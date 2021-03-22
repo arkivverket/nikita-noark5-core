@@ -85,6 +85,8 @@ public class ContactInformation
     private CorrespondencePartPerson correspondencePartPerson;
 
     @OneToOne(fetch = LAZY)
+    @JoinColumn(name = SYSTEM_ID_ENG)
+    @MapsId
     private CorrespondencePartUnit correspondencePartUnit;
 
     @OneToOne(fetch = LAZY)

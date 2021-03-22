@@ -25,6 +25,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.io.StringWriter;
 
+import static com.jayway.jsonpath.JsonPath.read;
 import static nikita.common.config.Constants.NOARK5_V5_CONTENT_TYPE_JSON;
 import static nikita.common.config.MetadataConstants.CORRESPONDENCE_PART_CODE_EA;
 import static nikita.common.config.MetadataConstants.CORRESPONDENCE_PART_DESCRIPTION_EA;
@@ -133,7 +134,31 @@ public class StructureTest {
         MockHttpServletResponse response =
                 resultActions.andReturn().getResponse();
         System.out.println(response.getContentAsString());
-        resultActions.andExpect(status().isOk())
+
+        resultActions.andExpect(status().isCreated());
+        validateCorrespondencePartUnit(resultActions);
+
+        resultActions.andDo(document("home",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint())));
+
+        url = "/noark5v5/api/arkivstruktur/korrespondansepartenhet/" +
+                read(response.getContentAsString(), "$." + SYSTEM_ID);
+
+        resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON)
+                .with(user(nikitaUserDetailsService
+                        .loadUserByUsername("admin@example.com"))));
+        resultActions.andExpect(status().isOk());
+        validateCorrespondencePartUnit(resultActions);
+    }
+
+    private void validateCorrespondencePartUnit(ResultActions resultActions)
+            throws Exception {
+
+        resultActions
                 .andExpect(jsonPath("$." + CORRESPONDENCE_PART_TYPE +
                         "." + CODE).value(CORRESPONDENCE_PART_CODE_EA))
                 .andExpect(jsonPath("$." + CORRESPONDENCE_PART_TYPE +
@@ -143,8 +168,8 @@ public class StructureTest {
                         .value("Hans Gruber"))
                 .andExpect(jsonPath("$." + NAME)
                         .value("Gruber Industries"))
-                .andExpect(jsonPath("$." + UNIT_IDENTIFIER)
-                        .value("123456789"))
+                .andExpect(jsonPath("$." + UNIT_IDENTIFIER + "." +
+                        ORGANISATION_NUMBER).value("123456789"))
                 .andExpect(jsonPath("$." + POSTAL_ADDRESS + "." +
                         ADDRESS_LINE_1).value("30th floor"))
                 .andExpect(jsonPath("$." + POSTAL_ADDRESS + "." +
@@ -158,26 +183,23 @@ public class StructureTest {
                 .andExpect(jsonPath("$." + POSTAL_ADDRESS + "." +
                         COUNTRY_CODE).value("no"))
                 .andExpect(jsonPath("$." + BUSINESS_ADDRESS + "." +
-                        ADDRESS_LINE_1).value("30th floor"))
+                        ADDRESS_LINE_1).value("31st floor"))
                 .andExpect(jsonPath("$." + BUSINESS_ADDRESS + "." +
                         ADDRESS_LINE_2).value("Nakatomi Plaza"))
                 .andExpect(jsonPath("$." + BUSINESS_ADDRESS + "." +
-                        ADDRESS_LINE_3).value("New York Place"))
+                        ADDRESS_LINE_3).value("Kongens gate 33"))
                 .andExpect(jsonPath("$." + BUSINESS_ADDRESS + "." +
-                        POSTAL_NUMBER).value("0001"))
+                        POSTAL_NUMBER).value("0002"))
                 .andExpect(jsonPath("$." + BUSINESS_ADDRESS + "." +
                         POSTAL_TOWN).value("Oslo"))
                 .andExpect(jsonPath("$." + BUSINESS_ADDRESS + "." +
-                        COUNTRY_CODE).value("+4700001111"))
+                        COUNTRY_CODE).value("no"))
                 .andExpect(jsonPath("$." + CONTACT_INFORMATION + "." +
-                        TELEPHONE_NUMBER).value("0001"))
+                        TELEPHONE_NUMBER).value("+4700001111"))
                 .andExpect(jsonPath("$." + CONTACT_INFORMATION + "." +
                         EMAIL_ADDRESS).value("hans.gruber@example.com"))
                 .andExpect(jsonPath("$." + CONTACT_INFORMATION + "." +
                         MOBILE_TELEPHONE_NUMBER).value("+4711110000"));
-        resultActions.andDo(document("home",
-                preprocessRequest(prettyPrint()),
-                preprocessResponse(prettyPrint())));
     }
 }
 

@@ -11,11 +11,15 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.LAZY;
-import static nikita.common.config.Constants.*;
+import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_CORRESPONDENCE_PART_UNIT;
+import static nikita.common.config.Constants.TABLE_CORRESPONDENCE_PART_UNIT;
 import static nikita.common.config.N5ResourceMappings.CORRESPONDENCE_PART_UNIT;
 
 @Entity
@@ -55,8 +59,6 @@ public class CorrespondencePartUnit
     private BusinessAddress businessAddress;
 
     @OneToOne(mappedBy = "correspondencePartUnit", fetch = LAZY, cascade = ALL)
-    @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID,
-            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private ContactInformation contactInformation;
 
     public String getUnitIdentifier() {
@@ -81,6 +83,7 @@ public class CorrespondencePartUnit
 
     public void setContactInformation(ContactInformation contactInformation) {
         this.contactInformation = contactInformation;
+        contactInformation.setCorrespondencePartUnit(this);
     }
 
     public BusinessAddress getBusinessAddress() {
@@ -98,6 +101,7 @@ public class CorrespondencePartUnit
 
     public void setPostalAddress(PostalAddress postalAddress) {
         this.postalAddress = postalAddress;
+        this.postalAddress.setCorrespondencePartUnit(this);
     }
 
     public String getContactPerson() {

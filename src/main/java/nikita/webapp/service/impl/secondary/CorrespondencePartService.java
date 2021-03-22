@@ -265,6 +265,15 @@ public class CorrespondencePartService
 
     }
 
+    /**
+     * The correspondencePart.setPostalAddress(postalAddress); should not be
+     * necessary as the deserialiser will already have done this. Check this
+     * to see if we really need to do this.
+     *
+     * @param correspondencePart Incoming correspondencePartUni
+     * @param record             existing record retrieved from database
+     * @return correspondencePart wraped as a correspondencePartUnitHateaos
+     */
     @Override
     public CorrespondencePartUnitHateoas createNewCorrespondencePartUnit(
             CorrespondencePartUnit correspondencePart,
@@ -276,14 +285,12 @@ public class CorrespondencePartService
         if (null != postalAddress) {
             postalAddress.getSimpleAddress().setAddressType(POSTAL_ADDRESS);
             correspondencePart.setPostalAddress(postalAddress);
-            postalAddress.setCorrespondencePartUnit(correspondencePart);
         }
         BusinessAddress businessAddress =
                 correspondencePart.getBusinessAddress();
         if (null != businessAddress) {
             businessAddress.getSimpleAddress().setAddressType(BUSINESS_ADDRESS);
-            //correspondencePart.setBusinessAddress(businessAddress);
-            businessAddress.setCorrespondencePartUnit(correspondencePart);
+            correspondencePart.setBusinessAddress(businessAddress);
         }
         record.addCorrespondencePart(correspondencePart);
         correspondencePartRepository.save(correspondencePart);

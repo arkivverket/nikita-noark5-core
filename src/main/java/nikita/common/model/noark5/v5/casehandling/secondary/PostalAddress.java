@@ -36,6 +36,8 @@ public class PostalAddress
     private CorrespondencePartPerson correspondencePartPerson;
 
     @OneToOne(fetch = LAZY)
+    @JoinColumn(name = SYSTEM_ID_ENG)
+    @MapsId
     private CorrespondencePartUnit correspondencePartUnit;
 
     @OneToOne(fetch = LAZY)
