@@ -4,12 +4,12 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.jayway.jsonpath.JsonPath;
 import nikita.N5CoreApp;
+import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.bsm.BSM;
 import nikita.common.model.noark5.bsm.BSMBase;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Record;
-import nikita.common.model.noark5.v5.casehandling.secondary.*;
-import nikita.common.model.noark5.v5.metadata.CorrespondencePartType;
+import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
 import nikita.common.model.noark5.v5.metadata.PartRole;
 import nikita.common.model.noark5.v5.secondary.PartPerson;
 import nikita.webapp.spring.TestSecurityConfiguration;
@@ -40,8 +40,6 @@ import java.util.*;
 
 import static java.time.OffsetDateTime.now;
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.MetadataConstants.CORRESPONDENCE_PART_CODE_EA;
-import static nikita.common.config.MetadataConstants.CORRESPONDENCE_PART_DESCRIPTION_EA;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Serialize.*;
 import static org.hamcrest.CoreMatchers.is;
@@ -55,6 +53,8 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.yaml.snakeyaml.util.UriEncoder.encode;
+import static utils.CorrespondencePartCreator.*;
+import static utils.CorrespondencePartValidator.*;
 
 /**
  * Things to develop
@@ -710,6 +710,8 @@ public class BSMTest {
     public void addBSMWithNewCorrespondencePart() throws Exception {
         CorrespondencePartPerson correspondencePart =
                 createCorrespondencePartPerson();
+        correspondencePart.setReferenceBSMBase(bsmObjects);
+
         String url = "/noark5v5/api/arkivstruktur/registrering" +
                 "/dc600862-3298-4ec0-8541-3e51fb900054/ny-korrespondansepartperson";
 
@@ -738,6 +740,10 @@ public class BSMTest {
                         .exists());
 
         validateCorrespondencePartPerson(resultActions);
+
+        resultActions.andExpect(jsonPath("$." + N5ResourceMappings.NAME)
+                .value(BSMTestConstants.name));
+
         validateBSM(resultActions);
 
         resultActions.andDo(document("home",
@@ -764,6 +770,8 @@ public class BSMTest {
                         .exists());
 
         validateCorrespondencePartPerson(resultActions);
+        resultActions.andExpect(jsonPath("$." + N5ResourceMappings.NAME)
+                .value(BSMTestConstants.name));
         validateBSM(resultActions);
     }
 
@@ -1135,21 +1143,6 @@ public class BSMTest {
                                 is("2020-07-01T21:25:06Z"))));
     }
 
-    private void validateCorrespondencePartPerson(ResultActions resultActions)
-            throws Exception {
-        validatePersonIdentifier(resultActions);
-        resultActions
-                .andExpect(jsonPath("$." + CORRESPONDENCE_PART_TYPE + "." + CODE)
-                        .value(CORRESPONDENCE_PART_CODE_EA))
-                .andExpect(jsonPath("$." + CORRESPONDENCE_PART_TYPE + "." + CODE_NAME)
-                        .value(CORRESPONDENCE_PART_DESCRIPTION_EA))
-                .andExpect(jsonPath("$." + NAME)
-                        .value(BSMTestConstants.name));
-        validateContactInformation(resultActions);
-        validatePostAddress(resultActions);
-        validateResidingAddress(resultActions);
-    }
-
     private void validatePartPerson(ResultActions resultActions)
             throws Exception {
         validatePersonIdentifier(resultActions);
@@ -1163,70 +1156,6 @@ public class BSMTest {
         validateContactInformation(resultActions);
         validatePostAddress(resultActions);
         validateResidingAddress(resultActions);
-    }
-
-    private void validatePersonIdentifier(ResultActions resultActions)
-            throws Exception {
-        resultActions
-                .andExpect(jsonPath("$." + PERSON_IDENTIFIER + "." +
-                        SOCIAL_SECURITY_NUMBER)
-                        .value(BSMTestConstants.socialSecurityNumber))
-                .andExpect(jsonPath("$." + PERSON_IDENTIFIER +
-                        "." + D_NUMBER_FIELD).value(BSMTestConstants.dNumber));
-    }
-
-    private void validatePostAddress(ResultActions resultActions)
-            throws Exception {
-        resultActions
-                .andExpect(jsonPath("$." +
-                        POSTAL_ADDRESS + "." + ADDRESS_LINE_1)
-                        .value("Utsikten"))
-                .andExpect(jsonPath("$." +
-                        POSTAL_ADDRESS + "." + ADDRESS_LINE_2)
-                        .value("Kongensleilighet"))
-                .andExpect(jsonPath("$." +
-                        POSTAL_ADDRESS + "." + ADDRESS_LINE_3)
-                        .value("Kongensgate 14"))
-                .andExpect(jsonPath("$." +
-                        POSTAL_ADDRESS + "." + POSTAL_NUMBER)
-                        .value("0130"))
-                .andExpect(jsonPath("$." +
-                        POSTAL_ADDRESS + "." + POSTAL_TOWN)
-                        .value("Oslo"));
-    }
-
-    private void validateResidingAddress(ResultActions resultActions)
-            throws Exception {
-        resultActions
-                .andExpect(jsonPath("$." +
-                        RESIDING_ADDRESS + "." + ADDRESS_LINE_1)
-                        .value("Innsikten"))
-                .andExpect(jsonPath("$." +
-                        RESIDING_ADDRESS + "." + ADDRESS_LINE_2)
-                        .value("Dronningensleilighet"))
-                .andExpect(jsonPath("$." +
-                        RESIDING_ADDRESS + "." + ADDRESS_LINE_3)
-                        .value("Dronningssgate 19"))
-                .andExpect(jsonPath("$." +
-                        RESIDING_ADDRESS + "." + POSTAL_NUMBER)
-                        .value("5003"))
-                .andExpect(jsonPath("$." +
-                        RESIDING_ADDRESS + "." + POSTAL_TOWN)
-                        .value("Bergen"));
-    }
-
-    private void validateContactInformation(ResultActions resultActions)
-            throws Exception {
-        resultActions
-                .andExpect(jsonPath("$." +
-                        CONTACT_INFORMATION + "." + EMAIL_ADDRESS)
-                        .value(BSMTestConstants.emailAddress))
-                .andExpect(jsonPath("$." +
-                        CONTACT_INFORMATION + "." + MOBILE_TELEPHONE_NUMBER)
-                        .value(BSMTestConstants.mobileNumber))
-                .andExpect(jsonPath("$." +
-                        CONTACT_INFORMATION + "." + TELEPHONE_NUMBER)
-                        .value(BSMTestConstants.telephoneNumber));
     }
 
     private void validateBSM(ResultActions resultActions) throws Exception {
@@ -1281,22 +1210,6 @@ public class BSMTest {
         bsmObjects.add(new BSMBase(bsmIntegerName, bsmIntegerValue));
     }
 
-    private CorrespondencePartPerson createCorrespondencePartPerson() {
-        CorrespondencePartPerson correspondencePart =
-                new CorrespondencePartPerson();
-        correspondencePart.setName(BSMTestConstants.name);
-        correspondencePart.setdNumber(BSMTestConstants.dNumber);
-        correspondencePart.setSocialSecurityNumber(
-                BSMTestConstants.socialSecurityNumber);
-        correspondencePart.setCorrespondencePartType(
-                createCorrespondencePartType());
-        correspondencePart.setPostalAddress(createPostalAddress());
-        correspondencePart.setResidingAddress(createResidingAddress());
-        correspondencePart.setContactInformation(createContactInformation());
-        correspondencePart.setReferenceBSMBase(bsmObjects);
-        return correspondencePart;
-    }
-
     private PartPerson createPartPerson() {
         PartPerson part = new PartPerson();
         part.setName(BSMTestConstants.name);
@@ -1316,54 +1229,6 @@ public class BSMTest {
         partRole.setCode(TEMPLATE_PART_ROLE_CODE);
         partRole.setCodeName(TEMPLATE_PART_ROLE_NAME);
         return partRole;
-    }
-
-    private CorrespondencePartType createCorrespondencePartType() {
-        CorrespondencePartType correspondencePartType =
-                new CorrespondencePartType();
-        correspondencePartType.setCode(CORRESPONDENCE_PART_CODE_EA);
-        correspondencePartType.setCodeName(CORRESPONDENCE_PART_DESCRIPTION_EA);
-        return correspondencePartType;
-    }
-
-    private ContactInformation createContactInformation() {
-        ContactInformation contactInformation = new ContactInformation();
-        contactInformation.setEmailAddress(BSMTestConstants.emailAddress);
-        contactInformation.setMobileTelephoneNumber(BSMTestConstants.mobileNumber);
-        contactInformation.setTelephoneNumber(BSMTestConstants.telephoneNumber);
-        PartPerson person = new PartPerson();
-        contactInformation.setPartPerson(person);
-        return contactInformation;
-    }
-
-    private ResidingAddress createResidingAddress() {
-        ResidingAddress residingAddress = new ResidingAddress();
-        SimpleAddress simpleAddress = new SimpleAddress();
-        simpleAddress.setAddressLine1("Innsikten");
-        simpleAddress.setAddressLine2("Dronningensleilighet");
-        simpleAddress.setAddressLine3("Dronningssgate 19");
-        PostalNumber postalNumber = new PostalNumber();
-        postalNumber.setPostalNumber("5003");
-        simpleAddress.setPostalNumber(postalNumber);
-        simpleAddress.setPostalTown("Bergen");
-        simpleAddress.setAddressType(RESIDING_ADDRESS);
-        residingAddress.setSimpleAddress(simpleAddress);
-        return residingAddress;
-    }
-
-    private PostalAddress createPostalAddress() {
-        PostalAddress postalAddress = new PostalAddress();
-        SimpleAddress simpleAddress = new SimpleAddress();
-        simpleAddress.setAddressLine1("Utsikten");
-        simpleAddress.setAddressLine2("Kongensleilighet");
-        simpleAddress.setAddressLine3("Kongensgate 14");
-        PostalNumber postalNumber = new PostalNumber();
-        postalNumber.setPostalNumber("0130");
-        simpleAddress.setPostalNumber(postalNumber);
-        simpleAddress.setPostalTown("Oslo");
-        simpleAddress.setAddressType(POSTAL_ADDRESS);
-        postalAddress.setSimpleAddress(simpleAddress);
-        return postalAddress;
     }
 
     private StringWriter createBSMMetadata(String name, String type,
