@@ -22,13 +22,13 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 import static javax.persistence.FetchType.LAZY;
-import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
+import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
-@Inheritance(strategy = TABLE_PER_CLASS)
+@Inheritance(strategy = JOINED)
 @Table(name = TABLE_BSM_BASE)
 public class BSMBase {
 
@@ -79,7 +79,8 @@ public class BSMBase {
     private String uriValue;
 
     @CreatedBy
-    @Column(name = "owned_by")
+    @Column(name = OWNED_BY)
+    @JsonProperty
     @Audited
     private String ownedBy;
 
