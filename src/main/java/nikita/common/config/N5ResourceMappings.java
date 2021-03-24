@@ -61,6 +61,17 @@ public final class N5ResourceMappings {
     public static final String LAST_MODIFIED_BY = "oppdatertAv";
     public static final String LAST_MODIFIED_DATE = "oppdatertDato";
     public static final String DOCUMENT_MEDIUM = "dokumentmedium";
+    public static final String CORRESPONDENCE_PART_TYPE_CODE =
+            "correspondence_part_type_code";
+    public static final String CORRESPONDENCE_PART_TYPE_CODE_NAME =
+            "correspondence_part_type_code_name";
+
+    public static final String REFERENCE_CORRESPONDENCE_PART =
+            "referenceCorrespondencePart";
+    public static final String REFERENCE_CORRESPONDENCE_PART_UNIT =
+            "referenceCorrespondencePartUnit";
+    public static final String REFERENCE_CORRESPONDENCE_PART_PERSON =
+            "referenceCorrespondencePartPerson";
 
     public static final String SYSTEM_ID_PARAMETER =
             LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS;
@@ -159,6 +170,9 @@ public final class N5ResourceMappings {
     public static final String PERSON_IDENTIFIER = "personidentifikator";
     public static final String UNIT_IDENTIFIER = "enhetsidentifikator";
     public static final String POST_CODE = "postnummer";
+
+    public static final String UNIT_IDENTIFIER_ENG = "unit_identifier";
+    public static final String UNIT_IDENTIFIER_ENG_OBJECT = "unitIdentifier";
     public static final String NEW_POST_CODE = NEW + DASH + POST_CODE;
 
     public static final String SOCIAL_SECURITY_NUMBER = "foedselsnummer";
@@ -583,7 +597,7 @@ public final class N5ResourceMappings {
     public static final String ELECTRONIC_SIGNATURE_VERIFIED_BY_ENG = "verified_by";
     public static final String ELECTRONIC_SIGNATURE_VERIFIED_DATE_ENG = "verified_date";
     public static final String ELECTRONIC_SIGNATURE_VERIFIED_FIELD_ENG = "electronic_signature_verified_name";
-    public static final String EMAIL_ADDRESS_ENG = "epostadresse";
+    public static final String EMAIL_ADDRESS_ENG = "email_address";
     public static final String EVENT_DATE_ENG = "event_date";
     public static final String EVENT_TYPE_ENG = "event_type";
     public static final String FILE_ENG = "file";
@@ -612,7 +626,8 @@ public final class N5ResourceMappings {
     public static final String MEETING_REGISTRATION_ENG = "moeteregistrering";
     public static final String MEETING_REGISTRATION_STATUS_ENG = "moteregistreringsstatus";
     public static final String MEETING_REGISTRATION_TYPE_ENG = "moeteregistreringstype";
-    public static final String MOBILE_TELEPHONE_NUMBER_ENG = "mobiltelefon";
+    public static final String MOBILE_TELEPHONE_NUMBER_ENG =
+            "mobile_telephone_number";
     public static final String MUNICIPALITY_NUMBER_ENG = "municipality_number";
     public static final String NEW_VALUE_ENG = "new_value";
     public static final String OLD_VALUE_ENG = "old_value";
@@ -698,12 +713,13 @@ public final class N5ResourceMappings {
     public static final String SIGN_OFF_ENG = "sign_off";
     public static final String STORAGE_LOCATION_ENG = "storage_location";
     public static final String SIGN_OFF_METHOD_ENG = "sign_of_method";
-    public static final String SOCIAL_SECURITY_NUMBER_ENG = "SignOfMethod";
+    public static final String SOCIAL_SECURITY_NUMBER_ENG =
+            "social_security_number";
     public static final String SUB_CLASS_ENG = "underklasse";
     public static final String SUB_FONDS_ENG = "underarkiv";
     public static final String SUB_HOLDING_NUMBER_ENG = "sub_holding_number";
     public static final String SYSTEM_ID_ENG = "system_id";
-    public static final String TELEPHONE_NUMBER_ENG = "telefonnummer";
+    public static final String TELEPHONE_NUMBER_ENG = "telephone_number";
     public static final String TITLE_ENG = "title";
     public static final String USER_ENG = "user";
     public static final String USER_NAME_ENG = "username";
@@ -851,7 +867,7 @@ public final class N5ResourceMappings {
     public static final String ELECTRONIC_SIGNATURE_VERIFIED_BY_ENG_OBJECT = "verifiedBy";
     public static final String ELECTRONIC_SIGNATURE_VERIFIED_DATE_ENG_OBJECT = "verifiedDate";
     public static final String ELECTRONIC_SIGNATURE_VERIFIED_FIELD_ENG_OBJECT = "electronicSignatureVerifiedName";
-    public static final String EMAIL_ADDRESS_ENG_OBJECT = "epostadresse";
+    public static final String EMAIL_ADDRESS_ENG_OBJECT = "emailAddress";
     public static final String EVENT_DATE_ENG_OBJECT = "eventDate";
     public static final String EVENT_TYPE_ENG_OBJECT = "EventType";
     public static final String FILE_ENG_OBJECT = "File";
@@ -880,7 +896,7 @@ public final class N5ResourceMappings {
     public static final String MEETING_REGISTRATION_ENG_OBJECT = "moeteregistrering";
     public static final String MEETING_REGISTRATION_STATUS_ENG_OBJECT = "moteregistreringsstatus";
     public static final String MEETING_REGISTRATION_TYPE_ENG_OBJECT = "moeteregistreringstype";
-    public static final String MOBILE_TELEPHONE_NUMBER_ENG_OBJECT = "mobiltelefon";
+    public static final String MOBILE_TELEPHONE_NUMBER_ENG_OBJECT = "mobileTelephoneNumber";
     public static final String MUNICIPALITY_NUMBER_ENG_OBJECT = "municipalityNumber";
     public static final String NAME_ENG_OBJECT = "name";
     public static final String NEW_VALUE_ENG_OBJECT = "newValue";
@@ -955,7 +971,7 @@ public final class N5ResourceMappings {
     public static final String SUB_FONDS_ENG_OBJECT = "underarkiv";
     public static final String SUB_HOLDING_NUMBER_ENG_OBJECT = "subHoldingNumber";
     public static final String SYSTEM_ID_ENG_OBJECT = "systemId";
-    public static final String TELEPHONE_NUMBER_ENG_OBJECT = "telefonnummer";
+    public static final String TELEPHONE_NUMBER_ENG_OBJECT = "telephoneNumber";
     public static final String TITLE_ENG_OBJECT = "title";
     public static final String USER_ENG_OBJECT = "bruker";
     public static final String USER_NAME_ENG_OBJECT = "brukerNavn";
