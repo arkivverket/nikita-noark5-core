@@ -91,6 +91,21 @@ public final class CorrespondencePartValidator {
         validateResidingAddress(resultActions);
     }
 
+    public static void validateCorrespondencePartPersonLink(
+            ResultActions resultActions) throws Exception {
+        resultActions
+                .andExpect(jsonPath("$._links.self").exists())
+                .andExpect(jsonPath("$._links.['" +
+                        REL_FONDS_STRUCTURE_CORRESPONDENCE_PART_PERSON + "']")
+                        .exists())
+                .andExpect(jsonPath("$._links.['" +
+                        REL_METADATA_CORRESPONDENCE_PART_TYPE + "']")
+                        .exists())
+                .andExpect(jsonPath("$._links.['" +
+                        REL_FONDS_STRUCTURE_RECORD + "']")
+                        .exists());
+    }
+
     public static void validatePostAddress(ResultActions resultActions)
             throws Exception {
         resultActions

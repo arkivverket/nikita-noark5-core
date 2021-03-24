@@ -40,12 +40,11 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static utils.CorrespondencePartCreator.createCorrespondencePartPerson;
 import static utils.CorrespondencePartCreator.createCorrespondencePartUnit;
-import static utils.CorrespondencePartValidator.validateCorrespondencePartUnit;
-import static utils.CorrespondencePartValidator.validateCorrespondencePartUnitLink;
+import static utils.CorrespondencePartValidator.*;
 
 /**
  * Tests compliance with the data model for creation  / updating og domain
- * objects
+ * objects. Tests will be added here as needed.
  */
 
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
@@ -78,17 +77,18 @@ public class StructureTest {
 
 
     /**
-     * @throws Exception
+     * Test that it is possible to create a CorrespondencePartUnit and test
+     * that the values and _links are correct. Then retrieve the systemID and
+     * make sure the object can be retrieved independently from the database.
+     *
+     * @throws Exception if required
      */
-
     @Test
     @Sql("/db-tests/basic_structure.sql")
     public void addCorrespondencePartUnitToExistingRecord() throws Exception {
         String url = "/noark5v5/api/arkivstruktur/registrering/" +
                 "dc600862-3298-4ec0-8541-3e51fb900054/" +
                 "ny-korrespondansepartenhet";
-        String selfHref = "http://localhost:8092" + url;
-
 
         JsonFactory factory = new JsonFactory();
         StringWriter jsonCorrespondencePartWriter = new StringWriter();
@@ -140,16 +140,18 @@ public class StructureTest {
     }
 
     /**
-     * @throws Exception
+     * Test that it is possible to create a CorrespondencePartPerson and test
+     * that the values and _links are correct. Then retrieve the systemID and
+     * make sure the object can be retrieved independently from the database.
+     *
+     * @throws Exception if required
      */
-
     @Test
-    @Sql("/db-tests/bsm.sql")
+    @Sql("/db-tests/basic_structure.sql")
     public void addCorrespondencePartPersonToExistingRecord() throws Exception {
         String url = "/noark5v5/api/arkivstruktur/registrering/" +
                 "dc600862-3298-4ec0-8541-3e51fb900054/" +
                 "ny-korrespondansepartperson";
-        String selfHref = "http://localhost:8092" + url;
 
         CorrespondencePartPerson correspondencePart =
                 createCorrespondencePartPerson();
@@ -181,13 +183,14 @@ public class StructureTest {
         System.out.println(response.getContentAsString());
 
         resultActions.andExpect(status().isCreated());
-        validateCorrespondencePartUnit(resultActions);
+        validateCorrespondencePartPerson(resultActions);
+        validateCorrespondencePartPersonLink(resultActions);
 
         resultActions.andDo(document("home",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint())));
 
-        url = "/noark5v5/api/arkivstruktur/korrespondansepartenhet/" +
+        url = "/noark5v5/api/arkivstruktur/korrespondansepartperson/" +
                 read(response.getContentAsString(), "$." + SYSTEM_ID);
 
         resultActions = mockMvc.perform(MockMvcRequestBuilders
@@ -197,7 +200,8 @@ public class StructureTest {
                 .with(user(nikitaUserDetailsService
                         .loadUserByUsername("admin@example.com"))));
         resultActions.andExpect(status().isOk());
-        validateCorrespondencePartUnit(resultActions);
+        validateCorrespondencePartPerson(resultActions);
+        validateCorrespondencePartPersonLink(resultActions);
     }
 }
 
