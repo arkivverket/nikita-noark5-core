@@ -2,6 +2,7 @@ package nikita.webapp.spring;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -21,5 +22,11 @@ public class TestSecurityConfiguration
     @Override
     public void configure(WebSecurity web) {
         web.debug(true);
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.inMemoryAuthentication().withUser("admin@example.com").password(
+                "password").roles("USER");
     }
 }

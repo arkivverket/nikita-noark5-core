@@ -1,12 +1,12 @@
 package nikita.webapp.spring;
 
-import nikita.webapp.spring.security.NikitaUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
@@ -25,10 +25,10 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 public class TestResourceServerConfiguration
         extends ResourceServerConfigurerAdapter {
 
-    private NikitaUserDetailsService userDetailsService;
+    private UserDetailsService userDetailsService;
 
     public TestResourceServerConfiguration(
-            NikitaUserDetailsService userDetailsService) {
+            UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 

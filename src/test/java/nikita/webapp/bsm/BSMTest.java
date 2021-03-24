@@ -3,7 +3,6 @@ package nikita.webapp.bsm;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.jayway.jsonpath.JsonPath;
-import nikita.N5CoreApp;
 import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.bsm.BSM;
 import nikita.common.model.noark5.bsm.BSMBase;
@@ -12,25 +11,27 @@ import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
 import nikita.common.model.noark5.v5.metadata.PartRole;
 import nikita.common.model.noark5.v5.secondary.PartPerson;
-import nikita.webapp.spring.TestSecurityConfiguration;
-import nikita.webapp.spring.security.NikitaUserDetailsService;
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import nikita.webapp.spring.WithMockCustomUser;
+import nikita.webapp.structure.SpringSecurityWebAuxTestConfig;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener;
+import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.io.IOException;
@@ -80,13 +81,10 @@ import static utils.CorrespondencePartValidator.*;
  * is setReferenceBSMBase being called multiple times
  */
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
-@SpringBootTest(classes = N5CoreApp.class,
+@SpringBootTest(classes = {SpringSecurityWebAuxTestConfig.class},
         webEnvironment = RANDOM_PORT)
-@ContextConfiguration(classes = {TestSecurityConfiguration.class})
-@ActiveProfiles("test")
-@AutoConfigureRestDocs(outputDir = "target/snippets")
-@TestMethodOrder(OrderAnnotation.class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestExecutionListeners(value = {WithSecurityContextTestExecutionListener.class})
+@Transactional
 public class BSMTest {
 
     // Values used in multiple tests
@@ -110,8 +108,11 @@ public class BSMTest {
 
     private MockMvc mockMvc;
 
+    //@Autowired
+    //private FilterChainProxy springSecurityFilterChain;
+
     @Autowired
-    private NikitaUserDetailsService nikitaUserDetailsService;
+    private UserDetailsService userDetailsService;
 
     @BeforeEach
     public void setUp(WebApplicationContext webApplicationContext,
@@ -191,7 +192,7 @@ public class BSMTest {
                             (String) values.get(0), false,
                             (String) values.get(1), (String) values.get(2),
                             factory).toString())
-                    .with(user(nikitaUserDetailsService
+                    .with(user(userDetailsService
                             .loadUserByUsername("admin@example.com"))));
             resultActions.andExpect(status().isCreated());
             validateBSMMetadata(entry.getKey(),
@@ -221,7 +222,7 @@ public class BSMTest {
                     .get(url)
                     .contextPath("/noark5v5")
                     .accept(NOARK5_V5_CONTENT_TYPE_JSON)
-                    .with(user(nikitaUserDetailsService
+                    .with(user(userDetailsService
                             .loadUserByUsername("admin@example.com"))));
             resultActions.andExpect(status().isOk());
             validateBSMMetadata(entry.getKey(),
@@ -246,7 +247,7 @@ public class BSMTest {
                 .accept(NOARK5_V5_CONTENT_TYPE_JSON)
                 .contentType(CONTENT_TYPE_JSON_MERGE_PATCH)
                 .content(jsonPatchWriter.toString())
-                .with(user(nikitaUserDetailsService
+                .with(user(userDetailsService
                         .loadUserByUsername("admin@example.com"))));
 
         resultActions
@@ -270,7 +271,7 @@ public class BSMTest {
                 .get(url)
                 .contextPath("/noark5v5")
                 .accept(NOARK5_V5_CONTENT_TYPE_JSON)
-                .with(user(nikitaUserDetailsService
+                .with(user(userDetailsService
                         .loadUserByUsername("admin@example.com"))));
 
         resultActions
@@ -330,7 +331,7 @@ public class BSMTest {
                 .accept(NOARK5_V5_CONTENT_TYPE_JSON)
                 .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
                 .content(jsonPatchWriter.toString())
-                .with(user(nikitaUserDetailsService
+                .with(user(userDetailsService
                         .loadUserByUsername("admin@example.com"))));
 
         resultActions.andExpect(status().isBadRequest());
@@ -361,7 +362,7 @@ public class BSMTest {
      */
     @Test
     @Order(3)
-    @Sql({"/db-tests/bsm.sql", "/db-tests/bsm/registered_bsm_values.sql"})
+    @Sql({"/db-tests/basic_structure.sql", "/db-tests/bsm/registered_bsm_values.sql"})
     public void addBSMToExistingRecord() throws Exception {
         String url = "/noark5v5/api/arkivstruktur/registrering/" +
                 "dc600862-3298-4ec0-8541-3e51fb900054";
@@ -387,7 +388,7 @@ public class BSMTest {
                 .accept(NOARK5_V5_CONTENT_TYPE_JSON)
                 .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
                 .content(jsonPatchWriter.toString())
-                .with(user(nikitaUserDetailsService
+                .with(user(userDetailsService
                         .loadUserByUsername("admin@example.com"))));
 
         MockHttpServletResponse response =
@@ -418,6 +419,7 @@ public class BSMTest {
      */
     @Test
     @Order(4)
+    @Sql("/db-tests/basic_structure.sql")
     public void addBSMWithNewRecord() throws Exception {
         Record record = new Record();
         record.setReferenceBSMBase(bsmObjects);
@@ -440,7 +442,7 @@ public class BSMTest {
                 .accept(NOARK5_V5_CONTENT_TYPE_JSON)
                 .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
                 .content(jsonRecordWriter.toString())
-                .with(user(nikitaUserDetailsService
+                .with(user(userDetailsService
                         .loadUserByUsername("admin@example.com"))));
 
         resultActions
@@ -465,7 +467,7 @@ public class BSMTest {
                 .get(url)
                 .contextPath("/noark5v5")
                 .accept(NOARK5_V5_CONTENT_TYPE_JSON)
-                .with(user(nikitaUserDetailsService
+                .with(user(userDetailsService
                         .loadUserByUsername("admin@example.com"))));
 
         resultActions
@@ -497,6 +499,8 @@ public class BSMTest {
      */
     @Test
     @Order(5)
+    @Sql({"/db-tests/basic_structure.sql",
+            "/db-tests/bsm/registered_bsm_values.sql"})
     public void addBSMToExistingFile() throws Exception {
         String url = "/noark5v5/api/arkivstruktur/mappe/" +
                 "f1677c47-99e1-42a7-bda2-b0bbc64841b7";
@@ -522,7 +526,7 @@ public class BSMTest {
                 .accept(NOARK5_V5_CONTENT_TYPE_JSON)
                 .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
                 .content(jsonPatchWriter.toString())
-                .with(user(nikitaUserDetailsService
+                .with(user(userDetailsService
                         .loadUserByUsername("admin@example.com"))));
 
         resultActions.andExpect(status().isOk());
@@ -554,6 +558,7 @@ public class BSMTest {
      */
     @Test
     @Order(6)
+    @Sql("/db-tests/basic_structure.sql")
     public void addBSMWithNewFile() throws Exception {
         File file = new File();
         file.setReferenceBSMBase(bsmObjects);
@@ -576,7 +581,7 @@ public class BSMTest {
                 .accept(NOARK5_V5_CONTENT_TYPE_JSON)
                 .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
                 .content(jsonFileWriter.toString())
-                .with(user(nikitaUserDetailsService
+                .with(user(userDetailsService
                         .loadUserByUsername("admin@example.com"))));
 
         resultActions
@@ -601,7 +606,7 @@ public class BSMTest {
                 .get(url)
                 .contextPath("/noark5v5")
                 .accept(NOARK5_V5_CONTENT_TYPE_JSON)
-                .with(user(nikitaUserDetailsService
+                .with(user(userDetailsService
                         .loadUserByUsername("admin@example.com"))));
 
         resultActions
@@ -633,6 +638,8 @@ public class BSMTest {
      */
     @Test
     @Order(7)
+    @Sql({"/db-tests/basic_structure.sql",
+            "/db-tests/bsm/registered_bsm_values.sql"})
     public void addBSMToExistingCorrespondencePart() throws Exception {
         String url = "/noark5v5/api/arkivstruktur/korrespondansepartperson/" +
                 "7f000101-730c-1c94-8173-0c0ded71003c";
@@ -658,7 +665,7 @@ public class BSMTest {
                 .accept(NOARK5_V5_CONTENT_TYPE_JSON)
                 .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
                 .content(jsonPatchWriter.toString())
-                .with(user(nikitaUserDetailsService
+                .with(user(userDetailsService
                         .loadUserByUsername("admin@example.com"))));
 
         resultActions.andExpect(status().isOk());
@@ -678,7 +685,7 @@ public class BSMTest {
                 .get(url)
                 .contextPath("/noark5v5")
                 .accept(NOARK5_V5_CONTENT_TYPE_JSON)
-                .with(user(nikitaUserDetailsService
+                .with(user(userDetailsService
                         .loadUserByUsername("admin@example.com"))));
 
         resultActions
@@ -707,6 +714,7 @@ public class BSMTest {
      */
     @Test
     @Order(8)
+    @Sql("/db-tests/basic_structure.sql")
     public void addBSMWithNewCorrespondencePart() throws Exception {
         CorrespondencePartPerson correspondencePart =
                 createCorrespondencePartPerson();
@@ -731,7 +739,7 @@ public class BSMTest {
                 .accept(NOARK5_V5_CONTENT_TYPE_JSON)
                 .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
                 .content(jsonCorrespondencePartWriter.toString())
-                .with(user(nikitaUserDetailsService
+                .with(user(userDetailsService
                         .loadUserByUsername("admin@example.com"))));
 
         resultActions
@@ -761,7 +769,7 @@ public class BSMTest {
                 .get(url)
                 .contextPath("/noark5v5")
                 .accept(NOARK5_V5_CONTENT_TYPE_JSON)
-                .with(user(nikitaUserDetailsService
+                .with(user(userDetailsService
                         .loadUserByUsername("admin@example.com"))));
 
         resultActions
@@ -797,6 +805,8 @@ public class BSMTest {
      */
     @Test
     @Order(9)
+    @Sql({"/db-tests/basic_structure.sql",
+            "/db-tests/bsm/registered_bsm_values.sql"})
     public void addBSMToExistingPart() throws Exception {
         String url = "/noark5v5/api/arkivstruktur/partperson/" +
                 "8131049d-dcac-43d8-bee4-656e72842da9";
@@ -822,7 +832,7 @@ public class BSMTest {
                 .accept(NOARK5_V5_CONTENT_TYPE_JSON)
                 .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
                 .content(jsonPatchWriter.toString())
-                .with(user(nikitaUserDetailsService
+                .with(user(userDetailsService
                         .loadUserByUsername("admin@example.com"))));
 
         MockHttpServletResponse response = resultActions.andReturn()
@@ -843,7 +853,7 @@ public class BSMTest {
                 .get(url)
                 .contextPath("/noark5v5")
                 .accept(NOARK5_V5_CONTENT_TYPE_JSON)
-                .with(user(nikitaUserDetailsService
+                .with(user(userDetailsService
                         .loadUserByUsername("admin@example.com"))));
 
         resultActions
@@ -871,6 +881,8 @@ public class BSMTest {
      */
     @Test
     @Order(10)
+    @Sql({"/db-tests/basic_structure.sql",
+            "/db-tests/bsm/registered_bsm_values.sql"})
     public void addBSMWithNewPart() throws Exception {
         PartPerson part = createPartPerson();
         String url = "/noark5v5/api/arkivstruktur/registrering" +
@@ -891,7 +903,7 @@ public class BSMTest {
                 .accept(NOARK5_V5_CONTENT_TYPE_JSON)
                 .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
                 .content(jsonPartWriter.toString())
-                .with(user(nikitaUserDetailsService
+                .with(user(userDetailsService
                         .loadUserByUsername("admin@example.com"))));
 
         resultActions
@@ -920,7 +932,7 @@ public class BSMTest {
                 .get(url)
                 .contextPath("/noark5v5")
                 .accept(NOARK5_V5_CONTENT_TYPE_JSON)
-                .with(user(nikitaUserDetailsService
+                .with(user(userDetailsService
                         .loadUserByUsername("admin@example.com"))));
 
         resultActions
@@ -942,6 +954,7 @@ public class BSMTest {
      */
     @Test
     @Order(11)
+    @Sql("/db-tests/basic_structure.sql")
     public void registerMetadataBSMMissingFields() throws Exception {
         String url = "/noark5v5/api/metadata/" + BSM_DEF;
         JsonFactory factory = new JsonFactory();
@@ -953,7 +966,7 @@ public class BSMTest {
                 .content(createBSMMetadataAllowNull(null, null, null,
                         BSMTestConstants.description, BSMTestConstants.source,
                         factory).toString())
-                .with(user(nikitaUserDetailsService
+                .with(user(userDetailsService
                         .loadUserByUsername("admin@example.com"))));
         resultActions.andExpect(status().isBadRequest());
     }
@@ -968,19 +981,26 @@ public class BSMTest {
      */
     @Test
     @Order(12)
-    @Sql("/db-tests/bsm.sql")
+    @Sql({"/db-tests/basic_structure.sql",
+            "/db-tests/bsm/registered_bsm_values.sql",
+            "/db-tests/bsm/bsm_values_to_object.sql"})
+    @WithMockCustomUser
     public void searchBSMMetadataUsingODataString() throws Exception {
         String url = "/noark5v5/odata/api/arkivstruktur/mappe" +
                 "?$filter=contains(ppt-v1:skolekontakt, 'Harald')";
+        //UserDetails userDetails = userDetailsService.loadUserByUsername(
+        //"admin@example.com");
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
-                .get(url)
-                .contextPath("/noark5v5")
-                .accept(NOARK5_V5_CONTENT_TYPE_JSON)
-                .with(user(nikitaUserDetailsService
-                        .loadUserByUsername("admin@example.com"))));
+                        .get(url)
+                        .contextPath("/noark5v5")
+                        .accept(NOARK5_V5_CONTENT_TYPE_JSON)
+                //            .with(user(userDetails))
+        );
         resultActions.andExpect(status().isOk());
         MockHttpServletResponse response = resultActions.andReturn()
                 .getResponse();
+        System.out.println(response.getContentAsString());
+
         validateBSMArray(resultActions);
     }
 
@@ -993,7 +1013,7 @@ public class BSMTest {
      */
     @Test
     @Order(13)
-    @Sql({"/db-tests/bsm.sql", "/db-tests/bsm/registered_bsm_values.sql",
+    @Sql({"/db-tests/basic_structure.sql", "/db-tests/bsm/registered_bsm_values.sql",
             "/db-tests/bsm/bsm_values_to_object.sql"})
     public void searchBSMMetadataUsingODataBoolean() throws Exception {
         String attributeName = "ppt-v1:avsluttet";
@@ -1003,7 +1023,7 @@ public class BSMTest {
                 .get(url)
                 .contextPath("/noark5v5")
                 .accept(NOARK5_V5_CONTENT_TYPE_JSON)
-                .with(user(nikitaUserDetailsService
+                .with(user(userDetailsService
                         .loadUserByUsername("admin@example.com"))));
         resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$.results[0]." + BSM_DEF)
@@ -1023,6 +1043,7 @@ public class BSMTest {
      */
     @Test
     @Order(14)
+    @Sql("/db-tests/basic_structure.sql")
     public void searchBSMMetadataUsingODataInteger() throws Exception {
         String attributeName = "ppt-v1:antallDager";
         String url = "/noark5v5/odata/api/arkivstruktur/mappe" +
@@ -1031,7 +1052,7 @@ public class BSMTest {
                 .get(url)
                 .contextPath("/noark5v5")
                 .accept(NOARK5_V5_CONTENT_TYPE_JSON)
-                .with(user(nikitaUserDetailsService
+                .with(user(userDetailsService
                         .loadUserByUsername("admin@example.com"))));
         resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$.results[0]." + BSM_DEF)
@@ -1051,6 +1072,7 @@ public class BSMTest {
      */
     @Test
     @Order(15)
+    @Sql("/db-tests/basic_structure.sql")
     public void searchBSMMetadataUsingODataDouble() throws Exception {
         String attributeName = "ppt-v1:snitt";
         String url = "/noark5v5/odata/api/arkivstruktur/mappe" +
@@ -1059,7 +1081,7 @@ public class BSMTest {
                 .get(url)
                 .contextPath("/noark5v5")
                 .accept(NOARK5_V5_CONTENT_TYPE_JSON)
-                .with(user(nikitaUserDetailsService
+                .with(user(userDetailsService
                         .loadUserByUsername("admin@example.com"))));
         resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$.results[0]." + BSM_DEF)
@@ -1079,7 +1101,7 @@ public class BSMTest {
      */
     @Test
     @Order(16)
-    @Sql({"/db-tests/bsm.sql", "/db-tests/bsm/registered_bsm_values.sql",
+    @Sql({"/db-tests/basic_structure.sql", "/db-tests/bsm/registered_bsm_values.sql",
             "/db-tests/bsm/bsm_values_to_object.sql"})
     public void searchBSMMetadataUsingODataDate() throws Exception {
         String attributeName = "ppt-v1:datohenvist";
@@ -1089,7 +1111,7 @@ public class BSMTest {
                 .get(url)
                 .contextPath("/noark5v5")
                 .accept(NOARK5_V5_CONTENT_TYPE_JSON)
-                .with(user(nikitaUserDetailsService
+                .with(user(userDetailsService
                         .loadUserByUsername("admin@example.com"))));
         MockHttpServletResponse response = resultActions.andReturn()
                 .getResponse();
@@ -1117,7 +1139,7 @@ public class BSMTest {
      */
     @Test
     @Order(17)
-    @Sql({"/db-tests/bsm.sql", "/db-tests/bsm/registered_bsm_values.sql",
+    @Sql({"/db-tests/basic_structure.sql", "/db-tests/bsm/registered_bsm_values.sql",
             "/db-tests/bsm/bsm_values_to_object.sql"})
     public void searchBSMMetadataUsingODataDateTime() throws Exception {
         String attributeName = "ppt-v1:meldingstidspunkt";
@@ -1129,7 +1151,7 @@ public class BSMTest {
                 .get(url)
                 .contextPath("/noark5v5")
                 .accept(NOARK5_V5_CONTENT_TYPE_JSON)
-                .with(user(nikitaUserDetailsService
+                .with(user(userDetailsService
                         .loadUserByUsername("admin@example.com"))));
         MockHttpServletResponse response = resultActions.andReturn()
                 .getResponse();

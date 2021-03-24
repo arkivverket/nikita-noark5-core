@@ -89,7 +89,7 @@ public class GeneralTest {
      * @throws Exception Needed for mockMvc.perform
      */
     @Test
-    @Sql("/db-tests/bsm.sql")
+    @Sql("/db-tests/basic_structure.sql")
     public void checkJSONValuesSet() throws Exception {
         String url = "/noark5v5/api/arkivstruktur/arkiv" +
                 "/3318a63f-11a7-4ec9-8bf1-4144b7f281cf";
@@ -134,7 +134,7 @@ public class GeneralTest {
      * @throws Exception Serialising or validation exception
      */
     @Test
-    @Sql("/db-tests/bsm.sql")
+    @Sql("/db-tests/basic_structure.sql")
     public void checkMultipleMetadataEntityPossible() throws Exception {
         DocumentDescription documentDescription = new DocumentDescription();
         documentDescription.setTitle("Test title");
@@ -232,7 +232,7 @@ public class GeneralTest {
      * @throws Exception Needed for mockMvc.perform
      */
     @Test
-    @Sql("/db-tests/bsm.sql")
+    @Sql("/db-tests/basic_structure.sql")
     public void checkODataSearchHasCorrectResponse() throws Exception {
 
         String url = "/noark5v5/odata/api/arkivstruktur/arkiv?$filter=" +
