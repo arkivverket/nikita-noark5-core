@@ -33,7 +33,8 @@ public class NoarkEntity
     private static final long serialVersionUID = 1L;
 
     @CreatedBy
-    @Column(name = "owned_by")
+    @Column(name = OWNED_BY)
+    @JsonProperty(OWNED_BY)
     @Audited
     private String ownedBy;
 
