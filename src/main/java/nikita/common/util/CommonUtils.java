@@ -1157,9 +1157,8 @@ public final class CommonUtils {
                     deserialiseSimpleAddressEntity(POSTAL_ADDRESS,
                             simpleAddress, currentNode.deepCopy(), errors);
                     postalAddress.setSimpleAddress(simpleAddress);
-                    postalAddress.
-                            setCorrespondencePartPerson(
-                                    (CorrespondencePartPerson) partPerson);
+                    postalAddress.setReferenceCorrespondencePartPerson(
+                            (CorrespondencePartPerson) partPerson);
                     partPerson.setPostalAddress(postalAddress);
                     objectNode.remove(N5ResourceMappings.POSTAL_ADDRESS);
                 }
@@ -1412,9 +1411,13 @@ public final class CommonUtils {
 
                 // Deserialize enhetsidentifikator
                 JsonNode currentNode = objectNode.get(UNIT_IDENTIFIER);
+                // { "enhetsidentifikator": { "organisasjonsnummer": "123458"}}
                 if (null != currentNode) {
-                    correspondencePartUnit.setUnitIdentifier(
-                            currentNode.textValue());
+                    currentNode = currentNode.get(ORGANISATION_NUMBER);
+                    if (null != currentNode) {
+                        correspondencePartUnit.setUnitIdentifier(
+                                currentNode.textValue());
+                    }
                     objectNode.remove(UNIT_IDENTIFIER);
                 }
 

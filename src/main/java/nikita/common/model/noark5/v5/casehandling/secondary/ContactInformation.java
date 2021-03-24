@@ -1,93 +1,59 @@
 package nikita.common.model.noark5.v5.casehandling.secondary;
 
-import nikita.common.model.noark5.v5.NoarkEntity;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.IContactInformationEntity;
 import nikita.common.model.noark5.v5.secondary.PartPerson;
 import nikita.common.model.noark5.v5.secondary.PartUnit;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.*;
-import java.util.UUID;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.TABLE_CONTACT_INFORMATION;
-import static nikita.common.config.N5ResourceMappings.SYSTEM_ID_ENG;
+import static nikita.common.config.N5ResourceMappings.*;
 
 @Entity
 @Table(name = TABLE_CONTACT_INFORMATION)
 public class ContactInformation
-        extends NoarkEntity
+        extends SystemIdEntity
         implements ISystemId, IContactInformationEntity {
-
-    /**
-     * M001 - systemID (xs:string)
-     */
-    @Id
-    @Type(type = "uuid-char")
-    @Column(name = SYSTEM_ID_ENG, insertable = false, updatable = false,
-            nullable = false)
-    private UUID systemId;
-
-    @Override
-    public String getSystemId() {
-        if (null != systemId)
-            return systemId.toString();
-        else
-            return null;
-    }
-
-    @Override
-    public void setSystemId(UUID systemId) {
-        this.systemId = systemId;
-    }
-
-    @Override
-    public UUID getId() {
-        return systemId;
-    }
-
-    @Override
-    public void setId(UUID systemId) {
-        this.systemId = systemId;
-    }
-
-    @Override
-    public String getIdentifier() {
-        return getSystemId();
-    }
 
     /**
      * M410 - epostadresse (xs:string)
      */
+    @Column(name = EMAIL_ADDRESS_ENG)
+    @JsonProperty(EMAIL_ADDRESS)
     @Audited
-    @Column(name = "email_address")
     private String emailAddress;
 
     /**
      * M??? - mobiltelefon (xs:string)
      */
-    @Column(name = "mobile_telephone_number")
+    @Column(name = MOBILE_TELEPHONE_NUMBER_ENG)
+    @JsonProperty(MOBILE_TELEPHONE_NUMBER)
     @Audited
     private String mobileTelephoneNumber;
 
     /**
      * M411 - telefonnummer (xs:string)
      */
-    @Column(name = "telephone_number")
+    @Column(name = TELEPHONE_NUMBER_ENG)
+    @JsonProperty(TELEPHONE_NUMBER)
     @Audited
     private String telephoneNumber;
 
     @OneToOne(fetch = LAZY)
-    private CorrespondencePartPerson correspondencePartPerson;
+    private CorrespondencePartPerson referenceCorrespondencePartPerson;
 
     @OneToOne(fetch = LAZY)
-    @JoinColumn(name = SYSTEM_ID_ENG)
-    @MapsId
-    private CorrespondencePartUnit correspondencePartUnit;
+    private CorrespondencePartUnit referenceCorrespondencePartUnit;
 
     @OneToOne(fetch = LAZY)
     private PartPerson partPerson;
@@ -120,21 +86,21 @@ public class ContactInformation
     }
 
     public CorrespondencePartPerson getCorrespondencePartPerson() {
-        return correspondencePartPerson;
+        return referenceCorrespondencePartPerson;
     }
 
     public void setCorrespondencePartPerson(
-            CorrespondencePartPerson correspondencePartPerson) {
-        this.correspondencePartPerson = correspondencePartPerson;
+            CorrespondencePartPerson referenceCorrespondencePartPerson) {
+        this.referenceCorrespondencePartPerson = referenceCorrespondencePartPerson;
     }
 
-    public CorrespondencePartUnit getCorrespondencePartUnit() {
-        return correspondencePartUnit;
+    public CorrespondencePartUnit getReferenceCorrespondencePartUnit() {
+        return referenceCorrespondencePartUnit;
     }
 
     public void setCorrespondencePartUnit(
-            CorrespondencePartUnit correspondencePartUnit) {
-        this.correspondencePartUnit = correspondencePartUnit;
+            CorrespondencePartUnit referenceCorrespondencePartUnit) {
+        this.referenceCorrespondencePartUnit = referenceCorrespondencePartUnit;
     }
 
     public PartPerson getPartPerson() {

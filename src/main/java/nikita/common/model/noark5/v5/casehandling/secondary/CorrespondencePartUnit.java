@@ -1,5 +1,6 @@
 package nikita.common.model.noark5.v5.casehandling.secondary;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.ICorrespondencePartUnitEntity;
@@ -11,16 +12,12 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.LAZY;
-import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_CORRESPONDENCE_PART_UNIT;
-import static nikita.common.config.Constants.TABLE_CORRESPONDENCE_PART_UNIT;
-import static nikita.common.config.N5ResourceMappings.CORRESPONDENCE_PART_UNIT;
+import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.*;
 
 @Entity
 @Table(name = TABLE_CORRESPONDENCE_PART_UNIT)
@@ -34,31 +31,43 @@ public class CorrespondencePartUnit
     /**
      * M??? - enhetsidentifikator (xs:string)
      */
-    @Column(name = "unit_identifier")
+    @Column(name = UNIT_IDENTIFIER_ENG)
+    @JsonProperty(UNIT_IDENTIFIER)
     @Audited
     private String unitIdentifier;
 
     /**
      * M??? - navn (xs:string)
      */
-    @Column(name = "name")
+    @Column(name = CORRESPONDENCE_PART_NAME_ENG)
+    @JsonProperty(CORRESPONDENCE_PART_NAME)
     @Audited
     private String name;
 
     /**
      * M412 - kontaktperson  (xs:string)
      */
-    @Column(name = "contact_person")
+    @Column(name = CONTACT_PERSON_ENG)
+    @JsonProperty(CONTACT_PERSON)
     @Audited
     private String contactPerson;
 
-    @OneToOne(mappedBy = "correspondencePartUnit", fetch = LAZY, cascade = ALL)
+    @OneToOne(mappedBy = REFERENCE_CORRESPONDENCE_PART_UNIT, fetch = LAZY,
+            cascade = ALL)
+    @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private PostalAddress postalAddress;
 
-    @OneToOne(mappedBy = "correspondencePartUnit", fetch = LAZY, cascade = ALL)
+    @OneToOne(mappedBy = REFERENCE_CORRESPONDENCE_PART_UNIT, fetch = LAZY,
+            cascade = ALL)
+    @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private BusinessAddress businessAddress;
 
-    @OneToOne(mappedBy = "correspondencePartUnit", fetch = LAZY, cascade = ALL)
+    @OneToOne(mappedBy = REFERENCE_CORRESPONDENCE_PART_UNIT, fetch = LAZY,
+            cascade = ALL)
+    @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private ContactInformation contactInformation;
 
     public String getUnitIdentifier() {
@@ -92,7 +101,7 @@ public class CorrespondencePartUnit
 
     public void setBusinessAddress(BusinessAddress businessAddress) {
         this.businessAddress = businessAddress;
-        this.businessAddress.setCorrespondencePartUnit(this);
+        this.businessAddress.setReferenceCorrespondencePartUnit(this);
     }
 
     public PostalAddress getPostalAddress() {
@@ -101,7 +110,7 @@ public class CorrespondencePartUnit
 
     public void setPostalAddress(PostalAddress postalAddress) {
         this.postalAddress = postalAddress;
-        this.postalAddress.setCorrespondencePartUnit(this);
+        this.postalAddress.setReferenceCorrespondencePartUnit(this);
     }
 
     public String getContactPerson() {

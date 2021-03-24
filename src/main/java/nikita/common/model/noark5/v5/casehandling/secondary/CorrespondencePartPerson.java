@@ -1,5 +1,6 @@
 package nikita.common.model.noark5.v5.casehandling.secondary;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.ICorrespondencePartPersonEntity;
@@ -16,7 +17,7 @@ import javax.persistence.*;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.CORRESPONDENCE_PART_PERSON;
+import static nikita.common.config.N5ResourceMappings.*;
 
 @Entity
 @Table(name = TABLE_CORRESPONDENCE_PART_PERSON)
@@ -30,14 +31,16 @@ public class CorrespondencePartPerson
     /**
      * M??? - fødselsnummer (xs:string)
      */
-    @Column(name = "social_security_number")
+    @Column(name = SOCIAL_SECURITY_NUMBER_ENG)
+    @JsonProperty(SOCIAL_SECURITY_NUMBER)
     @Audited
     private String socialSecurityNumber;
 
     /**
      * M??? - DNummer (xs:string)
      */
-    @Column(name = "d_number")
+    @Column(name = D_NUMBER_FIELD_ENG)
+    @JsonProperty(D_NUMBER_FIELD)
     @Audited
     private String dNumber;
 
@@ -46,21 +49,25 @@ public class CorrespondencePartPerson
      * Interface standard lists this as name. Using name until clarification
      * is provided
      */
+    @Column(name = CORRESPONDENCE_PART_NAME_ENG)
+    @JsonProperty(CORRESPONDENCE_PART_NAME)
     @Audited
-    @Column(name = "name")
     private String name;
 
-    @OneToOne(mappedBy = "correspondencePartPerson", fetch = LAZY, cascade = ALL)
+    @OneToOne(mappedBy = REFERENCE_CORRESPONDENCE_PART_PERSON, fetch = LAZY,
+            cascade = ALL)
     @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private PostalAddress postalAddress;
 
-    @OneToOne(mappedBy = "correspondencePartPerson", fetch = LAZY, cascade = ALL)
+    @OneToOne(mappedBy = REFERENCE_CORRESPONDENCE_PART_PERSON, fetch = LAZY,
+            cascade = ALL)
     @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private ResidingAddress residingAddress;
 
-    @OneToOne(mappedBy = "correspondencePartPerson", fetch = LAZY, cascade = ALL)
+    @OneToOne(mappedBy = REFERENCE_CORRESPONDENCE_PART_PERSON, fetch = LAZY,
+            cascade = ALL)
     @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private ContactInformation contactInformation;

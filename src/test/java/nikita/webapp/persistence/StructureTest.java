@@ -82,7 +82,7 @@ public class StructureTest {
      */
 
     @Test
-    @Sql("/db-tests/bsm.sql")
+    @Sql("/db-tests/basic_structure.sql")
     public void addCorrespondencePartUnitToExistingRecord() throws Exception {
         String url = "/noark5v5/api/arkivstruktur/registrering/" +
                 "dc600862-3298-4ec0-8541-3e51fb900054/" +
@@ -132,6 +132,9 @@ public class StructureTest {
                 .with(user(nikitaUserDetailsService
                         .loadUserByUsername("admin@example.com"))));
         resultActions.andExpect(status().isOk());
+        response = resultActions.andReturn().getResponse();
+        System.out.println(response.getContentAsString());
+
         validateCorrespondencePartUnit(resultActions);
         validateCorrespondencePartUnitLink(resultActions);
     }

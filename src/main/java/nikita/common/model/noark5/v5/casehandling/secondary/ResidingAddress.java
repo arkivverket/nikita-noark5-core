@@ -34,11 +34,12 @@ public class ResidingAddress
     SimpleAddress simpleAddress;
 
     @OneToOne(fetch = LAZY)
-    CorrespondencePartPerson correspondencePartPerson;
+    @JoinColumn(name = SYSTEM_ID_ENG)
+    @MapsId
+    CorrespondencePartPerson referenceCorrespondencePartPerson;
 
     @OneToOne(fetch = LAZY)
     private PartPerson partPerson;
-
 
     @Override
     public String getSystemId() {
@@ -77,12 +78,12 @@ public class ResidingAddress
     }
 
     public CorrespondencePartPerson getCorrespondencePartPerson() {
-        return correspondencePartPerson;
+        return referenceCorrespondencePartPerson;
     }
 
     public void setCorrespondencePartPerson(
-            CorrespondencePartPerson correspondencePartPerson) {
-        this.correspondencePartPerson = correspondencePartPerson;
+            CorrespondencePartPerson referenceCorrespondencePartPerson) {
+        this.referenceCorrespondencePartPerson = referenceCorrespondencePartPerson;
     }
 
     public PartPerson getPartPerson() {

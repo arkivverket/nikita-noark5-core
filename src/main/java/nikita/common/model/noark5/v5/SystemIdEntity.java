@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
+import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.NOARK_FONDS_STRUCTURE_PATH;
 import static nikita.common.config.N5ResourceMappings.SYSTEM_ID;
 import static nikita.common.config.N5ResourceMappings.SYSTEM_ID_ENG;
@@ -29,7 +29,7 @@ import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
  * Created by tsodring on 5/8/17.
  */
 @Entity
-@Inheritance(strategy = TABLE_PER_CLASS)
+@Inheritance(strategy = JOINED)
 @EntityListeners(AuditingEntityListener.class)
 @Audited(targetAuditMode = NOT_AUDITED)
 public class SystemIdEntity

@@ -942,6 +942,10 @@ public class InternalNameTranslator {
                         USER_NAME_ENG,
                         USER_NAME_ENG_OBJECT);
         addNorToEnglishNameMap
+                (UNIT_IDENTIFIER,
+                        UNIT_IDENTIFIER_ENG,
+                        UNIT_IDENTIFIER_ENG_OBJECT);
+        addNorToEnglishNameMap
                 (VARIANT_FORMAT,
                         VARIANT_FORMAT_ENG,
                         VARIANT_FORMAT_ENG_OBJECT);

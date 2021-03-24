@@ -234,7 +234,8 @@ public class CorrespondencePartService
         PostalAddress postalAddress = correspondencePart.getPostalAddress();
         if (null != postalAddress) {
             postalAddress.getSimpleAddress().setAddressType(POSTAL_ADDRESS);
-            postalAddress.setCorrespondencePartPerson(correspondencePart);
+            postalAddress.setReferenceCorrespondencePartPerson(
+                    correspondencePart);
         }
         ResidingAddress residingAddress =
                 correspondencePart.getResidingAddress();
