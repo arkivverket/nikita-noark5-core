@@ -688,6 +688,7 @@ public final class N5ResourceMappings {
             "journalpoststatuskodenavn";
 
 
+    public static final String OWNED_BY = "owned_by";
     public static final String RESIDING_ADDRESS_ENG = "bostedsadresse";
     public static final String RIGHT_ENG = "rettighet";
     public static final String SCREENING_ACCESS_RESTRICTION_ENG = "tilgangsrestriksjon";
