@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.transaction.Transactional;
 import java.io.StringWriter;
 
 import static com.jayway.jsonpath.JsonPath.read;
@@ -54,7 +55,8 @@ import static utils.CorrespondencePartValidator.*;
 @ActiveProfiles("test")
 @AutoConfigureRestDocs(outputDir = "target/snippets")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Transactional
+@TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class StructureTest {
 
     private MockMvc mockMvc;

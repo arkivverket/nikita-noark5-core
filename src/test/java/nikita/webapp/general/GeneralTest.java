@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.transaction.Transactional;
 import java.io.StringWriter;
 
 import static nikita.common.config.Constants.*;
@@ -51,6 +52,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @AutoConfigureRestDocs(outputDir = "target/snippets")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Transactional
 public class GeneralTest {
 
     private MockMvc mockMvc;
