@@ -165,6 +165,12 @@ public class Comment
         this.referenceDocumentDescription.add(documentDescription);
     }
 
+    public void removeDocumentDescription(
+            DocumentDescription documentDescription) {
+        this.referenceDocumentDescription.remove(documentDescription);
+        documentDescription.getReferenceComment().remove(this);
+    }
+
     @Override
     public String toString() {
         return "Comment{" + super.toString() +
