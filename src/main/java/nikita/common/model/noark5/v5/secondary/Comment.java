@@ -154,12 +154,22 @@ public class Comment
         this.referenceFile.add(file);
     }
 
+    public void removeFile(File file) {
+        this.referenceFile.remove(file);
+        file.getReferenceComment().remove(this);
+    }
+
     public Set<Record> getReferenceRecord() {
         return referenceRecord;
     }
 
     public void addRecord(Record record) {
         this.referenceRecord.add(record);
+    }
+
+    public void removeDocumentDescription(Record record) {
+        this.referenceDocumentDescription.remove(record);
+        record.getReferenceComment().remove(this);
     }
 
     public Set<DocumentDescription> getReferenceDocumentDescription() {
