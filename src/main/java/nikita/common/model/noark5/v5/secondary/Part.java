@@ -20,14 +20,12 @@ import java.util.Set;
 
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
-import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.NOARK_FONDS_STRUCTURE_PATH;
 import static nikita.common.config.Constants.TABLE_PART;
 import static nikita.common.config.N5ResourceMappings.PART;
 
 @Entity
 @Table(name = TABLE_PART)
-@Inheritance(strategy = JOINED)
 @Audited
 public class Part
         extends NoarkGeneralEntity
