@@ -171,7 +171,7 @@ public class TestParsing {
                 administrativeUnitDeserializer.deserialize(jsonParser,
                         null /* DeserializationContext */);
         assert (null != unit);
-        assert (systemID.equals(unit.getSystemId()));
+        assert (systemID.equals(unit.getSystemIdAsString()));
         assert ("Everywhere".equals(unit.getAdministrativeUnitName()));
     }
 
@@ -196,7 +196,7 @@ public class TestParsing {
                 userDeserializer.deserialize(jsonParser,
                         null /* DeserializationContext */);
         assert (null != user);
-        assert (systemID.equals(user.getSystemId()));
+        assert (systemID.equals(user.getSystemIdAsString()));
     }
 
     @Test
@@ -228,7 +228,7 @@ public class TestParsing {
                 classificationSystemDeserializer.deserialize(
                         jsonParser, null /* DeserializationContext */);
         assert (null != classificationSystem);
-        assert (systemID.equals(classificationSystem.getSystemId()));
+        assert (systemID.equals(classificationSystem.getSystemIdAsString()));
         assert (title.equals(classificationSystem.getTitle()));
     }
 
@@ -328,7 +328,7 @@ public class TestParsing {
                 fondsCreatorDeserializer.deserialize(
                         jsonParser, null /* DeserializationContext */);
         assert (null != fondsCreator);
-        assert (systemID.equals(fondsCreator.getSystemId()));
+        assert (systemID.equals(fondsCreator.getSystemIdAsString()));
         assert (name.equals(fondsCreator.getFondsCreatorName()));
     }
 
@@ -442,7 +442,7 @@ public class TestParsing {
                 seriesDeserializer.deserialize(jsonParser,
                         null /* DeserializationContext */);
         assert (null != series);
-        assert (systemID.equals(series.getSystemId()));
+        assert (systemID.equals(series.getSystemIdAsString()));
         assert (title.equals(series.getTitle()));
         Classified c = series.getReferenceClassified();
         assert ("SH".equals(c.getClassification().getCode()));
@@ -513,7 +513,7 @@ public class TestParsing {
         File file = fileDeserializer.deserialize(
                 jsonParser, null /* DeserializationContext */);
         assert (null != file);
-        assert (systemID.equals(file.getSystemId()));
+        assert (systemID.equals(file.getSystemIdAsString()));
         assert (title.equals(file.getTitle()));
         Classified c = file.getReferenceClassified();
         assert ("SH".equals(c.getClassification().getCode()));
@@ -594,7 +594,7 @@ public class TestParsing {
         CaseFile caseFile = caseFileDeserializer.deserialize(
                 jsonParser, null /* DeserializationContext */);
         assert (null != caseFile);
-        assert (systemID.equals(caseFile.getSystemId()));
+        assert (systemID.equals(caseFile.getSystemIdAsString()));
         assert (title.equals(caseFile.getTitle()));
         Classified c = caseFile.getReferenceClassified();
         assert ("SH".equals(c.getClassification().getCode()));
@@ -663,7 +663,7 @@ public class TestParsing {
                 recordDeserializer.deserialize(jsonParser,
                         null /* DeserializationContext */);
         assert (null != record);
-        assert (systemID.equals(record.getSystemId()));
+        assert (systemID.equals(record.getSystemIdAsString()));
         assert (title.equals(record.getTitle()));
         Classified c = record.getReferenceClassified();
         assert ("SH".equals(c.getClassification().getCode()));
@@ -761,7 +761,7 @@ public class TestParsing {
                 registryEntryDeserializer.deserialize(jsonParser,
                         null /* DeserializationContext */);
         assert (null != registryEntry);
-        assert (systemID.equals(registryEntry.getSystemId()));
+        assert (systemID.equals(registryEntry.getSystemIdAsString()));
         assert (title.equals(registryEntry.getTitle()));
         Classified c = registryEntry.getReferenceClassified();
         assert ("SH".equals(c.getClassification().getCode()));
@@ -841,7 +841,7 @@ public class TestParsing {
                 recordNoteDeserializer.deserialize(jsonParser,
                         null /* DeserializationContext */);
         assert (null != recordNote);
-        assert (systemID.equals(recordNote.getSystemId()));
+        assert (systemID.equals(recordNote.getSystemIdAsString()));
         assert (title.equals(recordNote.getTitle()));
         Classified c = recordNote.getReferenceClassified();
         assert ("SH".equals(c.getClassification().getCode()));
@@ -1038,7 +1038,7 @@ public class TestParsing {
                 partPersonDeserializer.deserialize(
                         jsonParser, null /* DeserializationContext */);
         assert (null != partPerson);
-        assert (systemID.equals(partPerson.getSystemId()));
+        assert (systemID.equals(partPerson.getSystemIdAsString()));
         assert (name.equals(partPerson.getName()));
         ContactInformation c = partPerson.getContactInformation();
         assert ("+47 900 00 000".equals(c.getTelephoneNumber()));
@@ -1090,7 +1090,7 @@ public class TestParsing {
                 partUnitDeserializer.deserialize(
                         jsonParser, null /* DeserializationContext */);
         assert (null != partUnit);
-        assert (systemID.equals(partUnit.getSystemId()));
+        assert (systemID.equals(partUnit.getSystemIdAsString()));
         assert (name.equals(partUnit.getName()));
         ContactInformation c = partUnit.getContactInformation();
         assert ("+47 900 00 000".equals(c.getTelephoneNumber()));
@@ -1141,7 +1141,7 @@ public class TestParsing {
                 correspondencePartPersonDeserializer.deserialize(
                         jsonParser, null /* DeserializationContext */);
         assert (null != correspondencePartPerson);
-        assert (systemID.equals(correspondencePartPerson.getSystemId()));
+        assert (systemID.equals(correspondencePartPerson.getSystemIdAsString()));
         assert (name.equals(correspondencePartPerson.getName()));
         ContactInformation c = correspondencePartPerson.getContactInformation();
         assert ("+47 900 00 000".equals(c.getTelephoneNumber()));
@@ -1193,7 +1193,7 @@ public class TestParsing {
                 correspondencePartUnitDeserializer.deserialize(
                         jsonParser, null /* DeserializationContext */);
         assert (null != correspondencePartUnit);
-        assert (systemID.equals(correspondencePartUnit.getSystemId()));
+        assert (systemID.equals(correspondencePartUnit.getSystemIdAsString()));
         assert (name.equals(correspondencePartUnit.getName()));
         ContactInformation c = correspondencePartUnit.getContactInformation();
         assert ("+47 900 00 000".equals(c.getTelephoneNumber()));
@@ -1224,7 +1224,7 @@ public class TestParsing {
                 correspondencePartInternalDeserializer.deserialize(
                         jsonParser, null /* DeserializationContext */);
         assert (null != correspondencePartInternal);
-        assert (systemID.equals(correspondencePartInternal.getSystemId()));
+        assert (systemID.equals(correspondencePartInternal.getSystemIdAsString()));
         assert (name.equals(correspondencePartInternal.getAdministrativeUnit()));
     }
 
@@ -1246,7 +1246,7 @@ public class TestParsing {
                 buildingDeserializer.deserialize(jsonParser,
                         null /* DeserializationContext */);
         assert (null != building);
-        assert (systemID.equals(building.getSystemId()));
+        assert (systemID.equals(building.getSystemIdAsString()));
     }
 
     @Test
@@ -1270,7 +1270,7 @@ public class TestParsing {
                 cadastralUnitDeserializer.deserialize(
                         jsonParser, null /* DeserializationContext */);
         assert (null != cadastralUnit);
-        assert (systemID.equals(cadastralUnit.getSystemId()));
+        assert (systemID.equals(cadastralUnit.getSystemIdAsString()));
     }
 
     @Test
@@ -1290,7 +1290,7 @@ public class TestParsing {
                 dNumberDeserializer.deserialize(jsonParser,
                         null /* DeserializationContext */);
         assert (null != dNumber);
-        assert (systemID.equals(dNumber.getSystemId()));
+        assert (systemID.equals(dNumber.getSystemIdAsString()));
     }
 
     @Test
@@ -1313,7 +1313,7 @@ public class TestParsing {
                 planDeserializer.deserialize(jsonParser,
                         null /* DeserializationContext */);
         assert (null != plan);
-        assert (systemID.equals(plan.getSystemId()));
+        assert (systemID.equals(plan.getSystemIdAsString()));
     }
 
     @Test
@@ -1336,7 +1336,7 @@ public class TestParsing {
                 positionDeserializer.deserialize(jsonParser,
                         null /* DeserializationContext */);
         assert (null != position);
-        assert (systemID.equals(position.getSystemId()));
+        assert (systemID.equals(position.getSystemIdAsString()));
     }
 
     @Test
@@ -1357,7 +1357,7 @@ public class TestParsing {
                 socialSecurityNumberDeserializer.deserialize(
                         jsonParser, null /* DeserializationContext */);
         assert (null != socialSecurityNumber);
-        assert (systemID.equals(socialSecurityNumber.getSystemId()));
+        assert (systemID.equals(socialSecurityNumber.getSystemIdAsString()));
     }
 
     @Test
@@ -1378,7 +1378,7 @@ public class TestParsing {
                 unitDeserializer.deserialize(
                         jsonParser, null /* DeserializationContext */);
         assert (null != unit);
-        assert (systemID.equals(unit.getSystemId()));
+        assert (systemID.equals(unit.getSystemIdAsString()));
     }
 
     @Test
@@ -1406,7 +1406,7 @@ public class TestParsing {
                 conversionDeserializer.deserialize(
                         jsonParser, null /* DeserializationContext */);
         assert (null != conversion);
-        assert (systemID.equals(conversion.getSystemId()));
+        assert (systemID.equals(conversion.getSystemIdAsString()));
         assert (fromFormatCode.equals(conversion.getConvertedFromFormat().getCode()));
         assert (toFormatCode.equals(conversion.getConvertedToFormat().getCode()));
     }
@@ -1433,7 +1433,7 @@ public class TestParsing {
                 commentDeserializer.deserialize(
                         jsonParser, null /* DeserializationContext */);
         assert (null != comment);
-        assert (systemID.equals(comment.getSystemId()));
+        assert (systemID.equals(comment.getSystemIdAsString()));
     }
 
     @Test
@@ -1475,7 +1475,7 @@ public class TestParsing {
         SignOff signOff = signOffDeserializer.deserialize
                 (jsonParser, null /* DeserializationContext */);
         assert (null != signOff);
-        assert (systemID.equals(signOff.getSystemId()));
+        assert (systemID.equals(signOff.getSystemIdAsString()));
         SignOffMethod m = signOff.getSignOffMethod();
         assert ("BY".equals(m.getCode()));
         assert ("Besvart med brev".equals(m.getCodeName()));
@@ -1506,7 +1506,7 @@ public class TestParsing {
         DocumentFlow documentFlow = documentFlowDeserializer.deserialize
                 (jsonParser, null /* DeserializationContext */);
         assert (null != documentFlow);
-        assert (systemID.equals(documentFlow.getSystemId()));
+        assert (systemID.equals(documentFlow.getSystemIdAsString()));
         assert (flowTo.equals(documentFlow.getFlowTo()));
         assert (flowFrom.equals(documentFlow.getFlowFrom()));
         FlowStatus m = documentFlow.getFlowStatus();
@@ -1545,7 +1545,7 @@ public class TestParsing {
         Precedence precedence = precedenceDeserializer.deserialize
                 (jsonParser, null /* DeserializationContext */);
         assert (null != precedence);
-        assert (systemID.equals(precedence.getSystemId()));
+        assert (systemID.equals(precedence.getSystemIdAsString()));
         PrecedenceStatus m = precedence.getPrecedenceStatus();
         assert ("G".equals(m.getCode()));
         assert ("Gjeldende".equals(m.getCodeName()));
@@ -1574,7 +1574,7 @@ public class TestParsing {
         ChangeLog changeLog = changeLogDeserializer.deserialize
                 (jsonParser, null /* DeserializationContext */);
         assert (null != changeLog);
-        assert (systemID.equals(changeLog.getSystemId()));
+        assert (systemID.equals(changeLog.getSystemIdAsString()));
         assert (uuid.equals(changeLog.getReferenceChangedBy()));
     }
 
@@ -1604,7 +1604,7 @@ public class TestParsing {
         EventLog eventLog = eventLogDeserializer.deserialize
                 (jsonParser, null /* DeserializationContext */);
         assert (null != eventLog);
-        assert (systemID.equals(eventLog.getSystemId()));
+        assert (systemID.equals(eventLog.getSystemIdAsString()));
         assert (uuid.equals(eventLog.getReferenceChangedBy()));
         EventType m = eventLog.getEventType();
         assert ("C".equals(m.getCode()));
