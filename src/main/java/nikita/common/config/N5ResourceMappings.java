@@ -66,6 +66,8 @@ public final class N5ResourceMappings {
     public static final String CORRESPONDENCE_PART_TYPE_CODE_NAME =
             "correspondence_part_type_code_name";
 
+    public static final String REFERENCE_COMMENT =
+            "referenceComment";
     public static final String REFERENCE_CORRESPONDENCE_PART =
             "referenceCorrespondencePart";
     public static final String REFERENCE_CORRESPONDENCE_PART_UNIT =
