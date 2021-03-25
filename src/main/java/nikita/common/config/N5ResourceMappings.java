@@ -295,6 +295,9 @@ public final class N5ResourceMappings {
     public static final String COMMENT_TYPE = "merknadstype";
     public static final String COMMENT_DATE = "merknadsdato";
     public static final String COMMENT_REGISTERED_BY = "merknadRegistrertAv";
+    public static final String COMMENT_TIME = "merknadsdato";
+    public static final String COMMENT_TIME_ENG = "comment_date";
+    public static final String COMMENT_TIME_ENG_OBJECT = "comment_date";
 
     // Classified
     public static final String CLASSIFIED = "gradering"; // root node
@@ -519,7 +522,8 @@ public final class N5ResourceMappings {
     public static final String CODE_INACTIVE_ENG = "inactive";
     public static final String COMMENT_DATE_ENG = "merknadsdato";
     public static final String COMMENT_ENG = "comment";
-    public static final String COMMENT_REGISTERED_BY_ENG = "merknadRegistrertAv";
+    public static final String COMMENT_REGISTERED_BY_ENG =
+            "comment_registered_by";
     public static final String COMMENT_TEXT_ENG = "comment_text";
     public static final String COMMENT_TYPE_ENG = "comment_type";
     public static final String CONTACT_INFORMATION_ENG = "contact_information";
@@ -785,7 +789,7 @@ public final class N5ResourceMappings {
     public static final String CODE_INACTIVE_ENG_OBJECT = "inactive";
     public static final String COMMENT_DATE_ENG_OBJECT = "merknadsdato";
     public static final String COMMENT_ENG_OBJECT = "Comment";
-    public static final String COMMENT_REGISTERED_BY_ENG_OBJECT = "merknadRegistrertAv";
+    public static final String COMMENT_REGISTERED_BY_ENG_OBJECT = "commentRegisteredBy";
     public static final String COMMENT_TEXT_ENG_OBJECT = "CommentText";
     public static final String COMMENT_TYPE_ENG_OBJECT = "CommentType";
     public static final String CONTACT_INFORMATION_ENG_OBJECT = "kontaktinformasjon";
@@ -981,8 +985,19 @@ public final class N5ResourceMappings {
     public static final String Y_ENG_OBJECT = "y";
     public static final String Z_ENG_OBJECT = "z";
 
+    public static final String COMMENT_TYPE_CODE = "merknadstypekode";
+    public static final String COMMENT_TYPE_CODE_ENG = "comment_type_code";
+    public static final String COMMENT_TYPE_CODE_ENG_OBJECT = "commentTypeCode";
+
+    public static final String COMMENT_TYPE_CODE_NAME = "merknadstypekodenavn";
+    public static final String COMMENT_TYPE_CODE_NAME_ENG =
+            "comment_type_code_name";
+    public static final String COMMENT_TYPE_CODE_NAME_ENG_OBJECT =
+            "commentTypeCodeName";
+
     public static final String REFERENCE_CLASSIFICATION_SYSTEM
             = "referenceClassificationSystem";
+
     private N5ResourceMappings() {
         throw new AssertionError();
     }

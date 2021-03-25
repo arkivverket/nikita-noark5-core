@@ -1,5 +1,6 @@
 package nikita.common.model.noark5.v5.secondary;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.File;
@@ -27,7 +28,7 @@ import java.util.Set;
 
 import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_COMMENT;
 import static nikita.common.config.Constants.TABLE_COMMENT;
-import static nikita.common.config.N5ResourceMappings.COMMENT;
+import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
@@ -44,28 +45,32 @@ public class Comment
     /**
      * M310 - merknadstekst (xs:string)
      */
-    @Column(name = "comment_text")
+    @Column(name = COMMENT_TEXT_ENG)
+    @JsonProperty(COMMENT_TEXT)
     @Audited
     private String commentText;
 
     /**
      * M??? - merknadstype code (xs:string)
      */
-    @Column(name = "comment_type_code")
+    @Column(name = COMMENT_TYPE_CODE_ENG)
+    @JsonProperty(COMMENT_TYPE_CODE)
     @Audited
     private String commentTypeCode;
 
     /**
      * M084 - merknadstype code name (xs:string)
      */
-    @Column(name = "comment_type_code_name")
+    @Column(name = COMMENT_TYPE_CODE_NAME_ENG)
+    @JsonProperty(COMMENT_TYPE_CODE_NAME)
     @Audited
     private String commentTypeCodeName;
 
     /**
      * M611 - merknadsdato (xs:dateTime)
      */
-    @Column(name = "comment_time")
+    @Column(name = COMMENT_TIME_ENG)
+    @JsonProperty(COMMENT_TIME)
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
     private OffsetDateTime commentDate;
@@ -73,7 +78,8 @@ public class Comment
     /**
      * M612 - merknadRegistrertAv (xs:string)
      */
-    @Column(name = "comment_registered_by")
+    @Column(name = COMMENT_REGISTERED_BY_ENG)
+    @JsonProperty(COMMENT_REGISTERED_BY)
     @Audited
     private String commentRegisteredBy;
 

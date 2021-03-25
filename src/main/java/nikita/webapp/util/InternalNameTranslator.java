@@ -348,9 +348,21 @@ public class InternalNameTranslator {
                         COMMENT_TEXT_ENG,
                         COMMENT_TEXT_ENG_OBJECT);
         addNorToEnglishNameMap
+                (COMMENT_TIME,
+                        COMMENT_TIME_ENG,
+                        COMMENT_TIME_ENG_OBJECT);
+        addNorToEnglishNameMap
                 (COMMENT_TYPE,
                         COMMENT_TYPE_ENG,
                         COMMENT_TYPE_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (COMMENT_TYPE_CODE,
+                        COMMENT_TYPE_CODE_ENG,
+                        COMMENT_TYPE_CODE_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (COMMENT_TYPE_CODE_NAME,
+                        COMMENT_TYPE_CODE_NAME_ENG,
+                        COMMENT_TYPE_CODE_NAME_ENG_OBJECT);
         addNorToEnglishNameMap
                 (CONTACT_INFORMATION,
                         CONTACT_INFORMATION_ENG,
