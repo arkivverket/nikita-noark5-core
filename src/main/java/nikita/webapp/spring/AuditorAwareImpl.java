@@ -3,7 +3,7 @@ package nikita.webapp.spring;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.annotation.ManagedBean;
 import java.util.Optional;
@@ -28,8 +28,7 @@ public class AuditorAwareImpl
         if (authentication.getPrincipal().equals("anonymousUser")) {
             return Optional.of("system");
         }
-        org.springframework.security.core.userdetails.User user =
-                (User) authentication.getPrincipal();
-        return Optional.of(user.getUsername());
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        return Optional.of(userDetails.getUsername());
     }
 }
