@@ -31,12 +31,12 @@ public class SystemIdHateoasHandler
                             IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HATEOAS_API_PATH + SLASH + entity.getFunctionalTypeName() +
-                SLASH + entity.getBaseTypeName() + SLASH + entity.getSystemId()
+                SLASH + entity.getBaseTypeName() + SLASH + entity.getSystemIdAsString()
                 + SLASH, getRelSelfLink()));
 
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HATEOAS_API_PATH + SLASH + entity.getFunctionalTypeName() +
-                SLASH + entity.getBaseTypeName() + SLASH + entity.getSystemId()
+                SLASH + entity.getBaseTypeName() + SLASH + entity.getSystemIdAsString()
                 + SLASH, entity.getBaseRel()));
     }
 

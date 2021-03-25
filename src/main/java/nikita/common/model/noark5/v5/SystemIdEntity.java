@@ -59,11 +59,8 @@ public class SystemIdEntity
     private List<ChangeLog> referenceChangeLog = new ArrayList<>();
 
     @Override
-    public String getSystemId() {
-        if (null != systemId)
-            return systemId.toString();
-        else
-            return null;
+    public UUID getSystemId() {
+        return systemId;
     }
 
     @Override
@@ -72,18 +69,16 @@ public class SystemIdEntity
     }
 
     @Override
-    public UUID getId() {
-        return systemId;
-    }
-
-    @Override
-    public void setId(UUID systemId) {
-        this.systemId = systemId;
+    public String getSystemIdAsString() {
+        if (null != systemId)
+            return systemId.toString();
+        else
+            return null;
     }
 
     @Override
     public String getIdentifier() {
-        return getSystemId();
+        return getSystemIdAsString();
     }
 
     @Override

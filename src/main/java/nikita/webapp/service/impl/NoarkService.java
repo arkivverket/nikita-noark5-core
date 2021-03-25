@@ -168,7 +168,7 @@ public class NoarkService
     protected void disassociateForeignKeys(
             SystemIdEntity entity, String deleteString) {
         Query query = entityManager.createNativeQuery(deleteString);
-        query.setParameter(ID, entity.getSystemId());
+        query.setParameter(ID, entity.getSystemIdAsString());
         query.executeUpdate();
     }
 

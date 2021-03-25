@@ -1945,7 +1945,7 @@ public final class CommonUtils {
                 if (systemIdEntity != null &&
                         systemIdEntity.getSystemId() != null) {
                     jgen.writeStringField(SYSTEM_ID,
-                            systemIdEntity.getSystemId());
+                            systemIdEntity.getSystemIdAsString());
                 }
             }
 
@@ -2269,7 +2269,7 @@ public final class CommonUtils {
                     throws IOException {
                 if (fondsCreatorEntity != null) {
                     printNullable(jgen, SYSTEM_ID,
-                            fondsCreatorEntity.getSystemId());
+                            fondsCreatorEntity.getSystemIdAsString());
                     printNullable(jgen, FONDS_CREATOR_ID,
                             fondsCreatorEntity.getFondsCreatorId());
                     printNullable(jgen, FONDS_CREATOR_NAME,

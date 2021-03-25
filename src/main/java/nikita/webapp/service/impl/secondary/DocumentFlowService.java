@@ -113,7 +113,7 @@ public class DocumentFlowService
         existing.setReferenceFlowTo(to);
         if (null != to) {
             existing.setFlowTo(to.getUsername());
-            existing.setReferenceFlowToSystemID(to.getId());
+            existing.setReferenceFlowToSystemID(to.getSystemId());
         } else {
             existing.setFlowTo(incoming.getFlowTo());
             existing.setReferenceFlowToSystemID(incoming.getReferenceFlowToSystemID());
@@ -127,7 +127,7 @@ public class DocumentFlowService
         existing.setReferenceFlowFrom(from);
         if (null != from) {
             existing.setFlowFrom(from.getUsername());
-            existing.setReferenceFlowFromSystemID(from.getId());
+            existing.setReferenceFlowFromSystemID(from.getSystemId());
         } else {
             existing.setFlowFrom(incoming.getFlowFrom());
             existing.setReferenceFlowFromSystemID
@@ -189,7 +189,7 @@ public class DocumentFlowService
         }
         if (null != to
             && null == documentFlow.getReferenceFlowToSystemID()) {
-            documentFlow.setReferenceFlowToSystemID(to.getId());
+            documentFlow.setReferenceFlowToSystemID(to.getSystemId());
         }
 
         if (null != from
@@ -198,7 +198,7 @@ public class DocumentFlowService
         }
         if (null != from
             && null == documentFlow.getReferenceFlowFromSystemID()) {
-            documentFlow.setReferenceFlowFromSystemID(from.getId());
+            documentFlow.setReferenceFlowFromSystemID(from.getSystemId());
         }
     }
 
@@ -241,7 +241,7 @@ public class DocumentFlowService
         User u = userService.userGetByUsername(getUser());
         if (null != u) {
             template.setFlowFrom(u.getUsername());
-            template.setReferenceFlowFromSystemID(u.getId());
+            template.setReferenceFlowFromSystemID(u.getSystemId());
             template.setReferenceFlowFrom(u);
         } else {
             String info = "Unable to find User object for current user when generating template!";

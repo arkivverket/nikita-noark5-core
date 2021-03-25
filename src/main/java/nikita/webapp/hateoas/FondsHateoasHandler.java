@@ -4,7 +4,6 @@ import nikita.common.model.noark5.v5.Fonds;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
-import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.webapp.hateoas.interfaces.IFondsHateoasHandler;
 import org.springframework.stereotype.Component;
 
@@ -82,7 +81,7 @@ public class FondsHateoasHandler
                                 IHateoasNoarkObject hateoasNoarkObject) {
         if (getFonds(entity).getReferenceFondsCreator().size() > 0) {
             hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                    HREF_BASE_FONDS + SLASH + entity.getSystemId() + SLASH + FONDS_CREATOR,
+                    HREF_BASE_FONDS + SLASH + entity.getSystemIdAsString() + SLASH + FONDS_CREATOR,
                     REL_FONDS_STRUCTURE_FONDS_CREATOR, true));
         }
     }
@@ -102,7 +101,7 @@ public class FondsHateoasHandler
                           IHateoasNoarkObject hateoasNoarkObject) {
         if (getFonds(entity).getReferenceSeries() != null) {
             hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                    HREF_BASE_FONDS + SLASH + entity.getSystemId() + SLASH + SERIES,
+                    HREF_BASE_FONDS + SLASH + entity.getSystemIdAsString() + SLASH + SERIES,
                     REL_FONDS_STRUCTURE_SERIES, true));
         }
     }
@@ -121,7 +120,7 @@ public class FondsHateoasHandler
     public void addFonds(ISystemId entity,
                          IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_FONDS + SLASH + entity.getSystemId(),
+                HREF_BASE_FONDS + SLASH + entity.getSystemIdAsString(),
                 REL_FONDS_STRUCTURE_FONDS, true));
     }
 
@@ -140,7 +139,7 @@ public class FondsHateoasHandler
     public void addSubFonds(ISystemId entity,
                             IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_FONDS + SLASH + entity.getSystemId() + SLASH + SUB_FONDS,
+                HREF_BASE_FONDS + SLASH + entity.getSystemIdAsString() + SLASH + SUB_FONDS,
                 REL_FONDS_STRUCTURE_SUB_FONDS, true));
     }
 
@@ -159,7 +158,7 @@ public class FondsHateoasHandler
     public void addNewSeries(ISystemId entity,
                              IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_FONDS + SLASH + entity.getSystemId() + SLASH + NEW_SERIES,
+                HREF_BASE_FONDS + SLASH + entity.getSystemIdAsString() + SLASH + NEW_SERIES,
                 REL_FONDS_STRUCTURE_NEW_SERIES));
     }
 
@@ -178,7 +177,7 @@ public class FondsHateoasHandler
     public void addNewFondsCreator(ISystemId entity,
                                    IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_FONDS + SLASH + entity.getSystemId() + SLASH +
+                HREF_BASE_FONDS + SLASH + entity.getSystemIdAsString() + SLASH +
                 NEW_FONDS_CREATOR, REL_FONDS_STRUCTURE_NEW_FONDS_CREATOR));
     }
 
@@ -197,7 +196,7 @@ public class FondsHateoasHandler
     public void addNewSubFonds(ISystemId entity,
                                IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_FONDS + SLASH + entity.getSystemId() + SLASH + NEW_FONDS,
+                HREF_BASE_FONDS + SLASH + entity.getSystemIdAsString() + SLASH + NEW_FONDS,
                 REL_FONDS_STRUCTURE_NEW_FONDS));
     }
 
@@ -217,7 +216,7 @@ public class FondsHateoasHandler
         Fonds fonds = getFonds(entity).getReferenceParentFonds();
         if (fonds != null) {
             hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                    HREF_BASE_FONDS + SLASH + fonds.getSystemId(),
+                    HREF_BASE_FONDS + SLASH + fonds.getSystemIdAsString(),
                     REL_FONDS_STRUCTURE_PARENT_FONDS));
         }
     }

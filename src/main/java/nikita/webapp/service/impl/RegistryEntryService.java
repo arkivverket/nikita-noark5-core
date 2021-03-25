@@ -253,9 +253,9 @@ public class RegistryEntryService
             if (!referenceCorrespondencePart.getReferenceRecord()
                 .equals(referenceRegistryEntry)) {
                 String info = INFO_CANNOT_FIND_OBJECT +
-                    " CorrespondencePart " + partID.toString() +
-                    " below RegistryEntry " +
-                    referenceRegistryEntry.getSystemId() + ".";
+                        " CorrespondencePart " + partID.toString() +
+                        " below RegistryEntry " +
+                        referenceRegistryEntry.getSystemIdAsString() + ".";
                 logger.info(info);
                 throw new NoarkEntityNotFoundException(info);
             }
@@ -565,7 +565,7 @@ public class RegistryEntryService
         } else {
             throw new NoarkEntityNotFoundException(
                     "Could not find user with systemID [" +
-                            RegistryEntry.getSystemId() + "]");
+                            RegistryEntry.getSystemIdAsString() + "]");
         }
         return administrativeUnit;
     }
@@ -635,10 +635,10 @@ public class RegistryEntryService
         Set<User> users = administrativeUnit.getUsers();
         if (!users.contains(user)) {
             throw new NoarkAdministrativeUnitMemberException(
-                    "User [" + user.getSystemId() + "] is " +
+                    "User [" + user.getSystemIdAsString() + "] is " +
                             "not a member  of the administrativeUnit " +
                             "with systemID [" +
-                            administrativeUnit.getSystemId() + "] when " +
+                            administrativeUnit.getSystemIdAsString() + "] when " +
                             "assigning caseFile responsible field.");
         }
     }
@@ -652,7 +652,7 @@ public class RegistryEntryService
             throw new NoarkAdministrativeUnitMemberException(
                     "User [" + user.getUsername() + "] is not a member " +
                             "of the administrativeUnit with systemID [" +
-                            administrativeUnit.getSystemId() + "] when " +
+                            administrativeUnit.getSystemIdAsString() + "] when " +
                             "assigning ownership field.");
         }
     }

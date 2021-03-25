@@ -4,7 +4,6 @@ import nikita.common.model.noark5.v5.DocumentObject;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
-import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
 import org.springframework.stereotype.Component;
 
@@ -50,14 +49,14 @@ public class DocumentObjectHateoasHandler
     @Override
     public void addConversion(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_DOCUMENT_OBJECT + SLASH + entity.getSystemId() + SLASH + CONVERSION + SLASH,
+                HREF_BASE_DOCUMENT_OBJECT + SLASH + entity.getSystemIdAsString() + SLASH + CONVERSION + SLASH,
                 REL_FONDS_STRUCTURE_CONVERSION, false));
     }
 
     @Override
     public void addNewConversion(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_DOCUMENT_OBJECT + SLASH + entity.getSystemId() + SLASH + NEW_CONVERSION + SLASH,
+                HREF_BASE_DOCUMENT_OBJECT + SLASH + entity.getSystemIdAsString() + SLASH + NEW_CONVERSION + SLASH,
                 REL_FONDS_STRUCTURE_NEW_CONVERSION, false));
     }
 
@@ -82,14 +81,14 @@ public class DocumentObjectHateoasHandler
     @Override
     public void addReferenceDocumentFile(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_DOCUMENT_OBJECT + SLASH + entity.getSystemId() + SLASH + REFERENCE_FILE + SLASH,
+                HREF_BASE_DOCUMENT_OBJECT + SLASH + entity.getSystemIdAsString() + SLASH + REFERENCE_FILE + SLASH,
                 REL_FONDS_STRUCTURE_DOCUMENT_FILE, false));
     }
 
     @Override
     public void addConvertFile(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_DOCUMENT_OBJECT + SLASH + entity.getSystemId() + SLASH + CONVERT_FILE,
+                HREF_BASE_DOCUMENT_OBJECT + SLASH + entity.getSystemIdAsString() + SLASH + CONVERT_FILE,
                 REL_FONDS_STRUCTURE_CONVERT_FILE, false));
     }
 
@@ -120,7 +119,7 @@ public class DocumentObjectHateoasHandler
         if (((DocumentObject) entity).getReferenceDocumentDescription()
                 != null) {
             return ((DocumentObject) entity).getReferenceDocumentDescription()
-                    .getSystemId();
+                    .getSystemIdAsString();
         }
         return null;
     }

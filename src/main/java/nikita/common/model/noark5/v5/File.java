@@ -379,8 +379,8 @@ public class File
 
         if (referenceType.equalsIgnoreCase(NEW_CROSS_REFERENCE)) {
             CrossReference crossReference = new CrossReference();
-            crossReference.setFromSystemId(getSystemId());
-            crossReference.setToSystemId(entity.getSystemId());
+            crossReference.setFromSystemId(getSystemIdAsString());
+            crossReference.setToSystemId(entity.getSystemIdAsString());
 
             if (entity.getBaseTypeName().equals(CLASS)) {
                 crossReference.setReferenceClass((Class) entity);

@@ -29,7 +29,7 @@ public class CommentHateoasHandler
                             IHateoasNoarkObject hateoasNoarkObject) {
         String selfHref = getOutgoingAddress() +
                 HREF_BASE_FONDS_STRUCTURE + SLASH + COMMENT + SLASH +
-                entity.getSystemId();
+                entity.getSystemIdAsString();
         hateoasNoarkObject.addLink(entity,
                 new Link(selfHref, getRelSelfLink()));
         hateoasNoarkObject.addLink(entity,
@@ -63,7 +63,7 @@ public class CommentHateoasHandler
                 new Link(getOutgoingAddress() + HREF_BASE_FILE +
                         "?" + urlEncode(DOLLAR_FILTER) + "=" +
                         COMMENT + SLASH + SYSTEM_ID +
-                        urlEncode(" eq '" + comment.getSystemId() + "'"),
+                        urlEncode(" eq '" + comment.getSystemIdAsString() + "'"),
                         REL_FONDS_STRUCTURE_FILE));
     }
 

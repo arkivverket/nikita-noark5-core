@@ -3,16 +3,12 @@ package nikita.webapp.hateoas.admin;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
-import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
-import nikita.webapp.hateoas.HateoasHandler;
 import nikita.webapp.hateoas.SystemIdHateoasHandler;
 import nikita.webapp.hateoas.interfaces.admin.IUserHateoasHandler;
 import org.springframework.stereotype.Component;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.USER;
-import static nikita.common.config.N5ResourceMappings.ADMINISTRATIVE_UNIT;
-import static nikita.common.config.N5ResourceMappings.NEW_ADMINISTRATIVE_UNIT;
+import static nikita.common.config.N5ResourceMappings.*;
 
 /**
  * Created by tsodring on 06/08/17.
@@ -49,14 +45,14 @@ public class UserHateoasHandler
     public void addNewAdministrativeUnit(ISystemId entity,
                                          IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_ADMIN + SLASH + USER + SLASH + entity.getSystemId() + SLASH + NEW_ADMINISTRATIVE_UNIT + SLASH,
+                HREF_BASE_ADMIN + SLASH + USER + SLASH + entity.getSystemIdAsString() + SLASH + NEW_ADMINISTRATIVE_UNIT + SLASH,
                 REL_ADMIN_NEW_ADMINISTRATIVE_UNIT, false));
     }
 
     public void addAdministrativeUnit(ISystemId entity,
                                       IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-		HREF_BASE_ADMIN + SLASH + USER + SLASH + entity.getSystemId() + SLASH + ADMINISTRATIVE_UNIT + SLASH,
+                HREF_BASE_ADMIN + SLASH + USER + SLASH + entity.getSystemIdAsString() + SLASH + ADMINISTRATIVE_UNIT + SLASH,
                 REL_ADMIN_ADMINISTRATIVE_UNIT, false));
     }
 }

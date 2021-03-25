@@ -4,9 +4,7 @@ import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.IPrecedenceEntity;
-import nikita.webapp.hateoas.HateoasHandler;
 import nikita.webapp.hateoas.SystemIdHateoasHandler;
-import nikita.webapp.hateoas.interfaces.ISystemIdHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.IPrecedenceHateoasHandler;
 import org.springframework.stereotype.Component;
 
@@ -60,7 +58,7 @@ public class PrecedenceHateoasHandler
             hateoasNoarkObject.addLink(precedence,
                 new Link(getOutgoingAddress() +
                          HREF_BASE_CASE_FILE + SLASH +
-                         precedence.getReferenceCaseFile().getSystemId(),
+                         precedence.getReferenceCaseFile().getSystemIdAsString(),
                          REL_CASE_HANDLING_CASE_FILE));
         }
         */
@@ -74,7 +72,7 @@ public class PrecedenceHateoasHandler
             hateoasNoarkObject.addLink(precedence,
                 new Link(getOutgoingAddress() +
                          HREF_BASE_REGISTRY_ENTRY + SLASH +
-                         precedence.getReferenceRegistryEntry().getSystemId(),
+                         precedence.getReferenceRegistryEntry().getSystemIdAsString(),
                          REL_CASE_HANDLING_REGISTRY_ENTRY));
         }
         */
