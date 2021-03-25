@@ -167,8 +167,8 @@ public class Comment
         this.referenceRecord.add(record);
     }
 
-    public void removeDocumentDescription(Record record) {
-        this.referenceDocumentDescription.remove(record);
+    public void removeRecord(Record record) {
+        this.referenceRecord.remove(record);
         record.getReferenceComment().remove(this);
     }
 
