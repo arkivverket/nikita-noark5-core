@@ -9,6 +9,18 @@ import java.util.Collection;
 
 public class CustomUserDetails
         implements UserDetails {
+
+    private String username = "admin@example.com";
+    private String password = "password";
+
+    public CustomUserDetails() {
+    }
+
+    public CustomUserDetails(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Arrays.asList(new SimpleGrantedAuthority("RECORDS_MANAGER"));
@@ -16,12 +28,12 @@ public class CustomUserDetails
 
     @Override
     public String getPassword() {
-        return "password";
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return "admin@example.com";
+        return username;
     }
 
     @Override

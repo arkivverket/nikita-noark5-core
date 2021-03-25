@@ -1,19 +1,18 @@
 package nikita.webapp.spring;
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-
+/*
 @Configuration
 @EnableWebSecurity
+@EnableOAuth2Client
+@EnableResourceServer
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @Order(4)
-public class TestSecurityConfiguration
-        extends WebSecurityConfigurerAdapter {
+*/
 
+public class TestSecurityConfiguration {
+}
+//extends WebSecurityConfigurerAdapter {
+/*
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests().anyRequest().permitAll();
@@ -29,4 +28,6 @@ public class TestSecurityConfiguration
         auth.inMemoryAuthentication().withUser("admin@example.com").password(
                 "password").roles("USER");
     }
-}
+    */
+
+

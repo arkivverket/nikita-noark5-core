@@ -1,6 +1,7 @@
 package utils;
 
-public class TestConstants {
+public final class TestConstants {
+
     public static String NAME_TEST = "Frank Grimes";
     public static String CONTACT_NAME_TEST = "Hans Gruber";
     public static String D_NUMBER_TEST = "01018298765";
@@ -30,4 +31,20 @@ public class TestConstants {
     public static String BUSINESS_ADDRESS_LINE_3_TEST = "Prinsessegate 22";
     public static String BUSINESS_POSTAL_CODE_TEST = "7010";
     public static String BUSINESS_POSTAL_TOWN_TEST = "Trondheim";
+
+    // For BusinessSpecificMetatadata
+    public static String BSM_DATE_NAME = "ppt-v1:datohenvist";
+    public static String BSM_DATE_TIME_NAME = "ppt-v1:datotidvedtakferdig";
+    public static String BSM_STRING_NAME = "ppt-v1:skolekontakt";
+    public static String BSM_STRING_VALUE = "Harald Harfarge";
+    public static String BSM_URI_NAME = "ppt-v1:refSkole";
+    public static String BSM_URI_VALUE = "https://skole.eksempel.com";
+    public static String BSM_BOOLEAN_NAME = "ppt-v1:sakferdig";
+    public static Boolean BSM_BOOLEAN_VALUE = true;
+    public static String BSM_DOUBLE_NAME = "ppt-v1:snittKarakter";
+    public static Double BSM_DOUBLE_VALUE = 1.2;
+    public static String BSM_INTEGER_NAME = "ppt-v1:antallDagerVurdert";
+    public static Integer BSM_INTEGER_VALUE = 8;
+    public static String BSM_DATE_TIME_VALUE = "2020-07-01T23:25:06+02:00";
+    public static String BSM_DATE_VALUE = "2020-07-01+02:00";
 }
