@@ -101,6 +101,16 @@ public class CaseFileDeserializer
             objectNode.remove(CASE_LOANED_TO);
         }
 
+        caseFile.setReferenceCrossReference(
+                deserialiseCrossReferences(caseFile, objectNode, errors));
+        caseFile.setReferenceDisposal(
+                deserialiseDisposal(objectNode, errors));
+        caseFile.setReferenceScreening(
+                deserialiseScreening(objectNode, errors));
+        caseFile.setReferenceClassified(
+                deserialiseClassified(objectNode, errors));
+
+
         // Deserialize referenceSeries
         currentNode = objectNode.get(REFERENCE_SERIES);
         if (null != currentNode) {
