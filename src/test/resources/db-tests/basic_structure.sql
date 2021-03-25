@@ -36,8 +36,14 @@ insert into as_correspondence_part(system_id, correspondence_part_type_code,
                                    correspondence_part_type_code_name, f_pk_record_id)
 values ('7f000101-730c-1c94-8173-0c0ded71003c', 'EA', 'Avsender', 'dc600862-3298-4ec0-8541-3e51fb900054');
 
+insert into as_correspondence_part_person(system_id, name, social_security_number)
+values ('7f000101-730c-1c94-8173-0c0ded71003c', 'Hans Gruber II', '987654321369852');
+
 insert into as_part(system_id, part_role_code, part_role_code_name, title)
 values ('8131049d-dcac-43d8-bee4-656e72842da9', 'KLI', 'Klient', 'title');
+
+insert into as_part_person(system_id, name, social_security_number)
+values ('8131049d-dcac-43d8-bee4-656e72842da9', 'Hans Gruber', '1234567895655');
 
 insert into as_record_part(f_pk_record_id, f_pk_part_id)
 values ('dc600862-3298-4ec0-8541-3e51fb900054', '8131049d-dcac-43d8-bee4-656e72842da9');
