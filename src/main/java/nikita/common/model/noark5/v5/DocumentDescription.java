@@ -53,7 +53,8 @@ public class DocumentDescription
      * M??? - dokumenttype code (xs:string)
      */
     @NotNull
-    @Column(name = "document_type_code", nullable = false)
+    @Column(name = DOCUMENT_TYPE_CODE_ENG, nullable = false)
+    @JsonProperty(DOCUMENT_TYPE_CODE)
     @Audited
     private String documentTypeCode;
 
@@ -61,21 +62,25 @@ public class DocumentDescription
      * M083 - dokumenttype code name (xs:string)
      */
     @NotNull
-    @Column(name = "document_type_code_name", nullable = false)
+    @Column(name = DOCUMENT_TYPE_CODE_NAME_ENG, nullable = false)
+    @JsonProperty(DOCUMENT_TYPE_CODE_NAME)
     @Audited
     private String documentTypeCodeName;
 
     /**
      * M??? - dokumentstatus code (xs:string)
      */
-    @Column(name = "document_status_code")
+    @Column(name = DOCUMENT_STATUS_CODE_ENG)
+    @JsonProperty(DOCUMENT_STATUS_CODE)
     @Audited
     private String documentStatusCode;
 
     /**
      * M054 - dokumentstatus code name (xs:string)
      */
-    @Column(name = "document_status_code_name")
+    @Column(name = DOCUMENT_STATUS_CODE_NAME_ENG)
+    @JsonProperty(DOCUMENT_STATUS_CODE_NAME)
+
     @Audited
     private String documentStatusCodeName;
 
@@ -99,14 +104,16 @@ public class DocumentDescription
     /**
      * M??? - dokumentmedium code (xs:string)
      */
-    @Column(name = "document_medium_code")
+    @Column(name = DOCUMENT_MEDIUM_CODE_ENG)
+    @JsonProperty(DOCUMENT_MEDIUM_CODE)
     @Audited
     private String documentMediumCode;
 
     /**
      * M300 - dokumentmedium code name (xs:string)
      */
-    @Column(name = "document_medium_code_name")
+    @Column(name = DOCUMENT_MEDIUM_CODE_NAME_ENG)
+    @JsonProperty(DOCUMENT_MEDIUM_CODE_NAME)
     @Audited
     private String documentMediumCodeName;
 
@@ -114,7 +121,8 @@ public class DocumentDescription
      * M??? - tilknyttetRegistreringSom code (xs:string)
      */
     @NotNull
-    @Column(name = "associated_with_record_as_code", nullable = false)
+    @Column(name = ASSOCIATED_WITH_RECORD_AS_CODE_ENG, nullable = false)
+    @JsonProperty(ASSOCIATED_WITH_RECORD_AS_CODE)
     @Audited
     private String associatedWithRecordAsCode;
 
@@ -122,7 +130,8 @@ public class DocumentDescription
      * M217 - tilknyttetRegistreringSom code name (xs:string)
      */
     @NotNull
-    @Column(name = "associated_with_record_as_code_name", nullable = false)
+    @Column(name = ASSOCIATED_WITH_RECORD_AS_CODE_NAME_ENG, nullable = false)
+    @JsonProperty(ASSOCIATED_WITH_RECORD_AS_CODE_NAME)
     @Audited
     private String associatedWithRecordAsCodeName;
 

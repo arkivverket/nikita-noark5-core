@@ -42,6 +42,14 @@ public class InternalNameTranslator {
                         ADMINISTRATIVE_UNIT_FIELD_ENG,
                         ADMINISTRATIVE_UNIT_FIELD_ENG_OBJECT);
         addNorToEnglishNameMap
+                (ASSOCIATED_WITH_RECORD_AS_CODE,
+                        ASSOCIATED_WITH_RECORD_AS_CODE_ENG,
+                        ASSOCIATED_WITH_RECORD_AS_CODE_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (ASSOCIATED_WITH_RECORD_AS_CODE_NAME,
+                        ASSOCIATED_WITH_RECORD_AS_CODE_NAME_ENG,
+                        ASSOCIATED_WITH_RECORD_AS_CODE_NAME_ENG_OBJECT);
+        addNorToEnglishNameMap
                 (AUTHOR,
                         AUTHOR_ENG,
                         AUTHOR_ENG_OBJECT);
@@ -543,6 +551,14 @@ public class InternalNameTranslator {
                         DOCUMENT_FLOW_FLOW_TO_ENG,
                         DOCUMENT_FLOW_FLOW_TO_ENG_OBJECT);
         addNorToEnglishNameMap
+                (DOCUMENT_MEDIUM_CODE,
+                        DOCUMENT_MEDIUM_CODE_ENG,
+                        DOCUMENT_MEDIUM_CODE_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (DOCUMENT_MEDIUM_CODE_NAME,
+                        DOCUMENT_MEDIUM_CODE_NAME_ENG,
+                        DOCUMENT_MEDIUM_CODE_NAME_ENG_OBJECT);
+        addNorToEnglishNameMap
                 (DOCUMENT_OBJECT_CHECKSUM_ALGORITHM,
                         DOCUMENT_OBJECT_CHECKSUM_ALGORITHM_ENG,
                         DOCUMENT_OBJECT_CHECKSUM_ALGORITHM_ENG_OBJECT);
@@ -587,9 +603,25 @@ public class InternalNameTranslator {
                         DOCUMENT_STATUS_ENG,
                         DOCUMENT_STATUS_ENG_OBJECT);
         addNorToEnglishNameMap
+                (DOCUMENT_STATUS_CODE,
+                        DOCUMENT_STATUS_CODE_ENG,
+                        DOCUMENT_STATUS_CODE_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (DOCUMENT_STATUS_CODE_NAME,
+                        DOCUMENT_STATUS_CODE_NAME_ENG,
+                        DOCUMENT_STATUS_CODE_NAME_ENG_OBJECT);
+        addNorToEnglishNameMap
                 (DOCUMENT_TYPE,
                         DOCUMENT_TYPE_ENG,
                         DOCUMENT_TYPE_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (DOCUMENT_TYPE_CODE,
+                        DOCUMENT_TYPE_CODE_ENG,
+                        DOCUMENT_TYPE_CODE_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (DOCUMENT_TYPE_CODE_NAME,
+                        DOCUMENT_TYPE_CODE_NAME_ENG,
+                        DOCUMENT_TYPE_CODE_NAME_ENG_OBJECT);
         addNorToEnglishNameMap
                 (ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD,
                         ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD_ENG,

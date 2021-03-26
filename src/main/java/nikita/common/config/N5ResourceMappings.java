@@ -997,6 +997,50 @@ public final class N5ResourceMappings {
     public static final String COMMENT_TYPE_CODE_NAME_ENG_OBJECT =
             "commentTypeCodeName";
 
+    public static final String DOCUMENT_TYPE_CODE = "dokumenttypekode";
+    public static final String DOCUMENT_TYPE_CODE_ENG = "document_type_code";
+    public static final String DOCUMENT_TYPE_CODE_ENG_OBJECT = "documentTypeCode";
+
+    public static final String DOCUMENT_TYPE_CODE_NAME = "dokumenttypekodenavn";
+    public static final String DOCUMENT_TYPE_CODE_NAME_ENG =
+            "document_type_code_name";
+    public static final String DOCUMENT_TYPE_CODE_NAME_ENG_OBJECT =
+            "documentTypeCodeName";
+
+    public static final String DOCUMENT_STATUS_CODE = "dokumentstatuskode";
+    public static final String DOCUMENT_STATUS_CODE_ENG = "document_status_code";
+    public static final String DOCUMENT_STATUS_CODE_ENG_OBJECT = "documentStatusCode";
+
+    public static final String DOCUMENT_STATUS_CODE_NAME = "dokumentstatuskodenavn";
+    public static final String DOCUMENT_STATUS_CODE_NAME_ENG =
+            "document_status_code_name";
+    public static final String DOCUMENT_STATUS_CODE_NAME_ENG_OBJECT =
+            "documentStatusCodeName";
+
+    public static final String ASSOCIATED_WITH_RECORD_AS_CODE =
+            "tilknyttetregistreringsomkode";
+    public static final String ASSOCIATED_WITH_RECORD_AS_CODE_ENG =
+            "associated_with_record_as_code";
+    public static final String ASSOCIATED_WITH_RECORD_AS_CODE_ENG_OBJECT =
+            "associatedWithRecordAsCode";
+
+    public static final String ASSOCIATED_WITH_RECORD_AS_CODE_NAME =
+            "tilknyttetregistreringsomkodenavn";
+    public static final String ASSOCIATED_WITH_RECORD_AS_CODE_NAME_ENG =
+            "associated_with_record_as_code_name";
+    public static final String ASSOCIATED_WITH_RECORD_AS_CODE_NAME_ENG_OBJECT =
+            "associatedWithRecordAsCodeName";
+
+    public static final String DOCUMENT_MEDIUM_CODE = "dokumentmediumkode";
+    public static final String DOCUMENT_MEDIUM_CODE_ENG = "document_medium_code";
+    public static final String DOCUMENT_MEDIUM_CODE_ENG_OBJECT = "documentMediumCode";
+
+    public static final String DOCUMENT_MEDIUM_CODE_NAME = "dokumentmediumkodenavn";
+    public static final String DOCUMENT_MEDIUM_CODE_NAME_ENG =
+            "document_medium_code_name";
+    public static final String DOCUMENT_MEDIUM_CODE_NAME_ENG_OBJECT =
+            "documentMediumCodeName";
+
     public static final String REFERENCE_CLASSIFICATION_SYSTEM
             = "referenceClassificationSystem";
 
