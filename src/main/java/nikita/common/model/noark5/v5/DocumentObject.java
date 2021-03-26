@@ -22,6 +22,7 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -135,7 +136,8 @@ public class DocumentObject
     private List<Conversion> referenceConversion = new ArrayList<>();
 
     // Link to ElectronicSignature
-    @OneToOne(fetch = LAZY)
+    @OneToOne(mappedBy = REFERENCE_DOCUMENT_OBJECT_DB, fetch = LAZY,
+            cascade = ALL)
     private ElectronicSignature referenceElectronicSignature;
 
     public Integer getVersionNumber() {

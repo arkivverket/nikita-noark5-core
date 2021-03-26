@@ -29,8 +29,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static javax.persistence.CascadeType.MERGE;
-import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.*;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.*;
@@ -223,7 +222,8 @@ public class RegistryEntry
     private Set<Precedence> referencePrecedence = new HashSet<>();
 
     // Link to ElectronicSignature
-    @OneToOne(fetch = LAZY)
+    @OneToOne(mappedBy = REFERENCE_REGISTRY_ENTRY_DB, fetch = LAZY,
+            cascade = ALL)
     private ElectronicSignature referenceElectronicSignature;
 
     public Integer getRecordYear() {

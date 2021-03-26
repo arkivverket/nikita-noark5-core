@@ -1043,6 +1043,12 @@ public final class N5ResourceMappings {
 
     public static final String REFERENCE_CLASSIFICATION_SYSTEM_DB
             = "referenceClassificationSystem";
+    public static final String REFERENCE_DOCUMENT_OBJECT_DB
+            = "referenceDocumentObject";
+    public static final String REFERENCE_DOCUMENT_DESCRIPTION_DB
+            = "referenceDocumentDescription";
+    public static final String REFERENCE_REGISTRY_ENTRY_DB
+            = "referenceRegistryEntry";
 
     private N5ResourceMappings() {
         throw new AssertionError();

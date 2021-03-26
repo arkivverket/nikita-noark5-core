@@ -28,8 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static javax.persistence.CascadeType.MERGE;
-import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.*;
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -233,7 +232,8 @@ public class DocumentDescription
     private Screening referenceScreening;
 
     // Link to ElectronicSignature
-    @OneToOne(fetch = LAZY)
+    @OneToOne(mappedBy = REFERENCE_DOCUMENT_DESCRIPTION_DB, fetch = LAZY,
+            cascade = ALL)
     private ElectronicSignature referenceElectronicSignature;
 
     // Links to Part
