@@ -1,5 +1,7 @@
 package nikita.webapp.util.error;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.http.HttpStatus;
 
 public class ApiError {
@@ -51,59 +53,46 @@ public class ApiError {
         this.stackTrace = stackTrace;
     }
 
-    //
-
     @Override
-    public final int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((developerMessage == null) ? 0 : developerMessage.hashCode());
-        result = prime * result + ((message == null) ? 0 : message.hashCode());
-        result = prime * result + status;
-        return result;
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .appendSuper(super.hashCode())
+                .append(status)
+                .append(message)
+                .append(developerMessage)
+                .append(stackTrace)
+                .toHashCode();
     }
 
     @Override
-    public final boolean equals(final Object other) {
-        if (this == other)
+    public boolean equals(Object otherEntity) {
+        if (otherEntity == null) {
+            return false;
+        }
+        if (otherEntity == this) {
             return true;
-        if (!(other instanceof ApiError))
-            return false;
-        final ApiError apiError = (ApiError) other;
-        if (developerMessage == null) {
-            if (apiError.developerMessage != null) {
-                return false;
-            }
-        } else if (!developerMessage.equals(apiError.developerMessage)) {
+        }
+        if (otherEntity.getClass() != getClass()) {
             return false;
         }
-        if (message == null) {
-            if (apiError.message != null) {
-                return false;
-            }
-        } else if (!message.equals(apiError.message)) {
-            return false;
-        }
-        return status == apiError.status;
+        return new EqualsBuilder()
+                .appendSuper(super.equals(otherEntity))
+                .append(this.status, ((ApiError) otherEntity).status)
+                .append(this.message, ((ApiError) otherEntity).message)
+                .append(this.developerMessage,
+                        ((ApiError) otherEntity).developerMessage)
+                .append(this.stackTrace, ((ApiError) otherEntity).stackTrace)
+                .isEquals();
     }
 
     // ignore stackTrace here!
     @Override
     public final String toString() {
         final StringBuilder builder = new StringBuilder();
-        builder.append("ApiError [status=").append(status).append(", message=").append(message).append(", developerMessage=").append(developerMessage).append("]");
+        builder.append("ApiError [status=").append(status)
+                .append(", message=").append(message)
+                .append(", developerMessage=").append(developerMessage)
+                .append("]");
         return builder.toString();
-    }
-
-    /**
-     * @return The details as a JSON string
-     */
-    public final String toJSON() {
-        final StringBuilder json = new StringBuilder();
-        json.append("{  \"feil\": { \"kode\" : ").append(status)
-	    .append(", \"beskrivelse\" : ").append(message)
-	    .append(", \"developerMessage\" : ").append(developerMessage)
-	    .append("} }");
-        return json.toString();
     }
 }

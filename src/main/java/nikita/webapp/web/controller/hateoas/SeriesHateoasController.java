@@ -18,6 +18,7 @@ import nikita.webapp.hateoas.interfaces.IFileHateoasHandler;
 import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.*;
+import nikita.webapp.util.error.ApiError;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.springframework.context.ApplicationEventPublisher;
@@ -275,7 +276,7 @@ public class SeriesHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_RECORD,
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
-    public ResponseEntity<String> createRecordAssociatedWithSeries(
+    public ResponseEntity<ApiError> createRecordAssociatedWithSeries(
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of series to associate the record" +
                             " with",

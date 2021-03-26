@@ -30,6 +30,7 @@ import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IDocumentDescriptionService;
 import nikita.webapp.service.interfaces.IRecordService;
+import nikita.webapp.util.error.ApiError;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
@@ -300,7 +301,7 @@ public class RecordHateoasController
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
             NEW_REFERENCE_SERIES,
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
-    public ResponseEntity<String> addReferenceSeriesToRecord(
+    public ResponseEntity<ApiError> addReferenceSeriesToRecord(
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of Record to associate the " +
                             "secondary Series with",
@@ -1466,7 +1467,7 @@ public class RecordHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
             REFERENCE_SERIES)
-    public ResponseEntity<String> findSecondarySeriesAssociatedWithRecord(
+    public ResponseEntity<ApiError> findSecondarySeriesAssociatedWithRecord(
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the Record to retrieve " +
                             "secondary Class for",

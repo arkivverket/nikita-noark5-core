@@ -31,6 +31,7 @@ import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IFileService;
 import nikita.webapp.service.interfaces.IRecordService;
+import nikita.webapp.util.error.ApiError;
 import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.springframework.context.ApplicationEventPublisher;
@@ -160,7 +161,7 @@ public class FileHateoasController
             NEW_CROSS_REFERENCE,
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     @SuppressWarnings("unused")
-    public ResponseEntity<String> createCrossReferenceAssociatedWithFile(
+    public ResponseEntity<ApiError> createCrossReferenceAssociatedWithFile(
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of file to associate the Record " +
                             "with",
@@ -313,7 +314,7 @@ public class FileHateoasController
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CLASS,
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     @SuppressWarnings("unused")
-    public ResponseEntity<String> addClassToFile(
+    public ResponseEntity<ApiError> addClassToFile(
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of File to associate the Class " +
                             "with",
@@ -363,7 +364,7 @@ public class FileHateoasController
             NEW_REFERENCE_SERIES,
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     @SuppressWarnings("unused")
-    public ResponseEntity<String> addReferenceSeriesToFile(
+    public ResponseEntity<ApiError> addReferenceSeriesToFile(
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of File to associate the " +
                             "secondary Series with",
@@ -416,7 +417,7 @@ public class FileHateoasController
             NEW_SECONDARY_CLASSIFICATION,
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     @SuppressWarnings("unused")
-    public ResponseEntity<String> addReferenceToSecondaryClassToFile(
+    public ResponseEntity<ApiError> addReferenceToSecondaryClassToFile(
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of File to associate the " +
                             "secondary Class with",
@@ -872,7 +873,7 @@ public class FileHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
 
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + CROSS_REFERENCE)
-    public ResponseEntity<String> findAllCrossReferenceAssociatedWithFile(
+    public ResponseEntity<ApiError> findAllCrossReferenceAssociatedWithFile(
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the File to retrieve " +
                             "CrossReferences for",
@@ -902,7 +903,7 @@ public class FileHateoasController
 
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
             SECONDARY_CLASSIFICATION)
-    public ResponseEntity<String> findSecondaryClassAssociatedWithFile(
+    public ResponseEntity<ApiError> findSecondaryClassAssociatedWithFile(
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the File to retrieve secondary" +
                             " Class for",
@@ -932,7 +933,7 @@ public class FileHateoasController
 
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
             REFERENCE_SERIES)
-    public ResponseEntity<String> findSecondarySeriesAssociatedWithFile(
+    public ResponseEntity<ApiError> findSecondarySeriesAssociatedWithFile(
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the File to retrieve secondary" +
                             " Class for",
@@ -1314,7 +1315,7 @@ public class FileHateoasController
 
     @PutMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + FILE_END,
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
-    public ResponseEntity<String> finaliseFile(
+    public ResponseEntity<ApiError> finaliseFile(
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of file to update",
                     required = true)
@@ -1357,7 +1358,7 @@ public class FileHateoasController
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
             FILE_EXPAND_TO_CASE_FILE,
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
-    public ResponseEntity<String> expandFileToCaseFile(
+    public ResponseEntity<ApiError> expandFileToCaseFile(
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of file to expand",
                     required = true)
@@ -1872,7 +1873,7 @@ public class FileHateoasController
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
             FILE_EXPAND_TO_MEETING_FILE,
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
-    public ResponseEntity<String> expandFileToMeetingFile(
+    public ResponseEntity<ApiError> expandFileToMeetingFile(
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of file to expand",
                     required = true)
