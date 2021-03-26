@@ -82,6 +82,7 @@ public class ElectronicSignature
 
     // Link to DocumentDescription
     @OneToOne(fetch = LAZY)
+    @MapsId
     @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID)
     private DocumentDescription referenceDocumentDescription;
 
