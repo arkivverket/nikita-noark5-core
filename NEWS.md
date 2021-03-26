@@ -3,7 +3,7 @@ Major changes in Nikita Noark 5 Core releases
 
 These are the highlevel changes.  For details, see the git history.
 
-Release 0.6 2020-XX-XX (commit X)
+Release 0.6 2021-XX-XX (commit X)
 ----------------------
  * Changed internal URLs, replaced "hateoas-api" with "api".
  * Implemented storing of Precedence.
