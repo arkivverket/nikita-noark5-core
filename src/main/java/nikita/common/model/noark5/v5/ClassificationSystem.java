@@ -19,7 +19,7 @@ import java.util.Set;
 import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_CLASSIFICATION_SYSTEM;
 import static nikita.common.config.Constants.TABLE_CLASSIFICATION_SYSTEM;
 import static nikita.common.config.N5ResourceMappings.CLASSIFICATION_SYSTEM;
-import static nikita.common.config.N5ResourceMappings.REFERENCE_CLASSIFICATION_SYSTEM;
+import static nikita.common.config.N5ResourceMappings.REFERENCE_CLASSIFICATION_SYSTEM_DB;
 
 @Entity
 @Table(name = TABLE_CLASSIFICATION_SYSTEM)
@@ -47,7 +47,7 @@ public class ClassificationSystem
     private String classificationTypeCodeName;
 
     // Links to Series
-    @ManyToMany(mappedBy = REFERENCE_CLASSIFICATION_SYSTEM)
+    @ManyToMany(mappedBy = REFERENCE_CLASSIFICATION_SYSTEM_DB)
     private final Set<Series> referenceSeries = new HashSet<>();
 
     // Links to child Classes

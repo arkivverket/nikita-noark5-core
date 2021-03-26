@@ -1041,7 +1041,7 @@ public final class N5ResourceMappings {
     public static final String DOCUMENT_MEDIUM_CODE_NAME_ENG_OBJECT =
             "documentMediumCodeName";
 
-    public static final String REFERENCE_CLASSIFICATION_SYSTEM
+    public static final String REFERENCE_CLASSIFICATION_SYSTEM_DB
             = "referenceClassificationSystem";
 
     private N5ResourceMappings() {
