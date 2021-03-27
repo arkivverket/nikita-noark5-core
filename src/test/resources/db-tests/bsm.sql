@@ -11,6 +11,9 @@ delete
 from as_record_part
 where 1;
 delete
+from as_document_description
+where 1;
+delete
 from as_part_person
 where 1;
 delete
@@ -44,6 +47,18 @@ values ('anonymousUser', '43d305de-b3c8-4922-86fd-45bd26f3bf01', 'test title cha
 insert into as_record (owned_by, system_id, title, description, created_date, created_by, record_file_id, version)
 values ('anonymousUser', 'dc600862-3298-4ec0-8541-3e51fb900054', 'test title record', 'test description record',
         '2019-04-08 00:00:00', 'admin', 'f1677c47-99e1-42a7-bda2-b0bbc64841b7', 0);
+
+insert into as_document_description (owned_by, system_id, title,
+                                     description, document_type_code,
+                                     created_date, created_by, document_type_code_name,
+                                     associated_with_record_as_code, associated_with_record_as_code_name,
+                                     document_number, association_date)
+values ('anonymousUser', '66b92e78-b75d-4b0f-9558-4204ab31c2d1', 'test title bravo',
+        'test description bravo', 'B',
+        '2019-04-08 00:00:00', 'admin@example.com', 'Brev',
+        'H', 'Hoveddokument', 1, '2020-04-08');
+
+
 insert into as_correspondence_part_person(system_id, created_by, created_date, last_modified_by, last_modified_date,
                                           owned_by, version, correspondence_part_type_code,
                                           correspondence_part_type_code_name, f_pk_record_id)

@@ -16,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.context.ActiveProfiles;
@@ -260,6 +261,56 @@ public class GeneralTest {
                 .andExpect(jsonPath(
                         "$._links.['" + expectedRel +
                                 "'].['" + HREF + "']").value(expectedUrl));
+        resultActions.andDo(document("home",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint())));
+    }
+
+
+    /**
+     * We are seeing a problem with an OData search for opprettetAv (createdBy)
+     * that is throwing an exception. This test is to see if we can reproduce
+     * the issue.
+     * <p>
+     *
+     * @throws Exception Serialising or validation exception
+     */
+    @Test
+    @Sql("/db-tests/bsm.sql")
+    public void checkODataSearchForCreatedBy() throws Exception {
+        String url = "/noark5v5/api/arkivstruktur/dokumentbeskrivelse";
+
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON)
+                .with(user(nikitaUserDetailsService
+                        .loadUserByUsername("admin@example.com"))));
+
+        MockHttpServletResponse response =
+                resultActions.andReturn().getResponse();
+        System.out.println(response.getContentAsString());
+
+        url = "/noark5v5/odata/api/arkivstruktur/dokumentbeskrivelse" +
+                "?$filter=" + CREATED_BY + " eq 'admin@example.com'";
+
+        resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON)
+                .with(user(nikitaUserDetailsService
+                        .loadUserByUsername("admin@example.com"))));
+
+        response =
+                resultActions.andReturn().getResponse();
+        System.out.println(response.getContentAsString());
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.results[0]." + SYSTEM_ID)
+                        .value("66b92e78-b75d-4b0f-9558-4204ab31c2d1"))
+                .andExpect(jsonPath("$.results[0]." + TITLE)
+                        .value("test title bravo"));
         resultActions.andDo(document("home",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint())));
