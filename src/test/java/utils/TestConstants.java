@@ -47,4 +47,12 @@ public final class TestConstants {
     public static Integer BSM_INTEGER_VALUE = 8;
     public static String BSM_DATE_TIME_VALUE = "2020-07-01T23:25:06+02:00";
     public static String BSM_DATE_VALUE = "2020-07-01+02:00";
+
+    // For ElectronicSignature
+    public static String VERIFIED_BY_VALUE = "Hans Gruber";
+    public static String VERIFIED_DATE_VALUE = "2020-07-01+02:00";
+    public static String VERIFIED_CODE_VALUE = "V";
+    public static String VERIFIED_CODE_NAME_VALUE = "Signatur påført og verifisert";
+    public static String VERIFIED_LEVEL_CODE_VALUE = "SK";
+    public static String VERIFIED_LEVEL_CODE_NAME_VALUE = "Symmetrisk kryptert";
 }
