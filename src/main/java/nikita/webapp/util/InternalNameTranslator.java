@@ -623,21 +623,29 @@ public class InternalNameTranslator {
                         DOCUMENT_TYPE_CODE_NAME_ENG,
                         DOCUMENT_TYPE_CODE_NAME_ENG_OBJECT);
         addNorToEnglishNameMap
-                (ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD,
-                        ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD_ENG,
-                        ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD_ENG_OBJECT);
+                (ELECTRONIC_SIGNATURE_SECURITY_LEVEL_CODE_NAME,
+                        ELECTRONIC_SIGNATURE_SECURITY_LEVEL_CODE_NAME_ENG,
+                        ELECTRONIC_SIGNATURE_SECURITY_LEVEL_CODE_NAME_OBJECT);
+        addNorToEnglishNameMap
+                (ELECTRONIC_SIGNATURE_SECURITY_LEVEL_CODE,
+                        ELECTRONIC_SIGNATURE_SECURITY_LEVEL_CODE_ENG,
+                        ELECTRONIC_SIGNATURE_SECURITY_LEVEL_CODE_OBJECT);
         addNorToEnglishNameMap
                 (ELECTRONIC_SIGNATURE_VERIFIED_BY,
                         ELECTRONIC_SIGNATURE_VERIFIED_BY_ENG,
-                        ELECTRONIC_SIGNATURE_VERIFIED_BY_ENG_OBJECT);
+                        ELECTRONIC_SIGNATURE_VERIFIED_BY_OBJECT);
         addNorToEnglishNameMap
                 (ELECTRONIC_SIGNATURE_VERIFIED_DATE,
                         ELECTRONIC_SIGNATURE_VERIFIED_DATE_ENG,
-                        ELECTRONIC_SIGNATURE_VERIFIED_DATE_ENG_OBJECT);
+                        ELECTRONIC_SIGNATURE_VERIFIED_DATE_OBJECT);
         addNorToEnglishNameMap
-                (ELECTRONIC_SIGNATURE_VERIFIED_FIELD,
-                        ELECTRONIC_SIGNATURE_VERIFIED_FIELD_ENG,
-                        ELECTRONIC_SIGNATURE_VERIFIED_FIELD_ENG_OBJECT);
+                (ELECTRONIC_SIGNATURE_VERIFIED_CODE_NAME,
+                        ELECTRONIC_SIGNATURE_VERIFIED_CODE_NAME_ENG,
+                        ELECTRONIC_SIGNATURE_VERIFIED_CODE_NAME_OBJECT);
+        addNorToEnglishNameMap
+                (ELECTRONIC_SIGNATURE_VERIFIED_CODE,
+                        ELECTRONIC_SIGNATURE_VERIFIED_CODE_ENG,
+                        ELECTRONIC_SIGNATURE_VERIFIED_CODE_OBJECT);
         addNorToEnglishNameMap
                 (EMAIL_ADDRESS,
                         EMAIL_ADDRESS_ENG,

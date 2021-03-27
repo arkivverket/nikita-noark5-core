@@ -1639,7 +1639,7 @@ public final class CommonUtils {
                 ElectronicSignatureSecurityLevel essLevel =
                         (ElectronicSignatureSecurityLevel)
                                 deserialiseMetadataValue(objectNode,
-                                        ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD,
+                                        ELECTRONIC_SIGNATURE_SECURITY_LEVEL,
                                         new ElectronicSignatureSecurityLevel(),
                                         errors, true);
                 electronicSignature
@@ -1649,7 +1649,7 @@ public final class CommonUtils {
                 ElectronicSignatureVerified esVerified =
                         (ElectronicSignatureVerified)
                                 deserialiseMetadataValue(objectNode,
-                                        ELECTRONIC_SIGNATURE_VERIFIED_FIELD,
+                                        ELECTRONIC_SIGNATURE_VERIFIED_CODE_NAME,
                                         new ElectronicSignatureVerified(),
                                         errors, true);
                 electronicSignature.setElectronicSignatureVerified(esVerified);
@@ -2286,16 +2286,18 @@ public final class CommonUtils {
                         esEntity.getReferenceElectronicSignature();
                 if (es != null) {
                     jgen.writeObjectFieldStart(ELECTRONIC_SIGNATURE);
+                    printNullable(jgen, ELECTRONIC_SIGNATURE_VERIFIED_BY,
+                            es.getVerifiedBy());
+                    printNullableDate(jgen, ELECTRONIC_SIGNATURE_VERIFIED_DATE,
+                            es.getVerifiedDate());
                     printNullableMetadata
-                            (jgen, ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD,
+                            (jgen, ELECTRONIC_SIGNATURE_SECURITY_LEVEL,
                                     es.getElectronicSignatureSecurityLevel());
                     printNullableMetadata
-                            (jgen, ELECTRONIC_SIGNATURE_VERIFIED_FIELD,
+                            (jgen, ELECTRONIC_SIGNATURE_VERIFIED_CODE_NAME,
                                     es.getElectronicSignatureVerified());
                     printNullableDate(jgen, ELECTRONIC_SIGNATURE_VERIFIED_DATE,
                             es.getVerifiedDate());
-                    printNullable(jgen, ELECTRONIC_SIGNATURE_VERIFIED_BY,
-                            es.getVerifiedBy());
                     jgen.writeEndObject();
                 }
             }

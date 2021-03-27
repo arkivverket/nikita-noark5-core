@@ -317,8 +317,15 @@ public final class N5ResourceMappings {
     public static final String ELECTRONIC_SIGNATURE = "elektroniskSignatur";
     public static final String ELECTRONIC_SIGNATURE_SECURITY_LEVEL = "elektronisksignatursikkerhetsnivaa";
     public static final String ELECTRONIC_SIGNATURE_VERIFIED = "elektronisksignaturverifisert";
-    public static final String ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD = "elektroniskSignaturSikkerhetsnivaa";
-    public static final String ELECTRONIC_SIGNATURE_VERIFIED_FIELD = "elektroniskSignaturVerifisert";
+    public static final String ELECTRONIC_SIGNATURE_SECURITY_LEVEL_CODE =
+            "elektronisksignatursikkerhetsnivaakode";
+    public static final String ELECTRONIC_SIGNATURE_SECURITY_LEVEL_CODE_NAME =
+            "elektronisksignatursikkerhetsnivaakodenavn";
+    public static final String ELECTRONIC_SIGNATURE_VERIFIED_CODE =
+            "elektronisksignaturverifisertkode";
+    public static final String ELECTRONIC_SIGNATURE_VERIFIED_CODE_NAME =
+            "elektronisksignaturverifisertkodenavn";
+
     public static final String ELECTRONIC_SIGNATURE_VERIFIED_DATE = "verifisertDato";
     public static final String ELECTRONIC_SIGNATURE_VERIFIED_BY = "verifisertAv";
 
@@ -599,10 +606,17 @@ public final class N5ResourceMappings {
     public static final String DOCUMENT_STATUS_ENG = "document_status";
     public static final String DOCUMENT_TYPE_ENG = "dokumenttype";
     public static final String ELECTRONIC_SIGNATURE_ENG = "elektronisksignatur";
-    public static final String ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD_ENG = "electronic_signature_security_level_name";
+
+    public static final String ELECTRONIC_SIGNATURE_SECURITY_LEVEL_CODE_ENG
+            = "electronic_signature_security_level_code_";
+    public static final String ELECTRONIC_SIGNATURE_SECURITY_LEVEL_CODE_NAME_ENG
+            = "electronic_signature_security_level_code_name";
     public static final String ELECTRONIC_SIGNATURE_VERIFIED_BY_ENG = "verified_by";
     public static final String ELECTRONIC_SIGNATURE_VERIFIED_DATE_ENG = "verified_date";
-    public static final String ELECTRONIC_SIGNATURE_VERIFIED_FIELD_ENG = "electronic_signature_verified_name";
+    public static final String ELECTRONIC_SIGNATURE_VERIFIED_CODE_ENG =
+            "electronic_signature_verified_code";
+    public static final String ELECTRONIC_SIGNATURE_VERIFIED_CODE_NAME_ENG =
+            "electronic_signature_verified_code_name";
     public static final String EMAIL_ADDRESS_ENG = "email_address";
     public static final String EVENT_DATE_ENG = "event_date";
     public static final String EVENT_TYPE_ENG = "event_type";
@@ -869,11 +883,21 @@ public final class N5ResourceMappings {
     public static final String DOCUMENT_TYPE_ENG_OBJECT = "DocumentType";
     public static final String ELECTRONIC_SIGNATURE_ENG_OBJECT =
             "ElectronicSignature";
-    public static final String ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD_ENG_OBJECT
-            = "ElectronicSignatureSecurityLevelName";
-    public static final String ELECTRONIC_SIGNATURE_VERIFIED_BY_ENG_OBJECT = "verifiedBy";
-    public static final String ELECTRONIC_SIGNATURE_VERIFIED_DATE_ENG_OBJECT = "verifiedDate";
-    public static final String ELECTRONIC_SIGNATURE_VERIFIED_FIELD_ENG_OBJECT = "electronicSignatureVerifiedName";
+    public static final String
+            ELECTRONIC_SIGNATURE_SECURITY_LEVEL_CODE_OBJECT
+            = "ElectronicSignatureSecurityLevelCode";
+    public static final String
+            ELECTRONIC_SIGNATURE_SECURITY_LEVEL_CODE_NAME_OBJECT
+            = "ElectronicSignatureSecurityLevelCodeName";
+    public static final String ELECTRONIC_SIGNATURE_VERIFIED_BY_OBJECT =
+            "verifiedBy";
+    public static final String ELECTRONIC_SIGNATURE_VERIFIED_DATE_OBJECT =
+            "verifiedDate";
+    public static final String ELECTRONIC_SIGNATURE_VERIFIED_CODE_OBJECT =
+            "electronicSignatureVerifiedName";
+    public static final String
+            ELECTRONIC_SIGNATURE_VERIFIED_CODE_NAME_OBJECT =
+            "electronicSignatureVerifiedCodeName";
     public static final String EMAIL_ADDRESS_ENG_OBJECT = "emailAddress";
     public static final String EVENT_DATE_ENG_OBJECT = "eventDate";
     public static final String EVENT_TYPE_ENG_OBJECT = "EventType";
