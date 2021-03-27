@@ -798,7 +798,7 @@ public class TestOData {
      */
     @Test
     @Transactional
-    public void shouldReturnValidHQLMetadataCodeDocumentStatusCodeName() {
+    public void shouldReturnValidHQLEQQueryCreatedBy() {
 	String user = "admin@example.com";
         String odata = "dokumentbeskrivelse?$filter=" +
                 CREATED_BY + " eq '" + user + "'";
