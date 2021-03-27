@@ -1,6 +1,8 @@
 package nikita.webapp.util.error;
 
 import nikita.common.util.exceptions.NikitaETAGMalformedHeaderException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,6 +15,8 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @ControllerAdvice
 class GlobalETAGExceptionHandler {
+    private final Logger logger =
+            LoggerFactory.getLogger(GlobalETAGExceptionHandler.class);
 
     /**
      * The point of this class is to capture exceptions that occur outside a
@@ -31,6 +35,7 @@ class GlobalETAGExceptionHandler {
                 ex.getClass().getSimpleName() : ex.getMessage();
         final String devMessage = getRootCauseMessage(ex);
         final String devStackTrace = ex.toString();
+        logger.error(message);
         ApiError apiError = new ApiError(
                 BAD_REQUEST, message.replace("\"", "\\\""),
                 devMessage.replace("\"", "\\\""),
