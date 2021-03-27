@@ -1,5 +1,6 @@
 package nikita.webapp.structure;
 
+import static nikita.common.config.N5ResourceMappings.*;
 import nikita.webapp.service.impl.odata.ODataService;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -777,6 +778,37 @@ public class TestOData {
         Assertions.assertEquals(query.getQueryString(), hql);
         Assertions.assertEquals(query.getParameterValue("parameter_0"),
                 "Dokumentet er under redigering");
+    }
+
+    /**
+     * Check that it is possible to query for opprettetAv.
+     * Entity: dokumentbeskrivelse (opprettetAv)
+     * <p>
+     * ODATA Input:
+     * dokumentbeskrivelse?$filter=opprettetAv eq 'admin@example.com'
+     * <p>
+     * Expected HQL:
+     * SELECT documentdescription_1 FROM DocumentDescription AS documentdescription_1
+     * WHERE
+     * documentdescription_1.created_by = :parameter_0
+     * <p>
+     * Additionally.
+     * The parameter_0 parameter value should be:
+     * admin@example.com
+     */
+    @Test
+    @Transactional
+    public void shouldReturnValidHQLMetadataCodeDocumentStatusCodeName() {
+	String user = "admin@example.com";
+        String odata = "dokumentbeskrivelse?$filter=" +
+                CREATED_BY + " eq '" + user + "'";
+        Query query = oDataService.convertODataToHQL(odata, "");
+        String hql = "SELECT documentdescription_1 FROM DocumentDescription" +
+                " AS documentdescription_1" +
+                " WHERE" +
+                " documentdescription_1." + CREATED_BY_ENG + " = :parameter_0";
+        Assertions.assertEquals(query.getQueryString(), hql);
+        Assertions.assertEquals(query.getParameterValue("parameter_0"), user);
     }
 
     /**
