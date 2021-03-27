@@ -803,10 +803,11 @@ public class TestOData {
         String odata = "dokumentbeskrivelse?$filter=" +
                 CREATED_BY + " eq '" + user + "'";
         Query query = oDataService.convertODataToHQL(odata, "");
-        String hql = "SELECT documentdescription_1 FROM DocumentDescription" +
+        String hql = "SELECT documentdescription_1 FROM " +
+                DOCUMENT_DESCRIPTION_ENG_OBJECT +
                 " AS documentdescription_1" +
                 " WHERE" +
-                " documentdescription_1." + CREATED_BY_ENG + " = :parameter_0";
+                " documentdescription_1." + CREATED_BY_ENG_OBJECT + " = :parameter_0";
         Assertions.assertEquals(query.getQueryString(), hql);
         Assertions.assertEquals(query.getParameterValue("parameter_0"), user);
     }
