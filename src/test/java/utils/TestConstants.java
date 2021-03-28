@@ -46,7 +46,9 @@ public final class TestConstants {
     public static String BSM_INTEGER_NAME = "ppt-v1:antallDagerVurdert";
     public static Integer BSM_INTEGER_VALUE = 8;
     public static String BSM_DATE_TIME_VALUE = "2020-07-01T23:25:06+02:00";
+    public static String BSM_DATE_TIME_VALUE_Z = "2020-07-01T21:25:06Z";
     public static String BSM_DATE_VALUE = "2020-07-01+02:00";
+    public static String BSM_DATE_VALUE_Z = "2020-06-30Z";
 
     // For ElectronicSignature
     public static String VERIFIED_BY_VALUE = "Hans Gruber";

@@ -40,6 +40,8 @@ import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserializeDate;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserializeDateTime;
 import static nikita.common.util.CommonUtils.Hateoas.Serialize.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.core.AnyOf.anyOf;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
@@ -1045,7 +1047,9 @@ public class BSMTest {
                 .andExpect(jsonPath("$.results[0]." + BSM_DEF)
                         .exists())
                 .andExpect(jsonPath("$.results[0]." + BSM_DEF +
-                        "." + BSM_DATE_NAME).value(BSM_DATE_VALUE));
+                                "." + BSM_DATE_NAME,
+                        anyOf(is(BSM_DATE_VALUE),
+                                is(BSM_DATE_VALUE_Z))));
     }
 
     /**
@@ -1075,8 +1079,9 @@ public class BSMTest {
                 .andExpect(jsonPath("$.results[0]." + BSM_DEF)
                         .exists())
                 .andExpect(jsonPath("$.results[0]." + BSM_DEF +
-                        "." + BSM_DATE_TIME_NAME)
-                        .value(BSM_DATE_TIME_VALUE));
+                                "." + BSM_DATE_TIME_NAME,
+                        anyOf(is(BSM_DATE_TIME_VALUE),
+                                is(BSM_DATE_TIME_VALUE_Z))));
     }
 
     private void validatePartPerson(ResultActions resultActions)
