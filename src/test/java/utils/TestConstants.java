@@ -57,4 +57,27 @@ public final class TestConstants {
     public static String VERIFIED_CODE_NAME_VALUE = "Signatur påført og verifisert";
     public static String VERIFIED_LEVEL_CODE_VALUE = "SK";
     public static String VERIFIED_LEVEL_CODE_NAME_VALUE = "Symmetrisk kryptert";
+
+    // National Identifiers
+    public static Integer BUILDING_NUMBER_VALUE = 99;
+    public static Integer BUILDING_CHANGE_NUMBER_VALUE = 898;
+    public static String PLAN_IDENTIFICATION_VALUE =
+            "plan identification value";
+    public static String PLAN_COUNTY_NUMBER_VALUE = "11";
+    public static String PLAN_MUNICIPALITY_NUMBER_VALUE = "53";
+    public static String PLAN_COUNTRY_CODE_VALUE = "NO";
+    public static String PLAN_COUNTRY_CODE_NAME_VALUE = "Norge";
+    public static String POSITION_CODE_VALUE = "EPSG:4326";
+    public static String POSITION_CODE_NAME_VALUE = "WGS84";
+    public static Double POSITION_X_VALUE = 1.01;
+    public static Double POSITION_Y_VALUE = 2.02;
+    public static Double POSITION_Z_VALUE = 3.03;
+    public static String ORGANISATION_NUMBER_VALUE = "02020202022";
+    public static String D_NUMBER_VALUE = "01010101011";
+    public static String SS_NUMBER_VALUE = "02020202021";
+    public static String MUNICIPALITY_NUMBER_VALUE = "0101";
+    public static Integer HOLDING_NUMBER_VALUE = 1;
+    public static Integer SUB_HOLDING_NUMBER_VALUE = 2;
+    public static Integer LEASE_NUMBER_VALUE = 3;
+    public static Integer SECTION_NUMBER_VALUE = 4;
 }
