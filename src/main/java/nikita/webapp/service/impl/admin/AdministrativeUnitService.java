@@ -26,7 +26,6 @@ import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
  * SequenceNumberGeneratorService
  */
 @Service
-@Transactional
 public class AdministrativeUnitService
         extends NoarkService
         implements IAdministrativeUnitService {
@@ -59,6 +58,7 @@ public class AdministrativeUnitService
      * @return the newly persisted administrativeUnit object
      */
     @Override
+    @Transactional
     public AdministrativeUnit
     createNewAdministrativeUnitBySystem(AdministrativeUnit administrativeUnit) {
         createSequenceNumberGenerator(administrativeUnit);
@@ -79,6 +79,7 @@ public class AdministrativeUnitService
      * @return the newly persisted administrativeUnit object
      */
     @Override
+    @Transactional
     public AdministrativeUnit
     createNewAdministrativeUnitBySystemNoDuplicate(
             AdministrativeUnit administrativeUnit) {
@@ -105,6 +106,7 @@ public class AdministrativeUnitService
      */
 
     @Override
+    @Transactional
     public AdministrativeUnit
     createNewAdministrativeUnitByUser(
             AdministrativeUnit administrativeUnit,
@@ -123,6 +125,7 @@ public class AdministrativeUnitService
      * @return list of all administrativeUnit
      */
     @Override
+    @Transactional(readOnly = true)
     public List<AdministrativeUnit> findAll() {
         return administrativeUnitRepository.findAll();
     }
@@ -136,6 +139,7 @@ public class AdministrativeUnitService
      * @return the administrativeUnit
      */
     @Override
+    @Transactional(readOnly = true)
     public AdministrativeUnit findBySystemId(UUID systemId) {
         return administrativeUnitRepository.findBySystemId(systemId);
     }
@@ -147,6 +151,7 @@ public class AdministrativeUnitService
      * @return the updated administrativeUnit
      */
     @Override
+    @Transactional
     public AdministrativeUnit update(
             String systemId, Long version,
             AdministrativeUnit incomingAdministrativeUnit) {
@@ -173,6 +178,7 @@ public class AdministrativeUnitService
      * @param systemId systemId of the administrativeUnit to delete
      */
     @Override
+    @Transactional
     public void deleteEntity(@NotNull String systemId) {
         deleteEntity(getAdministrativeUnitOrThrow(systemId));
     }
@@ -183,11 +189,13 @@ public class AdministrativeUnitService
      * @return the number of objects deleted
      */
     @Override
+    @Transactional
     public long deleteAllByOwnedBy() {
         return administrativeUnitRepository.deleteByOwnedBy(getUser());
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<AdministrativeUnit> findFirst() {
         return administrativeUnitRepository.findFirstByOrderByCreatedDateAsc();
     }
@@ -201,8 +209,8 @@ public class AdministrativeUnitService
      *             administrativeUnit
      * @return the administrativeUnit
      */
+    @Transactional(readOnly = true)
     public AdministrativeUnit getAdministrativeUnitOrThrow(User user) {
-
         Set<User> users = new HashSet<>();
         users.add(user);
         Optional<AdministrativeUnit> administrativeUnit =

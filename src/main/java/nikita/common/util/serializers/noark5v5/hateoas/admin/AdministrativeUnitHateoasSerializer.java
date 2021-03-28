@@ -38,7 +38,7 @@ public class AdministrativeUnitHateoasSerializer extends HateoasSerializer imple
                       administrativeUnit.getAdministrativeUnitStatus());
         if (administrativeUnit.getParentAdministrativeUnit() != null) {
             jgen.writeStringField(ADMINISTRATIVE_UNIT_PARENT_REFERENCE,
-                    administrativeUnit.getParentAdministrativeUnit().getSystemId());
+                    administrativeUnit.getParentAdministrativeUnit().getSystemIdAsString());
         }
         printHateoasLinks(jgen, administrativeUnitHateoas
                           .getLinks(administrativeUnit));

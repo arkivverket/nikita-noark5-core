@@ -1,30 +1,31 @@
 package nikita.common.model.noark5.v5.casehandling.secondary;
 
-import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.SystemIdEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.ISimpleAddress;
 import nikita.common.model.noark5.v5.secondary.PartUnit;
 
-import javax.persistence.*;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
+import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.TABLE_BUSINESS_ADDRESS;
 
-/**
- * Created by tsodring on 5/14/17.
- */
 @Entity
 @Table(name = TABLE_BUSINESS_ADDRESS)
 public class BusinessAddress
         extends SystemIdEntity
-        implements ISimpleAddress {
+        implements ISystemId, ISimpleAddress {
 
     @Embedded
     private SimpleAddress simpleAddress;
 
-    @OneToOne
-    private CorrespondencePartUnit correspondencePartUnit;
+    @OneToOne(fetch = LAZY)
+    private CorrespondencePartUnit referenceCorrespondencePartUnit;
 
-    @OneToOne
+    @OneToOne(fetch = LAZY)
     private PartUnit partUnit;
 
     public SimpleAddress getSimpleAddress() {
@@ -35,13 +36,13 @@ public class BusinessAddress
         this.simpleAddress = simpleAddress;
     }
 
-    public CorrespondencePartUnit getCorrespondencePartUnit() {
-        return correspondencePartUnit;
+    public CorrespondencePartUnit getReferenceCorrespondencePartUnit() {
+        return referenceCorrespondencePartUnit;
     }
 
-    public void setCorrespondencePartUnit(CorrespondencePartUnit
-                                                  correspondencePartUnit) {
-        this.correspondencePartUnit = correspondencePartUnit;
+    public void setReferenceCorrespondencePartUnit(
+            CorrespondencePartUnit referenceCorrespondencePartUnit) {
+        this.referenceCorrespondencePartUnit = referenceCorrespondencePartUnit;
     }
 
     public PartUnit getPartUnit() {
@@ -51,20 +52,4 @@ public class BusinessAddress
     public void setPartUnit(PartUnit partUnit) {
         this.partUnit = partUnit;
     }
-
-    @Override
-    public String toString() {
-        return super.toString();
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        return super.equals(other);
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
-
 }

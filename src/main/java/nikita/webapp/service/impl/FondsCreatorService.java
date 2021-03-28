@@ -3,7 +3,6 @@ package nikita.webapp.service.impl;
 import nikita.common.model.noark5.v5.Fonds;
 import nikita.common.model.noark5.v5.FondsCreator;
 import nikita.common.model.noark5.v5.hateoas.FondsHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.FondsStatus;
 import nikita.common.repository.n5v5.IFondsCreatorRepository;
 import nikita.common.repository.n5v5.IFondsRepository;
@@ -26,7 +25,8 @@ import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.DatabaseConstants.DELETE_FROM_FONDS_CREATOR_FONDS;
-import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.config.N5ResourceMappings.FONDS_STATUS;
+import static nikita.common.config.N5ResourceMappings.FONDS_STATUS_OPEN_CODE;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setFinaliseEntityValues;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
@@ -115,14 +115,11 @@ public class FondsCreatorService
      * @return A FondsHateoas list packed as a ResponseEntity
      */
     @Override
-    @SuppressWarnings("unchecked")
     public ResponseEntity<FondsHateoas> findFondsAssociatedWithFondsCreator(
             @NotNull final String systemId) {
-        FondsHateoas fondsHateoas =
-                new FondsHateoas(
-                        (List<INoarkEntity>) (List)
-                                getFondsCreatorOrThrow(systemId).
-                                        getReferenceFonds());
+        FondsHateoas fondsHateoas = new FondsHateoas(
+                List.copyOf(getFondsCreatorOrThrow(systemId)
+                        .getReferenceFonds()));
         fondsHateoasHandler.addLinks(fondsHateoas,
                 new Authorisation());
         return ResponseEntity.status(OK)

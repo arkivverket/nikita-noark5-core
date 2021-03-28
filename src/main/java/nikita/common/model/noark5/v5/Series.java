@@ -1,7 +1,7 @@
 package nikita.common.model.noark5.v5;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
 import nikita.common.model.noark5.v5.interfaces.*;
@@ -14,18 +14,16 @@ import nikita.webapp.util.annotation.HateoasObject;
 import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.envers.Audited;
 import org.hibernate.annotations.Type;
+import org.hibernate.envers.Audited;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
-import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
@@ -93,7 +91,7 @@ public class Series
     private String documentMediumCodeName;
 
     // Links to StorageLocations
-    @ManyToMany(cascade = ALL)
+    @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = TABLE_SERIES_STORAGE_LOCATION,
             joinColumns = @JoinColumn(
                     name = FOREIGN_KEY_SERIES_PK,
@@ -101,7 +99,7 @@ public class Series
             inverseJoinColumns = @JoinColumn(
                     name = FOREIGN_KEY_STORAGE_LOCATION_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private List<StorageLocation> referenceStorageLocation = new ArrayList<>();
+    private Set<StorageLocation> referenceStorageLocation = new HashSet<>();
 
     // Link to Fonds
     @ManyToOne(fetch = LAZY)
@@ -135,7 +133,7 @@ public class Series
     private Series referenceSuccessor;
 
     // Link to ClassificationSystem
-    @ManyToMany
+    @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = TABLE_SERIES_CLASSIFICATION_SYSTEM,
             joinColumns = @JoinColumn(
                     name = FOREIGN_KEY_SERIES_PK,
@@ -143,8 +141,8 @@ public class Series
             inverseJoinColumns = @JoinColumn(
                     name = FOREIGN_KEY_CLASSIFICATION_SYSTEM_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private List<ClassificationSystem> referenceClassificationSystem =
-            new ArrayList<>();
+    private Set<ClassificationSystem> referenceClassificationSystem =
+            new HashSet<>();
 
     // Links to Files
     @JsonIgnore
@@ -157,35 +155,35 @@ public class Series
     private List<Record> referenceRecord = new ArrayList<>();
 
     // Links to Classified
-    @ManyToOne(cascade = PERSIST)
+    @ManyToOne(fetch = LAZY, cascade = PERSIST)
     @JoinColumn(name = SERIES_CLASSIFIED_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     @JsonIgnore
     private Classified referenceClassified;
 
     // Link to Disposal
-    @ManyToOne(cascade = PERSIST)
+    @ManyToOne(fetch = LAZY, cascade = PERSIST)
     @JoinColumn(name = SERIES_DISPOSAL_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     @JsonIgnore
     private Disposal referenceDisposal;
 
     // Link to Screening
-    @ManyToOne(cascade = PERSIST)
+    @ManyToOne(fetch = LAZY, cascade = PERSIST)
     @JoinColumn(name = SERIES_SCREENING_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     @JsonIgnore
     private Screening referenceScreening;
 
     // Link to DisposalUndertaken
-    @ManyToOne(cascade = PERSIST)
+    @ManyToOne(fetch = LAZY, cascade = PERSIST)
     @JoinColumn(name = SERIES_DISPOSAL_UNDERTAKEN_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     @JsonIgnore
     private DisposalUndertaken referenceDisposalUndertaken;
 
     // Link to Deletion
-    @ManyToOne(cascade = PERSIST)
+    @ManyToOne(fetch = LAZY, cascade = PERSIST)
     @JoinColumn(name = SERIES_DELETION_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     @JsonIgnore
@@ -250,19 +248,14 @@ public class Series
     }
 
     @Override
-    public List<StorageLocation> getReferenceStorageLocation() {
+    public Set<StorageLocation> getReferenceStorageLocation() {
         return referenceStorageLocation;
     }
 
     @Override
-    public void setReferenceStorageLocation(
-            List<StorageLocation> referenceStorageLocation) {
-        this.referenceStorageLocation = referenceStorageLocation;
-    }
-
-    @Override
-    public void addReferenceStorageLocation(StorageLocation storageLocation) {
+    public void addStorageLocation(StorageLocation storageLocation) {
         this.referenceStorageLocation.add(storageLocation);
+        storageLocation.getReferenceSeries().add(this);
     }
 
     public Fonds getReferenceFonds() {
@@ -305,18 +298,20 @@ public class Series
         this.referenceSuccessor = referenceSuccessor;
     }
 
-    public List<ClassificationSystem> getReferenceClassificationSystem() {
+    public Set<ClassificationSystem> getReferenceClassificationSystem() {
         return referenceClassificationSystem;
-    }
-
-    public void setReferenceClassificationSystem(
-            List <ClassificationSystem> referenceClassificationSystem) {
-        this.referenceClassificationSystem = referenceClassificationSystem;
     }
 
     public void addClassificationSystem(
             ClassificationSystem classificationSystem) {
         this.referenceClassificationSystem.add(classificationSystem);
+        classificationSystem.getReferenceSeries().add(this);
+    }
+
+    public void removeClassificationSystem(
+            ClassificationSystem classificationSystem) {
+        this.referenceClassificationSystem.remove(classificationSystem);
+        classificationSystem.getReferenceSeries().remove(this);
     }
 
     public List<File> getReferenceFile() {
@@ -327,8 +322,14 @@ public class Series
         this.referenceFile = referenceFile;
     }
 
-    public void addReferenceFile(File file) {
+    public void addFile(File file) {
         this.referenceFile.add(file);
+        file.setReferenceSeries(this);
+    }
+
+    public void removeFile(File file) {
+        this.referenceFile.remove(file);
+        file.setReferenceSeries(this);
     }
 
     public List<Record> getReferenceRecord() {
@@ -339,8 +340,14 @@ public class Series
         this.referenceRecord = referenceRecord;
     }
 
-    public void addReferenceRecord(Record record) {
+    public void addRecord(Record record) {
         this.referenceRecord.add(record);
+        record.setReferenceSeries(this);
+    }
+
+    public void removeRecord(Record record) {
+        this.referenceRecord.remove(record);
+        record.setReferenceSeries(this);
     }
 
     @Override
@@ -369,7 +376,11 @@ public class Series
     }
 
     @Override
-    public void setReferenceDisposalUndertaken(
+    public void removeDisposalUndertaken() {
+        this.referenceDisposalUndertaken = null;
+    }
+
+    public void setDisposalUndertaken(
             DisposalUndertaken referenceDisposalUndertaken) {
         this.referenceDisposalUndertaken = referenceDisposalUndertaken;
     }

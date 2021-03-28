@@ -78,7 +78,7 @@ public class PrecedenceService
         existing.setPrecedenceApprovedDate(incoming.getPrecedenceApprovedDate());
         if (null != approvedBy) {
             existing.setPrecedenceApprovedBy(approvedBy.getUsername());
-            existing.setReferencePrecedenceApprovedBySystemID(approvedBy.getId());
+            existing.setReferencePrecedenceApprovedBySystemID(approvedBy.getSystemId());
             existing.setReferencePrecedenceApprovedBy(approvedBy);
         } else {
             existing.setPrecedenceApprovedBy
@@ -117,7 +117,7 @@ public class PrecedenceService
 
         if (null != approvedBy) {
             entity.setPrecedenceApprovedBy(approvedBy.getUsername());
-            entity.setReferencePrecedenceApprovedBySystemID(approvedBy.getId());
+            entity.setReferencePrecedenceApprovedBySystemID(approvedBy.getSystemId());
             entity.setReferencePrecedenceApprovedBy(approvedBy);
         } // otherwise, accept value
 

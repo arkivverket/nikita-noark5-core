@@ -21,13 +21,14 @@ import javax.persistence.*;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
-import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
+import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
-@Inheritance(strategy = TABLE_PER_CLASS)
+@Inheritance(strategy = JOINED)
 @Table(name = TABLE_BSM_BASE)
 public class BSMBase {
 
@@ -78,7 +79,8 @@ public class BSMBase {
     private String uriValue;
 
     @CreatedBy
-    @Column(name = "owned_by")
+    @Column(name = OWNED_BY)
+    @JsonProperty
     @Audited
     private String ownedBy;
 
@@ -118,31 +120,31 @@ public class BSMBase {
     @JsonProperty(LAST_MODIFIED_BY)
     private String lastModifiedBy;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = BSM_FILE_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     @JsonIgnore
     private File referenceFile;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = BSM_RECORD_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     @JsonIgnore
     private Record referenceRecord;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = BSM_PART_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     @JsonIgnore
     private Part referencePart;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = BSM_CORRESPONDENCE_PART_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     @JsonIgnore
     private CorrespondencePart referenceCorrespondencePart;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = BSM_ADMINISTRATIVE_UNIT_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     @JsonIgnore

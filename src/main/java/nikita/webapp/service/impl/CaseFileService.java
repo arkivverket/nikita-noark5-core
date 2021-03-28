@@ -148,11 +148,10 @@ public class CaseFileService
     public PrecedenceHateoas findAllPrecedenceForCaseFile(
             @NotNull final String systemID) {
         CaseFile caseFile = getCaseFileOrThrow(systemID);
-        PrecedenceHateoas precedenceHateoas =
-                new PrecedenceHateoas((List<INoarkEntity>)
-                        (List) caseFile.getReferencePrecedence());
+        PrecedenceHateoas precedenceHateoas = new PrecedenceHateoas(
+                List.copyOf(caseFile.getReferencePrecedence()));
         precedenceHateoasHandler
-            .addLinks(precedenceHateoas, new Authorisation());
+                .addLinks(precedenceHateoas, new Authorisation());
         setOutgoingRequestHeader(precedenceHateoas);
         return precedenceHateoas;
     }
@@ -174,11 +173,8 @@ public class CaseFileService
     @Override
     public PrecedenceHateoas createPrecedenceAssociatedWithFile(
             String caseFileSystemID, Precedence precedence) {
-
         CaseFile caseFile = getCaseFileOrThrow(caseFileSystemID);
-        // bidirectional relationship @ManyToMany, set both sides of relationship
-        caseFile.getReferencePrecedence().add(precedence);
-        precedence.getReferenceCaseFile().add(caseFile);
+        caseFile.addPrecedence(precedence);
         return precedenceService.createNewPrecedence(precedence);
     }
 

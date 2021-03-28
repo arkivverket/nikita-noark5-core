@@ -4,10 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.IClassEntity;
-import nikita.common.model.noark5.v5.interfaces.IClassified;
-import nikita.common.model.noark5.v5.interfaces.ICrossReference;
-import nikita.common.model.noark5.v5.interfaces.IDisposal;
-import nikita.common.model.noark5.v5.interfaces.IScreening;
 import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.deserialisers.ClassDeserializer;
 import nikita.webapp.hateoas.ClassHateoasHandler;
@@ -19,9 +15,11 @@ import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.CascadeType.*;
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -44,7 +42,7 @@ public class Class
     private String classId;
 
     // Links to Keywords
-    @ManyToMany
+    @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = TABLE_CLASS_KEYWORD,
             joinColumns = @JoinColumn(
                     name = FOREIGN_KEY_CLASS_PK,
@@ -52,7 +50,7 @@ public class Class
             inverseJoinColumns = @JoinColumn(
                     name = FOREIGN_KEY_KEYWORD_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private List<Keyword> referenceKeyword = new ArrayList<>();
+    private Set<Keyword> referenceKeyword = new HashSet<>();
 
     // Link to ClassificationSystem
     @ManyToOne(fetch = LAZY)
@@ -77,19 +75,19 @@ public class Class
     private List<Record> referenceRecord = new ArrayList<>();
 
     // Links to Classified
-    @ManyToOne(cascade = ALL)
+    @ManyToOne(fetch = LAZY, cascade = ALL)
     @JoinColumn(name = CLASS_CLASSIFIED_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Classified referenceClassified;
 
     // Link to Disposal
-    @ManyToOne(cascade = ALL)
+    @ManyToOne(fetch = LAZY, cascade = ALL)
     @JoinColumn(name = CLASS_DISPOSAL_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Disposal referenceDisposal;
 
     // Link to Screening
-    @ManyToOne(cascade = ALL)
+    @ManyToOne(fetch = LAZY, cascade = ALL)
     @JoinColumn(name = CLASS_SCREENING_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Screening referenceScreening;
@@ -118,18 +116,14 @@ public class Class
     }
 
     @Override
-    public List<Keyword> getReferenceKeyword() {
+    public Set<Keyword> getReferenceKeyword() {
         return referenceKeyword;
     }
 
     @Override
-    public void setReferenceKeyword(List<Keyword> referenceKeyword) {
-        this.referenceKeyword = referenceKeyword;
-    }
-
-    @Override
-    public void addReferenceKeyword(Keyword keyword) {
+    public void addKeyword(Keyword keyword) {
         this.referenceKeyword.add(keyword);
+        keyword.getReferenceClass().add(this);
     }
 
     @Override
@@ -163,6 +157,16 @@ public class Class
         this.referenceChildClass = referenceChildClass;
     }
 
+    public void addClass(Class klass) {
+        this.referenceChildClass.add(klass);
+        klass.setReferenceParentClass(this);
+    }
+
+    public void removeClass(Class klass) {
+        this.referenceChildClass.remove(klass);
+        klass.setReferenceParentClass(null);
+    }
+
     @Override
     public List<File> getReferenceFile() {
         return referenceFile;
@@ -173,6 +177,16 @@ public class Class
         this.referenceFile = referenceFile;
     }
 
+    public void addFile(File file) {
+        this.referenceFile.add(file);
+        file.setReferenceClass(this);
+    }
+
+    public void removeFile(File file) {
+        this.referenceFile.remove(file);
+        file.setReferenceClass(null);
+    }
+
     @Override
     public List<Record> getReferenceRecord() {
         return referenceRecord;
@@ -181,6 +195,16 @@ public class Class
     @Override
     public void setReferenceRecord(List<Record> referenceRecord) {
         this.referenceRecord = referenceRecord;
+    }
+
+    public void addRecord(Record record) {
+        this.referenceRecord.add(record);
+        record.setReferenceClass(this);
+    }
+
+    public void removeRecord(Record record) {
+        this.referenceRecord.remove(record);
+        record.setReferenceClass(null);
     }
 
     @Override
@@ -225,8 +249,15 @@ public class Class
     }
 
     @Override
-    public void addReferenceCrossReference(CrossReference crossReference) {
+    public void addCrossReference(CrossReference crossReference) {
         this.referenceCrossReference.add(crossReference);
+        crossReference.setReferenceClass(this);
+    }
+
+    @Override
+    public void removeCrossReference(CrossReference crossReference) {
+        this.referenceCrossReference.remove(crossReference);
+        crossReference.setReferenceClass(null);
     }
 
     @Override

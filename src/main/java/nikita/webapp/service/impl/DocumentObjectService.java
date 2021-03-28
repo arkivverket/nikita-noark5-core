@@ -353,7 +353,7 @@ public class DocumentObjectService
 
         String extension = FilenameUtils.getExtension(
                 documentObject.getOriginalFilename());
-        String documentFilename = documentObject.getSystemId();
+        String documentFilename = documentObject.getSystemIdAsString();
         if (extension != null) {
             documentFilename += "." + extension;
         }
@@ -429,7 +429,7 @@ public class DocumentObjectService
                         getOriginalFilename());
 
         if (originalFilename == null) {
-            originalFilename = archiveDocumentObject.getSystemId() + "." +
+            originalFilename = archiveDocumentObject.getSystemIdAsString() + "." +
                     getArchiveFileExtension(archiveDocumentObject);
         } else {
             originalFilename += "." +
@@ -498,7 +498,7 @@ public class DocumentObjectService
             // Tie the new document object and document description together
             archiveDocumentObject.setReferenceDocumentDescription
                     (documentDescription);
-            documentDescription.addReferenceDocumentObject(archiveDocumentObject);
+            documentDescription.addDocumentObject(archiveDocumentObject);
 
             archiveDocumentObject.setChecksum(
                     new DigestUtils(defaultChecksumAlgorithm).
@@ -929,7 +929,6 @@ public class DocumentObjectService
         documentObjectHateoasHandler.addLinks(documentObjectHateoas,
                 new Authorisation());
         return documentObjectHateoas;
-
     }
 
     /**
@@ -1001,7 +1000,7 @@ public class DocumentObjectService
         // Set the filename to be the systemID of the documentObject,
         // effectively locking this in as one-to-one relationship
         Path incoming = Paths.get(incomingDirectoryName +
-                File.separator + documentObject.getSystemId() + "." +
+                File.separator + documentObject.getSystemIdAsString() + "." +
                 extension);
 
         Path path = Files.createFile(incoming);

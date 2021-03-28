@@ -221,7 +221,7 @@ public class DocumentDescriptionService
     /*
      * Note:
      * <p>
-     * Assumes documentDescription.addReferenceRecord() has already been called.
+     * Assumes documentDescription.addRecord() has already been called.
      *
      */
     @Override
@@ -291,13 +291,11 @@ public class DocumentDescriptionService
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public RecordHateoas
     findAllRecordWithDocumentDescriptionBySystemId(@NotNull String systemId) {
-        RecordHateoas recordHateoas = new
-                RecordHateoas((List<INoarkEntity>)
-                (List) getDocumentDescriptionOrThrow(systemId)
-                        .getReferenceRecord());
+        RecordHateoas recordHateoas = new RecordHateoas(
+                List.copyOf(getDocumentDescriptionOrThrow(systemId)
+                        .getReferenceRecord()));
         recordHateoasHandler.addLinks(recordHateoas,
                 new Authorisation());
         return recordHateoas;
@@ -306,21 +304,19 @@ public class DocumentDescriptionService
     @Override
     public CommentHateoas getCommentAssociatedWithDocumentDescription(
             @NotNull final String systemID) {
-        CommentHateoas commentHateoas =
-            new CommentHateoas((List<INoarkEntity>) (List)
-                getDocumentDescriptionOrThrow(systemID).getReferenceComment());
+        CommentHateoas commentHateoas = new CommentHateoas(
+                List.copyOf(getDocumentDescriptionOrThrow(systemID)
+                        .getReferenceComment()));
         commentHateoasHandler.addLinks(commentHateoas, new Authorisation());
         return commentHateoas;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public PartHateoas getPartAssociatedWithDocumentDescription(
             @NotNull final String systemID) {
         PartHateoas partHateoas = new PartHateoas(
-                (List<INoarkEntity>) (List)
-                        getDocumentDescriptionOrThrow(systemID).
-                                getReferencePart());
+                List.copyOf(getDocumentDescriptionOrThrow(systemID)
+                        .getReferencePart()));
         partHateoasHandler.addLinks(partHateoas, new Authorisation());
         return partHateoas;
     }

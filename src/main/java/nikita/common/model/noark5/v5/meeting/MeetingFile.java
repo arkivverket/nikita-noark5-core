@@ -1,6 +1,5 @@
 package nikita.common.model.noark5.v5.meeting;
 
-import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.File;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -11,6 +10,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.TABLE_MEETING_FILE;
 import static nikita.common.config.N5ResourceMappings.MEETING_FILE;
@@ -53,7 +53,7 @@ public class MeetingFile
      * M221 - referanseForrigeMoete (xs:string)
      **/
     // Link to next Meeting
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = LAZY)
     private MeetingFile referenceNextMeeting;
 
     /**
@@ -62,7 +62,7 @@ public class MeetingFile
 
     // Link to previous Meeting
     // TODO: This links to id, not systemId. Fix!
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = LAZY)
     private MeetingFile referencePreviousMeeting;
 
     // Links to MeetingParticipant
@@ -131,6 +131,16 @@ public class MeetingFile
     public void setReferenceMeetingParticipant(
             List<MeetingParticipant> referenceMeetingParticipant) {
         this.referenceMeetingParticipant = referenceMeetingParticipant;
+    }
+
+    public void addMeetingParticipant(MeetingParticipant meetingParticipant) {
+        this.referenceMeetingParticipant.add(meetingParticipant);
+        meetingParticipant.setReferenceMeetingFile(this);
+    }
+
+    public void removeMeetingParticipant(MeetingParticipant meetingParticipant) {
+        this.referenceMeetingParticipant.remove(meetingParticipant);
+        meetingParticipant.setReferenceMeetingFile(null);
     }
 
     @Override

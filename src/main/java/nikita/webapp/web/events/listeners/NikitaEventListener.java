@@ -103,7 +103,7 @@ public class NikitaEventListener {
 
             JSONObject block = new JSONObject();
 
-            block.put("header", event.getEntity().getSystemId());
+            block.put("header", event.getEntity().getSystemIdAsString());
             JSONObject body = new JSONObject();
             String entityType = event.getEntity().getBaseTypeName();
             body.put("object-type", entityType);

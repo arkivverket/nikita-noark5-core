@@ -3,7 +3,6 @@ package nikita.webapp.hateoas;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
-import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
 import org.springframework.stereotype.Component;
 
@@ -71,49 +70,49 @@ public class DocumentDescriptionHateoasHandler
     public void addRecord(ISystemId entity,
                           IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemId() + SLASH +
+                HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemIdAsString() + SLASH +
                 RECORD, REL_FONDS_STRUCTURE_RECORD, false));
     }
 
     @Override
     public void addComment(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemId() + SLASH + COMMENT + SLASH,
+                HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemIdAsString() + SLASH + COMMENT + SLASH,
                 REL_FONDS_STRUCTURE_COMMENT, false));
     }
 
     @Override
     public void addNewComment(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemId() + SLASH + NEW_COMMENT + SLASH,
+                HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemIdAsString() + SLASH + NEW_COMMENT + SLASH,
                 REL_FONDS_STRUCTURE_NEW_COMMENT, false));
     }
 
     @Override
     public void addStorageLocation(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemId() + SLASH + STORAGE_LOCATION + SLASH,
+                HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemIdAsString() + SLASH + STORAGE_LOCATION + SLASH,
                 REL_FONDS_STRUCTURE_STORAGE_LOCATION, false));
     }
 
     @Override
     public void addNewStorageLocation(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemId() + SLASH + NEW_STORAGE_LOCATION + SLASH,
+                HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemIdAsString() + SLASH + NEW_STORAGE_LOCATION + SLASH,
                 REL_FONDS_STRUCTURE_NEW_STORAGE_LOCATION, false));
     }
 
     @Override
     public void addDocumentObject(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemId() + SLASH + DOCUMENT_OBJECT + SLASH,
+                HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemIdAsString() + SLASH + DOCUMENT_OBJECT + SLASH,
                 REL_FONDS_STRUCTURE_DOCUMENT_OBJECT, false));
     }
 
     @Override
     public void addNewDocumentObject(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemId() + SLASH + NEW_DOCUMENT_OBJECT + SLASH,
+                HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemIdAsString() + SLASH + NEW_DOCUMENT_OBJECT + SLASH,
                 REL_FONDS_STRUCTURE_NEW_DOCUMENT_OBJECT, false));
     }
 
@@ -145,7 +144,7 @@ public class DocumentDescriptionHateoasHandler
     public void addPart(
             ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemId() + SLASH + PART + SLASH,
+                HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemIdAsString() + SLASH + PART + SLASH,
                 REL_FONDS_STRUCTURE_PART, true));
     }
 
@@ -153,7 +152,7 @@ public class DocumentDescriptionHateoasHandler
     public void addNewPartPerson(
             ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemId() + SLASH + NEW_PART_PERSON + SLASH,
+                HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemIdAsString() + SLASH + NEW_PART_PERSON + SLASH,
                 REL_FONDS_STRUCTURE_NEW_PART_PERSON));
     }
 
@@ -161,7 +160,7 @@ public class DocumentDescriptionHateoasHandler
     public void addNewPartUnit(
             ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemId() + SLASH + NEW_PART_UNIT + SLASH,
+                HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemIdAsString() + SLASH + NEW_PART_UNIT + SLASH,
                 REL_FONDS_STRUCTURE_NEW_PART_UNIT));
     }
 
@@ -179,7 +178,7 @@ public class DocumentDescriptionHateoasHandler
     public void addAuthor(ISystemId entity,
                           IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemId() +
+                HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemIdAsString() +
                 SLASH + AUTHOR + SLASH, REL_FONDS_STRUCTURE_AUTHOR, true));
     }
 
@@ -197,7 +196,7 @@ public class DocumentDescriptionHateoasHandler
     public void addNewAuthor(ISystemId entity,
                              IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemId() +
+                HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemIdAsString() +
                 SLASH + NEW_AUTHOR + SLASH, REL_FONDS_STRUCTURE_NEW_AUTHOR));
     }
 }

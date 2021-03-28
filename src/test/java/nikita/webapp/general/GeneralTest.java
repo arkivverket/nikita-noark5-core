@@ -29,6 +29,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.transaction.Transactional;
 import java.io.StringWriter;
 
 import static nikita.common.config.Constants.*;
@@ -52,6 +53,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @AutoConfigureRestDocs(outputDir = "target/snippets")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Transactional
 public class GeneralTest {
 
     private MockMvc mockMvc;
@@ -90,7 +92,7 @@ public class GeneralTest {
      * @throws Exception Needed for mockMvc.perform
      */
     @Test
-    @Sql("/db-tests/bsm.sql")
+    @Sql("/db-tests/basic_structure.sql")
     public void checkJSONValuesSet() throws Exception {
         String url = "/noark5v5/api/arkivstruktur/arkiv" +
                 "/3318a63f-11a7-4ec9-8bf1-4144b7f281cf";
@@ -135,7 +137,7 @@ public class GeneralTest {
      * @throws Exception Serialising or validation exception
      */
     @Test
-    @Sql("/db-tests/bsm.sql")
+    @Sql("/db-tests/basic_structure.sql")
     public void checkMultipleMetadataEntityPossible() throws Exception {
         DocumentDescription documentDescription = new DocumentDescription();
         documentDescription.setTitle("Test title");
@@ -233,7 +235,7 @@ public class GeneralTest {
      * @throws Exception Needed for mockMvc.perform
      */
     @Test
-    @Sql("/db-tests/bsm.sql")
+    @Sql("/db-tests/basic_structure.sql")
     public void checkODataSearchHasCorrectResponse() throws Exception {
 
         String url = "/noark5v5/odata/api/arkivstruktur/arkiv?$filter=" +

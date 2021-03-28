@@ -680,8 +680,8 @@ public final class CommonUtils {
                             Keyword keyword = new Keyword();
                             keyword.setKeyword(keywordText);
                             keywords.add(keyword);
+                            keywordEntity.addKeyword(keyword);
                         }
-                        keywordEntity.setReferenceKeyword(keywords);
                     }
                     objectNode.remove(KEYWORD);
                 }
@@ -723,22 +723,26 @@ public final class CommonUtils {
                         .setClassificationType(classificationType);
             }
 
-            public static void deserialiseStorageLocation(IStorageLocation storageLocationEntity,
-                                                          ObjectNode objectNode, StringBuilder errors) {
+            public static void deserialiseStorageLocation(
+                    IStorageLocation storageLocationEntity,
+                    ObjectNode objectNode, StringBuilder errors) {
                 // Deserialize storageLocation
                 JsonNode currentNode = objectNode.get(STORAGE_LOCATION);
 
                 if (null != currentNode) {
-                    ArrayList<StorageLocation> storageLocations = new ArrayList<>();
+                    ArrayList<StorageLocation> storageLocations =
+                            new ArrayList<>();
                     if (currentNode.isArray()) {
                         currentNode.iterator();
                         for (JsonNode node : currentNode) {
                             String location = node.textValue();
-                            StorageLocation storageLocation = new StorageLocation();
+                            StorageLocation storageLocation =
+                                    new StorageLocation();
                             storageLocation.setStorageLocation(location);
                             storageLocations.add(storageLocation);
+                            storageLocationEntity.addStorageLocation(
+                                    storageLocation);
                         }
-                        storageLocationEntity.setReferenceStorageLocation(storageLocations);
                     }
                     objectNode.remove(STORAGE_LOCATION);
                 }
@@ -947,7 +951,8 @@ public final class CommonUtils {
                 disposalEntity.setDisposalDate(deserializeDate(DISPOSAL_DATE, objectNode, errors));
             }
 
-            public static DisposalUndertaken deserialiseDisposalUndertaken(ObjectNode objectNode, StringBuilder errors) {
+            public static DisposalUndertaken deserialiseDisposalUndertaken(
+                    ObjectNode objectNode, StringBuilder errors) {
                 DisposalUndertaken disposalUndertaken = null;
                 JsonNode disposalUndertakenNode = objectNode.get(DISPOSAL_UNDERTAKEN);
                 if (disposalUndertakenNode != null) {
@@ -1012,18 +1017,6 @@ public final class CommonUtils {
 
                 // Deserialize deletionDate
                 deletionEntity.setDeletionDate(deserializeDateTime(DELETION_DATE, objectNode, errors));
-            }
-
-            public static List<Part> deserialiseCaseParties(ObjectNode objectNode, StringBuilder errors) {
-                ArrayList<Part> caseParties = new ArrayList<>();
-                //JsonNode jsonPart = objectNode.get(PART);
-                // TODO: I seem tobe missing my body of code ...
-/*                for (CorrespondencePart correspondencePart: caseParties) {
-                    deserialiseCorrespondencePart(correspondencePart, objectNode);
-                    objectNode.remove(CORRESPONDENCE_PART);
-                }
-*/
-                return caseParties;
             }
 
             public static void deserialiseAdministrativeUnitEntity(IAdministrativeUnitEntity administrativeUnit,
@@ -1164,9 +1157,8 @@ public final class CommonUtils {
                     deserialiseSimpleAddressEntity(POSTAL_ADDRESS,
                             simpleAddress, currentNode.deepCopy(), errors);
                     postalAddress.setSimpleAddress(simpleAddress);
-                    postalAddress.
-                            setCorrespondencePartPerson(
-                                    (CorrespondencePartPerson) partPerson);
+                    postalAddress.setReferenceCorrespondencePartPerson(
+                            (CorrespondencePartPerson) partPerson);
                     partPerson.setPostalAddress(postalAddress);
                     objectNode.remove(N5ResourceMappings.POSTAL_ADDRESS);
                 }
@@ -1285,7 +1277,7 @@ public final class CommonUtils {
                 if (null != currentNode) {
                     JsonNode node = currentNode.get(ORGANISATION_NUMBER);
                     if (null != node) {
-                        partUnit.setOrganisationNumber(node.textValue());
+                        partUnit.setUnitIdentifier(node.textValue());
 
                         // This remove() call is placed inside block
                         // to report error if no organisasjonsnummer
@@ -1367,15 +1359,19 @@ public final class CommonUtils {
             }
 
 
-            public static void deserialiseCorrespondencePartInternalEntity(ICorrespondencePartInternalEntity
-                                                                                   correspondencePartInternal,
-                                                                           ObjectNode objectNode, StringBuilder errors) {
-                deserialiseCorrespondencePartType(correspondencePartInternal, objectNode, errors);
+            public static void deserialiseCorrespondencePartInternalEntity(
+                    ICorrespondencePartInternalEntity
+                            correspondencePartInternal,
+                    ObjectNode objectNode, StringBuilder errors) {
+                deserialiseCorrespondencePartType(
+                        correspondencePartInternal, objectNode, errors);
 
                 // Deserialize administrativEnhet
-                JsonNode currentNode = objectNode.get(ADMINISTRATIVE_UNIT_FIELD);
+                JsonNode currentNode =
+                        objectNode.get(ADMINISTRATIVE_UNIT_FIELD);
                 if (null != currentNode) {
-                    correspondencePartInternal.setAdministrativeUnit(currentNode.textValue());
+                    correspondencePartInternal.setAdministrativeUnit(
+                            currentNode.textValue());
                     objectNode.remove(ADMINISTRATIVE_UNIT_FIELD);
                 }
                 // Deserialize saksbehandler
@@ -1413,8 +1409,20 @@ public final class CommonUtils {
                 deserialiseCorrespondencePartType(correspondencePartUnit,
                         objectNode, errors);
 
+                // Deserialize enhetsidentifikator
+                JsonNode currentNode = objectNode.get(UNIT_IDENTIFIER);
+                // { "enhetsidentifikator": { "organisasjonsnummer": "123458"}}
+                if (null != currentNode) {
+                    currentNode = currentNode.get(ORGANISATION_NUMBER);
+                    if (null != currentNode) {
+                        correspondencePartUnit.setUnitIdentifier(
+                                currentNode.textValue());
+                    }
+                    objectNode.remove(UNIT_IDENTIFIER);
+                }
+
                 // Deserialize kontaktperson
-                JsonNode currentNode = objectNode.get(CONTACT_PERSON);
+                currentNode = objectNode.get(CONTACT_PERSON);
                 if (null != currentNode) {
                     correspondencePartUnit.setContactPerson(
                             currentNode.textValue());
@@ -1426,29 +1434,6 @@ public final class CommonUtils {
                 if (null != currentNode) {
                     correspondencePartUnit.setName(currentNode.textValue());
                     objectNode.remove(NAME);
-                }
-
-                // Deserialize organisasjonsnummer
-                currentNode = objectNode.get(UNIT_IDENTIFIER);
-                if (null != currentNode) {
-                    JsonNode node = currentNode.get(ORGANISATION_NUMBER);
-                    if (null != node) {
-                        correspondencePartUnit.setOrganisationNumber(
-                                node.textValue());
-
-                        // This remove() call is placed inside block
-                        // to report error if no organisasjonsnummer
-                        // was found.
-                        objectNode.remove(UNIT_IDENTIFIER);
-                    }
-                }
-
-                // Deserialize kontaktperson
-                currentNode = objectNode.get(CONTACT_PERSON);
-                if (null != currentNode) {
-                    correspondencePartUnit.setContactPerson(
-                            currentNode.textValue());
-                    objectNode.remove(CONTACT_PERSON);
                 }
 
                 // Deserialize postadresse
@@ -1654,7 +1639,7 @@ public final class CommonUtils {
                 ElectronicSignatureSecurityLevel essLevel =
                         (ElectronicSignatureSecurityLevel)
                                 deserialiseMetadataValue(objectNode,
-                                        ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD,
+                                        ELECTRONIC_SIGNATURE_SECURITY_LEVEL,
                                         new ElectronicSignatureSecurityLevel(),
                                         errors, true);
                 electronicSignature
@@ -1664,7 +1649,7 @@ public final class CommonUtils {
                 ElectronicSignatureVerified esVerified =
                         (ElectronicSignatureVerified)
                                 deserialiseMetadataValue(objectNode,
-                                        ELECTRONIC_SIGNATURE_VERIFIED_FIELD,
+                                        ELECTRONIC_SIGNATURE_VERIFIED_CODE_NAME,
                                         new ElectronicSignatureVerified(),
                                         errors, true);
                 electronicSignature.setElectronicSignatureVerified(esVerified);
@@ -1960,7 +1945,7 @@ public final class CommonUtils {
                 if (systemIdEntity != null &&
                         systemIdEntity.getSystemId() != null) {
                     jgen.writeStringField(SYSTEM_ID,
-                            systemIdEntity.getSystemId());
+                            systemIdEntity.getSystemIdAsString());
                 }
             }
 
@@ -2141,10 +2126,10 @@ public final class CommonUtils {
                     IGenericUnitEntity unit)
                     throws IOException {
                 if (null != unit) {
-                    if (null != unit.getOrganisationNumber()) {
+                    if (null != unit.getUnitIdentifier()) {
                         jgen.writeObjectFieldStart(UNIT_IDENTIFIER);
                         jgen.writeStringField(ORGANISATION_NUMBER,
-                                unit.getOrganisationNumber());
+                                unit.getUnitIdentifier());
                         jgen.writeEndObject();
                     }
                     printNullable(jgen, NAME, unit.getName());
@@ -2247,9 +2232,11 @@ public final class CommonUtils {
             }
             */
 
-            public static void printStorageLocation(JsonGenerator jgen, IStorageLocation storageLocationEntity)
+            public static void printStorageLocation(
+                    JsonGenerator jgen, IStorageLocation storageLocationEntity)
                     throws IOException {
-                List<StorageLocation> storageLocation = storageLocationEntity.getReferenceStorageLocation();
+                Set<StorageLocation> storageLocation = storageLocationEntity
+                        .getReferenceStorageLocation();
                 if (storageLocation != null && storageLocation.size() > 0) {
                     jgen.writeArrayFieldStart(STORAGE_LOCATION);
                     for (StorageLocation location : storageLocation) {
@@ -2261,10 +2248,11 @@ public final class CommonUtils {
                 }
             }
 
-            public static void printFondsCreators(JsonGenerator jgen, IFondsCreator fondsCreatorObject)
+            public static void printFondsCreators(
+                    JsonGenerator jgen, IFondsCreator fondsCreatorObject)
                     throws IOException {
-
-                List<FondsCreator> fondsCreators = fondsCreatorObject.getReferenceFondsCreator();
+                Set<FondsCreator> fondsCreators =
+                        fondsCreatorObject.getReferenceFondsCreator();
                 if (fondsCreators != null) {
                     for (FondsCreator fondsCreator : fondsCreators) {
                         if (fondsCreator != null) {
@@ -2281,7 +2269,7 @@ public final class CommonUtils {
                     throws IOException {
                 if (fondsCreatorEntity != null) {
                     printNullable(jgen, SYSTEM_ID,
-                            fondsCreatorEntity.getSystemId());
+                            fondsCreatorEntity.getSystemIdAsString());
                     printNullable(jgen, FONDS_CREATOR_ID,
                             fondsCreatorEntity.getFondsCreatorId());
                     printNullable(jgen, FONDS_CREATOR_NAME,
@@ -2298,16 +2286,18 @@ public final class CommonUtils {
                         esEntity.getReferenceElectronicSignature();
                 if (es != null) {
                     jgen.writeObjectFieldStart(ELECTRONIC_SIGNATURE);
+                    printNullable(jgen, ELECTRONIC_SIGNATURE_VERIFIED_BY,
+                            es.getVerifiedBy());
+                    printNullableDate(jgen, ELECTRONIC_SIGNATURE_VERIFIED_DATE,
+                            es.getVerifiedDate());
                     printNullableMetadata
-                            (jgen, ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD,
+                            (jgen, ELECTRONIC_SIGNATURE_SECURITY_LEVEL,
                                     es.getElectronicSignatureSecurityLevel());
                     printNullableMetadata
-                            (jgen, ELECTRONIC_SIGNATURE_VERIFIED_FIELD,
+                            (jgen, ELECTRONIC_SIGNATURE_VERIFIED_CODE_NAME,
                                     es.getElectronicSignatureVerified());
                     printNullableDate(jgen, ELECTRONIC_SIGNATURE_VERIFIED_DATE,
                             es.getVerifiedDate());
-                    printNullable(jgen, ELECTRONIC_SIGNATURE_VERIFIED_BY,
-                            es.getVerifiedBy());
                     jgen.writeEndObject();
                 }
             }
@@ -2475,7 +2465,7 @@ public final class CommonUtils {
 
             public static void printKeyword(JsonGenerator jgen, IKeyword keywordEntity)
                     throws IOException {
-                List<Keyword> keywords = keywordEntity.getReferenceKeyword();
+                Set<Keyword> keywords = keywordEntity.getReferenceKeyword();
                 if (keywords != null && keywords.size() > 0) {
                     jgen.writeArrayFieldStart(KEYWORD);
                     for (Keyword keyword : keywords) {

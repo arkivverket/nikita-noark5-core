@@ -4,7 +4,6 @@ import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
-import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
 import org.springframework.stereotype.Component;
 
@@ -74,42 +73,42 @@ public class RecordHateoasHandler
     @Override
     public void addComment(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + COMMENT + SLASH,
+                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() + SLASH + COMMENT + SLASH,
                 REL_FONDS_STRUCTURE_COMMENT, false));
     }
 
     @Override
     public void addNewComment(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + NEW_COMMENT + SLASH,
+                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() + SLASH + NEW_COMMENT + SLASH,
                 REL_FONDS_STRUCTURE_NEW_COMMENT, false));
     }
 
     @Override
     public void addStorageLocation(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + STORAGE_LOCATION + SLASH,
+                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() + SLASH + STORAGE_LOCATION + SLASH,
                 REL_FONDS_STRUCTURE_STORAGE_LOCATION, false));
     }
 
     @Override
     public void addNewStorageLocation(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + NEW_STORAGE_LOCATION + SLASH,
+                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() + SLASH + NEW_STORAGE_LOCATION + SLASH,
                 REL_FONDS_STRUCTURE_NEW_STORAGE_LOCATION, false));
     }
 
     @Override
     public void addCrossReference(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + CROSS_REFERENCE + SLASH,
+                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() + SLASH + CROSS_REFERENCE + SLASH,
                 REL_FONDS_STRUCTURE_CROSS_REFERENCE, false));
     }
 
     @Override
     public void addNewCrossReference(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + NEW_CROSS_REFERENCE + SLASH,
+                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() + SLASH + NEW_CROSS_REFERENCE + SLASH,
                 REL_FONDS_STRUCTURE_NEW_CROSS_REFERENCE, false));
     }
 
@@ -130,7 +129,7 @@ public class RecordHateoasHandler
         Record record = getRecord(entity);
         if (record.getReferenceSeries() != null) {
             hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                    HREF_BASE_SERIES + SLASH + record.getReferenceSeries().getSystemId(),
+                    HREF_BASE_SERIES + SLASH + record.getReferenceSeries().getSystemIdAsString(),
                     REL_FONDS_STRUCTURE_SERIES));
         }
     }
@@ -152,7 +151,7 @@ public class RecordHateoasHandler
         if (record.getReferenceFile() != null) {
             hateoasNoarkObject.addLink(entity,
                     new Link(getOutgoingAddress() + HREF_BASE_FILE + SLASH +
-                            record.getReferenceFile().getSystemId(),
+                            record.getReferenceFile().getSystemIdAsString(),
                             REL_FONDS_STRUCTURE_FILE));
         }
     }
@@ -173,7 +172,7 @@ public class RecordHateoasHandler
         Record record = getRecord(entity);
         if (record.getReferenceClass() != null) {
             hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                    HREF_BASE_CLASS + SLASH + record.getReferenceClass().getSystemId(),
+                    HREF_BASE_CLASS + SLASH + record.getReferenceClass().getSystemIdAsString(),
                     REL_FONDS_STRUCTURE_CLASS));
         }
     }
@@ -181,21 +180,21 @@ public class RecordHateoasHandler
     @Override
     public void addNewDocumentDescription(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + NEW_DOCUMENT_DESCRIPTION + SLASH,
+                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() + SLASH + NEW_DOCUMENT_DESCRIPTION + SLASH,
                 REL_FONDS_STRUCTURE_NEW_DOCUMENT_DESCRIPTION, false));
     }
 
     @Override
     public void addDocumentDescription(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + DOCUMENT_DESCRIPTION + SLASH,
+                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() + SLASH + DOCUMENT_DESCRIPTION + SLASH,
                 REL_FONDS_STRUCTURE_DOCUMENT_DESCRIPTION, false));
     }
 
     @Override
     public void addNewReferenceSeries(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + REFERENCE_NEW_SERIES + SLASH,
+                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() + SLASH + REFERENCE_NEW_SERIES + SLASH,
                 REL_FONDS_STRUCTURE_NEW_REFERENCE_SERIES, false));
     }
 
@@ -203,7 +202,7 @@ public class RecordHateoasHandler
     public void addNewCorrespondencePartPerson(
             ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + NEW_CORRESPONDENCE_PART_PERSON + SLASH,
+                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() + SLASH + NEW_CORRESPONDENCE_PART_PERSON + SLASH,
                 REL_FONDS_STRUCTURE_NEW_CORRESPONDENCE_PART_PERSON));
     }
 
@@ -211,7 +210,7 @@ public class RecordHateoasHandler
     public void addCorrespondencePart(
             ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + CORRESPONDENCE_PART + SLASH,
+                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() + SLASH + CORRESPONDENCE_PART + SLASH,
                 REL_FONDS_STRUCTURE_CORRESPONDENCE_PART, true));
     }
 
@@ -219,7 +218,7 @@ public class RecordHateoasHandler
     public void addNewCorrespondencePartUnit(
             ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + NEW_CORRESPONDENCE_PART_UNIT + SLASH,
+                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() + SLASH + NEW_CORRESPONDENCE_PART_UNIT + SLASH,
                 REL_FONDS_STRUCTURE_NEW_CORRESPONDENCE_PART_UNIT));
     }
 
@@ -227,7 +226,7 @@ public class RecordHateoasHandler
     public void addPart(
             ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + PART + SLASH,
+                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() + SLASH + PART + SLASH,
                 REL_FONDS_STRUCTURE_PART, true));
     }
 
@@ -235,7 +234,7 @@ public class RecordHateoasHandler
     public void addNewPartPerson(
             ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + NEW_PART_PERSON + SLASH,
+                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() + SLASH + NEW_PART_PERSON + SLASH,
                 REL_FONDS_STRUCTURE_NEW_PART_PERSON));
     }
 
@@ -243,7 +242,7 @@ public class RecordHateoasHandler
     public void addNewPartUnit(
             ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + NEW_PART_UNIT + SLASH,
+                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() + SLASH + NEW_PART_UNIT + SLASH,
                 REL_FONDS_STRUCTURE_NEW_PART_UNIT));
     }
 
@@ -252,7 +251,7 @@ public class RecordHateoasHandler
         /*
         Temporary disabled as it causes problems for clients.
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_FONDS_STRUCTURE + SLASH + RECORD + SLASH + entity.getSystemId() + SLASH + NEW_CORRESPONDENCE_PART_INTERNAL + SLASH,
+                HREF_BASE_FONDS_STRUCTURE + SLASH + RECORD + SLASH + entity.getSystemIdAsString() + SLASH + NEW_CORRESPONDENCE_PART_INTERNAL + SLASH,
                 REL_FONDS_STRUCTURE_NEW_CORRESPONDENCE_PART_INTERNAL, false));
 
          */
@@ -272,7 +271,7 @@ public class RecordHateoasHandler
     public void addAuthor(ISystemId entity,
                           IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemId() +
+                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() +
                 SLASH + AUTHOR + SLASH, REL_FONDS_STRUCTURE_AUTHOR, true));
     }
 
@@ -290,7 +289,7 @@ public class RecordHateoasHandler
     public void addNewAuthor(ISystemId entity,
                              IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemId() +
+                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() +
                 SLASH + NEW_AUTHOR + SLASH, REL_FONDS_STRUCTURE_NEW_AUTHOR));
     }
 
@@ -298,7 +297,7 @@ public class RecordHateoasHandler
     public void addNewBuilding(ISystemId entity,
                                IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + NEW_BUILDING,
+                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() + SLASH + NEW_BUILDING,
                 REL_FONDS_STRUCTURE_NEW_BUILDING));
     }
 
@@ -306,7 +305,7 @@ public class RecordHateoasHandler
     public void addNewCadastralUnit(ISystemId entity,
                                     IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + NEW_CADASTRAL_UNIT,
+                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() + SLASH + NEW_CADASTRAL_UNIT,
                 REL_FONDS_STRUCTURE_NEW_CADASTRAL_UNIT));
     }
 
@@ -314,7 +313,7 @@ public class RecordHateoasHandler
     public void addNewDNumber(ISystemId entity,
                               IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + NEW_D_NUMBER,
+                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() + SLASH + NEW_D_NUMBER,
                 REL_FONDS_STRUCTURE_NEW_D_NUMBER));
     }
 
@@ -322,7 +321,7 @@ public class RecordHateoasHandler
     public void addNewPlan(ISystemId entity,
                            IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + NEW_PLAN,
+                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() + SLASH + NEW_PLAN,
                 REL_FONDS_STRUCTURE_NEW_PLAN));
     }
 
@@ -330,7 +329,7 @@ public class RecordHateoasHandler
     public void addNewPosition(ISystemId entity,
                                IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + NEW_POSITION,
+                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() + SLASH + NEW_POSITION,
                 REL_FONDS_STRUCTURE_NEW_POSITION));
     }
 
@@ -338,7 +337,7 @@ public class RecordHateoasHandler
     public void addNewSocialSecurityNumber(
             ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + NEW_SOCIAL_SECURITY_NUMBER,
+                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() + SLASH + NEW_SOCIAL_SECURITY_NUMBER,
                 REL_FONDS_STRUCTURE_NEW_SOCIAL_SECURITY_NUMBER));
     }
 
@@ -346,7 +345,7 @@ public class RecordHateoasHandler
     public void addNewUnit(ISystemId entity,
                            IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + NEW_NI_UNIT,
+                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() + SLASH + NEW_NI_UNIT,
                 REL_FONDS_STRUCTURE_NEW_NI_UNIT));
     }
 
@@ -354,7 +353,7 @@ public class RecordHateoasHandler
     public void addNationalIdentifier(ISystemId entity,
                             IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemId() + SLASH + NATIONAL_IDENTIFIER,
+                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() + SLASH + NATIONAL_IDENTIFIER,
                 REL_FONDS_STRUCTURE_NATIONAL_IDENTIFIER));
     }
 

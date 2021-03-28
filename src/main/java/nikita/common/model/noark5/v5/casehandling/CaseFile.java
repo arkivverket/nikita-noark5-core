@@ -1,7 +1,7 @@
 package nikita.common.model.noark5.v5.casehandling;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
@@ -21,9 +21,12 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -117,7 +120,7 @@ public class CaseFile
     private String loanedTo;
 
     // Links to Precedence
-    @ManyToMany
+    @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = TABLE_CASE_FILE_PRECEDENCE,
             joinColumns = @JoinColumn(
                     name = FOREIGN_KEY_CASE_FILE_PK,
@@ -125,10 +128,10 @@ public class CaseFile
             inverseJoinColumns = @JoinColumn(
                     name = FOREIGN_KEY_PRECEDENCE_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private List<Precedence> referencePrecedence = new ArrayList<>();
+    private Set<Precedence> referencePrecedence = new HashSet<>();
 
     // Link to AdministrativeUnit
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = CASE_FILE_ADMINISTRATIVE_UNIT_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     @JsonIgnore
@@ -223,12 +226,15 @@ public class CaseFile
         return NOARK_CASE_HANDLING_PATH;
     }
 
-    public List<Precedence> getReferencePrecedence() {
+    @Override
+    public Set<Precedence> getReferencePrecedence() {
         return referencePrecedence;
     }
 
-    public void setReferencePrecedence(List<Precedence> referencePrecedence) {
-        this.referencePrecedence = referencePrecedence;
+    @Override
+    public void addPrecedence(Precedence precedence) {
+        this.referencePrecedence.add(precedence);
+        precedence.getReferenceCaseFile().add(this);
     }
 
     public AdministrativeUnit getReferenceAdministrativeUnit() {

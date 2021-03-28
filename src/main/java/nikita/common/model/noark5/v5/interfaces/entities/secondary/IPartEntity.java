@@ -1,25 +1,28 @@
 package nikita.common.model.noark5.v5.interfaces.entities.secondary;
 
+import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.interfaces.IBSM;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.common.model.noark5.v5.metadata.PartRole;
 
-import java.util.List;
+import java.util.Set;
 
-/**
- * Created by tsodring on 11/07/19.
- */
 public interface IPartEntity
         extends ISystemId, IBSM {
-
     PartRole getPartRole();
 
     void setPartRole(PartRole partRole);
 
-    List<Record> getReferenceRecord();
+    Set<DocumentDescription> getReferenceDocumentDescription();
 
-    void setReferenceRecord(List<Record> referenceRecord);
+    void addDocumentDescription(DocumentDescription documentDescription);
 
-    void addReferenceRecord(Record record);
+    void removeDocumentDescription(DocumentDescription documentDescription);
+
+    Set<Record> getReferenceRecord();
+
+    void addRecord(Record record);
+
+    void removeRecord(Record record);
 }

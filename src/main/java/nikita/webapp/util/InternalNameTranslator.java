@@ -42,6 +42,14 @@ public class InternalNameTranslator {
                         ADMINISTRATIVE_UNIT_FIELD_ENG,
                         ADMINISTRATIVE_UNIT_FIELD_ENG_OBJECT);
         addNorToEnglishNameMap
+                (ASSOCIATED_WITH_RECORD_AS_CODE,
+                        ASSOCIATED_WITH_RECORD_AS_CODE_ENG,
+                        ASSOCIATED_WITH_RECORD_AS_CODE_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (ASSOCIATED_WITH_RECORD_AS_CODE_NAME,
+                        ASSOCIATED_WITH_RECORD_AS_CODE_NAME_ENG,
+                        ASSOCIATED_WITH_RECORD_AS_CODE_NAME_ENG_OBJECT);
+        addNorToEnglishNameMap
                 (AUTHOR,
                         AUTHOR_ENG,
                         AUTHOR_ENG_OBJECT);
@@ -348,9 +356,21 @@ public class InternalNameTranslator {
                         COMMENT_TEXT_ENG,
                         COMMENT_TEXT_ENG_OBJECT);
         addNorToEnglishNameMap
+                (COMMENT_TIME,
+                        COMMENT_TIME_ENG,
+                        COMMENT_TIME_ENG_OBJECT);
+        addNorToEnglishNameMap
                 (COMMENT_TYPE,
                         COMMENT_TYPE_ENG,
                         COMMENT_TYPE_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (COMMENT_TYPE_CODE,
+                        COMMENT_TYPE_CODE_ENG,
+                        COMMENT_TYPE_CODE_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (COMMENT_TYPE_CODE_NAME,
+                        COMMENT_TYPE_CODE_NAME_ENG,
+                        COMMENT_TYPE_CODE_NAME_ENG_OBJECT);
         addNorToEnglishNameMap
                 (CONTACT_INFORMATION,
                         CONTACT_INFORMATION_ENG,
@@ -531,6 +551,14 @@ public class InternalNameTranslator {
                         DOCUMENT_FLOW_FLOW_TO_ENG,
                         DOCUMENT_FLOW_FLOW_TO_ENG_OBJECT);
         addNorToEnglishNameMap
+                (DOCUMENT_MEDIUM_CODE,
+                        DOCUMENT_MEDIUM_CODE_ENG,
+                        DOCUMENT_MEDIUM_CODE_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (DOCUMENT_MEDIUM_CODE_NAME,
+                        DOCUMENT_MEDIUM_CODE_NAME_ENG,
+                        DOCUMENT_MEDIUM_CODE_NAME_ENG_OBJECT);
+        addNorToEnglishNameMap
                 (DOCUMENT_OBJECT_CHECKSUM_ALGORITHM,
                         DOCUMENT_OBJECT_CHECKSUM_ALGORITHM_ENG,
                         DOCUMENT_OBJECT_CHECKSUM_ALGORITHM_ENG_OBJECT);
@@ -575,25 +603,49 @@ public class InternalNameTranslator {
                         DOCUMENT_STATUS_ENG,
                         DOCUMENT_STATUS_ENG_OBJECT);
         addNorToEnglishNameMap
+                (DOCUMENT_STATUS_CODE,
+                        DOCUMENT_STATUS_CODE_ENG,
+                        DOCUMENT_STATUS_CODE_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (DOCUMENT_STATUS_CODE_NAME,
+                        DOCUMENT_STATUS_CODE_NAME_ENG,
+                        DOCUMENT_STATUS_CODE_NAME_ENG_OBJECT);
+        addNorToEnglishNameMap
                 (DOCUMENT_TYPE,
                         DOCUMENT_TYPE_ENG,
                         DOCUMENT_TYPE_ENG_OBJECT);
         addNorToEnglishNameMap
-                (ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD,
-                        ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD_ENG,
-                        ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD_ENG_OBJECT);
+                (DOCUMENT_TYPE_CODE,
+                        DOCUMENT_TYPE_CODE_ENG,
+                        DOCUMENT_TYPE_CODE_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (DOCUMENT_TYPE_CODE_NAME,
+                        DOCUMENT_TYPE_CODE_NAME_ENG,
+                        DOCUMENT_TYPE_CODE_NAME_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (ELECTRONIC_SIGNATURE_SECURITY_LEVEL_CODE_NAME,
+                        ELECTRONIC_SIGNATURE_SECURITY_LEVEL_CODE_NAME_ENG,
+                        ELECTRONIC_SIGNATURE_SECURITY_LEVEL_CODE_NAME_OBJECT);
+        addNorToEnglishNameMap
+                (ELECTRONIC_SIGNATURE_SECURITY_LEVEL_CODE,
+                        ELECTRONIC_SIGNATURE_SECURITY_LEVEL_CODE_ENG,
+                        ELECTRONIC_SIGNATURE_SECURITY_LEVEL_CODE_OBJECT);
         addNorToEnglishNameMap
                 (ELECTRONIC_SIGNATURE_VERIFIED_BY,
                         ELECTRONIC_SIGNATURE_VERIFIED_BY_ENG,
-                        ELECTRONIC_SIGNATURE_VERIFIED_BY_ENG_OBJECT);
+                        ELECTRONIC_SIGNATURE_VERIFIED_BY_OBJECT);
         addNorToEnglishNameMap
                 (ELECTRONIC_SIGNATURE_VERIFIED_DATE,
                         ELECTRONIC_SIGNATURE_VERIFIED_DATE_ENG,
-                        ELECTRONIC_SIGNATURE_VERIFIED_DATE_ENG_OBJECT);
+                        ELECTRONIC_SIGNATURE_VERIFIED_DATE_OBJECT);
         addNorToEnglishNameMap
-                (ELECTRONIC_SIGNATURE_VERIFIED_FIELD,
-                        ELECTRONIC_SIGNATURE_VERIFIED_FIELD_ENG,
-                        ELECTRONIC_SIGNATURE_VERIFIED_FIELD_ENG_OBJECT);
+                (ELECTRONIC_SIGNATURE_VERIFIED_CODE_NAME,
+                        ELECTRONIC_SIGNATURE_VERIFIED_CODE_NAME_ENG,
+                        ELECTRONIC_SIGNATURE_VERIFIED_CODE_NAME_OBJECT);
+        addNorToEnglishNameMap
+                (ELECTRONIC_SIGNATURE_VERIFIED_CODE,
+                        ELECTRONIC_SIGNATURE_VERIFIED_CODE_ENG,
+                        ELECTRONIC_SIGNATURE_VERIFIED_CODE_OBJECT);
         addNorToEnglishNameMap
                 (EMAIL_ADDRESS,
                         EMAIL_ADDRESS_ENG,
@@ -941,6 +993,10 @@ public class InternalNameTranslator {
                 (USER_NAME,
                         USER_NAME_ENG,
                         USER_NAME_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (UNIT_IDENTIFIER,
+                        UNIT_IDENTIFIER_ENG,
+                        UNIT_IDENTIFIER_ENG_OBJECT);
         addNorToEnglishNameMap
                 (VARIANT_FORMAT,
                         VARIANT_FORMAT_ENG,

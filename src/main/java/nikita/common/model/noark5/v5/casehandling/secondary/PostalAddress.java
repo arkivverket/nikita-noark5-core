@@ -1,7 +1,7 @@
 package nikita.common.model.noark5.v5.casehandling.secondary;
 
-import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.SystemIdEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.ISimpleAddress;
 import nikita.common.model.noark5.v5.secondary.PartPerson;
 import nikita.common.model.noark5.v5.secondary.PartUnit;
@@ -14,23 +14,20 @@ import javax.persistence.Table;
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.TABLE_POSTAL_ADDRESS;
 
-/**
- * Created by tsodring on 5/14/17.
- */
 @Entity
 @Table(name = TABLE_POSTAL_ADDRESS)
 public class PostalAddress
         extends SystemIdEntity
-        implements ISimpleAddress {
+        implements ISystemId, ISimpleAddress {
 
     @Embedded
     private SimpleAddress simpleAddress;
 
     @OneToOne(fetch = LAZY)
-    private CorrespondencePartPerson correspondencePartPerson;
+    private CorrespondencePartPerson referenceCorrespondencePartPerson;
 
     @OneToOne(fetch = LAZY)
-    private CorrespondencePartUnit correspondencePartUnit;
+    private CorrespondencePartUnit referenceCorrespondencePartUnit;
 
     @OneToOne(fetch = LAZY)
     private PartPerson partPerson;
@@ -46,22 +43,23 @@ public class PostalAddress
         this.simpleAddress = simpleAddress;
     }
 
-    public CorrespondencePartPerson getCorrespondencePartPerson() {
-        return correspondencePartPerson;
+    public CorrespondencePartPerson getReferenceCorrespondencePartPerson() {
+        return referenceCorrespondencePartPerson;
     }
 
-    public void setCorrespondencePartPerson(
-            CorrespondencePartPerson correspondencePartPerson) {
-        this.correspondencePartPerson = correspondencePartPerson;
+    public void setReferenceCorrespondencePartPerson(
+            CorrespondencePartPerson referenceCorrespondencePartPerson) {
+        this.referenceCorrespondencePartPerson =
+                referenceCorrespondencePartPerson;
     }
 
-    public CorrespondencePartUnit getCorrespondencePartUnit() {
-        return correspondencePartUnit;
+    public CorrespondencePartUnit getReferenceCorrespondencePartUnit() {
+        return referenceCorrespondencePartUnit;
     }
 
-    public void setCorrespondencePartUnit(
+    public void setReferenceCorrespondencePartUnit(
             CorrespondencePartUnit correspondencePartUnit) {
-        this.correspondencePartUnit = correspondencePartUnit;
+        this.referenceCorrespondencePartUnit = correspondencePartUnit;
     }
 
     public PartPerson getPartPerson() {

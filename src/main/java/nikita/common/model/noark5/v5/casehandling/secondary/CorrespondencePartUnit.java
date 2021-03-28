@@ -1,5 +1,6 @@
 package nikita.common.model.noark5.v5.casehandling.secondary;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.ICorrespondencePartUnitEntity;
@@ -16,8 +17,7 @@ import javax.persistence.*;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.Constants.PRIMARY_KEY_SYSTEM_ID;
-import static nikita.common.config.N5ResourceMappings.CORRESPONDENCE_PART_UNIT;
+import static nikita.common.config.N5ResourceMappings.*;
 
 @Entity
 @Table(name = TABLE_CORRESPONDENCE_PART_UNIT)
@@ -29,45 +29,53 @@ public class CorrespondencePartUnit
         implements ICorrespondencePartUnitEntity {
 
     /**
-     * M??? - organisasjonsnummer (xs:string)
+     * M??? - enhetsidentifikator (xs:string)
      */
-    @Column(name = "organisation_number")
+    @Column(name = UNIT_IDENTIFIER_ENG)
+    @JsonProperty(UNIT_IDENTIFIER)
     @Audited
-    private String organisationNumber;
+    private String unitIdentifier;
 
     /**
      * M??? - navn (xs:string)
      */
-    @Column(name = "name")
+    @Column(name = CORRESPONDENCE_PART_NAME_ENG)
+    @JsonProperty(CORRESPONDENCE_PART_NAME)
     @Audited
     private String name;
 
     /**
      * M412 - kontaktperson  (xs:string)
      */
-    @Column(name = "contact_person")
+    @Column(name = CONTACT_PERSON_ENG)
+    @JsonProperty(CONTACT_PERSON)
     @Audited
     private String contactPerson;
 
-    @OneToOne(mappedBy = "correspondencePartUnit", cascade = ALL)
+    @OneToOne(mappedBy = REFERENCE_CORRESPONDENCE_PART_UNIT, fetch = LAZY,
+            cascade = ALL)
+    @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private PostalAddress postalAddress;
 
-    @OneToOne(mappedBy = "correspondencePartUnit", cascade = ALL)
+    @OneToOne(mappedBy = REFERENCE_CORRESPONDENCE_PART_UNIT, fetch = LAZY,
+            cascade = ALL)
     @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private BusinessAddress businessAddress;
 
-    @OneToOne(mappedBy = "correspondencePartUnit", cascade = ALL)
+    @OneToOne(mappedBy = REFERENCE_CORRESPONDENCE_PART_UNIT, fetch = LAZY,
+            cascade = ALL)
     @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private ContactInformation contactInformation;
 
-    public String getOrganisationNumber() {
-        return organisationNumber;
+    public String getUnitIdentifier() {
+        return unitIdentifier;
     }
 
-    public void setOrganisationNumber(String organisationNumber) {
-        this.organisationNumber = organisationNumber;
+    public void setUnitIdentifier(String unitIdentifier) {
+        this.unitIdentifier = unitIdentifier;
     }
 
     public String getName() {
@@ -84,6 +92,7 @@ public class CorrespondencePartUnit
 
     public void setContactInformation(ContactInformation contactInformation) {
         this.contactInformation = contactInformation;
+        contactInformation.setCorrespondencePartUnit(this);
     }
 
     public BusinessAddress getBusinessAddress() {
@@ -92,6 +101,7 @@ public class CorrespondencePartUnit
 
     public void setBusinessAddress(BusinessAddress businessAddress) {
         this.businessAddress = businessAddress;
+        this.businessAddress.setReferenceCorrespondencePartUnit(this);
     }
 
     public PostalAddress getPostalAddress() {
@@ -100,6 +110,7 @@ public class CorrespondencePartUnit
 
     public void setPostalAddress(PostalAddress postalAddress) {
         this.postalAddress = postalAddress;
+        this.postalAddress.setReferenceCorrespondencePartUnit(this);
     }
 
     public String getContactPerson() {
@@ -123,7 +134,7 @@ public class CorrespondencePartUnit
     @Override
     public String toString() {
         return super.toString() +
-                ", organisationNumber='" + organisationNumber + '\'' +
+                ", unitIdentifier='" + unitIdentifier + '\'' +
                 ", name='" + name + '\'' +
                 ", contactPerson='" + contactPerson + '\'' +
                 '}';
@@ -143,7 +154,7 @@ public class CorrespondencePartUnit
         CorrespondencePartUnit rhs = (CorrespondencePartUnit) other;
         return new EqualsBuilder()
                 .appendSuper(super.equals(other))
-                .append(organisationNumber, rhs.organisationNumber)
+                .append(unitIdentifier, rhs.unitIdentifier)
                 .append(name, rhs.name)
                 .append(contactPerson, rhs.contactPerson)
                 .isEquals();
@@ -153,7 +164,7 @@ public class CorrespondencePartUnit
     public int hashCode() {
         return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
-                .append(organisationNumber)
+                .append(unitIdentifier)
                 .append(name)
                 .append(contactPerson)
                 .toHashCode();

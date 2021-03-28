@@ -24,10 +24,12 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.*;
+import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
@@ -50,7 +52,8 @@ public class DocumentDescription
      * M??? - dokumenttype code (xs:string)
      */
     @NotNull
-    @Column(name = "document_type_code", nullable = false)
+    @Column(name = DOCUMENT_TYPE_CODE_ENG, nullable = false)
+    @JsonProperty(DOCUMENT_TYPE_CODE)
     @Audited
     private String documentTypeCode;
 
@@ -58,21 +61,25 @@ public class DocumentDescription
      * M083 - dokumenttype code name (xs:string)
      */
     @NotNull
-    @Column(name = "document_type_code_name", nullable = false)
+    @Column(name = DOCUMENT_TYPE_CODE_NAME_ENG, nullable = false)
+    @JsonProperty(DOCUMENT_TYPE_CODE_NAME)
     @Audited
     private String documentTypeCodeName;
 
     /**
      * M??? - dokumentstatus code (xs:string)
      */
-    @Column(name = "document_status_code")
+    @Column(name = DOCUMENT_STATUS_CODE_ENG)
+    @JsonProperty(DOCUMENT_STATUS_CODE)
     @Audited
     private String documentStatusCode;
 
     /**
      * M054 - dokumentstatus code name (xs:string)
      */
-    @Column(name = "document_status_code_name")
+    @Column(name = DOCUMENT_STATUS_CODE_NAME_ENG)
+    @JsonProperty(DOCUMENT_STATUS_CODE_NAME)
+
     @Audited
     private String documentStatusCodeName;
 
@@ -96,14 +103,16 @@ public class DocumentDescription
     /**
      * M??? - dokumentmedium code (xs:string)
      */
-    @Column(name = "document_medium_code")
+    @Column(name = DOCUMENT_MEDIUM_CODE_ENG)
+    @JsonProperty(DOCUMENT_MEDIUM_CODE)
     @Audited
     private String documentMediumCode;
 
     /**
      * M300 - dokumentmedium code name (xs:string)
      */
-    @Column(name = "document_medium_code_name")
+    @Column(name = DOCUMENT_MEDIUM_CODE_NAME_ENG)
+    @JsonProperty(DOCUMENT_MEDIUM_CODE_NAME)
     @Audited
     private String documentMediumCodeName;
 
@@ -111,7 +120,8 @@ public class DocumentDescription
      * M??? - tilknyttetRegistreringSom code (xs:string)
      */
     @NotNull
-    @Column(name = "associated_with_record_as_code", nullable = false)
+    @Column(name = ASSOCIATED_WITH_RECORD_AS_CODE_ENG, nullable = false)
+    @JsonProperty(ASSOCIATED_WITH_RECORD_AS_CODE)
     @Audited
     private String associatedWithRecordAsCode;
 
@@ -119,7 +129,8 @@ public class DocumentDescription
      * M217 - tilknyttetRegistreringSom code name (xs:string)
      */
     @NotNull
-    @Column(name = "associated_with_record_as_code_name", nullable = false)
+    @Column(name = ASSOCIATED_WITH_RECORD_AS_CODE_NAME_ENG, nullable = false)
+    @JsonProperty(ASSOCIATED_WITH_RECORD_AS_CODE_NAME)
     @Audited
     private String associatedWithRecordAsCodeName;
 
@@ -136,7 +147,7 @@ public class DocumentDescription
      * M620 - tilknyttetDato (xs:date)
      */
     @NotNull
-    @Column(name = DOCUMENT_DESCRIPTION_ASSOCIATED_DATE_ENG, nullable = false)
+    @Column(name = DOCUMENT_DESCRIPTION_ASSOCIATED_DATE_ENG)
     @DateTimeFormat(iso = DATE)
     @Audited
     @JsonProperty(DOCUMENT_DESCRIPTION_ASSOCIATED_DATE)
@@ -168,14 +179,15 @@ public class DocumentDescription
 
     // Links to Records
     @ManyToMany(mappedBy = "referenceDocumentDescription")
-    private List<Record> referenceRecord = new ArrayList<>();
+    private final Set<Record> referenceRecord = new HashSet<>();
 
     // Links to DocumentObjects
     @OneToMany(mappedBy = "referenceDocumentDescription")
-    private List<DocumentObject> referenceDocumentObject = new ArrayList<>();
+    private final List<DocumentObject> referenceDocumentObject =
+            new ArrayList<>();
 
     // Links to Comments
-    @ManyToMany
+    @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = TABLE_DOCUMENT_DESCRIPTION_COMMENT,
             joinColumns = @JoinColumn(
                     name = FOREIGN_KEY_DOCUMENT_DESCRIPTION_PK,
@@ -183,50 +195,49 @@ public class DocumentDescription
             inverseJoinColumns = @JoinColumn(
                     name = FOREIGN_KEY_COMMENT_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private List<Comment> referenceComment = new ArrayList<>();
+    private final Set<Comment> referenceComment = new HashSet<>();
 
     // Links to Authors
-    @OneToMany(mappedBy = "referenceDocumentDescription",
-            cascade = ALL, orphanRemoval = true)
-    private List<Author> referenceAuthor = new ArrayList<>();
+    @OneToMany(mappedBy = "referenceDocumentDescription")
+    private final List<Author> referenceAuthor = new ArrayList<>();
 
     // Link to Classified
-    @ManyToOne(cascade = PERSIST)
+    @ManyToOne(fetch = LAZY, cascade = PERSIST)
     @JoinColumn(name = DOCUMENT_DESCRIPTION_CLASSIFIED_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Classified referenceClassified;
 
     // Link to Disposal
-    @ManyToOne(cascade = PERSIST)
+    @ManyToOne(fetch = LAZY, cascade = PERSIST)
     @JoinColumn(name = DOCUMENT_DESCRIPTION_DISPOSAL_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Disposal referenceDisposal;
 
     // Link to DisposalUndertaken
-    @ManyToOne(cascade = PERSIST)
+    @ManyToOne(fetch = LAZY, cascade = PERSIST)
     @JoinColumn(name = DOCUMENT_DESCRIPTION_DISPOSAL_UNDERTAKEN_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private DisposalUndertaken referenceDisposalUndertaken;
 
     // Link to Deletion
-    @ManyToOne(cascade = PERSIST)
+    @ManyToOne(fetch = LAZY, cascade = PERSIST)
     @JoinColumn(name = DOCUMENT_DESCRIPTION_DELETION_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Deletion referenceDeletion;
 
     // Link to Screening
-    @ManyToOne(cascade = PERSIST)
+    @ManyToOne(fetch = LAZY, cascade = PERSIST)
     @JoinColumn(name = DOCUMENT_DESCRIPTION_SCREENING_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Screening referenceScreening;
 
     // Link to ElectronicSignature
-    @OneToOne
-    @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID)
+    @OneToOne(mappedBy = REFERENCE_DOCUMENT_DESCRIPTION_DB, fetch = LAZY,
+            cascade = ALL)
     private ElectronicSignature referenceElectronicSignature;
 
     // Links to Part
-    @ManyToMany
+    @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = TABLE_DOCUMENT_DESCRIPTION_PARTY,
             joinColumns = @JoinColumn(
                     name = FOREIGN_KEY_DOCUMENT_DESCRIPTION_PK,
@@ -234,7 +245,7 @@ public class DocumentDescription
             inverseJoinColumns = @JoinColumn(
                     name = FOREIGN_KEY_PART_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private List<Part> referencePart = new ArrayList<>();
+    private final Set<Part> referencePart = new HashSet<>();
 
     public DocumentType getDocumentType() {
         if (null == documentTypeCode)
@@ -361,29 +372,32 @@ public class DocumentDescription
         this.externalReference = externalReference;
     }
 
-    public List<Record> getReferenceRecord() {
+    public Set<Record> getReferenceRecord() {
         return referenceRecord;
     }
 
-    public void setReferenceRecord(List<Record> referenceRecord) {
-        this.referenceRecord = referenceRecord;
+    public void addRecord(Record record) {
+        this.referenceRecord.add(record);
+        record.addDocumentDescription(this);
     }
 
-    public void addReferenceRecord(Record record) {
-        this.referenceRecord.add(record);
+    public void removeRecord(Record record) {
+        this.referenceRecord.remove(record);
+        record.addDocumentDescription(this);
     }
 
     public List<DocumentObject> getReferenceDocumentObject() {
         return referenceDocumentObject;
     }
 
-    public void setReferenceDocumentObject(
-            List<DocumentObject> referenceDocumentObject) {
-        this.referenceDocumentObject = referenceDocumentObject;
+    public void addDocumentObject(DocumentObject documentObject) {
+        referenceDocumentObject.add(documentObject);
+        documentObject.setReferenceDocumentDescription(this);
     }
 
-    public void addReferenceDocumentObject(DocumentObject documentObject) {
-        referenceDocumentObject.add(documentObject);
+    public void removeDocumentObject(DocumentObject documentObject) {
+        referenceDocumentObject.remove(documentObject);
+        documentObject.setReferenceDocumentDescription(null);
     }
 
     @Override
@@ -397,18 +411,14 @@ public class DocumentDescription
     }
 
     @Override
-    public List<Comment> getReferenceComment() {
+    public Set<Comment> getReferenceComment() {
         return referenceComment;
     }
 
     @Override
-    public void setReferenceComment(List<Comment> referenceComment) {
-        this.referenceComment = referenceComment;
-    }
-
-    @Override
-    public void addReferenceComment(Comment comment) {
+    public void addComment(Comment comment) {
         this.referenceComment.add(comment);
+        comment.getReferenceDocumentDescription().add(this);
     }
 
     @Override
@@ -417,12 +427,15 @@ public class DocumentDescription
     }
 
     @Override
-    public void setReferenceAuthor(List<Author> referenceAuthor) {
-        this.referenceAuthor = referenceAuthor;
+    public void addAuthor(Author author) {
+        referenceAuthor.add(author);
+        author.setReferenceDocumentDescription(this);
     }
 
-    public void addReferenceAuthor(Author author) {
-        referenceAuthor.add(author);
+    @Override
+    public void removeAuthor(Author author) {
+        referenceAuthor.remove(author);
+        author.setReferenceDocumentDescription(null);
     }
 
     @Override
@@ -451,9 +464,12 @@ public class DocumentDescription
     }
 
     @Override
-    public void setReferenceDisposalUndertaken(
-            DisposalUndertaken referenceDisposalUndertaken) {
-        this.referenceDisposalUndertaken = referenceDisposalUndertaken;
+    public void setDisposalUndertaken(DisposalUndertaken disposalUndertaken) {
+        this.referenceDisposalUndertaken = disposalUndertaken;
+    }
+
+    public void removeDisposalUndertaken() {
+        this.referenceDisposalUndertaken = null;
     }
 
     @Override
@@ -487,16 +503,13 @@ public class DocumentDescription
         this.referenceElectronicSignature = referenceElectronicSignature;
     }
 
-    public List<Part> getReferencePart() {
+    public Set<Part> getReferencePart() {
         return referencePart;
-    }
-
-    public void setReferencePart(List<Part> referencePart) {
-        this.referencePart = referencePart;
     }
 
     public void addPart(Part part) {
         this.referencePart.add(part);
+        part.getReferenceDocumentDescription().add(this);
     }
 
     @Override

@@ -19,8 +19,11 @@ import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
@@ -79,7 +82,7 @@ public class Fonds
     private List<Fonds> referenceChildFonds = new ArrayList<>();
 
     // Links to StorageLocations
-    @ManyToMany(cascade = PERSIST)
+    @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = TABLE_FONDS_STORAGE_LOCATION,
             joinColumns = @JoinColumn(
                     name = FOREIGN_KEY_FONDS_PK,
@@ -88,10 +91,10 @@ public class Fonds
                     name = FOREIGN_KEY_STORAGE_LOCATION_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     )
-    private List<StorageLocation> referenceStorageLocation = new ArrayList<>();
+    private Set<StorageLocation> referenceStorageLocation = new HashSet<>();
 
     // Links to FondsCreators
-    @ManyToMany
+    @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = TABLE_FONDS_FONDS_CREATOR,
             joinColumns = @JoinColumn(
                     name = FOREIGN_KEY_FONDS_PK,
@@ -100,7 +103,7 @@ public class Fonds
                     name = FOREIGN_KEY_FONDS_CREATOR_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     )
-    private List<FondsCreator> referenceFondsCreator = new ArrayList<>();
+    private Set<FondsCreator> referenceFondsCreator = new HashSet<>();
 
     public FondsStatus getFondsStatus() {
         if (null == fondsStatusCode)
@@ -152,6 +155,16 @@ public class Fonds
         this.referenceSeries = referenceSeries;
     }
 
+    public void addSeries(Series series) {
+        this.referenceSeries.add(series);
+        series.setReferenceFonds(this);
+    }
+
+    public void removeSeries(Series series) {
+        this.referenceSeries.remove(series);
+        series.setReferenceFonds(null);
+    }
+
     public Fonds getReferenceParentFonds() {
         return referenceParentFonds;
     }
@@ -170,33 +183,33 @@ public class Fonds
 
     public void addReferenceChildFonds(Fonds childFonds) {
         this.referenceChildFonds.add(childFonds);
+        childFonds.setReferenceParentFonds(this);
+    }
+
+    public void removeReferenceChildFonds(Fonds childFonds) {
+        this.referenceChildFonds.remove(childFonds);
+        childFonds.setReferenceParentFonds(null);
     }
 
     @Override
-    public List<StorageLocation> getReferenceStorageLocation() {
+    public Set<StorageLocation> getReferenceStorageLocation() {
         return referenceStorageLocation;
     }
 
     @Override
-    public void setReferenceStorageLocation(
-            List<StorageLocation> referenceStorageLocation) {
-        this.referenceStorageLocation = referenceStorageLocation;
-    }
-
-    @Override
-    public void addReferenceStorageLocation(
-            StorageLocation storageLocation) {
+    public void addStorageLocation(StorageLocation storageLocation) {
         this.referenceStorageLocation.add(storageLocation);
+        storageLocation.getReferenceFonds().add(this);
     }
 
     @Override
-    public List<FondsCreator> getReferenceFondsCreator() {
+    public Set<FondsCreator> getReferenceFondsCreator() {
         return referenceFondsCreator;
     }
 
-    public void setReferenceFondsCreator(
-            List<FondsCreator> referenceFondsCreator) {
-        this.referenceFondsCreator = referenceFondsCreator;
+    public void addFondsCreator(FondsCreator fondsCreator) {
+        this.referenceFondsCreator.add(fondsCreator);
+        fondsCreator.getReferenceFonds().add(this);
     }
 
     @Override

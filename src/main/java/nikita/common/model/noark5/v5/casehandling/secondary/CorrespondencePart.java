@@ -16,12 +16,12 @@ import java.util.List;
 
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
-import static javax.persistence.InheritanceType.JOINED;
+import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.*;
 
 @Entity
 @Table(name = TABLE_CORRESPONDENCE_PART)
-@Inheritance(strategy = JOINED)
 @JsonDeserialize(using = CorrespondencePartUnitDeserializer.class)
 @Audited
 public class CorrespondencePart
@@ -32,24 +32,24 @@ public class CorrespondencePart
      * M??? - korrespondansepartTypeKode kode (xs:string)
      */
     @NotNull
-    @Column(name = "correspondence_part_type_code", nullable = false)
+    @Column(name = CORRESPONDENCE_PART_TYPE_CODE, nullable = false)
     @Audited
     private String correspondencePartTypeCode;
 
     /**
      * M??? - korrespondansepartTypeKodenavn name (xs:string)
      */
-    @Column(name = "correspondence_part_type_code_name")
+    @Column(name = CORRESPONDENCE_PART_TYPE_CODE_NAME)
     @Audited
     private String correspondencePartTypeCodeName;
 
     // Link to Record
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = FOREIGN_KEY_RECORD_PK)
     private Record referenceRecord;
 
     // Links to businessSpecificMetadata (virksomhetsspesifikkeMetadata)
-    @OneToMany(mappedBy = "referenceCorrespondencePart",
+    @OneToMany(mappedBy = REFERENCE_CORRESPONDENCE_PART,
             cascade = {PERSIST, MERGE})
     private List<BSMBase> referenceBSMBase = new ArrayList<>();
 
@@ -91,9 +91,16 @@ public class CorrespondencePart
         }
     }
 
+    @Override
     public void addBSMBase(BSMBase bsmBase) {
         this.referenceBSMBase.add(bsmBase);
         bsmBase.setReferenceCorrespondencePart(this);
+    }
+
+    @Override
+    public void removeBSMBase(BSMBase bsmBase) {
+        this.referenceBSMBase.remove(bsmBase);
+        bsmBase.setReferenceCorrespondencePart(null);
     }
 
     public Record getReferenceRecord() {

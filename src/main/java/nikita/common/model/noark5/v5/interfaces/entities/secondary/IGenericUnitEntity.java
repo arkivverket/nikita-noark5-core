@@ -8,9 +8,9 @@ import nikita.common.model.noark5.v5.casehandling.secondary.ContactInformation;
 public interface IGenericUnitEntity
         extends IPostalAddress, IBusinessAddress, IContactInformation {
 
-    String getOrganisationNumber();
+    String getUnitIdentifier();
 
-    void setOrganisationNumber(String organisationNumber);
+    void setUnitIdentifier(String organisationNumber);
 
     String getName();
 

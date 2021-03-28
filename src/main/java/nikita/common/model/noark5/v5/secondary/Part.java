@@ -14,22 +14,18 @@ import org.hibernate.envers.Audited;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
-import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.NOARK_FONDS_STRUCTURE_PATH;
 import static nikita.common.config.Constants.TABLE_PART;
 import static nikita.common.config.N5ResourceMappings.PART;
 
-/**
- * Created by tsodring on 4/10/16.
- */
-
 @Entity
 @Table(name = TABLE_PART)
-@Inheritance(strategy = JOINED)
 @Audited
 public class Part
         extends NoarkGeneralEntity
@@ -52,27 +48,33 @@ public class Part
 
     // Links to Files
     @ManyToMany(mappedBy = "referencePart")
-    private List<File> referenceFile = new ArrayList<>();
+    private Set<File> referenceFile = new HashSet<>();
 
     // Links to Record
     @ManyToMany(mappedBy = "referencePart")
-    private List<Record> referenceRecord = new ArrayList<>();
+    private Set<Record> referenceRecord = new HashSet<>();
 
     // Links to DocumentDescriptions
     @ManyToMany(mappedBy = "referencePart")
-    private List<DocumentDescription> referenceDocumentDescription =
-            new ArrayList<>();
+    private Set<DocumentDescription> referenceDocumentDescription =
+            new HashSet<>();
 
     // Links to businessSpecificMetadata (virksomhetsspesifikkeMetadata)
     @OneToMany(mappedBy = "referencePart", cascade = {PERSIST, MERGE})
     private List<BSMBase> referenceBSMBase = new ArrayList<>();
 
-    public List<File> getReferenceFile() {
+    public Set<File> getReferenceFile() {
         return referenceFile;
     }
 
-    public void setReferenceFile(List<File> referenceFile) {
-        this.referenceFile = referenceFile;
+    public void addFile(File file) {
+        this.referenceFile.add(file);
+        file.getReferencePart().add(this);
+    }
+
+    public void removeFile(File file) {
+        referenceFile.remove(file);
+        file.getReferencePart().remove(this);
     }
 
     public PartRole getPartRole() {
@@ -82,45 +84,46 @@ public class Part
     }
 
     public void setPartRole(PartRole partRole) {
-	if (null != partRole) {
-	    this.partRoleCode = partRole.getCode();
-	    this.partRoleCodeName = partRole.getCodeName();
-	} else {
-	    this.partRoleCode = null;
-	    this.partRoleCodeName = null;
-	}
+        if (null != partRole) {
+            this.partRoleCode = partRole.getCode();
+            this.partRoleCodeName = partRole.getCodeName();
+        } else {
+            this.partRoleCode = null;
+            this.partRoleCodeName = null;
+        }
     }
 
-    public void addReferenceFile(File file) {
-        this.referenceFile.add(file);
-    }
-
-    public List<Record> getReferenceRecord() {
+    @Override
+    public Set<Record> getReferenceRecord() {
         return referenceRecord;
     }
 
-    public void setReferenceRecord(List<Record> referenceRecord) {
-        this.referenceRecord = referenceRecord;
-    }
-
-    public void addReferenceRecord(Record record) {
+    @Override
+    public void addRecord(Record record) {
         this.referenceRecord.add(record);
+        record.getReferencePart().add(this);
     }
 
-    public List<DocumentDescription> getReferenceDocumentDescription() {
+    public void removeRecord(Record record) {
+        referenceRecord.remove(record);
+        record.getReferencePart().remove(this);
+    }
+
+    public Set<DocumentDescription> getReferenceDocumentDescription() {
         return referenceDocumentDescription;
     }
 
-    public void setReferenceDocumentDescription(
-            List<DocumentDescription> referenceDocumentDescription) {
-        this.referenceDocumentDescription = referenceDocumentDescription;
-    }
-
-    public void addReferenceDocumentDescription(
+    public void addDocumentDescription(
             DocumentDescription documentDescription) {
-        this.referenceDocumentDescription.add(documentDescription);
+        referenceDocumentDescription.add(documentDescription);
+        documentDescription.getReferencePart().add(this);
     }
 
+    public void removeDocumentDescription(
+            DocumentDescription documentDescription) {
+        referenceDocumentDescription.remove(documentDescription);
+        documentDescription.getReferencePart().remove(this);
+    }
 
     public List<BSMBase> getReferenceBSMBase() {
         return referenceBSMBase;
@@ -133,15 +136,14 @@ public class Part
         }
     }
 
-    public void addReferenceBSMBase(List<BSMBase> referenceBSMBase) {
-        this.referenceBSMBase.addAll(referenceBSMBase);
-        for (BSMBase base : referenceBSMBase) {
-            base.setReferencePart(this);
-        }
+    public void addBSMBase(BSMBase bsmBase) {
+        referenceBSMBase.add(bsmBase);
+        bsmBase.setReferencePart(this);
     }
 
-    public void addBSMBase(BSMBase bsmBase) {
-        this.referenceBSMBase.add(bsmBase);
+    public void removeBSMBase(BSMBase bsmBase) {
+        referenceBSMBase.remove(bsmBase);
+        bsmBase.setReferencePart(null);
     }
 
     @Override

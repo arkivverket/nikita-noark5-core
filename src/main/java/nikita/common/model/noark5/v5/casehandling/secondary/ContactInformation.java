@@ -1,7 +1,8 @@
 package nikita.common.model.noark5.v5.casehandling.secondary;
 
-import nikita.common.model.noark5.v5.NoarkEntity;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import nikita.common.model.noark5.v5.SystemIdEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.IContactInformationEntity;
 import nikita.common.model.noark5.v5.secondary.PartPerson;
 import nikita.common.model.noark5.v5.secondary.PartUnit;
@@ -16,47 +17,48 @@ import javax.persistence.Table;
 
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.TABLE_CONTACT_INFORMATION;
+import static nikita.common.config.N5ResourceMappings.*;
 
-/**
- * Created by tsodring on 5/14/17.
- */
 @Entity
 @Table(name = TABLE_CONTACT_INFORMATION)
 public class ContactInformation
         extends SystemIdEntity
-        implements IContactInformationEntity {
+        implements ISystemId, IContactInformationEntity {
 
     /**
      * M410 - epostadresse (xs:string)
      */
+    @Column(name = EMAIL_ADDRESS_ENG)
+    @JsonProperty(EMAIL_ADDRESS)
     @Audited
-    @Column(name = "email_address")
     private String emailAddress;
 
     /**
      * M??? - mobiltelefon (xs:string)
      */
-    @Column(name = "mobile_telephone_number")
+    @Column(name = MOBILE_TELEPHONE_NUMBER_ENG)
+    @JsonProperty(MOBILE_TELEPHONE_NUMBER)
     @Audited
     private String mobileTelephoneNumber;
 
     /**
      * M411 - telefonnummer (xs:string)
      */
-    @Column(name = "telephone_number")
+    @Column(name = TELEPHONE_NUMBER_ENG)
+    @JsonProperty(TELEPHONE_NUMBER)
     @Audited
     private String telephoneNumber;
 
-    @OneToOne
-    private CorrespondencePartPerson correspondencePartPerson;
+    @OneToOne(fetch = LAZY)
+    private CorrespondencePartPerson referenceCorrespondencePartPerson;
 
-    @OneToOne
-    private CorrespondencePartUnit correspondencePartUnit;
+    @OneToOne(fetch = LAZY)
+    private CorrespondencePartUnit referenceCorrespondencePartUnit;
 
-    @OneToOne
+    @OneToOne(fetch = LAZY)
     private PartPerson partPerson;
 
-    @OneToOne
+    @OneToOne(fetch = LAZY)
     private PartUnit partUnit;
 
     public String getEmailAddress() {
@@ -84,21 +86,21 @@ public class ContactInformation
     }
 
     public CorrespondencePartPerson getCorrespondencePartPerson() {
-        return correspondencePartPerson;
+        return referenceCorrespondencePartPerson;
     }
 
     public void setCorrespondencePartPerson(
-            CorrespondencePartPerson correspondencePartPerson) {
-        this.correspondencePartPerson = correspondencePartPerson;
+            CorrespondencePartPerson referenceCorrespondencePartPerson) {
+        this.referenceCorrespondencePartPerson = referenceCorrespondencePartPerson;
     }
 
-    public CorrespondencePartUnit getCorrespondencePartUnit() {
-        return correspondencePartUnit;
+    public CorrespondencePartUnit getReferenceCorrespondencePartUnit() {
+        return referenceCorrespondencePartUnit;
     }
 
     public void setCorrespondencePartUnit(
-            CorrespondencePartUnit correspondencePartUnit) {
-        this.correspondencePartUnit = correspondencePartUnit;
+            CorrespondencePartUnit referenceCorrespondencePartUnit) {
+        this.referenceCorrespondencePartUnit = referenceCorrespondencePartUnit;
     }
 
     public PartPerson getPartPerson() {

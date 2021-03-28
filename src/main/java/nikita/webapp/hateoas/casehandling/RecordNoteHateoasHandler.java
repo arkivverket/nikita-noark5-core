@@ -3,7 +3,6 @@ package nikita.webapp.hateoas.casehandling;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
-import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.webapp.hateoas.RecordHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IRecordNoteHateoasHandler;
 import org.springframework.stereotype.Component;
@@ -43,7 +42,7 @@ public class RecordNoteHateoasHandler
     public void addDocumentFlow(ISystemId entity,
                                 IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD_NOTE + SLASH + entity.getSystemId() + SLASH + DOCUMENT_FLOW,
+                HREF_BASE_RECORD_NOTE + SLASH + entity.getSystemIdAsString() + SLASH + DOCUMENT_FLOW,
                 REL_CASE_HANDLING_DOCUMENT_FLOW));
     }
 
@@ -62,7 +61,7 @@ public class RecordNoteHateoasHandler
                                    IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity,
                 new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD_NOTE + SLASH + entity.getSystemId() + SLASH + NEW_DOCUMENT_FLOW,
-                REL_CASE_HANDLING_NEW_DOCUMENT_FLOW));
+                        HREF_BASE_RECORD_NOTE + SLASH + entity.getSystemIdAsString() + SLASH + NEW_DOCUMENT_FLOW,
+                        REL_CASE_HANDLING_NEW_DOCUMENT_FLOW));
     }
 }

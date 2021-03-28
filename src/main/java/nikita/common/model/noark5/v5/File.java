@@ -23,7 +23,9 @@ import org.hibernate.envers.Audited;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static javax.persistence.CascadeType.*;
 import static javax.persistence.FetchType.LAZY;
@@ -71,23 +73,23 @@ public class File
     private String documentMediumCodeName;
 
     // Link to StorageLocation
-    @ManyToMany
+    @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = TABLE_FILE_STORAGE_LOCATION,
             joinColumns = @JoinColumn(name = FOREIGN_KEY_FILE_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
             inverseJoinColumns =
             @JoinColumn(name = FOREIGN_KEY_STORAGE_LOCATION_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private List<StorageLocation> referenceStorageLocation = new ArrayList<>();
+    private Set<StorageLocation> referenceStorageLocation = new HashSet<>();
 
     // Links to Keywords
-    @ManyToMany
+    @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = TABLE_FILE_KEYWORD, joinColumns =
     @JoinColumn(name = FOREIGN_KEY_FILE_PK,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
             inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_KEYWORD_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private List<Keyword> referenceKeyword = new ArrayList<>();
+    private Set<Keyword> referenceKeyword = new HashSet<>();
 
     // Link to parent File
     @ManyToOne(fetch = LAZY)
@@ -114,29 +116,29 @@ public class File
     private List<Record> referenceRecord = new ArrayList<>();
 
     // Links to Comments
-    @ManyToMany(cascade = PERSIST)
+    @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = TABLE_FILE_COMMENT,
             joinColumns = @JoinColumn(name = FOREIGN_KEY_FILE_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
             inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_COMMENT_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private List<Comment> referenceComment = new ArrayList<>();
+    private Set<Comment> referenceComment = new HashSet<>();
 
     // Links to Classified
-    @ManyToOne(cascade = PERSIST)
+    @ManyToOne(fetch = LAZY, cascade = PERSIST)
     @JoinColumn(name = FILE_CLASSIFIED_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     @JsonIgnore
     private Classified referenceClassified;
 
     // Link to Disposal
-    @ManyToOne(cascade = PERSIST)
+    @ManyToOne(fetch = LAZY, cascade = PERSIST)
     @JoinColumn(name = FILE_DISPOSAL_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Disposal referenceDisposal;
 
     // Link to Screening
-    @ManyToOne(cascade = PERSIST)
+    @ManyToOne(fetch = LAZY, cascade = PERSIST)
     @JoinColumn(name = FILE_SCREENING_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Screening referenceScreening;
@@ -145,13 +147,13 @@ public class File
     private List<CrossReference> referenceCrossReference = new ArrayList<>();
 
     // Links to Part
-    @ManyToMany
+    @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = TABLE_FILE_PARTY,
             joinColumns = @JoinColumn(name = FOREIGN_KEY_FILE_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
             inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_PART_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private List<Part> referencePart = new ArrayList<>();
+    private Set<Part> referencePart = new HashSet<>();
 
     // Links to NationalIdentifiers
     @OneToMany(mappedBy = "referenceFile")
@@ -237,35 +239,26 @@ public class File
     }
 
     @Override
-    public List<StorageLocation> getReferenceStorageLocation() {
+    public Set<StorageLocation> getReferenceStorageLocation() {
         return referenceStorageLocation;
     }
 
     @Override
-    public void setReferenceStorageLocation(
-            List<StorageLocation> referenceStorageLocation) {
-        this.referenceStorageLocation = referenceStorageLocation;
-    }
-
-    @Override
-    public void addReferenceStorageLocation(
+    public void addStorageLocation(
             StorageLocation storageLocation) {
         this.referenceStorageLocation.add(storageLocation);
+        storageLocation.getReferenceFile().add(this);
     }
 
     @Override
-    public List<Keyword> getReferenceKeyword() {
+    public Set<Keyword> getReferenceKeyword() {
         return referenceKeyword;
     }
 
     @Override
-    public void setReferenceKeyword(List<Keyword> referenceKeyword) {
-        this.referenceKeyword = referenceKeyword;
-    }
-
-    @Override
-    public void addReferenceKeyword(Keyword keyword) {
+    public void addKeyword(Keyword keyword) {
         this.referenceKeyword.add(keyword);
+        keyword.getReferenceFile().add(this);
     }
 
     public File getReferenceParentFile() {
@@ -282,6 +275,16 @@ public class File
 
     public void setReferenceChildFile(List<File> referenceChildFile) {
         this.referenceChildFile = referenceChildFile;
+    }
+
+    public void addFile(File file) {
+        this.referenceChildFile.add(file);
+        file.setReferenceParentFile(file);
+    }
+
+    public void removeFile(File file) {
+        this.referenceChildFile.remove(file);
+        file.setReferenceParentFile(null);
     }
 
     public Series getReferenceSeries() {
@@ -308,12 +311,28 @@ public class File
         this.referenceRecord = referenceRecord;
     }
 
-    public List<Comment> getReferenceComment() {
+    public void addRecord(Record record) {
+        referenceRecord.add(record);
+        record.setReferenceFile(this);
+    }
+
+    public void removeRecord(Record record) {
+        referenceRecord.remove(record);
+        record.setReferenceFile(null);
+    }
+
+    public Set<Comment> getReferenceComment() {
         return referenceComment;
     }
 
-    public void setReferenceComment(List<Comment> referenceComment) {
+    public void setReferenceComment(Set<Comment> referenceComment) {
         this.referenceComment = referenceComment;
+    }
+
+    @Override
+    public void addComment(Comment comment) {
+        referenceComment.add(comment);
+        comment.getReferenceFile().add(this);
     }
 
     @Override
@@ -328,25 +347,31 @@ public class File
     }
 
     @Override
-    public void addReferenceComment(Comment comment) {
-        this.referenceComment.add(comment);
-    }
-
-    public List<Part> getReferencePart() {
+    public Set<Part> getReferencePart() {
         return referencePart;
     }
 
-    public void setReferencePart(List<Part> referencePart) {
-        this.referencePart = referencePart;
+    @Override
+    public void addPart(Part part) {
+        referencePart.add(part);
+        part.getReferenceFile().add(this);
     }
 
-    public void addPart(Part part) {
-        this.referencePart.add(part);
+    public void removePart(Part part) {
+        referencePart.remove(part);
+        part.getReferenceFile().remove(this);
     }
 
     @Override
-    public void addReferenceCrossReference(CrossReference crossReference) {
-        this.referenceCrossReference.add(crossReference);
+    public void addCrossReference(CrossReference crossReference) {
+        referenceCrossReference.add(crossReference);
+        crossReference.setReferenceFile(this);
+    }
+
+    @Override
+    public void removeCrossReference(CrossReference crossReference) {
+        referenceCrossReference.remove(crossReference);
+        crossReference.setReferenceFile(null);
     }
 
     public void createReference(@NotNull ISystemId entity,
@@ -354,8 +379,8 @@ public class File
 
         if (referenceType.equalsIgnoreCase(NEW_CROSS_REFERENCE)) {
             CrossReference crossReference = new CrossReference();
-            crossReference.setFromSystemId(getSystemId());
-            crossReference.setToSystemId(entity.getSystemId());
+            crossReference.setFromSystemId(getSystemIdAsString());
+            crossReference.setToSystemId(entity.getSystemIdAsString());
 
             if (entity.getBaseTypeName().equals(CLASS)) {
                 crossReference.setReferenceClass((Class) entity);
@@ -367,7 +392,7 @@ public class File
             crossReference.setReferenceFile(this);
             referenceCrossReference.add(crossReference);
             ((ICrossReference) entity).
-                    addReferenceCrossReference(crossReference);
+                    addCrossReference(crossReference);
         }
     }
 
@@ -381,8 +406,15 @@ public class File
     }
 
     public void addNationalIdentifier(
-            NationalIdentifier referenceNationalIdentifier) {
-        this.referenceNationalIdentifier.add(referenceNationalIdentifier);
+            NationalIdentifier nationalIdentifier) {
+        referenceNationalIdentifier.add(nationalIdentifier);
+        nationalIdentifier.setReferenceFile(this);
+    }
+
+    public void removeNationalIdentifier(
+            NationalIdentifier nationalIdentifier) {
+        referenceNationalIdentifier.remove(nationalIdentifier);
+        nationalIdentifier.setReferenceFile(null);
     }
 
     public List<BSMBase> getReferenceBSMBase() {
@@ -403,9 +435,16 @@ public class File
         }
     }
 
+    @Override
     public void addBSMBase(BSMBase bsmBase) {
         this.referenceBSMBase.add(bsmBase);
         bsmBase.setReferenceFile(this);
+    }
+
+    @Override
+    public void removeBSMBase(BSMBase bsmBase) {
+        this.referenceBSMBase.remove(bsmBase);
+        bsmBase.setReferenceFile(null);
     }
 
     @Override

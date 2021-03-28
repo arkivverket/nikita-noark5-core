@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static nikita.common.config.Constants.TABLE_CONTACT_CLASSIFIED;
-import static nikita.common.config.N5ResourceMappings.CLASSIFIED;
 import static nikita.common.config.N5ResourceMappings.CLASSIFICATION_ENG;
+import static nikita.common.config.N5ResourceMappings.CLASSIFIED;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 /**
@@ -170,12 +170,32 @@ public class Classified
         this.referenceSeries = referenceSeries;
     }
 
+    public void addSeries(Series klass) {
+        referenceSeries.add(klass);
+        klass.setReferenceClassified(this);
+    }
+
+    public void removeSeries(Series klass) {
+        referenceSeries.remove(klass);
+        klass.setReferenceClassified(null);
+    }
+
     public List<Class> getReferenceClass() {
         return referenceClass;
     }
 
     public void setReferenceClass(List<Class> referenceClass) {
         this.referenceClass = referenceClass;
+    }
+
+    public void addClass(Class klass) {
+        referenceClass.add(klass);
+        klass.setReferenceClassified(this);
+    }
+
+    public void removeClass(Class klass) {
+        referenceClass.remove(klass);
+        klass.setReferenceClassified(null);
     }
 
     public List<File> getReferenceFile() {
@@ -186,12 +206,32 @@ public class Classified
         this.referenceFile = referenceFile;
     }
 
+    public void addFile(File klass) {
+        referenceFile.add(klass);
+        klass.setReferenceClassified(this);
+    }
+
+    public void removeFile(File klass) {
+        referenceFile.remove(klass);
+        klass.setReferenceClassified(null);
+    }
+
     public List<Record> getReferenceRecord() {
         return referenceRecord;
     }
 
     public void setReferenceRecord(List<Record> referenceRecord) {
         this.referenceRecord = referenceRecord;
+    }
+
+    public void addRecord(Record klass) {
+        referenceRecord.add(klass);
+        klass.setReferenceClassified(this);
+    }
+
+    public void removeRecord(Record klass) {
+        referenceRecord.remove(klass);
+        klass.setReferenceClassified(null);
     }
 
     public List<DocumentDescription> getReferenceDocumentDescription() {
@@ -201,6 +241,16 @@ public class Classified
     public void setReferenceDocumentDescription(
             List<DocumentDescription> referenceDocumentDescription) {
         this.referenceDocumentDescription = referenceDocumentDescription;
+    }
+
+    public void addDocumentDescription(DocumentDescription klass) {
+        referenceDocumentDescription.add(klass);
+        klass.setReferenceClassified(this);
+    }
+
+    public void removeDocumentDescription(DocumentDescription klass) {
+        referenceDocumentDescription.remove(klass);
+        klass.setReferenceClassified(null);
     }
 
     @Override

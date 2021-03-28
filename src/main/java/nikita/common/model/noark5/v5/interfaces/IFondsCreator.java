@@ -3,14 +3,14 @@ package nikita.common.model.noark5.v5.interfaces;
 
 import nikita.common.model.noark5.v5.FondsCreator;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * Created by tsodring on 12/7/16.
  */
 
 public interface IFondsCreator {
-    List<FondsCreator> getReferenceFondsCreator();
+    Set<FondsCreator> getReferenceFondsCreator();
 
-    void setReferenceFondsCreator(List<FondsCreator> referenceFondsCreator);
+    void addFondsCreator(FondsCreator fondsCreator);
 }

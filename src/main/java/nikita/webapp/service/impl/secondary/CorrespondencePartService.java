@@ -179,8 +179,8 @@ public class CorrespondencePartService
         // First the values
         existingCorrespondencePart.setName(
                 incomingCorrespondencePart.getName());
-        existingCorrespondencePart.setOrganisationNumber(
-                incomingCorrespondencePart.getOrganisationNumber());
+        existingCorrespondencePart.setUnitIdentifier(
+                incomingCorrespondencePart.getUnitIdentifier());
         existingCorrespondencePart.setContactPerson(
                 incomingCorrespondencePart.getContactPerson());
 
@@ -234,7 +234,8 @@ public class CorrespondencePartService
         PostalAddress postalAddress = correspondencePart.getPostalAddress();
         if (null != postalAddress) {
             postalAddress.getSimpleAddress().setAddressType(POSTAL_ADDRESS);
-            postalAddress.setCorrespondencePartPerson(correspondencePart);
+            postalAddress.setReferenceCorrespondencePartPerson(
+                    correspondencePart);
         }
         ResidingAddress residingAddress =
                 correspondencePart.getResidingAddress();
@@ -244,8 +245,6 @@ public class CorrespondencePartService
         }
 
         record.addCorrespondencePart(correspondencePart);
-        correspondencePart.setReferenceRecord(record);
-
         CorrespondencePartPersonHateoas correspondencePartPersonHateoas =
                 new CorrespondencePartPersonHateoas(
                         correspondencePartRepository.save(correspondencePart));
@@ -267,6 +266,15 @@ public class CorrespondencePartService
 
     }
 
+    /**
+     * The correspondencePart.setPostalAddress(postalAddress); should not be
+     * necessary as the deserialiser will already have done this. Check this
+     * to see if we really need to do this.
+     *
+     * @param correspondencePart Incoming correspondencePartUni
+     * @param record             existing record retrieved from database
+     * @return correspondencePart wraped as a correspondencePartUnitHateaos
+     */
     @Override
     public CorrespondencePartUnitHateoas createNewCorrespondencePartUnit(
             CorrespondencePartUnit correspondencePart,
@@ -278,19 +286,14 @@ public class CorrespondencePartService
         if (null != postalAddress) {
             postalAddress.getSimpleAddress().setAddressType(POSTAL_ADDRESS);
             correspondencePart.setPostalAddress(postalAddress);
-            postalAddress.setCorrespondencePartUnit(correspondencePart);
         }
         BusinessAddress businessAddress =
                 correspondencePart.getBusinessAddress();
         if (null != businessAddress) {
             businessAddress.getSimpleAddress().setAddressType(BUSINESS_ADDRESS);
             correspondencePart.setBusinessAddress(businessAddress);
-            businessAddress.setCorrespondencePartUnit(correspondencePart);
         }
-        // bidirectional relationship @ManyToOne, set both sides of
-        // relationship
         record.addCorrespondencePart(correspondencePart);
-        correspondencePart.setReferenceRecord(record);
         correspondencePartRepository.save(correspondencePart);
         CorrespondencePartUnitHateoas correspondencePartUnitHateoas =
                 new CorrespondencePartUnitHateoas(correspondencePart);

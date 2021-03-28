@@ -179,8 +179,14 @@ public class RecordNote
     }
 
     @Override
-    public void addReferenceDocumentFlow(DocumentFlow referenceDocumentFlow) {
+    public void addDocumentFlow(DocumentFlow referenceDocumentFlow) {
         this.referenceDocumentFlow.add(referenceDocumentFlow);
+    }
+
+    @Override
+    public void removeDocumentFlow(DocumentFlow documentFlow) {
+        referenceDocumentFlow.remove(documentFlow);
+        documentFlow.setReferenceRegistryEntry(null);
     }
 
     @Override

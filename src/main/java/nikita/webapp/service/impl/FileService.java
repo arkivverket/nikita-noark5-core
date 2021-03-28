@@ -276,19 +276,16 @@ public class FileService
     public CommentHateoas getCommentAssociatedWithFile(
             @NotNull final String systemID) {
         CommentHateoas commentHateoas = new CommentHateoas(
-                (List<INoarkEntity>) (List) getFileOrThrow(systemID).
-                        getReferenceComment());
+                List.copyOf(getFileOrThrow(systemID).getReferenceComment()));
         commentHateoasHandler.addLinks(commentHateoas, new Authorisation());
         return commentHateoas;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public PartHateoas getPartAssociatedWithFile(
             @NotNull final String systemID) {
         PartHateoas partHateoas = new PartHateoas(
-                (List<INoarkEntity>) (List) getFileOrThrow(systemID).
-                        getReferencePart());
+                List.copyOf(getFileOrThrow(systemID).getReferencePart()));
         partHateoasHandler.addLinks(partHateoas, new Authorisation());
         return partHateoas;
     }

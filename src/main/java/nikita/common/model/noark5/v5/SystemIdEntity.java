@@ -19,16 +19,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
+import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.NOARK_FONDS_STRUCTURE_PATH;
 import static nikita.common.config.N5ResourceMappings.SYSTEM_ID;
+import static nikita.common.config.N5ResourceMappings.SYSTEM_ID_ENG;
 import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 
 /**
  * Created by tsodring on 5/8/17.
  */
 @Entity
-@Inheritance(strategy = TABLE_PER_CLASS)
+@Inheritance(strategy = JOINED)
 @EntityListeners(AuditingEntityListener.class)
 @Audited(targetAuditMode = NOT_AUDITED)
 public class SystemIdEntity
@@ -48,7 +49,7 @@ public class SystemIdEntity
             parameters = {@Parameter(
                     name = "uuid_gen_strategy_class",
                     value = "org.hibernate.id.uuid.CustomVersionOneStrategy")})
-    @Column(name = "system_id", updatable = false, nullable = false)
+    @Column(name = SYSTEM_ID_ENG, updatable = false, nullable = false)
     @Type(type = "uuid-char")
     private UUID systemId;
 
@@ -58,11 +59,8 @@ public class SystemIdEntity
     private List<ChangeLog> referenceChangeLog = new ArrayList<>();
 
     @Override
-    public String getSystemId() {
-        if (null != systemId)
-            return systemId.toString();
-        else
-            return null;
+    public UUID getSystemId() {
+        return systemId;
     }
 
     @Override
@@ -71,18 +69,16 @@ public class SystemIdEntity
     }
 
     @Override
-    public UUID getId() {
-        return systemId;
-    }
-
-    @Override
-    public void setId(UUID systemId) {
-        this.systemId = systemId;
+    public String getSystemIdAsString() {
+        if (null != systemId)
+            return systemId.toString();
+        else
+            return null;
     }
 
     @Override
     public String getIdentifier() {
-        return getSystemId();
+        return getSystemIdAsString();
     }
 
     @Override
@@ -100,6 +96,12 @@ public class SystemIdEntity
 
     public void addChangeLog(ChangeLog eventLog) {
         this.referenceChangeLog.add(eventLog);
+        eventLog.setReferenceArchiveUnit(this);
+    }
+
+    public void removeChangeLog(ChangeLog eventLog) {
+        referenceChangeLog.remove(eventLog);
+        eventLog.setReferenceArchiveUnit(null);
     }
 
     // Most entities belong to arkivstruktur. These entities pick the value

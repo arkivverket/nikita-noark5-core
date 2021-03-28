@@ -1,18 +1,12 @@
 package nikita.common.model.noark5.v5.interfaces.entities;
 
-import nikita.common.model.noark5.v5.interfaces.IPart;
 import nikita.common.model.noark5.v5.interfaces.IPrecedence;
 import nikita.common.model.noark5.v5.metadata.CaseStatus;
 
 import java.time.OffsetDateTime;
 
-/**
- * Created by tsodring
- */
 public interface ICaseFileEntity
-        extends IFileEntity, IPrecedence, IPart {
-
-
+        extends IFileEntity, IPrecedence {
     Integer getCaseYear();
 
     void setCaseYear(Integer caseYear);
@@ -32,16 +26,10 @@ public interface ICaseFileEntity
     String getRecordsManagementUnit();
 
     void setRecordsManagementUnit(String recordsManagementUnit);
-
     CaseStatus getCaseStatus();
-
     void setCaseStatus(CaseStatus caseStatus);
-
     OffsetDateTime getLoanedDate();
-
     void setLoanedDate(OffsetDateTime loanedDate);
-
     String getLoanedTo();
-
     void setLoanedTo(String loanedTo);
 }

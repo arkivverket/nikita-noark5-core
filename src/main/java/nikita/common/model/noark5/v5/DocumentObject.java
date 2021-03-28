@@ -22,6 +22,8 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 
@@ -124,7 +126,7 @@ public class DocumentObject
     private String mimeType;
 
     // Link to DocumentDescription
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = DOCUMENT_OBJECT_DOCUMENT_DESCRIPTION_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private DocumentDescription referenceDocumentDescription;
@@ -134,8 +136,8 @@ public class DocumentObject
     private List<Conversion> referenceConversion = new ArrayList<>();
 
     // Link to ElectronicSignature
-    @OneToOne
-    @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID)
+    @OneToOne(mappedBy = REFERENCE_DOCUMENT_OBJECT_DB, fetch = LAZY,
+            cascade = ALL)
     private ElectronicSignature referenceElectronicSignature;
 
     public Integer getVersionNumber() {
@@ -261,8 +263,14 @@ public class DocumentObject
         this.referenceConversion = referenceConversion;
     }
 
-    public void addReferenceConversion(Conversion referenceConversion) {
-        this.referenceConversion.add(referenceConversion);
+    public void addReferenceConversion(Conversion conversion) {
+        this.referenceConversion.add(conversion);
+        conversion.setReferenceDocumentObject(this);
+    }
+
+    public void removeReferenceConversion(Conversion conversion) {
+        this.referenceConversion.remove(conversion);
+        conversion.setReferenceDocumentObject(null);
     }
 
     public ElectronicSignature getReferenceElectronicSignature() {

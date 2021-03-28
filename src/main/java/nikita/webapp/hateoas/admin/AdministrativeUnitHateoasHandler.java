@@ -57,7 +57,7 @@ public class AdministrativeUnitHateoasHandler
             ISystemId entity,
             IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_ADMIN + SLASH + ADMINISTRATIVE_UNIT + SLASH + entity.getSystemId() + SLASH + NEW_ADMINISTRATIVE_UNIT + SLASH,
+                HREF_BASE_ADMIN + SLASH + ADMINISTRATIVE_UNIT + SLASH + entity.getSystemIdAsString() + SLASH + NEW_ADMINISTRATIVE_UNIT + SLASH,
                 REL_ADMIN_ADMINISTRATIVE_UNIT, false));
     }
 

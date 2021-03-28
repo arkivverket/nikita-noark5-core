@@ -3,8 +3,8 @@ package nikita.common.model.noark5.v5.secondary;
 import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.*;
 import nikita.common.model.noark5.v5.interfaces.entities.IScreeningEntity;
-import nikita.common.model.noark5.v5.metadata.ScreeningDocument;
 import nikita.common.model.noark5.v5.metadata.AccessRestriction;
+import nikita.common.model.noark5.v5.metadata.ScreeningDocument;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -87,23 +87,23 @@ public class Screening
     private Integer screeningDuration;
 
     // Links to Series
-    @ManyToMany(mappedBy = "referenceScreening")
+    @OneToMany(mappedBy = "referenceScreening")
     private List<Series> referenceSeries = new ArrayList<>();
 
     // Links to Class
-    @ManyToMany(mappedBy = "referenceScreening")
+    @OneToMany(mappedBy = "referenceScreening")
     private List<Class> referenceClass = new ArrayList<>();
 
     // Links to File
-    @ManyToMany(mappedBy = "referenceScreening")
+    @OneToMany(mappedBy = "referenceScreening")
     private List<File> referenceFile = new ArrayList<>();
 
     // Links to Record
-    @ManyToMany(mappedBy = "referenceScreening")
+    @OneToMany(mappedBy = "referenceScreening")
     private List<Record> referenceRecord = new ArrayList<>();
 
     // Links to DocumentDescription
-    @ManyToMany(mappedBy = "referenceScreening")
+    @OneToMany(mappedBy = "referenceScreening")
     private List<DocumentDescription> referenceDocumentDescription =
             new ArrayList<>();
 
@@ -191,12 +191,32 @@ public class Screening
         this.referenceSeries = referenceSeries;
     }
 
+    public void addSeries(Series series) {
+        this.referenceSeries.add(series);
+        series.setReferenceScreening(this);
+    }
+
+    public void removeSeries(Series series) {
+        this.referenceSeries.remove(series);
+        series.setReferenceScreening(null);
+    }
+
     public List<Class> getReferenceClass() {
         return referenceClass;
     }
 
     public void setReferenceClass(List<Class> referenceClass) {
         this.referenceClass = referenceClass;
+    }
+
+    public void addClass(Class klass) {
+        this.referenceClass.add(klass);
+        klass.setReferenceScreening(this);
+    }
+
+    public void removeClass(Class klass) {
+        this.referenceClass.remove(klass);
+        klass.setReferenceScreening(null);
     }
 
     public List<File> getReferenceFile() {
@@ -207,12 +227,32 @@ public class Screening
         this.referenceFile = referenceFile;
     }
 
+    public void addFile(File file) {
+        this.referenceFile.add(file);
+        file.setReferenceScreening(this);
+    }
+
+    public void removeFile(File file) {
+        this.referenceFile.remove(file);
+        file.setReferenceScreening(null);
+    }
+
     public List<Record> getReferenceRecord() {
         return referenceRecord;
     }
 
     public void setReferenceRecord(List<Record> referenceRecord) {
         this.referenceRecord = referenceRecord;
+    }
+
+    public void addRecord(Record record) {
+        this.referenceRecord.add(record);
+        record.setReferenceScreening(this);
+    }
+
+    public void removeRecord(Record record) {
+        this.referenceRecord.remove(record);
+        record.setReferenceScreening(null);
     }
 
     public List<DocumentDescription> getReferenceDocumentDescription() {
@@ -222,6 +262,18 @@ public class Screening
     public void setReferenceDocumentDescription(
             List<DocumentDescription> referenceDocumentDescription) {
         this.referenceDocumentDescription = referenceDocumentDescription;
+    }
+
+    public void addDocumentDescription(
+            DocumentDescription documentDescription) {
+        this.referenceDocumentDescription.add(documentDescription);
+        documentDescription.setReferenceScreening(this);
+    }
+
+    public void removeDocumentDescription(
+            DocumentDescription documentDescription) {
+        this.referenceDocumentDescription.remove(documentDescription);
+        documentDescription.setReferenceScreening(null);
     }
 
     @Override

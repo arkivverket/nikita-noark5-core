@@ -51,11 +51,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static java.time.OffsetDateTime.now;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.DatabaseConstants.DELETE_FROM_CORRESPONDENCE_PART_RECORD;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
@@ -160,17 +160,14 @@ public class RecordService
     public DocumentDescriptionHateoas
     createDocumentDescriptionAssociatedWithRecord(
             String systemID, DocumentDescription documentDescription) {
-
         Record record = getRecordOrThrow(systemID);
-
         validateDocumentMedium(metadataService, documentDescription);
         // Adding 1 as documentNumber starts at 1, not 0
         long documentNumber =
                 documentDescriptionRepository.
                         countByReferenceRecord(record) + 1;
         documentDescription.setDocumentNumber((int) documentNumber);
-        record.addReferenceDocumentDescription(documentDescription);
-        documentDescription.addReferenceRecord(record);
+        record.addDocumentDescription(documentDescription);
         documentDescription.setDocumentNumber((int) documentNumber);
 
         DocumentDescriptionHateoas documentDescriptionHateoas =
@@ -301,8 +298,8 @@ public class RecordService
     public CommentHateoas getCommentAssociatedWithRecord(
             @NotNull final String systemID) {
         CommentHateoas commentHateoas =
-            new CommentHateoas((List<INoarkEntity>) (List)
-                getRecordOrThrow(systemID).getReferenceComment());
+                new CommentHateoas(List.copyOf(
+                        getRecordOrThrow(systemID).getReferenceComment()));
         commentHateoasHandler.addLinks(commentHateoas, new Authorisation());
         return commentHateoas;
     }
@@ -322,11 +319,9 @@ public class RecordService
 
     @Override
     public PartHateoas
-    getPartAssociatedWithRecord(
-            final String systemID) {
-        PartHateoas partHateoas = new PartHateoas(
-                (List<INoarkEntity>) (List) getRecordOrThrow(systemID).
-                        getReferencePart());
+    getPartAssociatedWithRecord(final String systemID) {
+        PartHateoas partHateoas = new PartHateoas(List.copyOf(
+                getRecordOrThrow(systemID).getReferencePart()));
         partHateoasHandler.addLinks(partHateoas, new Authorisation());
         return partHateoas;
     }
@@ -499,7 +494,7 @@ public class RecordService
     generateDefaultRecord() {
         Record defaultRecord = new Record();
         defaultRecord.setArchivedBy(TEST_USER_CASE_HANDLER_2);
-        defaultRecord.setArchivedDate(OffsetDateTime.now());
+        defaultRecord.setArchivedDate(now());
         defaultRecord.setTitle(TEST_TITLE);
         defaultRecord.setDescription(TEST_DESCRIPTION);
         RecordHateoas recordHateoas = new RecordHateoas(defaultRecord);

@@ -1,7 +1,6 @@
 package nikita.common.model.noark5.v5.secondary;
 
 import nikita.common.model.noark5.v5.DocumentDescription;
-import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.IDisposalUndertakenEntity;
@@ -11,7 +10,7 @@ import org.hibernate.envers.Audited;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -43,11 +42,11 @@ public class DisposalUndertaken
     private OffsetDateTime disposalDate;
 
     // Links to Series
-    @ManyToMany(mappedBy = "referenceDisposalUndertaken")
+    @OneToMany(mappedBy = "referenceDisposalUndertaken")
     private List<Series> referenceSeries = new ArrayList<>();
 
     // Links to DocumentDescription
-    @ManyToMany(mappedBy = "referenceDisposalUndertaken")
+    @OneToMany(mappedBy = "referenceDisposalUndertaken")
     private List<DocumentDescription>
             referenceDocumentDescription = new ArrayList<>();
 
@@ -85,6 +84,16 @@ public class DisposalUndertaken
         this.referenceSeries = referenceSeries;
     }
 
+    public void addSeries(Series series) {
+        this.referenceSeries.add(series);
+        series.setDisposalUndertaken(this);
+    }
+
+    public void removeSeries(Series series) {
+        this.referenceSeries.remove(series);
+        series.setDisposalUndertaken(null);
+    }
+
     public List<DocumentDescription> getReferenceDocumentDescription() {
         return referenceDocumentDescription;
     }
@@ -92,6 +101,18 @@ public class DisposalUndertaken
     public void setReferenceDocumentDescription(
             List<DocumentDescription> referenceDocumentDescription) {
         this.referenceDocumentDescription = referenceDocumentDescription;
+    }
+
+    public void addDocumentDescription(
+            DocumentDescription documentDescription) {
+        referenceDocumentDescription.add(documentDescription);
+        documentDescription.setDisposalUndertaken(this);
+    }
+
+    public void removeDocumentDescription(
+            DocumentDescription documentDescription) {
+        referenceDocumentDescription.remove(documentDescription);
+        documentDescription.removeDisposalUndertaken();
     }
 
     @Override

@@ -11,6 +11,6 @@ public interface IDocumentFlow {
     List<DocumentFlow> getReferenceDocumentFlow();
 
     void setReferenceDocumentFlow(List<DocumentFlow> documentFlow);
-
-    void addReferenceDocumentFlow(DocumentFlow documentFlow);
+    void addDocumentFlow(DocumentFlow documentFlow);
+    void removeDocumentFlow(DocumentFlow documentFlow);
 }

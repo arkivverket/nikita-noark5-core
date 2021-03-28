@@ -8,7 +8,6 @@ import nikita.common.model.noark5.v5.Fonds;
 import nikita.common.model.noark5.v5.FondsCreator;
 import nikita.common.model.noark5.v5.hateoas.FondsCreatorHateoas;
 import nikita.common.model.noark5.v5.hateoas.FondsHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.hateoas.interfaces.IFondsCreatorHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IFondsHateoasHandler;
@@ -221,8 +220,8 @@ public class FondsCreatorHateoasController
         String ownedBy = SecurityContextHolder.getContext().getAuthentication()
                 .getName();
         FondsCreatorHateoas fondsCreatorHateoas = new
-                FondsCreatorHateoas((List<INoarkEntity>) (List)
-                fondsCreatorService.findByOwnedBy(ownedBy));
+                FondsCreatorHateoas(List.copyOf(
+                fondsCreatorService.findByOwnedBy(ownedBy)));
         fondsCreatorHateoasHandler.addLinks(fondsCreatorHateoas,
                 new Authorisation());
         return ResponseEntity.status(OK)

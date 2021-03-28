@@ -282,7 +282,6 @@ public class FondsService
     @Override
     public FondsHateoas findSingleFonds(String fondsSystemId) {
         Fonds existingFonds = getFondsOrThrow(fondsSystemId);
-
         FondsHateoas fondsHateoas = new FondsHateoas(fondsRepository.
                 save(existingFonds));
         fondsHateoasHandler.addLinks(fondsHateoas, new Authorisation());
@@ -337,10 +336,8 @@ public class FondsService
     public ResponseEntity<FondsCreatorHateoas>
     findFondsCreatorAssociatedWithFonds(@NotNull final String systemId) {
         FondsCreatorHateoas fondsCreatorHateoas =
-                new FondsCreatorHateoas(
-                        (List<INoarkEntity>) (List)
-                                getFondsOrThrow(systemId).
-                                        getReferenceFondsCreator());
+                new FondsCreatorHateoas(List.copyOf(getFondsOrThrow(systemId)
+                        .getReferenceFondsCreator()));
         fondsCreatorHateoasHandler.addLinks(fondsCreatorHateoas,
                 new Authorisation());
         return ResponseEntity.status(OK)

@@ -4,8 +4,9 @@ import java.util.UUID;
 
 public interface ISystemId
         extends INoarkEntity {
-    String getSystemId();
+    UUID getSystemId();
+
+    String getSystemIdAsString();
+
     void setSystemId(UUID systemId);
-    UUID getId();
-    void setId(UUID systemId);
 }

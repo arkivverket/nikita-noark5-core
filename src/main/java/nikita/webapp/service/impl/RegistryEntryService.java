@@ -213,9 +213,8 @@ public class RegistryEntryService
             throw new NikitaMalformedInputDataException(info);
         }
 
-        signOff.addRecord(registryEntry);
+        registryEntry.addSignOff(signOff);
         signOff = signOffRepository.save(signOff);
-        registryEntry.addReferenceSignOff(signOff);
         SignOffHateoas signOffHateoas = new SignOffHateoas(signOff);
         signOffHateoasHandler.addLinks(signOffHateoas, new Authorisation());
         return signOffHateoas;
@@ -254,9 +253,9 @@ public class RegistryEntryService
             if (!referenceCorrespondencePart.getReferenceRecord()
                 .equals(referenceRegistryEntry)) {
                 String info = INFO_CANNOT_FIND_OBJECT +
-                    " CorrespondencePart " + partID.toString() +
-                    " below RegistryEntry " +
-                    referenceRegistryEntry.getSystemId() + ".";
+                        " CorrespondencePart " + partID.toString() +
+                        " below RegistryEntry " +
+                        referenceRegistryEntry.getSystemIdAsString() + ".";
                 logger.info(info);
                 throw new NoarkEntityNotFoundException(info);
             }
@@ -315,11 +314,10 @@ public class RegistryEntryService
     public PrecedenceHateoas findAllPrecedenceForRegistryEntry(
             @NotNull final String systemID) {
         RegistryEntry registryEntry = getRegistryEntryOrThrow(systemID);
-        PrecedenceHateoas precedenceHateoas =
-                new PrecedenceHateoas((List<INoarkEntity>)
-                        (List) registryEntry.getReferencePrecedence());
+        PrecedenceHateoas precedenceHateoas = new PrecedenceHateoas(
+                List.copyOf(registryEntry.getReferencePrecedence()));
         precedenceHateoasHandler.addLinks(precedenceHateoas,
-                                          new Authorisation());
+                new Authorisation());
         setOutgoingRequestHeader(precedenceHateoas);
         return precedenceHateoas;
     }
@@ -327,11 +325,10 @@ public class RegistryEntryService
     @Override
     public SignOffHateoas
     findAllSignOffAssociatedWithRegistryEntry(String systemId) {
-        SignOffHateoas signOffHateoas =
-            new SignOffHateoas((List<INoarkEntity>) (List)
-            getRegistryEntryOrThrow(systemId).getReferenceSignOff());
-        signOffHateoasHandler.addLinks(signOffHateoas,
-                                       new Authorisation());
+        SignOffHateoas signOffHateoas = new SignOffHateoas(
+                List.copyOf(getRegistryEntryOrThrow(systemId)
+                        .getReferenceSignOff()));
+        signOffHateoasHandler.addLinks(signOffHateoas, new Authorisation());
         return signOffHateoas;
     }
 
@@ -365,12 +362,9 @@ public class RegistryEntryService
     @Override
     public PrecedenceHateoas createPrecedenceAssociatedWithRecord(
             String registryEntrySystemID, Precedence precedence) {
-
         RegistryEntry registryEntry = getRegistryEntryOrThrow(
                 registryEntrySystemID);
-        // bidirectional relationship @ManyToMany, set both sides of relationship
-        registryEntry.getReferencePrecedence().add(precedence);
-        precedence.getReferenceRegistryEntry().add(registryEntry);
+        registryEntry.addPrecedence(precedence);
         return precedenceService.createNewPrecedence(precedence);
 
     }
@@ -571,7 +565,7 @@ public class RegistryEntryService
         } else {
             throw new NoarkEntityNotFoundException(
                     "Could not find user with systemID [" +
-                            RegistryEntry.getSystemId() + "]");
+                            RegistryEntry.getSystemIdAsString() + "]");
         }
         return administrativeUnit;
     }
@@ -641,10 +635,10 @@ public class RegistryEntryService
         Set<User> users = administrativeUnit.getUsers();
         if (!users.contains(user)) {
             throw new NoarkAdministrativeUnitMemberException(
-                    "User [" + user.getSystemId() + "] is " +
+                    "User [" + user.getSystemIdAsString() + "] is " +
                             "not a member  of the administrativeUnit " +
                             "with systemID [" +
-                            administrativeUnit.getSystemId() + "] when " +
+                            administrativeUnit.getSystemIdAsString() + "] when " +
                             "assigning caseFile responsible field.");
         }
     }
@@ -658,7 +652,7 @@ public class RegistryEntryService
             throw new NoarkAdministrativeUnitMemberException(
                     "User [" + user.getUsername() + "] is not a member " +
                             "of the administrativeUnit with systemID [" +
-                            administrativeUnit.getSystemId() + "] when " +
+                            administrativeUnit.getSystemIdAsString() + "] when " +
                             "assigning ownership field.");
         }
     }

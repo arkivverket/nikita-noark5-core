@@ -1,9 +1,9 @@
 package nikita.webapp.spring;
 
-import nikita.common.model.nikita.NikitaUserPrincipal;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.annotation.ManagedBean;
 import java.util.Optional;
@@ -28,8 +28,7 @@ public class AuditorAwareImpl
         if (authentication.getPrincipal().equals("anonymousUser")) {
             return Optional.of("system");
         }
-        NikitaUserPrincipal principal =
-                (NikitaUserPrincipal) authentication.getPrincipal();
-        return Optional.of(principal.getUsername());
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        return Optional.of(userDetails.getUsername());
     }
 }

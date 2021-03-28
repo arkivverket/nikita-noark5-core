@@ -72,7 +72,7 @@ public class FondsJPATest {
      * possible to retrieve a count of persisted fonds.
      */
     @Test
-    @Sql("/db-tests/createFonds.sql")
+    @Sql("/db-tests/create_entity_fonds.sql")
     public void whenInitializedByDbUnit_thenCheckSize() {
         // assertThat(fondsRepository.findAll().size()).isEqualTo(2);
     }
@@ -82,7 +82,7 @@ public class FondsJPATest {
      * retrieve the persisted fonds.
      */
     @Test
-    @Sql("/db-tests/createFonds.sql")
+    @Sql("/db-tests/create_entity_fonds.sql")
     public void whenInitializedByDbUnit_thenFindBySystemId() {
         Fonds fonds = fondsRepository.findBySystemId(
                 UUID.fromString(fonds1SystemId));
@@ -97,7 +97,7 @@ public class FondsJPATest {
      * delete the persisted fonds.
      */
     @Test
-    @Sql("/db-tests/createFonds.sql")
+    @Sql("/db-tests/create_entity_fonds.sql")
     public void whenInitializedByDbUnit_thenDeleteBySystemId() {
         Fonds fonds = fondsRepository.findBySystemId(
                 UUID.fromString(fonds1SystemId));

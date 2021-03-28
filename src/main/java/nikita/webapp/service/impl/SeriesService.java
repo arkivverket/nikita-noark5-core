@@ -183,9 +183,8 @@ public class SeriesService
             @NotNull final String systemId) {
         ClassificationSystemHateoas classificationSystemHateoas =
                 new ClassificationSystemHateoas(
-                        (List<INoarkEntity>) (List)
-                                getSeriesOrThrow(systemId).
-                                        getReferenceClassificationSystem());
+                        List.copyOf(getSeriesOrThrow(systemId)
+                                .getReferenceClassificationSystem()));
         classificationSystemHateoasHandler.addLinks(classificationSystemHateoas,
                 new Authorisation());
         return ResponseEntity.status(OK)
@@ -277,7 +276,7 @@ public class SeriesService
                     throw new NikitaMalformedInputDataException(info);
                 }
                 referenceSeries
-                    .setReferenceSuccessorSystemID(series.getId());
+                        .setReferenceSuccessorSystemID(series.getSystemId());
                 referenceSeries.setReferenceSuccessor(series);
             }
             // Will set reference to null if series with SystemID not found
@@ -295,7 +294,7 @@ public class SeriesService
                     throw new NikitaMalformedInputDataException(info);
                 }
                 referenceSeries
-                    .setReferencePrecursorSystemID(series.getId());
+                        .setReferencePrecursorSystemID(series.getSystemId());
                 referenceSeries.setReferencePrecursor(series);
             }
             // Will set reference to null if series with SystemID not found
@@ -336,7 +335,7 @@ public class SeriesService
         if (null != series.getSeriesStatus() &&
                 SERIES_STATUS_CLOSED_CODE.equals(series.getSeriesStatus().getCode())) {
             String info = INFO_CANNOT_ASSOCIATE_WITH_CLOSED_OBJECT +
-                    ". Series with systemId " + series.getSystemId() +
+                    ". Series with systemId " + series.getSystemIdAsString() +
                     " has status code " + SERIES_STATUS_CLOSED_CODE;
             logger.info(info);
             throw new NoarkEntityEditWhenClosedException(info);

@@ -1,86 +1,102 @@
 package nikita.common.model.noark5.v5.secondary;
 
-import nikita.common.model.noark5.v5.DocumentDescription;
-import nikita.common.model.noark5.v5.DocumentObject;
-import nikita.common.model.noark5.v5.SystemIdEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import nikita.common.model.noark5.v5.*;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.common.model.noark5.v5.metadata.ElectronicSignatureSecurityLevel;
 import nikita.common.model.noark5.v5.metadata.ElectronicSignatureVerified;
+import nikita.common.util.exceptions.NikitaMalformedInputDataException;
+import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
-import static nikita.common.config.Constants.PRIMARY_KEY_SYSTEM_ID;
-import static nikita.common.config.Constants.TABLE_ELECTRONIC_SIGNATURE;
+import static javax.persistence.FetchType.LAZY;
+import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 @Entity
 @Table(name = TABLE_ELECTRONIC_SIGNATURE)
 public class ElectronicSignature
-        extends SystemIdEntity {
+        extends NoarkEntity
+        implements ISystemId, Comparable<SystemIdEntity> {
 
+    // Links to ChangeLog
+    @OneToMany(mappedBy = "referenceSystemIdEntity")
+    @JsonIgnore
+    private final List<ChangeLog> referenceChangeLog = new ArrayList<>();
     /**
-     * M??? - elektronisksignatursikkerhetsnivaa code (xs:string)
+     * M001 - systemID (xs:string)
      */
-    @Column(name = "electronic_signature_security_level_code")
-    @Audited
-    private String electronicSignatureSecurityLevelCode;
-
-    /**
-     * M507 - elektronisksignatursikkerhetsnivaa code name (xs:string)
-     */
-    @Column(name = ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD_ENG)
-    @Audited
-    private String electronicSignatureSecurityLevelCodeName;
-
-    /**
-     * M??? - elektronisksignaturverifisert code (xs:string)
-     */
-    @Column(name = "electronic_signature_verified_code")
-    @Audited
-    private String electronicSignatureVerifiedCode;
-
-    /**
-     * M508 - elektronisksignaturverifisert code name (xs:string)
-     */
-    @Column(name = ELECTRONIC_SIGNATURE_VERIFIED_FIELD_ENG)
-    @Audited
-    private String electronicSignatureVerifiedCodeName;
-
+    @Id
+    @Column(name = SYSTEM_ID_ENG, updatable = false, nullable = false)
+    @Type(type = "uuid-char")
+    private UUID systemId;
     /**
      * M622 - verifisertDato (xs:date)
      */
     @Column(name = ELECTRONIC_SIGNATURE_VERIFIED_DATE_ENG)
+    @JsonProperty(ELECTRONIC_SIGNATURE_VERIFIED_DATE)
     @DateTimeFormat(iso = DATE)
     @Audited
     private OffsetDateTime verifiedDate;
-
     /**
      * M623 - verifisertAv (xs:string)
      */
     @Column(name = ELECTRONIC_SIGNATURE_VERIFIED_BY_ENG)
+    @JsonProperty(ELECTRONIC_SIGNATURE_VERIFIED_BY)
     @Audited
     private String verifiedBy;
+    /**
+     * M??? - elektronisksignatursikkerhetsnivaa code (xs:string)
+     */
+    @Column(name = ELECTRONIC_SIGNATURE_SECURITY_LEVEL_CODE_ENG)
+    @JsonProperty(ELECTRONIC_SIGNATURE_SECURITY_LEVEL_CODE)
+    @Audited
+    private String electronicSignatureSecurityLevelCode;
+    /**
+     * M507 - elektronisksignatursikkerhetsnivaa code name (xs:string)
+     */
+    @Column(name = ELECTRONIC_SIGNATURE_SECURITY_LEVEL_CODE_NAME_ENG)
+    @JsonProperty(ELECTRONIC_SIGNATURE_SECURITY_LEVEL_CODE_NAME)
+    @Audited
+    private String electronicSignatureSecurityLevelCodeName;
+    /**
+     * M??? - elektronisksignaturverifisert code (xs:string)
+     */
+    @Column(name = ELECTRONIC_SIGNATURE_VERIFIED_CODE_ENG)
+    @JsonProperty(ELECTRONIC_SIGNATURE_VERIFIED_CODE)
+    @Audited
+    private String electronicSignatureVerifiedCode;
 
     // Link to RegistryEntry
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = LAZY)
     @MapsId
     @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID)
     private RegistryEntry referenceRegistryEntry;
 
     // Link to DocumentObject
-    @OneToOne
+    @OneToOne(fetch = LAZY)
     @MapsId
     @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID)
     private DocumentObject referenceDocumentObject;
 
     // Link to DocumentDescription
-    @OneToOne
+    @OneToOne(fetch = LAZY)
+    @MapsId
     @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID)
     private DocumentDescription referenceDocumentDescription;
 
@@ -228,5 +244,68 @@ public class ElectronicSignature
                 .append(electronicSignatureVerifiedCode)
                 .append(electronicSignatureVerifiedCodeName)
                 .toHashCode();
+    }
+
+    /**
+     * M508 - elektronisksignaturverifisert code name (xs:string)
+     */
+    @Column(name = ELECTRONIC_SIGNATURE_VERIFIED_CODE_NAME_ENG)
+    @JsonProperty(ELECTRONIC_SIGNATURE_VERIFIED_CODE_NAME + "." + CODE_NAME)
+    @Audited
+    private String electronicSignatureVerifiedCodeName;
+
+    @Override
+    public UUID getSystemId() {
+        return systemId;
+    }
+
+    @Override
+    public void setSystemId(UUID systemId) {
+        this.systemId = systemId;
+    }
+
+    @Override
+    public String getSystemIdAsString() {
+        if (null != systemId)
+            return systemId.toString();
+        else
+            return null;
+    }
+
+    @Override
+    public String getIdentifier() {
+        return getSystemIdAsString();
+    }
+
+    @Override
+    public String getIdentifierType() {
+        return SYSTEM_ID;
+    }
+
+    // Most entities belong to arkivstruktur. These entities pick the value
+    // up here
+    @Override
+    public String getFunctionalTypeName() {
+        return NOARK_FONDS_STRUCTURE_PATH;
+    }
+
+    @Override
+    public void createReference(
+            @NotNull INoarkEntity entity,
+            @NotNull String referenceType) {
+        // I really should be overridden. Currently throwing an Exception if I
+        // am not overriden as nikita is unable to process this
+        throw new NikitaMalformedInputDataException("Error when trying to " +
+                "create a reference between entities");
+    }
+
+    @Override
+    public int compareTo(@NotNull SystemIdEntity otherEntity) {
+        if (null == otherEntity) {
+            return -1;
+        }
+        return new CompareToBuilder()
+                .append(this.systemId, otherEntity.getSystemId())
+                .toComparison();
     }
 }

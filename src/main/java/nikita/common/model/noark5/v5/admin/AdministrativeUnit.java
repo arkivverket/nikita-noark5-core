@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Set;
 
 import static javax.persistence.CascadeType.*;
+import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
@@ -86,12 +87,11 @@ public class AdministrativeUnit
     // Links to SequenceNumberGenerator
     @OneToMany(mappedBy = "referenceAdministrativeUnit",
             cascade = ALL, orphanRemoval = true)
-    private Set <SequenceNumberGenerator>
+    private Set<SequenceNumberGenerator>
             referenceSequenceNumberGenerator = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(
-            name = TABLE_ADMINISTRATIVE_UNIT_USER,
+    @ManyToMany(cascade = {PERSIST, MERGE})
+    @JoinTable(name = TABLE_ADMINISTRATIVE_UNIT_USER,
             joinColumns = {
                     @JoinColumn(
                             name = FOREIGN_KEY_ADMINISTRATIVE_UNIT_PK,
@@ -102,6 +102,7 @@ public class AdministrativeUnit
     private Set<User> users = new HashSet<>();
 
     // Links to CaseFile
+    // TODO: Do we really need the relationship to be bidirectional?
     @OneToMany(mappedBy = "referenceAdministrativeUnit", cascade = ALL)
     @JsonIgnore
     private List<CaseFile> referenceCaseFile = new ArrayList<>();
@@ -110,12 +111,11 @@ public class AdministrativeUnit
      * M585 referanseOverordnetEnhet (xs:string)
      */
     // Link to parent AdministrativeUnit
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY)
     private AdministrativeUnit referenceParentAdministrativeUnit;
 
     // Links to child AdministrativeUnit
-    @OneToMany(mappedBy = "referenceParentAdministrativeUnit",
-            fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "referenceParentAdministrativeUnit", fetch = LAZY)
     private List<AdministrativeUnit> referenceChildAdministrativeUnit =
             new ArrayList<>();
 
@@ -151,6 +151,16 @@ public class AdministrativeUnit
         this.referenceCaseFile = referenceCaseFile;
     }
 
+    public void addCaseFile(CaseFile caseFile) {
+        this.referenceCaseFile.add(caseFile);
+        caseFile.setReferenceAdministrativeUnit(this);
+    }
+
+    public void removeCaseFile(CaseFile caseFile) {
+        this.referenceCaseFile.remove(caseFile);
+        caseFile.setReferenceAdministrativeUnit(null);
+    }
+
     public String getShortName() {
         return shortName;
     }
@@ -179,6 +189,13 @@ public class AdministrativeUnit
     public void addReferenceSequenceNumberGenerator(
             SequenceNumberGenerator sequenceNumberGenerator) {
         this.referenceSequenceNumberGenerator.add(sequenceNumberGenerator);
+        sequenceNumberGenerator.setReferenceAdministrativeUnit(this);
+    }
+
+    public void removeReferenceSequenceNumberGenerator(
+            SequenceNumberGenerator sequenceNumberGenerator) {
+        this.referenceSequenceNumberGenerator.remove(sequenceNumberGenerator);
+        sequenceNumberGenerator.setReferenceAdministrativeUnit(null);
     }
 
     public String getAdministrativeUnitStatus() {
@@ -217,6 +234,16 @@ public class AdministrativeUnit
         this.referenceChildAdministrativeUnit = referenceChildAdministrativeUnit;
     }
 
+    public void addAdministrativeUnit(AdministrativeUnit administrativeUnit) {
+        this.referenceChildAdministrativeUnit.add(administrativeUnit);
+        administrativeUnit.setParentAdministrativeUnit(this);
+    }
+
+    public void removeAdministrativeUnit(AdministrativeUnit administrativeUnit) {
+        this.referenceChildAdministrativeUnit.remove(administrativeUnit);
+        administrativeUnit.setParentAdministrativeUnit(null);
+    }
+
     public Set<User> getUsers() {
         return users;
     }
@@ -249,6 +276,12 @@ public class AdministrativeUnit
 
     public void addBSMBase(BSMBase bsmBase) {
         this.referenceBSMBase.add(bsmBase);
+        bsmBase.setReferenceAdministrativeUnit(this);
+    }
+
+    public void removeBSMBase(BSMBase bsmBase) {
+        this.referenceBSMBase.remove(bsmBase);
+        bsmBase.setReferenceAdministrativeUnit(null);
     }
 
     @Override

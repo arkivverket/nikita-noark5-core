@@ -30,12 +30,12 @@ public class ConversionHateoasHandler
 
         Conversion conversion = (Conversion) entity;
         String parentEntity =
-            conversion.getReferenceDocumentObject().getBaseTypeName();
+                conversion.getReferenceDocumentObject().getBaseTypeName();
         String parentSystemId =
-            conversion.getReferenceDocumentObject().getSystemId();
+                conversion.getReferenceDocumentObject().getSystemIdAsString();
         String selfhref = getOutgoingAddress() +
-            HREF_BASE_FONDS_STRUCTURE + SLASH + parentEntity + SLASH +
-            parentSystemId + SLASH + CONVERSION + SLASH + entity.getSystemId();
+                HREF_BASE_FONDS_STRUCTURE + SLASH + parentEntity + SLASH +
+                parentSystemId + SLASH + CONVERSION + SLASH + entity.getSystemId();
         hateoasNoarkObject.addLink(entity,
                                    new Link(selfhref, getRelSelfLink()));
         hateoasNoarkObject.addLink(entity,

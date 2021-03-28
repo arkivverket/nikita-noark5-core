@@ -1,5 +1,6 @@
 package nikita.common.model.noark5.v5.secondary;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.File;
@@ -17,11 +18,17 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.time.OffsetDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
-import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.COMMENT;
+import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_COMMENT;
+import static nikita.common.config.Constants.TABLE_COMMENT;
+import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
@@ -38,28 +45,32 @@ public class Comment
     /**
      * M310 - merknadstekst (xs:string)
      */
-    @Column(name = "comment_text")
+    @Column(name = COMMENT_TEXT_ENG)
+    @JsonProperty(COMMENT_TEXT)
     @Audited
     private String commentText;
 
     /**
      * M??? - merknadstype code (xs:string)
      */
-    @Column(name = "comment_type_code")
+    @Column(name = COMMENT_TYPE_CODE_ENG)
+    @JsonProperty(COMMENT_TYPE_CODE)
     @Audited
     private String commentTypeCode;
 
     /**
      * M084 - merknadstype code name (xs:string)
      */
-    @Column(name = "comment_type_code_name")
+    @Column(name = COMMENT_TYPE_CODE_NAME_ENG)
+    @JsonProperty(COMMENT_TYPE_CODE_NAME)
     @Audited
     private String commentTypeCodeName;
 
     /**
      * M611 - merknadsdato (xs:dateTime)
      */
-    @Column(name = "comment_time")
+    @Column(name = COMMENT_TIME_ENG)
+    @JsonProperty(COMMENT_TIME)
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
     private OffsetDateTime commentDate;
@@ -67,48 +78,23 @@ public class Comment
     /**
      * M612 - merknadRegistrertAv (xs:string)
      */
-    @Column(name = "comment_registered_by")
+    @Column(name = COMMENT_REGISTERED_BY_ENG)
+    @JsonProperty(COMMENT_REGISTERED_BY)
     @Audited
     private String commentRegisteredBy;
 
     // Link to File
-    @ManyToOne
-    @JoinColumn(name = FOREIGN_KEY_FILE_PK)
-    private File referenceFile;
+    @ManyToMany(mappedBy = REFERENCE_COMMENT)
+    private final Set<File> referenceFile = new HashSet<>();
 
     // Links to Record
-    @ManyToOne
-    @JoinColumn(name = FOREIGN_KEY_RECORD_PK)
-    private Record referenceRecord;
+    @ManyToMany(mappedBy = REFERENCE_COMMENT)
+    private final Set<Record> referenceRecord = new HashSet<>();
 
     // Link to DocumentDescription
-    @ManyToOne
-    @JoinColumn(name = FOREIGN_KEY_DOCUMENT_DESCRIPTION_PK)
-    private DocumentDescription referenceDocumentDescription;
-
-    /**
-     * Used to identify if the current comment is associated  with a file
-     * This can be used to save a potential lookup in the database.
-     */
-    @Column(name = "is_for_file")
-    @Audited
-    private Boolean isForFile = false;
-
-    /**
-     * Used to identify if the current comment is associated  with a record
-     * This can be used to save a potential lookup in the database.
-     */
-    @Column(name = "is_for_record")
-    @Audited
-    private Boolean isForRecord = false;
-
-    /**
-     * Used to identify if the current comment is associated  with a document
-     * description. This can be used to save a potential lookup in the database.
-     */
-    @Column(name = "is_for_document_description")
-    @Audited
-    private Boolean isForDocumentDescription = false;
+    @ManyToMany(mappedBy = REFERENCE_COMMENT)
+    private final Set<DocumentDescription> referenceDocumentDescription =
+            new HashSet<>();
 
     public String getCommentText() {
         return commentText;
@@ -121,7 +107,7 @@ public class Comment
     public CommentType getCommentType() {
         if (null == commentTypeCode)
             return null;
-        return new CommentType(commentTypeCode,commentTypeCodeName);
+        return new CommentType(commentTypeCode, commentTypeCodeName);
     }
 
     public void setCommentType(CommentType commentType) {
@@ -160,44 +146,45 @@ public class Comment
         return REL_FONDS_STRUCTURE_COMMENT;
     }
 
-    public File getReferenceFile() {
+    public Set<File> getReferenceFile() {
         return referenceFile;
     }
 
-    public void setReferenceFile(File referenceFile) {
-        this.referenceFile = referenceFile;
-        isForFile = true;
+    public void addFile(File file) {
+        this.referenceFile.add(file);
     }
 
-    public Record getReferenceRecord() {
+    public void removeFile(File file) {
+        this.referenceFile.remove(file);
+        file.getReferenceComment().remove(this);
+    }
+
+    public Set<Record> getReferenceRecord() {
         return referenceRecord;
     }
 
-    public void setReferenceRecord(Record referenceRecord) {
-        this.referenceRecord = referenceRecord;
-        isForRecord = true;
+    public void addRecord(Record record) {
+        this.referenceRecord.add(record);
     }
 
-    public DocumentDescription getReferenceDocumentDescription() {
+    public void removeRecord(Record record) {
+        this.referenceRecord.remove(record);
+        record.getReferenceComment().remove(this);
+    }
+
+    public Set<DocumentDescription> getReferenceDocumentDescription() {
         return referenceDocumentDescription;
     }
 
-    public void setReferenceDocumentDescription
-        (DocumentDescription referenceDocumentDescription) {
-        this.referenceDocumentDescription = referenceDocumentDescription;
-        isForDocumentDescription = true;
+    public void addDocumentDescription(
+            DocumentDescription documentDescription) {
+        this.referenceDocumentDescription.add(documentDescription);
     }
 
-    public Boolean getForFile() {
-        return isForFile;
-    }
-
-    public Boolean getForRecord() {
-        return isForRecord;
-    }
-
-    public Boolean getForDocumentDescription() {
-        return isForDocumentDescription;
+    public void removeDocumentDescription(
+            DocumentDescription documentDescription) {
+        this.referenceDocumentDescription.remove(documentDescription);
+        documentDescription.getReferenceComment().remove(this);
     }
 
     @Override

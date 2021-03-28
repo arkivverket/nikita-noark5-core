@@ -3,7 +3,8 @@ package nikita.common.model.noark5.v5.admin;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.AUTO;
@@ -31,7 +32,7 @@ public class Authority
     private AuthorityName authorityName;
 
     @ManyToMany(mappedBy = "authorities")
-    private List<User> users;
+    private Set<User> users = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -49,11 +50,12 @@ public class Authority
         this.authorityName = authorityName;
     }
 
-    public List<User> getUsers() {
+    public Set<User> getUsers() {
         return users;
     }
 
-    public void setUsers(List<User> users) {
-        this.users = users;
+    public void removeUser(User user) {
+        this.users.remove(user);
+        user.getAuthorities().remove(this);
     }
 }

@@ -139,8 +139,8 @@ public class PartService
         // First the values
         existingPart.setName(
                 incomingPart.getName());
-        existingPart.setOrganisationNumber(
-                incomingPart.getOrganisationNumber());
+        existingPart.setUnitIdentifier(
+                incomingPart.getUnitIdentifier());
         existingPart.setContactPerson(
                 incomingPart.getContactPerson());
         // Only copy if changed, in case it has an historical value
@@ -195,13 +195,10 @@ public class PartService
     @Override
     public PartPersonHateoas createNewPartPerson(
             @NotNull PartPerson part, @NotNull Record record) {
-
         validatePartRole(part);
         createPerson(part);
-        part.addReferenceRecord(record);
-        part = partRepository.save(part);
         record.addPart(part);
-
+        part = partRepository.save(part);
         PartPersonHateoas partPersonHateoas = new PartPersonHateoas(part);
         partHateoasHandler.addLinks(partPersonHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(
@@ -214,9 +211,8 @@ public class PartService
             @NotNull PartPerson part, @NotNull File file) {
         validatePartRole(part);
         createPerson(part);
-        part.addReferenceFile(file);
-        part = partRepository.save(part);
         file.addPart(part);
+        part = partRepository.save(part);
         PartPersonHateoas partPersonHateoas = new PartPersonHateoas(part);
         partHateoasHandler.addLinks(partPersonHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(
@@ -228,17 +224,12 @@ public class PartService
     public PartUnitHateoas createNewPartUnit(PartUnit part, Record record) {
         validatePartRole(part);
         createUnit(part);
-        // bidirectional relationship @ManyToMany, set both sides of
-        // relationship
-        part.addReferenceRecord(record);
-        part = partRepository.save(part);
         record.addPart(part);
-
+        part = partRepository.save(part);
         PartUnitHateoas partUnitHateoas = new PartUnitHateoas(part);
         partHateoasHandler.addLinks(partUnitHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityCreatedEvent(this, part));
-
         return partUnitHateoas;
     }
 
@@ -247,11 +238,8 @@ public class PartService
             @NotNull PartUnit part, @NotNull File file) {
         validatePartRole(part);
         createUnit(part);
-        // bidirectional relationship @ManyToMany, set both sides of
-        // relationship
-        part.addReferenceFile(file);
-        part = partRepository.save(part);
         file.addPart(part);
+        part = partRepository.save(part);
         PartUnitHateoas partUnitHateoas = new PartUnitHateoas(part);
         partHateoasHandler.addLinks(partUnitHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(
@@ -265,11 +253,8 @@ public class PartService
             @NotNull DocumentDescription documentDescription) {
         validatePartRole(partUnit);
         createUnit(partUnit);
-        // bidirectional relationship @ManyToMany, set both sides of
-        // relationship
-        partUnit.addReferenceDocumentDescription(documentDescription);
-        partUnit = partRepository.save(partUnit);
         documentDescription.addPart(partUnit);
+        partUnit = partRepository.save(partUnit);
         PartUnitHateoas partUnitHateoas = new PartUnitHateoas(partUnit);
         partHateoasHandler.addLinks(partUnitHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(
@@ -283,9 +268,8 @@ public class PartService
             @NotNull DocumentDescription documentDescription) {
         validatePartRole(partPerson);
         createPerson(partPerson);
-        partPerson.addReferenceDocumentDescription(documentDescription);
+        partPerson.addDocumentDescription(documentDescription);
         partPerson = partRepository.save(partPerson);
-        documentDescription.addPart(partPerson);
         PartPersonHateoas partPersonHateoas = new PartPersonHateoas(partPerson);
         partHateoasHandler.addLinks(partPersonHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(

@@ -18,10 +18,11 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_CORRESPONDENCE_PART_INTERNAL;
 import static nikita.common.config.Constants.TABLE_CORRESPONDENCE_PART_INTERNAL;
-import static nikita.common.config.N5ResourceMappings.CORRESPONDENCE_PART_INTERNAL;
 import static nikita.common.config.N5ResourceMappings.ADMINISTRATIVE_UNIT_FIELD_ENG;
+import static nikita.common.config.N5ResourceMappings.CORRESPONDENCE_PART_INTERNAL;
 
 @Entity
 @Table(name = TABLE_CORRESPONDENCE_PART_INTERNAL)
@@ -46,10 +47,10 @@ public class CorrespondencePartInternal
     @Audited
     private String caseHandler;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     private AdministrativeUnit referenceAdministrativeUnit;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     private User user;
 
     public String getAdministrativeUnit() {

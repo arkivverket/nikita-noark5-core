@@ -13,13 +13,13 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_CLASSIFICATION_SYSTEM;
 import static nikita.common.config.Constants.TABLE_CLASSIFICATION_SYSTEM;
 import static nikita.common.config.N5ResourceMappings.CLASSIFICATION_SYSTEM;
-import static nikita.common.config.N5ResourceMappings.REFERENCE_CLASSIFICATION_SYSTEM;
+import static nikita.common.config.N5ResourceMappings.REFERENCE_CLASSIFICATION_SYSTEM_DB;
 
 @Entity
 @Table(name = TABLE_CLASSIFICATION_SYSTEM)
@@ -47,12 +47,12 @@ public class ClassificationSystem
     private String classificationTypeCodeName;
 
     // Links to Series
-    @ManyToMany(mappedBy = REFERENCE_CLASSIFICATION_SYSTEM)
-    private List<Series> referenceSeries = new ArrayList<>();
+    @ManyToMany(mappedBy = REFERENCE_CLASSIFICATION_SYSTEM_DB)
+    private final Set<Series> referenceSeries = new HashSet<>();
 
     // Links to child Classes
     @OneToMany(mappedBy = "referenceClassificationSystem")
-    private List<Class> referenceClass = new ArrayList<>();
+    private final Set<Class> referenceClass = new HashSet<>();
 
     @Override
     public ClassificationType getClassificationType() {
@@ -84,23 +84,37 @@ public class ClassificationSystem
     }
 
     @Override
-    public List<Series> getReferenceSeries() {
+    public Set<Series> getReferenceSeries() {
         return referenceSeries;
     }
 
     @Override
-    public void setReferenceSeries(List<Series> referenceSeries) {
-        this.referenceSeries = referenceSeries;
+    public void addSeries(Series series) {
+        this.referenceSeries.add(series);
+        series.getReferenceClassificationSystem().add(this);
     }
 
     @Override
-    public List<Class> getReferenceClass() {
+    public void removeSeries(Series series) {
+        this.referenceSeries.remove(series);
+        series.getReferenceClassificationSystem().remove(this);
+    }
+
+    @Override
+    public Set<Class> getReferenceClass() {
         return referenceClass;
     }
 
     @Override
-    public void setReferenceClass(List<Class> referenceClass) {
-        this.referenceClass = referenceClass;
+    public void addClass(Class klass) {
+        this.referenceClass.add(klass);
+        klass.setReferenceClassificationSystem(this);
+    }
+
+    @Override
+    public void removeClass(Class klass) {
+        this.referenceClass.remove(klass);
+        klass.setReferenceClassificationSystem(this);
     }
 
     @Override
