@@ -228,11 +228,12 @@ public class MetadataDetails extends APIDetails {
                 String listpath, String newpath,
                 String officialrelation) {
         aPIDetails.add(new APIDetail(
-                publicUrlPath + HREF_BASE_METADATA + SLASH + listpath,
-                officialrelation, true));
+                publicUrlPath + HREF_BASE_METADATA + SLASH +
+                        listpath.toLowerCase(), officialrelation, true));
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_METADATA + SLASH + newpath,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH + newpath + SLASH,
+                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH +
+                        newpath.toLowerCase() + SLASH,
                 false));
     }
 }
