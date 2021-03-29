@@ -1,6 +1,5 @@
 package nikita.webapp.structure;
 
-import static nikita.common.config.N5ResourceMappings.*;
 import nikita.webapp.service.impl.odata.ODataService;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -17,6 +16,7 @@ import javax.persistence.EntityManager;
 import java.time.OffsetDateTime;
 
 import static java.util.UUID.fromString;
+import static nikita.common.config.N5ResourceMappings.*;
 
 /**
  * Test OData queries that are supported
@@ -1846,7 +1846,48 @@ public class TestOData {
      * Check that it is possible to do a query with filter join between an
      * entity that supports business specific metadata (BSM) and the BSM
      * table.
-     * Entity:  mappe, VSM
+     * Entity:  mappe, Nasjonalidentifkator:enhetsidentifikator
+     * Attribute: organisasjonsnummer with value 02020202022
+     * <p>
+     * ODATA Input:
+     * mappe?$filter=enhetsidentifikator/organisasjonsnummer eq '02020202022'
+     * <p>
+     * Expected HQL:
+     * SELECT file_1 FROM File AS file_1
+     * JOIN
+     * file_1.referenceNationalIdentifier AS unitidentifier_1
+     * WHERE
+     * unitidentifier_1.organisationNumber = :parameter_0
+     * <p>
+     * Additionally parameter_0 should be
+     * 02020202022
+     */
+    @Test
+    @Transactional
+    public void shouldReturnValidHQLEntityJoinFileWithNI() {
+        String attributeName = "enhetsidentifikator/organisasjonsnummer";
+        String compareValue = "02020202022";
+        String odata = "mappe?$filter=" + attributeName +
+                " eq '" + compareValue + "'";
+
+        String hql = "SELECT file_1 FROM File AS file_1" +
+                " JOIN" +
+                " file_1.referenceNationalIdentifier AS unitidentifier_1" +
+                " WHERE" +
+                " unitidentifier_1.organisationNumber = :parameter_0";
+
+        Query query = oDataService.convertODataToHQL(odata, "");
+
+        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+                compareValue);
+        Assertions.assertEquals(query.getQueryString(), hql);
+    }
+
+    /**
+     * Check that it is possible to do a query with filter join between an
+     * entity that supports National Identifiers and the BSM
+     * table.
+     * Entity:  mappe, nasjonalidentifikator
      * Attribute: VSM.valueName with value ppt-v1:meldingstidspunkt
      * <p>
      * ODATA Input:
