@@ -278,7 +278,7 @@ public class GeneralTest {
      * @throws Exception Serialising or validation exception
      */
     @Test
-    @Sql("/db-tests/bsm.sql")
+    @Sql("/db-tests/basic_structure.sql")
     public void checkODataSearchForCreatedBy() throws Exception {
         String url = "/noark5v5/api/arkivstruktur/dokumentbeskrivelse";
 
