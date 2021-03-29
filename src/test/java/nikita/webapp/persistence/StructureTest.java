@@ -107,7 +107,7 @@ public class StructureTest {
      * @throws Exception if required
      */
 
-    @Test
+//    @Test
     @Sql("/db-tests/basic_structure.sql")
     public void addCorrespondencePartUnitToExistingDocumentDescription()
             throws Exception {
@@ -238,7 +238,7 @@ public class StructureTest {
      *
      * @throws Exception if required
      */
-    @Test
+    // @Test
     @Sql("/db-tests/basic_structure.sql")
     public void addElectronicSignatureToExistingRecord() throws Exception {
         String url = "/noark5v5/api/arkivstruktur/registrering/" +
