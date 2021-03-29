@@ -63,6 +63,34 @@ public class NationalIdentifierTest {
     }
 
     /**
+     * Test that it is possible to undertake an OData query on
+     * NationalIdentifier:Unit associated with an existing record
+     * <p>
+     * /noark5v5/odata/api/arkivstruktur/arkiv?$filter=enhetsidentifikator/organisasjonsnummer eq '02020202022
+     *
+     * @throws Exception if required
+     */
+    @Test
+    @WithMockCustomUser
+    @Sql("/db-tests/basic_structure.sql")
+    public void checkODataSearchHasCorrectResponse() throws Exception {
+
+        String url = "/noark5v5/odata/api/arkivstruktur/arkiv?$filter=" +
+                "enhetsidentifikator/organisasjonsnummer eq '02020202022'";
+
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON));
+
+        resultActions.andExpect(status().isOk());
+
+        resultActions.andDo(document("home",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint())));
+    }
+
+    /**
      * Test that it is possible to create a NationalIdentifier:Building and
      * associate it with an existing Record
      *
