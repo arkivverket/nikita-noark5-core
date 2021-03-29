@@ -781,7 +781,7 @@ public final class N5ResourceMappings {
     public static final String CASE_HANDLER_ENG_OBJECT = "saksbehandler";
     public static final String CASE_LOANED_DATE_ENG_OBJECT = "loanedDate";
     public static final String CASE_LOANED_TO_ENG_OBJECT = "loanedTo";
-    public static final String PART_ENG_OBJECT = "part";
+    public static final String PART_ENG_OBJECT = "Part";
     public static final String PART_ID_ENG_OBJECT = "partID";
     public static final String PART_NAME_ENG_OBJECT = "PartName";
     public static final String PART_ROLE_FIELD_ENG_OBJECT = "PartRoll";
