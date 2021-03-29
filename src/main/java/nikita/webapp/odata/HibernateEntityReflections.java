@@ -13,7 +13,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class HibernateEntityReflections {
 
@@ -113,11 +112,6 @@ public class HibernateEntityReflections {
 
     protected void constructEntityList() {
         Reflections ref = new Reflections("nikita.common.model.noark5.v5");
-        Set<String> entities1 =
-                ref.getTypesAnnotatedWith(
-                        javax.persistence.Entity.class)
-                        .stream().map(Class::getName).collect(Collectors.toSet());
-
         Iterator<Class<?>> itr =
                 ref.getTypesAnnotatedWith(Entity.class).iterator();
         while (itr.hasNext()) {
