@@ -9,6 +9,7 @@ import nikita.common.model.noark5.v5.metadata.Country;
 import nikita.common.util.deserialisers.nationalidentifier.PlanDeserializer;
 import nikita.common.util.serializers.noark5v5.hateoas.nationalidentifier.PlanSerializer;
 import nikita.webapp.hateoas.nationalidentifier.PlanHateoasHandler;
+import nikita.webapp.util.annotation.ANationalIdentifier;
 import nikita.webapp.util.annotation.HateoasObject;
 import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -36,6 +37,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @JsonDeserialize(using = PlanDeserializer.class)
 @HateoasPacker(using = PlanHateoasHandler.class)
 @HateoasObject(using = PlanHateoas.class)
+@ANationalIdentifier(name = PLAN)
 public class Plan
         extends NationalIdentifier
         implements IPlanEntity {

@@ -8,6 +8,7 @@ import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.IBui
 import nikita.common.util.deserialisers.nationalidentifier.BuildingDeserializer;
 import nikita.common.util.serializers.noark5v5.hateoas.nationalidentifier.BuildingSerializer;
 import nikita.webapp.hateoas.nationalidentifier.BuildingHateoasHandler;
+import nikita.webapp.util.annotation.ANationalIdentifier;
 import nikita.webapp.util.annotation.HateoasObject;
 import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -31,6 +32,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @JsonDeserialize(using = BuildingDeserializer.class)
 @HateoasPacker(using = BuildingHateoasHandler.class)
 @HateoasObject(using = BuildingHateoas.class)
+@ANationalIdentifier(name = BUILDING)
 public class Building
         extends NationalIdentifier
         implements IBuildingEntity {

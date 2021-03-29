@@ -8,6 +8,7 @@ import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.IDNu
 import nikita.common.util.deserialisers.nationalidentifier.DNumberDeserializer;
 import nikita.common.util.serializers.noark5v5.hateoas.nationalidentifier.DNumberSerializer;
 import nikita.webapp.hateoas.nationalidentifier.DNumberHateoasHandler;
+import nikita.webapp.util.annotation.ANationalIdentifier;
 import nikita.webapp.util.annotation.HateoasObject;
 import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -31,6 +32,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @JsonDeserialize(using = DNumberDeserializer.class)
 @HateoasPacker(using = DNumberHateoasHandler.class)
 @HateoasObject(using = DNumberHateoas.class)
+@ANationalIdentifier(name = D_NUMBER)
 public class DNumber
         extends PersonIdentifier
         implements IDNumberEntity {
