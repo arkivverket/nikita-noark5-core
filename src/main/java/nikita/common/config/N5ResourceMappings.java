@@ -315,9 +315,13 @@ public final class N5ResourceMappings {
 
     // ElectronicSignature
     public static final String ELECTRONIC_SIGNATURE = "elektroniskSignatur";
-    public static final String ELECTRONIC_SIGNATURE_SECURITY_LEVEL =
+    public static final String ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD =
             "elektroniskSignaturSikkerhetsnivaa";
+    public static final String ELECTRONIC_SIGNATURE_SECURITY_LEVEL =
+            "elektronisksignatursikkerhetsnivaa";
     public static final String ELECTRONIC_SIGNATURE_VERIFIED =
+            "elektronisksignaturverifisert";
+    public static final String ELECTRONIC_SIGNATURE_VERIFIED_FIELD =
             "elektroniskSignaturVerifisert";
     public static final String ELECTRONIC_SIGNATURE_SECURITY_LEVEL_CODE =
             "elektronisksignatursikkerhetsnivaakode";

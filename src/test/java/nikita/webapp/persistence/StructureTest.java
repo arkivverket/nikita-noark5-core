@@ -123,7 +123,7 @@ public class StructureTest {
                 VERIFIED_DATE_VALUE);
         jsonPatch.writeStringField(ELECTRONIC_SIGNATURE_VERIFIED_BY,
                 VERIFIED_BY_VALUE);
-        jsonPatch.writeObjectFieldStart(ELECTRONIC_SIGNATURE_SECURITY_LEVEL);
+        jsonPatch.writeObjectFieldStart(ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD);
         jsonPatch.writeStringField(CODE, VERIFIED_LEVEL_CODE_VALUE);
         jsonPatch.writeStringField(CODE_NAME, VERIFIED_LEVEL_CODE_NAME_VALUE);
         jsonPatch.writeEndObject();
