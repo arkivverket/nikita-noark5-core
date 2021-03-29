@@ -8,6 +8,7 @@ import nikita.common.model.noark5.v5.metadata.AssociatedWithRecordAs;
 import nikita.common.model.noark5.v5.metadata.DocumentStatus;
 import nikita.common.model.noark5.v5.metadata.DocumentType;
 import nikita.webapp.spring.TestSecurityConfiguration;
+import nikita.webapp.spring.WithMockCustomUser;
 import nikita.webapp.spring.security.NikitaUserDetailsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -138,6 +139,7 @@ public class GeneralTest {
      */
     @Test
     @Sql("/db-tests/basic_structure.sql")
+    @WithMockCustomUser
     public void checkMultipleMetadataEntityPossible() throws Exception {
         DocumentDescription documentDescription = new DocumentDescription();
         documentDescription.setTitle("Test title");
@@ -186,9 +188,7 @@ public class GeneralTest {
                 .contextPath("/noark5v5")
                 .accept(NOARK5_V5_CONTENT_TYPE_JSON)
                 .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
-                .content(jsonWriter.toString())
-                .with(user(nikitaUserDetailsService
-                        .loadUserByUsername("admin@example.com"))));
+                .content(jsonWriter.toString()));
 
         resultActions
                 .andExpect(status().isCreated())
@@ -236,6 +236,7 @@ public class GeneralTest {
      */
     @Test
     @Sql("/db-tests/basic_structure.sql")
+    @WithMockCustomUser
     public void checkODataSearchHasCorrectResponse() throws Exception {
 
         String url = "/noark5v5/odata/api/arkivstruktur/arkiv?$filter=" +
@@ -250,9 +251,8 @@ public class GeneralTest {
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
                 .get(url)
                 .contextPath("/noark5v5")
-                .accept(NOARK5_V5_CONTENT_TYPE_JSON)
-                .with(user(nikitaUserDetailsService
-                        .loadUserByUsername("admin@example.com"))));
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON));
+
         resultActions
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$." + ENTITY_ROOT_NAME_LIST_COUNT)
@@ -278,32 +278,20 @@ public class GeneralTest {
      * @throws Exception Serialising or validation exception
      */
     @Test
-    @Sql("/db-tests/bsm.sql")
+    @Sql("/db-tests/basic_structure.sql")
+    @WithMockCustomUser
     public void checkODataSearchForCreatedBy() throws Exception {
         String url = "/noark5v5/api/arkivstruktur/dokumentbeskrivelse";
-
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
-                .get(url)
-                .contextPath("/noark5v5")
-                .accept(NOARK5_V5_CONTENT_TYPE_JSON)
-                .with(user(nikitaUserDetailsService
-                        .loadUserByUsername("admin@example.com"))));
-
-        MockHttpServletResponse response =
-                resultActions.andReturn().getResponse();
-        System.out.println(response.getContentAsString());
 
         url = "/noark5v5/odata/api/arkivstruktur/dokumentbeskrivelse" +
                 "?$filter=" + CREATED_BY + " eq 'admin@example.com'";
 
-        resultActions = mockMvc.perform(MockMvcRequestBuilders
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
                 .get(url)
                 .contextPath("/noark5v5")
-                .accept(NOARK5_V5_CONTENT_TYPE_JSON)
-                .with(user(nikitaUserDetailsService
-                        .loadUserByUsername("admin@example.com"))));
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON));
 
-        response =
+        MockHttpServletResponse response =
                 resultActions.andReturn().getResponse();
         System.out.println(response.getContentAsString());
 

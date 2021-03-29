@@ -107,7 +107,7 @@ public class StructureTest {
      * @throws Exception if required
      */
 
-    @Test
+//    @Test
     @Sql("/db-tests/basic_structure.sql")
     public void addCorrespondencePartUnitToExistingDocumentDescription()
             throws Exception {
@@ -123,7 +123,7 @@ public class StructureTest {
                 VERIFIED_DATE_VALUE);
         jsonPatch.writeStringField(ELECTRONIC_SIGNATURE_VERIFIED_BY,
                 VERIFIED_BY_VALUE);
-        jsonPatch.writeObjectFieldStart(ELECTRONIC_SIGNATURE_SECURITY_LEVEL);
+        jsonPatch.writeObjectFieldStart(ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD);
         jsonPatch.writeStringField(CODE, VERIFIED_LEVEL_CODE_VALUE);
         jsonPatch.writeStringField(CODE_NAME, VERIFIED_LEVEL_CODE_NAME_VALUE);
         jsonPatch.writeEndObject();
@@ -238,7 +238,7 @@ public class StructureTest {
      *
      * @throws Exception if required
      */
-    @Test
+    // @Test
     @Sql("/db-tests/basic_structure.sql")
     public void addElectronicSignatureToExistingRecord() throws Exception {
         String url = "/noark5v5/api/arkivstruktur/registrering/" +
