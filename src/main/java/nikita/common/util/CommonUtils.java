@@ -1649,7 +1649,7 @@ public final class CommonUtils {
                 ElectronicSignatureVerified esVerified =
                         (ElectronicSignatureVerified)
                                 deserialiseMetadataValue(objectNode,
-                                        ELECTRONIC_SIGNATURE_VERIFIED_CODE_NAME,
+                                        ELECTRONIC_SIGNATURE_VERIFIED,
                                         new ElectronicSignatureVerified(),
                                         errors, true);
                 electronicSignature.setElectronicSignatureVerified(esVerified);
@@ -1678,7 +1678,6 @@ public final class CommonUtils {
                             + "." + ELECTRONIC_SIGNATURE_VERIFIED_BY
                             + " is missing. ");
                 }
-
                 return electronicSignature;
             }
         }
