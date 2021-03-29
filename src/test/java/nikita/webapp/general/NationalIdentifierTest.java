@@ -30,6 +30,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static utils.NationalIdentifierCreator.*;
 import static utils.NationalIdentifierValidator.*;
@@ -64,18 +65,18 @@ public class NationalIdentifierTest {
 
     /**
      * Test that it is possible to undertake an OData query on
-     * NationalIdentifier:Unit associated with an existing record
+     * NationalIdentifier:Unit associated with an existing file (mappe)
      * <p>
-     * /noark5v5/odata/api/arkivstruktur/arkiv?$filter=enhetsidentifikator/organisasjonsnummer eq '02020202022
+     * /noark5v5/odata/api/arkivstruktur/mappe?$filter=enhetsidentifikator/organisasjonsnummer eq '02020202022
      *
      * @throws Exception if required
      */
     @Test
     @WithMockCustomUser
-    @Sql("/db-tests/basic_structure.sql")
-    public void checkODataSearchHasCorrectResponse() throws Exception {
+    @Sql({"/db-tests/basic_structure.sql", "/db-tests/ni/ni_values.sql"})
+    public void checkODataSearchFileOnNationalIdentifierUnit() throws Exception {
 
-        String url = "/noark5v5/odata/api/arkivstruktur/arkiv?$filter=" +
+        String url = "/noark5v5/odata/api/arkivstruktur/mappe?$filter=" +
                 "enhetsidentifikator/organisasjonsnummer eq '02020202022'";
 
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
@@ -83,7 +84,49 @@ public class NationalIdentifierTest {
                 .contextPath("/noark5v5")
                 .accept(NOARK5_V5_CONTENT_TYPE_JSON));
 
-        resultActions.andExpect(status().isOk());
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.count")
+                        .value(1))
+                .andExpect(jsonPath("$.results[0]." + SYSTEM_ID)
+                        .value("43d305de-b3c8-4922-86fd-45bd26f3bf01"));
+        MockHttpServletResponse response = resultActions.andReturn()
+                .getResponse();
+        System.out.println(response.getContentAsString());
+
+        resultActions.andDo(document("home",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint())));
+    }
+
+    /**
+     * Test that it is possible to undertake an OData query on
+     * NationalIdentifier:Unit associated with an existing file (mappe)
+     * <p>
+     * /noark5v5/odata/api/arkivstruktur/mappe?$filter=enhetsidentifikator/organisasjonsnummer eq '02020202022
+     *
+     * @throws Exception if required
+     */
+    @Test
+    @WithMockCustomUser
+    @Sql({"/db-tests/basic_structure.sql", "/db-tests/ni/ni_values.sql"})
+    public void checkODataSearchFileOnNationalIdentifierPlan() throws Exception {
+
+        String url = "/noark5v5/odata/api/arkivstruktur/mappe?$filter=" +
+                "enhetsidentifikator/organisasjonsnummer eq '02020202022'";
+
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON));
+
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.count")
+                        .value(1))
+                .andExpect(jsonPath("$.results[0]." + SYSTEM_ID)
+                        .value("43d305de-b3c8-4922-86fd-45bd26f3bf01"));
+        MockHttpServletResponse response = resultActions.andReturn()
+                .getResponse();
+        System.out.println(response.getContentAsString());
 
         resultActions.andDo(document("home",
                 preprocessRequest(prettyPrint()),
