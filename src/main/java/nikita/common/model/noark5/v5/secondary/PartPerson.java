@@ -47,16 +47,6 @@ public class PartPerson
     @JsonProperty(D_NUMBER_FIELD)
     private String dNumber;
 
-    /**
-     * M302 - partNavn (xs:string)
-     * Interface standard lists this as name. Using name until clarification
-     * is provided
-     */
-    @Column(name = CORRESPONDENCE_PART_NAME_ENG)
-    @Audited
-    @JsonProperty(CORRESPONDENCE_PART_NAME)
-    private String name;
-
     @OneToOne(mappedBy = "partPerson", fetch = LAZY, cascade = ALL)
     @JoinColumn(name = PRIMARY_KEY_SYSTEM_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
@@ -87,14 +77,6 @@ public class PartPerson
 
     public void setdNumber(String dNumber) {
         this.dNumber = dNumber;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public PostalAddress getPostalAddress() {
@@ -136,7 +118,6 @@ public class PartPerson
         return "PartPerson{" + super.toString() +
                 ", socialSecurityNumber='" + socialSecurityNumber + '\'' +
                 ", dNumber='" + dNumber + '\'' +
-                ", name='" + name + '\'' +
                 '}';
     }
 
@@ -150,7 +131,6 @@ public class PartPerson
                 .appendSuper(super.equals(other))
                 .append(socialSecurityNumber, rhs.socialSecurityNumber)
                 .append(dNumber, rhs.dNumber)
-                .append(name, rhs.name)
                 .isEquals();
     }
 
@@ -160,7 +140,6 @@ public class PartPerson
                 .appendSuper(super.hashCode())
                 .append(socialSecurityNumber)
                 .append(dNumber)
-                .append(name)
                 .toHashCode();
     }
 }

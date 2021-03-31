@@ -1,6 +1,5 @@
 package nikita.webapp.structure;
 
-import static nikita.common.config.N5ResourceMappings.*;
 import nikita.webapp.service.impl.odata.ODataService;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -17,6 +16,7 @@ import javax.persistence.EntityManager;
 import java.time.OffsetDateTime;
 
 import static java.util.UUID.fromString;
+import static nikita.common.config.N5ResourceMappings.*;
 
 /**
  * Test OData queries that are supported
@@ -1884,6 +1884,127 @@ public class TestOData {
                 "ppt-v1:meldingstidspunkt");
         Assertions.assertEquals(query.getParameterValue("parameter_1"),
                 OffsetDateTime.parse("2020-01-01T22:25:06.09+02:00"));
+        Assertions.assertEquals(query.getQueryString(), hql);
+    }
+
+    /**
+     * Check that it is possible to do a query with filter join between a
+     * File and a Part
+     * Entity:  mappe, part
+     * Attribute: kodenavn with value ADV
+     * <p>
+     * ODATA Input:
+     * mappe?$filter=part/partRolle/kodenavn+eq+'ADV'
+     * <p>
+     * Expected HQL:
+     * SELECT file_1 FROM File AS file_1
+     * JOIN
+     * file_1.referencePart AS part_1
+     * WHERE part_1.partRoleCodeName = :parameter_0
+     * <p>
+     * Additionally parameter_0 should be
+     * ADV
+     * <p>
+     * Tested added as it was reported as failing from external test
+     */
+    @Test
+    @Transactional
+    public void shouldReturnValidHQLEntityJoinFileWithPartPartRoleCodeName() {
+        String attributeName = "part/partRolle/kodenavn";
+        String compareValue = "ADV";
+        String odata = "mappe?$filter=" + attributeName +
+                " eq '" + compareValue + "'";
+
+        String hql = "SELECT file_1 FROM File AS file_1" +
+                " JOIN" +
+                " file_1.referencePart AS part_1" +
+                " WHERE" +
+                " part_1.partRoleCodeName = :parameter_0";
+
+        Query query = oDataService.convertODataToHQL(odata, "");
+        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+                compareValue);
+        Assertions.assertEquals(query.getQueryString(), hql);
+    }
+
+    /**
+     * Check that it is possible to do a query with filter join between a
+     * File and a Part
+     * Entity:  mappe, part
+     * Attribute: kodenavn with value ADV
+     * <p>
+     * ODATA Input:
+     * mappe?$filter=part/partRolle/kodenavn+eq+'ADV'
+     * <p>
+     * Expected HQL:
+     * SELECT file_1 FROM File AS file_1
+     * JOIN
+     * file_1.referencePart AS part_1
+     * WHERE part_1.partRoleCodeName = :parameter_0
+     * <p>
+     * Additionally parameter_0 should be
+     * ADV
+     * <p>
+     * Tested added as it was reported as failing from external test
+     */
+    @Test
+    @Transactional
+    public void shouldReturnValidHQLEntityJoinFileWithPartPartRoleCode() {
+        String attributeName = "part/partRolle/kode";
+        String compareValue = "ADV";
+        String odata = "mappe?$filter=" + attributeName +
+                " eq '" + compareValue + "'";
+
+        String hql = "SELECT file_1 FROM File AS file_1" +
+                " JOIN" +
+                " file_1.referencePart AS part_1" +
+                " WHERE" +
+                " part_1.partRoleCode = :parameter_0";
+
+        Query query = oDataService.convertODataToHQL(odata, "");
+        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+                compareValue);
+        Assertions.assertEquals(query.getQueryString(), hql);
+    }
+
+    /**
+     * Check that it is possible to do a query with filter join between a File
+     * and a Part
+     * Entity:  mappe, part
+     * Attribute: kodenavn with value ADV
+     * <p>
+     * ODATA Input:
+     * mappe?$filter=contains(part/navn, 'Eksempel')
+     * <p>
+     * Expected HQL:
+     * SELECT file_1 FROM File AS file_1
+     * JOIN
+     * file_1.referencePart AS part_1
+     * WHERE
+     * part_1.name like :parameter_0
+     * <p>
+     * Additionally parameter_0 should be
+     * ADV
+     * <p>
+     * Tested added as it was reported as failing from external test
+     */
+    @Test
+    @Transactional
+    public void shouldReturnValidHQLEntityJoinFileWithPartName() {
+        String attributeName = "part/navn";
+        String compareValue = "Eksempel";
+        String odata = "mappe?$filter=contains(" + attributeName +
+                ", '" + compareValue + "')";
+
+        String hql = "SELECT file_1 FROM File AS file_1" +
+                " JOIN" +
+                " file_1.referencePart AS part_1" +
+                " WHERE" +
+                " part_1.name like :parameter_0";
+
+        Query query = oDataService.convertODataToHQL(odata, "");
+        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+                "%" + compareValue + "%");
         Assertions.assertEquals(query.getQueryString(), hql);
     }
 

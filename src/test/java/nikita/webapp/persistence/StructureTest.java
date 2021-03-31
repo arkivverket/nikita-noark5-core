@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import nikita.N5CoreApp;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
+import nikita.webapp.spring.WithMockCustomUser;
 import nikita.webapp.spring.security.NikitaUserDetailsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,6 +39,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static utils.CorrespondencePartCreator.createCorrespondencePartPerson;
 import static utils.CorrespondencePartValidator.validateCorrespondencePartPerson;
@@ -74,6 +76,61 @@ public class StructureTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint())))
                 .build();
+    }
+
+    /**
+     * Test that it is possible to create a ElectronicSignature associated
+     * with a DocumentDescription. The Noark API standard requires the use of
+     * RFC 7386 - JSON Merge Patch.
+     * <p>
+     * This will result in a PATCH request to the address of the object you
+     * want to patch:
+     * /noark5v5/api/arkivstruktur/dokumentbeskrivelse/66b92e78-b75d-4b0f-9558-4204ab31c2d1
+     * <p>
+     * An example JSON payload for the request:
+     * {
+     * "elektronisksignatur" : {
+     * <p>
+     * "verifisertDato": "1992-07-25",
+     * "verifisertAv": "Hans Gruber",
+     * "elektronisksignaturverifisert": {
+     * "kode" : "V",
+     * "kodenavn": "Signatur påført og verifisert",
+     * },
+     * "elektronisksignatursikkerhetsnivaa" : {
+     * "kode" : "SK",
+     * "kodenavn": "Symmetrisk kryptert",
+     * }
+     * }
+     * }
+     * <p>
+     * Note: Patch requires an ETAG to be set during the request
+     *
+     * @throws Exception if required
+     */
+    @Test
+    @Sql("/db-tests/basic_structure.sql")
+    @WithMockCustomUser
+    public void checkFilePartContains()
+            throws Exception {
+        String url = "/noark5v5/odata/api/arkivstruktur/mappe?$filter=contains" +
+                "(part/navn, 'Gruber')";
+
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON));
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.results[0]." + SYSTEM_ID)
+                        .value("f1677c47-99e1-42a7-bda2-b0bbc64841b7"))
+                .andExpect(jsonPath("$.results[1]." + SYSTEM_ID)
+                        .value("43d305de-b3c8-4922-86fd-45bd26f3bf01"));
+
+        resultActions.andDo(document("home",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint())));
     }
 
     /**
