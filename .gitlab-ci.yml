@@ -31,7 +31,6 @@ noark5tester-runtest:
   artifacts:
     paths:
       - nikita-run.log
-      - target/generate*/**
 
 noark5tester-inoutin:
   stage: use
@@ -79,6 +78,7 @@ maven-build:
   artifacts:
     paths:
       - target/*.jar
+      - target/generate*/**
 
 code_quality:
   stage: test
