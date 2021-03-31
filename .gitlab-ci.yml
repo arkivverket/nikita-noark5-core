@@ -31,6 +31,7 @@ noark5tester-runtest:
   artifacts:
     paths:
       - nikita-run.log
+      - target/generate*/**
 
 noark5tester-inoutin:
   stage: use
