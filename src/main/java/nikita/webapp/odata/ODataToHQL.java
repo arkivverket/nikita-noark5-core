@@ -198,7 +198,7 @@ public class ODataToHQL
      */
     private String translateComparator(String comparator)
             throws NikitaMalformedInputDataException {
-        switch (comparator) {
+        switch (comparator.toLowerCase()) {
             case ODATA_EQ:
                 return HQL_EQ;
             case ODATA_GT:
