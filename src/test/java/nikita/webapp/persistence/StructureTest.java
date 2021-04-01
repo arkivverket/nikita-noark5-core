@@ -33,6 +33,7 @@ import static nikita.common.config.Constants.CONTENT_TYPE_JSON_MERGE_PATCH;
 import static nikita.common.config.Constants.NOARK5_V5_CONTENT_TYPE_JSON;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Serialize.printCorrespondencePartPerson;
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
@@ -110,7 +111,6 @@ public class StructureTest {
      */
     @Test
     @Sql("/db-tests/basic_structure.sql")
-    @WithMockCustomUser
     public void checkFilePartContains()
             throws Exception {
         String url = "/noark5v5/odata/api/arkivstruktur/mappe?$filter=contains" +
@@ -127,6 +127,74 @@ public class StructureTest {
                         .value("f1677c47-99e1-42a7-bda2-b0bbc64841b7"))
                 .andExpect(jsonPath("$.results[1]." + SYSTEM_ID)
                         .value("43d305de-b3c8-4922-86fd-45bd26f3bf01"));
+
+        resultActions.andDo(document("home",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint())));
+    }
+
+    /**
+     * Check that it is possible to search based on files with an associated
+     * partRoll that has a codename 'Advokat'
+     * <p>
+     * Make sure result corresponds to the file with systemID
+     * f1677c47-99e1-42a7-bda2-b0bbc64841b7
+     * and that only one result has been returned
+     *
+     * @throws Exception if required
+     */
+    @Test
+    @Sql("/db-tests/basic_structure.sql")
+    @WithMockCustomUser
+    public void checkFilePartWithPartRoleCodeName()
+            throws Exception {
+        String url = "/noark5v5/odata/api/arkivstruktur/mappe?$filter=" +
+                "part/partRolle/kodenavn eq 'Advokat'";
+
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON));
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.results[0]." + SYSTEM_ID)
+                        .value("f1677c47-99e1-42a7-bda2-b0bbc64841b7"))
+                .andExpect(jsonPath("$.results", hasSize(1)));
+
+        resultActions.andDo(document("home",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint())));
+    }
+
+    /**
+     * Check that it is possible to search based on files with an associated
+     * partRoll that has a code 'ADV'
+     * <p>
+     * Make sure result corresponds to the file with systemID
+     * f1677c47-99e1-42a7-bda2-b0bbc64841b7
+     * and that only one result has been returned
+     *
+     * @throws Exception if required
+     */
+    @Test
+    @Sql("/db-tests/basic_structure.sql")
+    @WithMockCustomUser
+    public void checkFilePartWithPartRoleCode()
+            throws Exception {
+        String url = "/noark5v5/odata/api/arkivstruktur/mappe?$filter=" +
+                "part/partRolle/kode eq 'ADV'";
+
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON));
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.results[0]." + SYSTEM_ID)
+                        .value("f1677c47-99e1-42a7-bda2-b0bbc64841b7"))
+                .andExpect(jsonPath("$.results", hasSize(1)));
 
         resultActions.andDo(document("home",
                 preprocessRequest(prettyPrint()),

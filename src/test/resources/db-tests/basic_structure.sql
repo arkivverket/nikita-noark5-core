@@ -60,7 +60,7 @@ insert into as_part_person(system_id, social_security_number)
 values ('8131049d-dcac-43d8-bee4-656e72842da9', '1234567895655');
 
 insert into as_part(system_id, name, part_role_code, part_role_code_name, title)
-values ('ebcefc44-73e5-485e-94c9-1b210359c125', 'Hans Gruber', 'KLI', 'Klient', 'title');
+values ('ebcefc44-73e5-485e-94c9-1b210359c125', 'Hans Gruber', 'ADV', 'Advokat', 'title');
 
 insert into as_part_unit(system_id, organisation_number)
 values ('ebcefc44-73e5-485e-94c9-1b210359c125', '02020202022');

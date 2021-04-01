@@ -1894,13 +1894,13 @@ public class TestOData {
      * Attribute: kodenavn with value ADV
      * <p>
      * ODATA Input:
-     * mappe?$filter=part/partRolle/kodenavn+eq+'ADV'
+     * mappe?$filter=part/partRolle/kode+eq+'ADV'
      * <p>
      * Expected HQL:
      * SELECT file_1 FROM File AS file_1
      * JOIN
      * file_1.referencePart AS part_1
-     * WHERE part_1.partRoleCodeName = :parameter_0
+     * WHERE part_1.partRoleCode = :parameter_0
      * <p>
      * Additionally parameter_0 should be
      * ADV
@@ -1909,8 +1909,8 @@ public class TestOData {
      */
     @Test
     @Transactional
-    public void shouldReturnValidHQLEntityJoinFileWithPartPartRoleCodeName() {
-        String attributeName = "part/partRolle/kodenavn";
+    public void shouldReturnValidHQLEntityJoinFileWithPartPartRoleCode() {
+        String attributeName = "part/partRolle/kode";
         String compareValue = "ADV";
         String odata = "mappe?$filter=" + attributeName +
                 " eq '" + compareValue + "'";
@@ -1934,7 +1934,7 @@ public class TestOData {
      * Attribute: kodenavn with value ADV
      * <p>
      * ODATA Input:
-     * mappe?$filter=part/partRolle/kodenavn+eq+'ADV'
+     * mappe?$filter=part/partRolle/kodenavn+eq+'Advokat'
      * <p>
      * Expected HQL:
      * SELECT file_1 FROM File AS file_1
@@ -1943,15 +1943,15 @@ public class TestOData {
      * WHERE part_1.partRoleCodeName = :parameter_0
      * <p>
      * Additionally parameter_0 should be
-     * ADV
+     * Advokat
      * <p>
      * Tested added as it was reported as failing from external test
      */
     @Test
     @Transactional
-    public void shouldReturnValidHQLEntityJoinFileWithPartPartRoleCode() {
-        String attributeName = "part/partRolle/kode";
-        String compareValue = "ADV";
+    public void shouldReturnValidHQLEntityJoinFileWithPartPartRoleCodeName() {
+        String attributeName = "part/partRolle/kodenavn";
+        String compareValue = "Advokat";
         String odata = "mappe?$filter=" + attributeName +
                 " eq '" + compareValue + "'";
 
@@ -1959,7 +1959,7 @@ public class TestOData {
                 " JOIN" +
                 " file_1.referencePart AS part_1" +
                 " WHERE" +
-                " part_1.partRoleCode = :parameter_0";
+                " part_1.partRoleCodeName = :parameter_0";
 
         Query query = oDataService.convertODataToHQL(odata, "");
         Assertions.assertEquals(query.getParameterValue("parameter_0"),
@@ -2009,8 +2009,49 @@ public class TestOData {
     }
 
     /**
+     * Check that it is possible to do a query with filter join between a File
+     * and a Part
+     * Entity:  mappe, part
+     * Attribute: organisasjonsnummer
+     * <p>
+     * ODATA Input:
+     * mappe?$filter=partEnhet/organisasjonsnummer eq '02020202022'
+     * <p>
+     * Expected HQL:
+     * SELECT file_1 FROM File AS file_1
+     * JOIN
+     * file_1.referencePart AS part_1
+     * WHERE
+     * part_1.name like :parameter_0
+     * <p>
+     * Additionally parameter_0 should be
+     * ADV
+     * <p>
+     * Tested added as it was reported as failing from external test
+     */
+    @Test
+    @Transactional
+    public void shouldReturnValidHQLEntityJoinFileWithPartUnitField() {
+        String attributeName = "partEnhet/organisasjonsnummer";
+        String compareValue = " 02020202022";
+        String odata = "mappe?$filter=" + attributeName + " eq " +
+                "'" + compareValue + "')";
+
+        String hql = "SELECT file_1 FROM File AS file_1" +
+                " JOIN" +
+                " file_1.referencePart AS unitidentifier_1" +
+                " WHERE" +
+                " unitidentifier_1.organisationNumber = :parameter_0";
+
+        Query query = oDataService.convertODataToHQL(odata, "");
+        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+                "%" + compareValue + "%");
+        Assertions.assertEquals(query.getQueryString(), hql);
+    }
+
+    /**
      * Check that a space between date and time of a dateTime object results in
-     * the throwing of an exception.
+     * the throwing of an exception
      * Note:
      * <br>
      * In ISO 8601:2004 it was permitted to omit the "T" character, but this
