@@ -653,7 +653,7 @@ public final class N5ResourceMappings {
     public static final String FOREIGN_ADDRESS_ENG = "utenlandsadresse";
     public static final String FORMAT_ENG = "format";
     public static final String HOLDING_NUMBER_ENG = "holding_number";
-    public static final String KEYWORD_ENG = "noekkelord";
+    public static final String KEYWORD_ENG = "keyword";
     public static final String LAST_MODIFIED_BY_ENG = "last_modified_by";
     public static final String LAST_MODIFIED_DATE_ENG = "last_modified_date";
     public static final String LEASE_NUMBER_ENG = "lease_number";
@@ -934,7 +934,7 @@ public final class N5ResourceMappings {
     public static final String FOREIGN_ADDRESS_ENG_OBJECT = "utenlandsadresse";
     public static final String FORMAT_ENG_OBJECT = "Format";
     public static final String HOLDING_NUMBER_ENG_OBJECT = "holdingNumber";
-    public static final String KEYWORD_ENG_OBJECT = "noekkelord";
+    public static final String KEYWORD_ENG_OBJECT = "Keyword";
     public static final String LAST_MODIFIED_BY_ENG_OBJECT = "lastModifiedBy";
     public static final String LAST_MODIFIED_DATE_ENG_OBJECT = "lastModifiedDate";
     public static final String LEASE_NUMBER_ENG_OBJECT = "leaseNumber";
