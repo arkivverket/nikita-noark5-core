@@ -24,7 +24,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@RequestMapping(value = HREF_BASE_METADATA + SLASH + BSM_DEF,
+@RequestMapping(value = HREF_BASE_METADATA,
         produces = NOARK5_V5_CONTENT_TYPE_JSON)
 public class BSMMetadataController
         extends NoarkController {
@@ -55,7 +55,7 @@ public class BSMMetadataController
                     description = API_MESSAGE_CONFLICT),
             @ApiResponse(responseCode = INTERNAL_SERVER_ERROR_VAL,
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @PostMapping
+    @PostMapping(SLASH + NEW_BSM_DEF)
     public ResponseEntity<BSMMetadataHateoas> createBSMMetadata(
             @RequestBody BSMMetadata bsmMetadata) {
         return bsmMetadataService.save(bsmMetadata);
@@ -76,7 +76,7 @@ public class BSMMetadataController
                     description = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(responseCode = INTERNAL_SERVER_ERROR_VAL,
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @GetMapping
+    @GetMapping(SLASH + BSM_DEF)
     public ResponseEntity<BSMMetadataHateoas> findAll() {
         return bsmMetadataService.findAll();
     }
@@ -96,7 +96,7 @@ public class BSMMetadataController
                     description = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(responseCode = INTERNAL_SERVER_ERROR_VAL,
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @GetMapping(value = NEW + "-" + BSM_DEF)
+    @GetMapping(value = NEW_BSM_DEF)
     public ResponseEntity<String>
     getBSMMetadataTemplate(HttpServletRequest request) {
         return ResponseEntity.status(OK)
@@ -122,7 +122,7 @@ public class BSMMetadataController
                     description = API_MESSAGE_CONFLICT),
             @ApiResponse(responseCode = INTERNAL_SERVER_ERROR_VAL,
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER)
+    @GetMapping(value = SLASH + BSM_DEF + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<BSMMetadataHateoas> getBSMMetadata(
             @Parameter(name = SYSTEM_ID,
                     required = true)
@@ -149,7 +149,7 @@ public class BSMMetadataController
                     description = API_MESSAGE_CONFLICT),
             @ApiResponse(responseCode = INTERNAL_SERVER_ERROR_VAL,
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @PatchMapping(value = SLASH + SYSTEM_ID_PARAMETER,
+    @PatchMapping(value = SLASH + BSM_DEF + SLASH + SYSTEM_ID_PARAMETER,
             consumes = CONTENT_TYPE_JSON_MERGE_PATCH)
     public ResponseEntity<BSMMetadataHateoas> patchBSMMetadata(
             @Parameter(name = SYSTEM_ID,
@@ -183,7 +183,7 @@ public class BSMMetadataController
             @ApiResponse(
                     responseCode = INTERNAL_SERVER_ERROR_VAL,
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @DeleteMapping(value = SLASH + SYSTEM_ID_PARAMETER)
+    @DeleteMapping(value = SLASH + BSM_DEF + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<String> deleteBSMMetadata(
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of bsmMetadata object to delete.",

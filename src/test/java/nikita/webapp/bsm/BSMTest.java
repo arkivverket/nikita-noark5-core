@@ -148,7 +148,7 @@ public class BSMTest {
         mdValues.put(BSM_INTEGER_NAME, new ArrayList<>(Arrays.asList(TYPE_INTEGER,
                 DESCRIPTION_TEST, BSM_URI_VALUE)));
 
-        String url = "/noark5v5/api/metadata/" + BSM_DEF;
+        String url = "/noark5v5/api/metadata/" + NEW_BSM_DEF;
         JsonFactory factory = new JsonFactory();
         String uuidCreatedBSMMetadata = "";
         for (Map.Entry<String, List<String>> entry : mdValues.entrySet()) {
@@ -893,7 +893,7 @@ public class BSMTest {
     @Sql("/db-tests/basic_structure.sql")
     @WithMockCustomUser
     public void registerMetadataBSMMissingFields() throws Exception {
-        String url = "/noark5v5/api/metadata/" + BSM_DEF;
+        String url = "/noark5v5/api/metadata/" + NEW_BSM_DEF;
         JsonFactory factory = new JsonFactory();
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
                 .post(url)
