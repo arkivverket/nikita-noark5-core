@@ -140,6 +140,7 @@ public final class N5ResourceMappings {
     public static final String PART_PERSON = "partperson";
     public static final String PART_PERSON_ENG = "part_person";
     public static final String PART_PERSON_ENG_OBJECT = "PartPerson";
+    public static final String PART_PERSON_FIELD = "partPerson";
     public static final String PART_ID = "partID";
     public static final String PART_NAME = "partNavn";
     public static final String PART_ROLE_FIELD = "partRolle";

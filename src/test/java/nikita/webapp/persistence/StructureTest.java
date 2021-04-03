@@ -111,6 +111,7 @@ public class StructureTest {
      */
     @Test
     @Sql("/db-tests/basic_structure.sql")
+    @WithMockCustomUser
     public void checkFilePartContains()
             throws Exception {
         String url = "/noark5v5/odata/api/arkivstruktur/mappe?$filter=contains" +
@@ -160,6 +161,86 @@ public class StructureTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.results[0]." + SYSTEM_ID)
                         .value("f1677c47-99e1-42a7-bda2-b0bbc64841b7"))
+                .andExpect(jsonPath("$.results", hasSize(1)));
+
+        resultActions.andDo(document("home",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint())));
+    }
+
+    /**
+     * Check that it is possible to search files based on associated partUnit
+     * value. In this case search all partUnit that contain name equal to
+     * 'Hans Gruber'
+     * <p>
+     * mappe?$filter=partEnhet/navn eq 'Hans Gruber'
+     * <p>
+     * Make sure result corresponds to the file with systemID
+     * f1677c47-99e1-42a7-bda2-b0bbc64841b7
+     * and that only one result has been returned
+     *
+     * @throws Exception if required
+     */
+    @Test
+    @Sql("/db-tests/basic_structure.sql")
+    @WithMockCustomUser
+    public void searchFileWithPartUnit()
+            throws Exception {
+        String attributeName = "partEnhet/navn";
+        String compareValue = "Hans Gruber";
+
+        String url = "/noark5v5/odata/api/arkivstruktur/mappe?$filter=" +
+                attributeName + " eq '" + compareValue + "'";
+
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON));
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.results[0]." + SYSTEM_ID)
+                        .value("f1677c47-99e1-42a7-bda2-b0bbc64841b7"))
+                .andExpect(jsonPath("$.results", hasSize(1)));
+
+        resultActions.andDo(document("home",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint())));
+    }
+
+    /**
+     * Check that it is possible to search files based on associated partUnit
+     * value. In this case search all partUnit that contain name equal to
+     * 'Hans Gruber'
+     * <p>
+     * mappe?$filter=partPerson/navn eq 'Hans Gruber'
+     * <p>
+     * Make sure result corresponds to the file with systemID
+     * 43d305de-b3c8-4922-86fd-45bd26f3bf01
+     * and that only one result has been returned
+     *
+     * @throws Exception if required
+     */
+    @Test
+    @Sql("/db-tests/basic_structure.sql")
+    @WithMockCustomUser
+    public void searchFileWithPartPerson()
+            throws Exception {
+        String attributeName = "partPerson/navn";
+        String compareValue = "Hans Gruber";
+
+        String url = "/noark5v5/odata/api/arkivstruktur/mappe?$filter=" +
+                attributeName + " eq '" + compareValue + "'";
+
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON));
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.results[0]." + SYSTEM_ID)
+                        .value("43d305de-b3c8-4922-86fd-45bd26f3bf01"))
                 .andExpect(jsonPath("$.results", hasSize(1)));
 
         resultActions.andDo(document("home",

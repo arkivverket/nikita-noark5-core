@@ -1905,7 +1905,7 @@ public class TestOData {
      * Additionally parameter_0 should be
      * ADV
      * <p>
-     * Tested added as it was reported as failing from external test
+     * Test added as it was reported as failing from external test
      */
     @Test
     @Transactional
@@ -1919,7 +1919,7 @@ public class TestOData {
                 " JOIN" +
                 " file_1.referencePart AS part_1" +
                 " WHERE" +
-                " part_1.partRoleCodeName = :parameter_0";
+                " part_1.partRoleCode = :parameter_0";
 
         Query query = oDataService.convertODataToHQL(odata, "");
         Assertions.assertEquals(query.getParameterValue("parameter_0"),
@@ -1945,7 +1945,7 @@ public class TestOData {
      * Additionally parameter_0 should be
      * Advokat
      * <p>
-     * Tested added as it was reported as failing from external test
+     * Test added as it was reported as failing from external test
      */
     @Test
     @Transactional
@@ -1986,7 +1986,7 @@ public class TestOData {
      * Additionally parameter_0 should be
      * ADV
      * <p>
-     * Tested added as it was reported as failing from external test
+     * Test added as it was reported as failing from external test
      */
     @Test
     @Transactional
@@ -2010,6 +2010,92 @@ public class TestOData {
 
     /**
      * Check that it is possible to do a query with filter join between a File
+     * and a Part where only objects of type PartPerson are returned
+     * Entity:  mappe, part
+     * Attribute: navn
+     * <p>
+     * ODATA Input:
+     * mappe?$filter=partPerson/navn eq 'Hans Gruber'
+     * <p>
+     * Expected HQL:
+     * SELECT file_1 FROM File AS file_1
+     * JOIN
+     * file_1.referencePart AS part_1
+     * WHERE
+     * " part_1.name = :parameter_0 and
+     * " type (part_1) = PartUnit
+     * <p>
+     * Additionally parameter_0 should be
+     * Hans Gruber
+     * <p>
+     * Test added as it was reported as failing from external test
+     */
+    @Test
+    @Transactional
+    public void shouldReturnValidHQLEntityJoinFileWithPartPerson() {
+        String attributeName = "partPerson/navn";
+        String compareValue = "Hans Gruber";
+        String odata = "mappe?$filter=" + attributeName + " eq '" +
+                compareValue + "'";
+
+        String hql = "SELECT file_1 FROM File AS file_1" +
+                " JOIN" +
+                " file_1.referencePart AS part_1" +
+                " WHERE" +
+                " part_1.name = :parameter_0" +
+                "  and type(part_1) = PartPerson";
+        // Note: There are two spaces before "  and .."
+        Query query = oDataService.convertODataToHQL(odata, "");
+        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+                "Hans Gruber");
+        Assertions.assertEquals(query.getQueryString(), hql);
+    }
+
+    /**
+     * Check that it is possible to do a query with filter join between a File
+     * and a Part where only objects of type PartUnit are returned
+     * Entity:  mappe, part
+     * Attribute: navn
+     * <p>
+     * ODATA Input:
+     * mappe?$filter=partEnhet/navn eq 'Hans Gruber'
+     * <p>
+     * Expected HQL:
+     * SELECT file_1 FROM File AS file_1
+     * JOIN
+     * file_1.referencePart AS part_1
+     * WHERE
+     * " part_1.name = :parameter_0 and
+     * " type (part_1) = PartUnit
+     * <p>
+     * Additionally parameter_0 should be
+     * Hans Gruber
+     * <p>
+     * Test added as it was reported as failing from external test
+     */
+    @Test
+    @Transactional
+    public void shouldReturnValidHQLEntityJoinFileWithPartUnit() {
+        String attributeName = "partEnhet/navn";
+        String compareValue = "Hans Gruber";
+        String odata = "mappe?$filter=" + attributeName + " eq '" +
+                compareValue + "'";
+
+        String hql = "SELECT file_1 FROM File AS file_1" +
+                " JOIN" +
+                " file_1.referencePart AS part_1" +
+                " WHERE" +
+                " part_1.name = :parameter_0" +
+                "  and type(part_1) = PartUnit";
+        // Note: There are two spaces  before "  and .."
+        Query query = oDataService.convertODataToHQL(odata, "");
+        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+                "Hans Gruber");
+        Assertions.assertEquals(query.getQueryString(), hql);
+    }
+
+    /**
+     * Check that it is possible to do a query with filter join between a File
      * and a Part
      * Entity:  mappe, part
      * Attribute: organisasjonsnummer
@@ -2027,7 +2113,7 @@ public class TestOData {
      * Additionally parameter_0 should be
      * ADV
      * <p>
-     * Tested added as it was reported as failing from external test
+     * Test added as it was reported as failing from external test
      */
     @Test
     @Transactional
@@ -2039,13 +2125,14 @@ public class TestOData {
 
         String hql = "SELECT file_1 FROM File AS file_1" +
                 " JOIN" +
-                " file_1.referencePart AS unitidentifier_1" +
+                " file_1.referencePart AS part_1" +
                 " WHERE" +
-                " unitidentifier_1.organisationNumber = :parameter_0";
-
+                " part_1.organisationNumber = :parameter_0" +
+                "  and type(part_1) = PartUnit";
+        // Note the double space "  and type(..."
         Query query = oDataService.convertODataToHQL(odata, "");
         Assertions.assertEquals(query.getParameterValue("parameter_0"),
-                "%" + compareValue + "%");
+                compareValue);
         Assertions.assertEquals(query.getQueryString(), hql);
     }
 
