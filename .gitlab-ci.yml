@@ -27,7 +27,7 @@ noark5tester-runtest:
     - serverpid=$!
     - echo "Waiting for nikita to start"
     - count=0; while ! curl --silent $baseurl && [ 10 -gt "$count" ]; do sleep 20; printf "."; count=$(($count + 1)); done; if [ 10 -gt "$count" ]; then nikitastarted=true; else echo "Failed to start nikita"; tail -100 nikita-run.log; exit 1; fi
-    - (cd noark5-tester && LC_ALL=C.UTF-8 ./runtest --verbose --baseurl $baseurl)
+    - (cd noark5-tester && LC_ALL=C.UTF-8 ./runtest --baseurl $baseurl)
   artifacts:
     paths:
       - nikita-run.log
