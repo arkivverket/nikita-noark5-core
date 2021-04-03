@@ -2,19 +2,19 @@
   "EventType": [
     {
       "code": "C",
-      "codename": "'Opprett"
+      "codename": "'Opprettet"
     },
     {
       "code": "R",
-      "codename": "Les"
+      "codename": "Lest"
     },
     {
       "code": "U",
-      "codename": "Oppdater"
+      "codename": "Endret"
     },
     {
       "code": "D",
-      "codename": "Slett"
+      "codename": "Slettet"
     }
   ]
 }
