@@ -751,6 +751,22 @@ public class InternalNameTranslator {
                         PARENT_CLASS_ENG,
                         PARENT_CLASS_ENG_OBJECT);
         addNorToEnglishNameMap
+                (PART_PERSON,
+                        PART_PERSON_ENG,
+                        PART_PERSON_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (PART_PERSON_FIELD,
+                        PART_PERSON_ENG,
+                        PART_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (PART_UNIT,
+                        PART_UNIT_ENG,
+                        PART_UNIT_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (PART_UNIT_FIELD,
+                        PART_UNIT_ENG,
+                        PART_ENG_OBJECT);
+        addNorToEnglishNameMap
                 (PLAN_IDENTIFICATION,
                         PLAN_IDENTIFICATION_ENG,
                         PLAN_IDENTIFICATION_ENG_OBJECT);

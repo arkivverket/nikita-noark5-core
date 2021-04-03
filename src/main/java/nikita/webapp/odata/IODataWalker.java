@@ -20,6 +20,9 @@ public interface IODataWalker {
 
     void addEntityToEntityJoin(String fromEntity, String toEntity);
 
+    void addClassNameForInheritanceClarification(
+            String entityName, String originalEntityName);
+
     void processParenthesis(String bracket);
 
     void processLogicalOperator(String logicalOperator);

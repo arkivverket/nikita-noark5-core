@@ -1,5 +1,6 @@
 package nikita.common.model.noark5.v5.secondary;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import nikita.common.model.noark5.bsm.BSMBase;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.File;
@@ -22,7 +23,7 @@ import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
 import static nikita.common.config.Constants.NOARK_FONDS_STRUCTURE_PATH;
 import static nikita.common.config.Constants.TABLE_PART;
-import static nikita.common.config.N5ResourceMappings.PART;
+import static nikita.common.config.N5ResourceMappings.*;
 
 @Entity
 @Table(name = TABLE_PART)
@@ -35,16 +36,26 @@ public class Part
      * M??? - partRolle code (xs:string)
      */
     @NotNull
-    @Column(name = "part_role_code", nullable = false)
+    @Column(name = PART_ROLE_CODE_ENG, nullable = false)
+    @JsonProperty(PART_ROLE_CODE)
     @Audited
     private String partRoleCode;
 
     /**
      * M303 - partRolle code name (xs:string)
      */
-    @Column(name = "part_role_code_name")
+    @Column(name = PART_ROLE_CODE_NAME_ENG)
+    @JsonProperty(PART_ROLE_CODE_NAME)
     @Audited
     private String partRoleCodeName;
+
+    /**
+     * M302 - partNavn (xs:string)
+     */
+    @Column(name = CORRESPONDENCE_PART_NAME_ENG)
+    @Audited
+    @JsonProperty(CORRESPONDENCE_PART_NAME)
+    private String name;
 
     // Links to Files
     @ManyToMany(mappedBy = "referencePart")
@@ -91,6 +102,14 @@ public class Part
             this.partRoleCode = null;
             this.partRoleCodeName = null;
         }
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
@@ -161,6 +180,7 @@ public class Part
         return "Part{" + super.toString() +
                 ", partRoleCode='" + partRoleCode + '\'' +
                 ", partRoleCodeName='" + partRoleCodeName + '\'' +
+                ", name='" + name + '\'' +
                 '}';
     }
 
@@ -174,6 +194,7 @@ public class Part
                 .appendSuper(super.equals(other))
                 .append(partRoleCode, rhs.partRoleCode)
                 .append(partRoleCodeName, rhs.partRoleCodeName)
+                .append(name, rhs.name)
                 .isEquals();
     }
 
@@ -183,6 +204,7 @@ public class Part
                 .appendSuper(super.hashCode())
                 .append(partRoleCode)
                 .append(partRoleCodeName)
+                .append(name)
                 .toHashCode();
     }
 }

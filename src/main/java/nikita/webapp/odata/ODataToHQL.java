@@ -18,18 +18,18 @@ public class ODataToHQL
         extends ODataWalker
         implements IODataWalker {
 
-    protected final HQLStatementBuilder statement;
+    protected final NoarkHQLStatementBuilder statement;
     private final HibernateEntityReflections reflections;
     protected Comparison comparison = new Comparison();
     protected boolean right = false;
 
     public ODataToHQL(String dmlStatementType) {
-        statement = new HQLStatementBuilder(dmlStatementType);
+        statement = new NoarkHQLStatementBuilder(dmlStatementType);
         reflections = new HibernateEntityReflections();
     }
 
     public ODataToHQL() {
-        statement = new HQLStatementBuilder();
+        statement = new NoarkHQLStatementBuilder();
         reflections = new HibernateEntityReflections();
     }
 
@@ -80,6 +80,12 @@ public class ODataToHQL
                                String comparisonOperator, Object value) {
         statement.addCompareValue(aliasAndAttribute,
                 translateComparator(comparisonOperator), value);
+    }
+
+    @Override
+    public void addClassNameForInheritanceClarification(
+            String entityName, String originalEntityName) {
+        statement.addPotentialTypeMapping(entityName, originalEntityName);
     }
 
     @Override
@@ -198,7 +204,7 @@ public class ODataToHQL
      */
     private String translateComparator(String comparator)
             throws NikitaMalformedInputDataException {
-        switch (comparator) {
+        switch (comparator.toLowerCase()) {
             case ODATA_EQ:
                 return HQL_EQ;
             case ODATA_GT:

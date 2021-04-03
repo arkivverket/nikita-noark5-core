@@ -40,14 +40,6 @@ public class PartUnit
     private String organisationNumber;
 
     /**
-     * M302 - partNavn (xs:string)
-     */
-    @Column(name = CORRESPONDENCE_PART_NAME_ENG)
-    @Audited
-    @JsonProperty(CORRESPONDENCE_PART_NAME)
-    private String name;
-
-    /**
      * M412 - kontaktperson  (xs:string)
      */
     @Column(name = CONTACT_PERSON_ENG)
@@ -76,14 +68,6 @@ public class PartUnit
 
     public void setUnitIdentifier(String organisationNumber) {
         this.organisationNumber = organisationNumber;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public ContactInformation getContactInformation() {
@@ -132,7 +116,6 @@ public class PartUnit
     public String toString() {
         return "PartUnit{" + super.toString() +
                 ", organisationNumber='" + organisationNumber + '\'' +
-                ", name='" + name + '\'' +
                 ", contactPerson='" + contactPerson + '\'' +
                 '}';
     }
@@ -152,7 +135,6 @@ public class PartUnit
         return new EqualsBuilder()
                 .appendSuper(super.equals(other))
                 .append(organisationNumber, rhs.organisationNumber)
-                .append(name, rhs.name)
                 .append(contactPerson, rhs.contactPerson)
                 .isEquals();
     }
@@ -162,7 +144,6 @@ public class PartUnit
         return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
                 .append(organisationNumber)
-                .append(name)
                 .append(contactPerson)
                 .toHashCode();
     }

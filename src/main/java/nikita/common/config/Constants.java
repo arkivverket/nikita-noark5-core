@@ -815,7 +815,7 @@ public final class Constants {
             "as_file_keyword";
     public static final String TABLE_FILE_COMMENT =
             "as_file_comment";
-    public static final String TABLE_FILE_PARTY = "as_file_party";
+    public static final String TABLE_FILE_PARTY = "as_file_part";
     public static final String TABLE_RECORD_AUTHOR = "as_record_author";
     public static final String TABLE_REGISTRY_ENTRY_SIGN_OFF =
             "sa_registry_entry_sign_off";

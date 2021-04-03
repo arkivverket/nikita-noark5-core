@@ -1,5 +1,6 @@
 package nikita.webapp.odata;
 
+import nikita.common.model.nikita.Pair;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -17,8 +18,10 @@ public class HQLStatementBuilder {
 
     private final String PARAMETER = "parameter_";
     private final Map<String, Object> parameters = new HashMap<>();
+    protected final Map<String, String> typeMappings = new HashMap<>();
+    protected final List<Pair> inheritanceList = new ArrayList<>();
     private final List<String> orderByList = new ArrayList<>();
-    private final StringBuilder select = new StringBuilder();
+    protected final StringBuilder select = new StringBuilder();
     private final StringBuilder from = new StringBuilder();
     private final StringBuilder where = new StringBuilder();
     private final StringBuilder orderBy = new StringBuilder();
@@ -221,6 +224,14 @@ public class HQLStatementBuilder {
             query += "WHERE " + whereString;
         }
 
+        if (inheritanceList.size() > 0) {
+            // "_1) is used because addEntityToEntityJoin uses _1
+            for (Pair pair : inheritanceList) {
+                query += " and type(" + pair.getKey().toLowerCase()
+                        + "_1) = " + pair.getValue();
+            }
+        }
+
         if (orderBy.length() > 0) {
             query += orderBy.toString();
         }
@@ -287,5 +298,18 @@ public class HQLStatementBuilder {
     // implementation out for the moment but leaving the signatures intact
     public void addCountAsResource(Boolean includeResults) {
         selectCount = true;
+    }
+
+    /**
+     * Make a note of the entityName e.g., Part and the original
+     * originalEntityName e.g., so that we can allow higher layers that
+     * understand the domain model the ability fix the inheritance
+     *
+     * @param entityName
+     * @param originalEntityName
+     */
+    public void addPotentialTypeMapping(
+            String entityName, String originalEntityName) {
+        typeMappings.put(originalEntityName, entityName);
     }
 }

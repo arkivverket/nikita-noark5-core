@@ -121,17 +121,21 @@ public abstract class ODataWalker
         // Join the from the entity applying the filter on e.g
         // mappe?$filter=klasse/klassifikasjonssystem ....
         // You have to first join mappe (File) to klasse (Class)
-        String toEntity = getInternalNameObject(getValue(ctx,
-                EntityNameContext.class));
+        String originalEntityName = getValue(ctx, EntityNameContext.class);
+        String toEntity = getInternalNameObject(originalEntityName);
         addEntityToEntityJoin(this.entity, toEntity);
+        addClassNameForInheritanceClarification(toEntity, originalEntityName);
         if (entityNameContexts.size() > 1) {
             for (int i = 0; i < entityNameContexts.size(); i++) {
                 if (i < entityNameContexts.size() - 1) {
                     String fromEntity = getInternalNameObject
                             (getValue(ctx, EntityNameContext.class, i));
-                    toEntity = getInternalNameObject(
-                            getValue(ctx, EntityNameContext.class, i + 1));
+                    originalEntityName = getValue(ctx,
+                            EntityNameContext.class, i + 1);
+                    toEntity = getInternalNameObject(originalEntityName);
                     addEntityToEntityJoin(fromEntity, toEntity);
+                    addClassNameForInheritanceClarification(toEntity,
+                            originalEntityName);
                 }
             }
         }

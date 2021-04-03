@@ -133,11 +133,24 @@ public final class N5ResourceMappings {
     // Part
     public static final String PART_ROLE = "partrolle";
     public static final String PART = "part";
-    public static final String PART_PERSON = "partperson";
     public static final String PART_UNIT = "partenhet";
+    public static final String PART_UNIT_FIELD = "partEnhet";
+    public static final String PART_UNIT_ENG = "part_unit";
+    public static final String PART_UNIT_ENG_OBJECT = "PartUnit";
+    public static final String PART_PERSON = "partperson";
+    public static final String PART_PERSON_ENG = "part_person";
+    public static final String PART_PERSON_ENG_OBJECT = "PartPerson";
+    public static final String PART_PERSON_FIELD = "partPerson";
     public static final String PART_ID = "partID";
     public static final String PART_NAME = "partNavn";
     public static final String PART_ROLE_FIELD = "partRolle";
+    public static final String PART_ROLE_CODE_NAME = "kodenavn";
+    public static final String PART_ROLE_CODE = "kode";
+    public static final String PART_ROLE_CODE_NAME_ENG = "part_role_code_name";
+    public static final String PART_ROLE_CODE_ENG = "part_role_code";
+    public static final String PART_ROLE_CODE_NAME_OBJECT =
+            "partRoleCodeName";
+    public static final String PART_ROLE_CODE_OBJECT = "partRoleCode";
 
     // Record
     public static final String RECORD_ARCHIVED_BY = "arkivertAv";
@@ -641,7 +654,7 @@ public final class N5ResourceMappings {
     public static final String FOREIGN_ADDRESS_ENG = "utenlandsadresse";
     public static final String FORMAT_ENG = "format";
     public static final String HOLDING_NUMBER_ENG = "holding_number";
-    public static final String KEYWORD_ENG = "noekkelord";
+    public static final String KEYWORD_ENG = "keyword";
     public static final String LAST_MODIFIED_BY_ENG = "last_modified_by";
     public static final String LAST_MODIFIED_DATE_ENG = "last_modified_date";
     public static final String LEASE_NUMBER_ENG = "lease_number";
@@ -784,7 +797,7 @@ public final class N5ResourceMappings {
     public static final String PART_ENG_OBJECT = "Part";
     public static final String PART_ID_ENG_OBJECT = "partID";
     public static final String PART_NAME_ENG_OBJECT = "PartName";
-    public static final String PART_ROLE_FIELD_ENG_OBJECT = "PartRoll";
+    public static final String PART_ROLE_FIELD_ENG_OBJECT = "PartRole";
     public static final String CASE_RECORDS_MANAGEMENT_UNIT_ENG_OBJECT = "recordsManagementUnit";
     public static final String CASE_RESPONSIBLE_ENG_OBJECT = "caseResponsible";
     public static final String CASE_SEQUENCE_NUMBER_ENG_OBJECT = "caseSequenceNumber";
@@ -922,7 +935,7 @@ public final class N5ResourceMappings {
     public static final String FOREIGN_ADDRESS_ENG_OBJECT = "utenlandsadresse";
     public static final String FORMAT_ENG_OBJECT = "Format";
     public static final String HOLDING_NUMBER_ENG_OBJECT = "holdingNumber";
-    public static final String KEYWORD_ENG_OBJECT = "noekkelord";
+    public static final String KEYWORD_ENG_OBJECT = "Keyword";
     public static final String LAST_MODIFIED_BY_ENG_OBJECT = "lastModifiedBy";
     public static final String LAST_MODIFIED_DATE_ENG_OBJECT = "lastModifiedDate";
     public static final String LEASE_NUMBER_ENG_OBJECT = "leaseNumber";
