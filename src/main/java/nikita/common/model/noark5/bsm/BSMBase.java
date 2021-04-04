@@ -104,7 +104,7 @@ public class BSMBase {
     private String createdBy;
 
     /**
-     * M??? - oppdatertDato (xs:dateTime)
+     * M682 - endretDato (xs:dateTime)
      */
     @LastModifiedDate
     @Column(name = LAST_MODIFIED_DATE_ENG)
@@ -113,7 +113,7 @@ public class BSMBase {
     private OffsetDateTime lastModifiedDate;
 
     /**
-     * M??? - oppdatertAv (xs:string)
+     * M683 - endretAv (xs:string)
      */
     @LastModifiedBy
     @Column(name = LAST_MODIFIED_BY_ENG)
