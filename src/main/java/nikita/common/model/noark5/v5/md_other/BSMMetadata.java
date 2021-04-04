@@ -35,7 +35,7 @@ public class BSMMetadata
     @Column(name = OUTDATED_ENG, nullable = false)
     @JsonProperty(OUTDATED)
     @Updatable
-    private Boolean outdated;
+    private Boolean outdated = false;
 
     @Column(name = DESCRIPTION_ENG)
     @JsonProperty(DESCRIPTION)

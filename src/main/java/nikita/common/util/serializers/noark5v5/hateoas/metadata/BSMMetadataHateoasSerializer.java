@@ -27,7 +27,10 @@ public class BSMMetadataHateoasSerializer
         printSystemIdEntity(jgen, bsmMetadata);
         print(jgen, NAME, bsmMetadata.getName());
         print(jgen, TYPE, bsmMetadata.getType());
-        printNullable(jgen, OUTDATED, bsmMetadata.getOutdated());
+        Boolean outdated = bsmMetadata.getOutdated();
+        if (null != outdated && outdated) {
+            jgen.writeBooleanField(OUTDATED, outdated);
+        }
         printNullable(jgen, DESCRIPTION, bsmMetadata.getDescription());
         printNullable(jgen, SOURCE, bsmMetadata.getSource());
         printHateoasLinks(jgen, bSMMetadataHateoas.getLinks(bsmMetadata));
