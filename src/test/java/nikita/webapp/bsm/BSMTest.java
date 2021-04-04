@@ -1225,8 +1225,6 @@ public class BSMTest {
                         .value(name))
                 .andExpect(jsonPath("$." + TYPE)
                         .value(type))
-                .andExpect(jsonPath("$." + OUTDATED)
-                        .value(outdated))
                 .andExpect(jsonPath("$." + DESCRIPTION)
                         .value(description))
                 .andExpect(jsonPath("$." + SOURCE)
