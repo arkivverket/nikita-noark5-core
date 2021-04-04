@@ -211,7 +211,7 @@ public final class N5ResourceMappings {
     // This is probably CORRESPONDENCE_PART_NAME. Waiting for clarification
     public static final String NAME = "navn";
     public static final String NAME_ENG = "attribute_name";
-    public static final String TYPE = "datatype";
+    public static final String TYPE = "type";
     public static final String TYPE_ENG = "datatype";
     public static final String TYPE_ENG_OBJECT = "Datatype";
     public static final String OUTDATED = "utdatert";
