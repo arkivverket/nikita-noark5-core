@@ -221,6 +221,12 @@ public class MetadataDetails extends APIDetails {
                 COORDINATE_SYSTEM,
                 NEW_COORDINATE_SYSTEM,
                 REL_METADATA_COORDINATE_SYSTEM);
+
+        // Add support for BSM
+        metadataRel(publicUrlPath,
+                BSM_DEF,
+                NEW_BSM_DEF,
+                REL_METADATA_BSM);
     }
 
     private void

@@ -197,6 +197,9 @@ public final class Constants {
     public static final String NEW_COORDINATE_SYSTEM =
 	NEW + DASH + COORDINATE_SYSTEM;
 
+    public static final String NEW_BSM_DEF =
+	NEW + DASH + BSM_DEF;
+
     // String used for default / template object
     public static final String DEFAULT_TITLE = "Default title for ";
     public static final String DEFAULT_DESCRIPTION = "This object, if " +
