@@ -58,8 +58,8 @@ public final class N5ResourceMappings {
     public static final String CREATED_BY = "opprettetAv";
     public static final String FINALISED_DATE = "avsluttetDato";
     public static final String FINALISED_BY = "avsluttetAv";
-    public static final String LAST_MODIFIED_BY = "oppdatertAv";
-    public static final String LAST_MODIFIED_DATE = "oppdatertDato";
+    public static final String LAST_MODIFIED_BY = "endretAv";
+    public static final String LAST_MODIFIED_DATE = "endretDato";
     public static final String DOCUMENT_MEDIUM = "dokumentmedium";
     public static final String CORRESPONDENCE_PART_TYPE_CODE =
             "correspondence_part_type_code";
