@@ -3,7 +3,11 @@ package nikita.common.model.noark5.v5.md_other;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.SystemIdEntity;
+import nikita.common.model.noark5.v5.hateoas.md_other.BSMMetadataHateoas;
 import nikita.common.util.deserialisers.BSMMetadataDeserialiser;
+import nikita.webapp.hateoas.metadata.BSMMetadataHateoasHandler;
+import nikita.webapp.util.annotation.HateoasObject;
+import nikita.webapp.util.annotation.HateoasPacker;
 import nikita.webapp.util.annotation.Updatable;
 
 import javax.persistence.Column;
@@ -19,6 +23,9 @@ import static nikita.common.config.N5ResourceMappings.*;
 @Entity
 @Table(name = TABLE_BSM_METDATA)
 @JsonDeserialize(using = BSMMetadataDeserialiser.class)
+@HateoasPacker(using = BSMMetadataHateoasHandler.class)
+@HateoasObject(using = BSMMetadataHateoas.class)
+
 public class BSMMetadata
         extends SystemIdEntity {
 

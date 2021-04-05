@@ -41,6 +41,7 @@ import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserializeDate
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserializeDateTime;
 import static nikita.common.util.CommonUtils.Hateoas.Serialize.*;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.AnyOf.anyOf;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -126,7 +127,7 @@ public class BSMTest {
      */
     @Test
     @WithMockCustomUser
-    public void registerMetadataBSM() throws Exception {
+    public void registerMetadataBSMCheckTheyCanBeRetrieved() throws Exception {
         HashMap<String, List<String>> mdValues = new LinkedHashMap<>();
         mdValues.put("ppt-v1:skoleaar",
                 new ArrayList<>(Arrays.asList(TYPE_STRING,
@@ -255,6 +256,20 @@ public class BSMTest {
                 .andExpect(jsonPath(
                         "$._links.['" + REL_METADATA_BSM + "']")
                         .exists());
+
+        url = "/noark5v5/api/metadata/" + BSM_DEF;
+        // Check the list can be retrieved
+        resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON));
+
+        MockHttpServletResponse response =
+                resultActions.andReturn().getResponse();
+        System.out.println(response.getContentAsString());
+
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.results", hasSize(8)));
     }
 
     /**
