@@ -4,6 +4,10 @@ where 1;
 insert into bsm_base (systemid, owned_by, data_type, value_name, string_value, fk_bsm_file_id)
 values ('eebe2161-3fcc-4b6d-9920-0b570b00bed8', 'admin@example.com', 'string', 'ppt-v1:skolekontakt', 'Harald Harfarge',
         '43d305de-b3c8-4922-86fd-45bd26f3bf01');
+insert into bsm_base (systemid, owned_by, data_type, value_name, string_value, fk_bsm_file_id)
+insert into bsm_base (systemid, owned_by, data_type, value_name, string_value, fk_bsm_file_id)
+values ('eebe2161-3fcc-4b6d-9920-0b570b00bed8', 'admin@example.com', 'string', 'ppt-v1:skolekontakt', null,
+        '43d305de-b3c8-4922-86fd-45bd26f3bf01');
 insert into bsm_base (systemid, owned_by, data_type, value_name, boolean_value, fk_bsm_file_id)
 values ('d738ca59-6211-478a-8851-eb1686633d3c', 'admin@example.com', 'boolean', 'ppt-v1:sakferdig', true,
         '43d305de-b3c8-4922-86fd-45bd26f3bf01');
