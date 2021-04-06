@@ -1888,6 +1888,122 @@ public class TestOData {
     }
 
     /**
+     * Check that it is possible to do a query with filter join between an
+     * entity that supports business specific metadata (BSM) and the BSM
+     * table.
+     * Entity:  mappe, VSM
+     * Attribute: VSM.valueName with value ppt-v1:meldingstidspunkt
+     * <p>
+     * ODATA Input:
+     * mappe?$filter=virksomhetsspesifikkeMetadata/ppt-v1:skolekontakt neq null&$top=1
+     * <p>
+     * Expected HQL:
+     * SELECT file_1 FROM File as file_1
+     * JOIN
+     * file_1.referenceBSM as bsmbase_1
+     * WHERE
+     * bsmbase_1.valueName is not null
+     * <p>
+     * Additionally the parameter_0 value should be
+     * ppt-v1:skolekontakt
+     */
+    @Test
+    @Transactional
+    public void shouldReturnValidHQLEntityJoinFileWithBSMNotNullAttribute() {
+
+        String attributeName = "ppt-v1:skolekontakt";
+        String odata = "mappe?$filter=virksomhetsspesifikkeMetadata/" +
+                attributeName + " neq null&$top=1";
+
+        String hql = "SELECT file_1 FROM File AS file_1" +
+                " JOIN" +
+                " file_1.referenceBSMBase AS bsmbase_1" +
+                " WHERE" +
+                " bsmbase_1.valueName is not null";
+
+        Query query = oDataService.convertODataToHQL(odata, "");
+
+        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+                attributeName);
+        Assertions.assertEquals(query.getQueryString(), hql);
+    }
+
+    /**
+     * Check that it is possible to do a query with filter join between an
+     * entity that supports business specific metadata (BSM) and the BSM
+     * table.
+     * Entity:  mappe, VSM
+     * Attribute: VSM.valueName with value ppt-v1:skolekontakt
+     * <p>
+     * ODATA Input:
+     * mappe?$filter=virksomhetsspesifikkeMetadata/ppt-v1:skolekontakt eq null&$top=1
+     * <p>
+     * Expected HQL:
+     * SELECT file_1 FROM File as file_1
+     * JOIN
+     * file_1.referenceBSM as bsmbase_1
+     * WHERE
+     * bsmbase_1.valueName is  null
+     * <p>
+     * Additionally the parameter_0 value should be
+     * ppt-v1:skolekontakt
+     */
+    @Test
+    @Transactional
+    public void shouldReturnValidHQLEntityJoinFileWithBSMNullAttribute() {
+
+        String attributeName = "ppt-v1:skolekontakt";
+        String odata = "mappe?$filter=virksomhetsspesifikkeMetadata/" +
+                attributeName + " eq null&$top=1";
+
+        String hql = "SELECT file_1 FROM File AS file_1" +
+                " JOIN" +
+                " file_1.referenceBSMBase AS bsmbase_1" +
+                " WHERE" +
+                " bsmbase_1.valueName is null";
+
+        Query query = oDataService.convertODataToHQL(odata, "");
+
+        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+                attributeName);
+        Assertions.assertEquals(query.getQueryString(), hql);
+    }
+
+    /**
+     * Check that it is possible to do a OData query on BSM
+     * Entity:  VSM
+     * Attribute: VSM.valueName with value ppt-v1:meldingstidspunkt
+     * <p>
+     * ODATA Input:
+     * virksomhetsspesifikkeMetadata?$filter=ppt-v1:skolekontakt eq null
+     * <p>
+     * Expected HQL:
+     * SELECT bsm_1 FROM BSM as bsm_1
+     * WHERE
+     * bsmbase_1.valueName is null
+     * <p>
+     * Additionally the parameter_0 value should be
+     * ppt-v1:skolekontakt
+     */
+    @Test
+    @Transactional
+    public void shouldReturnValidHQLBSMNullAttribute() {
+
+        String attributeName = "ppt-v1:skolekontakt";
+        String odata = "virksomhetsspesifikkeMetadata?$filter=" +
+                attributeName + " eq null&$top=1";
+
+        String hql = "SELECT file_1 FROM File AS file_1" +
+                " WHERE" +
+                " bsmbase_1.valueName is null";
+
+        Query query = oDataService.convertODataToHQL(odata, "");
+        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+                attributeName);
+        Assertions.assertEquals(query.getQueryString(), hql);
+    }
+
+    /**
      * Check that it is possible to do a query with filter join between a
      * File and a Part
      * Entity:  mappe, part
