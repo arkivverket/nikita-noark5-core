@@ -2,6 +2,7 @@ package nikita.common.model.noark5.v5;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import nikita.common.model.noark5.bsm.BSMBase;
 import nikita.common.model.noark5.v5.hateoas.DocumentDescriptionHateoas;
 import nikita.common.model.noark5.v5.interfaces.*;
 import nikita.common.model.noark5.v5.interfaces.entities.ICreate;
@@ -246,6 +247,11 @@ public class DocumentDescription
                     name = FOREIGN_KEY_PART_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private final Set<Part> referencePart = new HashSet<>();
+
+    // Links to businessSpecificMetadata (virksomhetsspesifikkeMetadata)
+    @OneToMany(mappedBy = REFERENCE_DOCUMENT_DESCRIPTION_DB,
+            cascade = {PERSIST, MERGE})
+    private final List<BSMBase> referenceBSMBase = new ArrayList<>();
 
     public DocumentType getDocumentType() {
         if (null == documentTypeCode)
@@ -510,6 +516,18 @@ public class DocumentDescription
     public void addPart(Part part) {
         this.referencePart.add(part);
         part.getReferenceDocumentDescription().add(this);
+    }
+
+
+    public List<BSMBase> getReferenceBSMBase() {
+        return referenceBSMBase;
+    }
+
+    public void addReferenceBSMBase(List<BSMBase> referenceBSMBase) {
+        this.referenceBSMBase.addAll(referenceBSMBase);
+        for (BSMBase bsm : referenceBSMBase) {
+            bsm.setReferenceDocumentDescription(this);
+        }
     }
 
     @Override

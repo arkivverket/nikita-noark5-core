@@ -23,6 +23,7 @@ import nikita.webapp.hateoas.interfaces.secondary.IAuthorHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.ICommentHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.IPartHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.interfaces.IBSMService;
 import nikita.webapp.service.interfaces.IDocumentDescriptionService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import nikita.webapp.service.interfaces.secondary.IAuthorService;
@@ -54,18 +55,19 @@ public class DocumentDescriptionService
     private static final Logger logger =
             LoggerFactory.getLogger(DocumentDescriptionService.class);
 
-    private DocumentObjectService documentObjectService;
-    private IDocumentDescriptionRepository documentDescriptionRepository;
-    private IDocumentDescriptionHateoasHandler documentDescriptionHateoasHandler;
-    private IDocumentObjectHateoasHandler documentObjectHateoasHandler;
-    private IRecordHateoasHandler recordHateoasHandler;
-    private IAuthorService authorService;
-    private ICommentService commentService;
-    private IMetadataService metadataService;
-    private IPartService partService;
-    private IPartHateoasHandler partHateoasHandler;
-    private IAuthorHateoasHandler authorHateoasHandler;
-    private ICommentHateoasHandler commentHateoasHandler;
+    private final DocumentObjectService documentObjectService;
+    private final IDocumentDescriptionRepository documentDescriptionRepository;
+    private final IDocumentDescriptionHateoasHandler documentDescriptionHateoasHandler;
+    private final IDocumentObjectHateoasHandler documentObjectHateoasHandler;
+    private final IRecordHateoasHandler recordHateoasHandler;
+    private final IAuthorService authorService;
+    private final ICommentService commentService;
+    private final IMetadataService metadataService;
+    private final IPartService partService;
+    private final IPartHateoasHandler partHateoasHandler;
+    private final IAuthorHateoasHandler authorHateoasHandler;
+    private final ICommentHateoasHandler commentHateoasHandler;
+    private final IBSMService bsmService;
 
     public DocumentDescriptionService(
             EntityManager entityManager,
@@ -82,7 +84,8 @@ public class DocumentDescriptionService
             IPartService partService,
             IPartHateoasHandler partHateoasHandler,
             IAuthorHateoasHandler authorHateoasHandler,
-            ICommentHateoasHandler commentHateoasHandler) {
+            ICommentHateoasHandler commentHateoasHandler,
+            IBSMService bsmService) {
         super(entityManager, applicationEventPublisher);
         this.documentObjectService = documentObjectService;
         this.documentDescriptionRepository = documentDescriptionRepository;
@@ -97,6 +100,7 @@ public class DocumentDescriptionService
         this.partHateoasHandler = partHateoasHandler;
         this.authorHateoasHandler = authorHateoasHandler;
         this.commentHateoasHandler = commentHateoasHandler;
+        this.bsmService = bsmService;
     }
 
     // All CREATE operations
@@ -110,6 +114,7 @@ public class DocumentDescriptionService
         List<DocumentObject> documentObjects = documentDescription
                 .getReferenceDocumentObject();
         documentObjects.add(documentObject);
+        bsmService.validateBSMList(documentDescription.getReferenceBSMBase());
         DocumentObjectHateoas documentObjectHateoas =
                 new DocumentObjectHateoas
                     (documentObjectService.save(documentObject));
@@ -230,6 +235,7 @@ public class DocumentDescriptionService
         validateDocumentStatus(documentDescription);
         validateDocumentType(documentDescription);
         validateDeletion(documentDescription.getReferenceDeletion());
+        bsmService.validateBSMList(documentDescription.getReferenceBSMBase());
         documentDescription.setAssociationDate(OffsetDateTime.now());
         documentDescription.setAssociatedBy(getUser());
         return documentDescriptionRepository.save(documentDescription);
@@ -266,7 +272,6 @@ public class DocumentDescriptionService
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public DocumentDescriptionHateoas findAll() {
         DocumentDescriptionHateoas documentDescriptionHateoas = new
                 DocumentDescriptionHateoas((List<INoarkEntity>)
@@ -277,7 +282,6 @@ public class DocumentDescriptionService
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public DocumentObjectHateoas
     findAllDocumentObjectWithDocumentDescriptionBySystemId(
             @NotNull String systemId) {
@@ -359,12 +363,14 @@ public class DocumentDescriptionService
                 existingDocumentDescription);
         updateDocumentDescription(incomingDocumentDescription,
                 existingDocumentDescription);
+        bsmService.validateBSMList(incomingDocumentDescription
+                .getReferenceBSMBase());
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
         existingDocumentDescription.setVersion(version);
         DocumentDescriptionHateoas documentDescriptionHateoas =
                 new DocumentDescriptionHateoas
-            (documentDescriptionRepository.save(existingDocumentDescription));
+                        (documentDescriptionRepository.save(existingDocumentDescription));
         documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas,
                 new Authorisation());
         return documentDescriptionHateoas;

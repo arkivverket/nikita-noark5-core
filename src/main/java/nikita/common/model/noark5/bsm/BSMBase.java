@@ -2,6 +2,7 @@ package nikita.common.model.noark5.bsm;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
@@ -143,6 +144,12 @@ public class BSMBase {
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     @JsonIgnore
     private CorrespondencePart referenceCorrespondencePart;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = BSM_CORRESPONDENCE_PART_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
+    @JsonIgnore
+    private DocumentDescription referenceDocumentDescription;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = BSM_ADMINISTRATIVE_UNIT_ID,
@@ -347,6 +354,14 @@ public class BSMBase {
 
     public void setReferenceCorrespondencePart(CorrespondencePart referenceCorrespondencePart) {
         this.referenceCorrespondencePart = referenceCorrespondencePart;
+    }
+
+    public DocumentDescription getReferenceDocumentDescription() {
+        return referenceDocumentDescription;
+    }
+
+    public void setReferenceDocumentDescription(DocumentDescription referenceDocumentDescription) {
+        this.referenceDocumentDescription = referenceDocumentDescription;
     }
 
     public AdministrativeUnit getReferenceAdministrativeUnit() {
