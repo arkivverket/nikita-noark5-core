@@ -16,12 +16,12 @@ import nikita.common.model.noark5.v5.secondary.Part;
 import nikita.common.model.noark5.v5.secondary.PartPerson;
 import nikita.common.model.noark5.v5.secondary.PartUnit;
 import nikita.common.repository.n5v5.metadata.IPartRoleRepository;
-import nikita.common.repository.n5v5.other.IBSMMetadataRepository;
 import nikita.common.repository.n5v5.secondary.IPartRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.secondary.IPartHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.impl.NoarkService;
+import nikita.webapp.service.interfaces.IBSMService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import nikita.webapp.service.interfaces.secondary.IPartService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
@@ -58,7 +58,7 @@ public class PartService
     private final IPartRepository partRepository;
     private IMetadataService metadataService;
     private final IPartHateoasHandler partHateoasHandler;
-    private final IBSMMetadataRepository bsmMetadataRepository;
+    private final IBSMService bsmService;
 
     public PartService(EntityManager entityManager,
                        ApplicationEventPublisher applicationEventPublisher,
@@ -66,13 +66,13 @@ public class PartService
                        IPartRepository partRepository,
                        IMetadataService metadataService,
                        IPartHateoasHandler partHateoasHandler,
-                       IBSMMetadataRepository bsmMetadataRepository) {
+                       IBSMService bsmService) {
         super(entityManager, applicationEventPublisher);
         this.partRoleRepository = partRoleRepository;
         this.partRepository = partRepository;
         this.metadataService = metadataService;
         this.partHateoasHandler = partHateoasHandler;
-        this.bsmMetadataRepository = bsmMetadataRepository;
+        this.bsmService = bsmService;
     }
 
     @Override
@@ -180,8 +180,8 @@ public class PartService
     }
 
     @Override
-    protected Optional<BSMMetadata> getBSMByName(String name) {
-        return bsmMetadataRepository.findByName(name);
+    protected Optional<BSMMetadata> findBSMByName(String name) {
+        return bsmService.findBSMByName(name);
     }
 
     @Override

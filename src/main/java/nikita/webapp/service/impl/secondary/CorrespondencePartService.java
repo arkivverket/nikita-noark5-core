@@ -11,12 +11,12 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnit
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.*;
 import nikita.common.model.noark5.v5.md_other.BSMMetadata;
 import nikita.common.model.noark5.v5.metadata.CorrespondencePartType;
-import nikita.common.repository.n5v5.other.IBSMMetadataRepository;
 import nikita.common.repository.n5v5.secondary.ICorrespondencePartRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.secondary.ICorrespondencePartHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.impl.NoarkService;
+import nikita.webapp.service.interfaces.IBSMService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import nikita.webapp.service.interfaces.secondary.ICorrespondencePartService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
@@ -54,19 +54,19 @@ public class CorrespondencePartService
     private final ICorrespondencePartHateoasHandler
             correspondencePartHateoasHandler;
     private final IMetadataService metadataService;
-    private final IBSMMetadataRepository bsmMetadataRepository;
+    private final IBSMService bsmService;
 
     public CorrespondencePartService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
             ICorrespondencePartRepository correspondencePartRepository,
             ICorrespondencePartHateoasHandler correspondencePartHateoasHandler,
-            IMetadataService metadataService, IBSMMetadataRepository bsmMetadataRepository) {
+            IMetadataService metadataService, IBSMService bsmService) {
         super(entityManager, applicationEventPublisher);
         this.correspondencePartRepository = correspondencePartRepository;
         this.correspondencePartHateoasHandler = correspondencePartHateoasHandler;
         this.metadataService = metadataService;
-        this.bsmMetadataRepository = bsmMetadataRepository;
+        this.bsmService = bsmService;
     }
 
     @Override
@@ -642,8 +642,8 @@ public class CorrespondencePartService
     }
 
     @Override
-    protected Optional<BSMMetadata> getBSMByName(String name) {
-        return bsmMetadataRepository.findByName(name);
+    protected Optional<BSMMetadata> findBSMByName(String name) {
+        return bsmService.findBSMByName(name);
     }
 
     @Override

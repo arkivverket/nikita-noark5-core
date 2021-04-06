@@ -23,7 +23,6 @@ import nikita.common.model.noark5.v5.secondary.PartPerson;
 import nikita.common.model.noark5.v5.secondary.PartUnit;
 import nikita.common.repository.n5v5.IDocumentDescriptionRepository;
 import nikita.common.repository.n5v5.IRecordRepository;
-import nikita.common.repository.n5v5.other.IBSMMetadataRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.*;
 import nikita.webapp.hateoas.interfaces.nationalidentifier.INationalIdentifierHateoasHandler;
@@ -32,6 +31,7 @@ import nikita.webapp.hateoas.interfaces.secondary.ICommentHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.ICorrespondencePartHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.IPartHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.interfaces.IBSMService;
 import nikita.webapp.service.interfaces.INationalIdentifierService;
 import nikita.webapp.service.interfaces.IRecordService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
@@ -65,7 +65,6 @@ import static org.springframework.http.HttpStatus.OK;
 
 @Service
 @Transactional
-@SuppressWarnings("unchecked")
 public class RecordService
         extends NoarkService
         implements IRecordService {
@@ -73,34 +72,34 @@ public class RecordService
     private static final Logger logger =
             LoggerFactory.getLogger(RecordService.class);
 
-    private DocumentDescriptionService documentDescriptionService;
-    private IRecordRepository recordRepository;
-    private IBSMMetadataRepository bsmMetadataRepository;
-    private IRecordHateoasHandler recordHateoasHandler;
-    private IFileHateoasHandler fileHateoasHandler;
-    private ISeriesHateoasHandler seriesHateoasHandler;
-    private IClassHateoasHandler classHateoasHandler;
-    private IDocumentDescriptionHateoasHandler
+    private final DocumentDescriptionService documentDescriptionService;
+    private final IRecordRepository recordRepository;
+    private final IBSMService bsmService;
+    private final IRecordHateoasHandler recordHateoasHandler;
+    private final IFileHateoasHandler fileHateoasHandler;
+    private final ISeriesHateoasHandler seriesHateoasHandler;
+    private final IClassHateoasHandler classHateoasHandler;
+    private final IDocumentDescriptionHateoasHandler
             documentDescriptionHateoasHandler;
-    private IDocumentDescriptionRepository documentDescriptionRepository;
-    private IAuthorService authorService;
-    private ICommentService commentService;
-    private ICorrespondencePartService correspondencePartService;
-    private IMetadataService metadataService;
-    private INationalIdentifierService nationalIdentifierService;
-    private IPartService partService;
-    private ICorrespondencePartHateoasHandler correspondencePartHateoasHandler;
-    private INationalIdentifierHateoasHandler nationalIdentifierHateoasHandler;
-    private IPartHateoasHandler partHateoasHandler;
-    private IAuthorHateoasHandler authorHateoasHandler;
-    private ICommentHateoasHandler commentHateoasHandler;
+    private final IDocumentDescriptionRepository documentDescriptionRepository;
+    private final IAuthorService authorService;
+    private final ICommentService commentService;
+    private final ICorrespondencePartService correspondencePartService;
+    private final IMetadataService metadataService;
+    private final INationalIdentifierService nationalIdentifierService;
+    private final IPartService partService;
+    private final ICorrespondencePartHateoasHandler correspondencePartHateoasHandler;
+    private final INationalIdentifierHateoasHandler nationalIdentifierHateoasHandler;
+    private final IPartHateoasHandler partHateoasHandler;
+    private final IAuthorHateoasHandler authorHateoasHandler;
+    private final ICommentHateoasHandler commentHateoasHandler;
 
     public RecordService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
             DocumentDescriptionService documentDescriptionService,
             IRecordRepository recordRepository,
-            IBSMMetadataRepository bsmMetadataRepository,
+            IBSMService bsmService,
             IRecordHateoasHandler recordHateoasHandler,
             IFileHateoasHandler fileHateoasHandler,
             ISeriesHateoasHandler seriesHateoasHandler,
@@ -122,7 +121,7 @@ public class RecordService
         super(entityManager, applicationEventPublisher);
         this.documentDescriptionService = documentDescriptionService;
         this.recordRepository = recordRepository;
-        this.bsmMetadataRepository = bsmMetadataRepository;
+        this.bsmService = bsmService;
         this.entityManager = entityManager;
         this.recordHateoasHandler = recordHateoasHandler;
         this.fileHateoasHandler = fileHateoasHandler;
@@ -148,6 +147,7 @@ public class RecordService
     @Override
     public ResponseEntity<RecordHateoas> save(Record record) {
         validateDocumentMedium(metadataService, record);
+        bsmService.validateBSMList(record.getReferenceBSMBase());
         RecordHateoas recordHateoas =
                 new RecordHateoas(recordRepository.save(record));
         recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
@@ -327,7 +327,6 @@ public class RecordService
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public NationalIdentifierHateoas getNationalIdentifierAssociatedWithRecord(
             @NotNull final String systemID) {
         NationalIdentifierHateoas niHateoas = new NationalIdentifierHateoas(
@@ -632,6 +631,7 @@ public class RecordService
 
     // All UPDATE operations
     public Record update(Record record) {
+        bsmService.validateBSMList(record.getReferenceBSMBase());
         return recordRepository.save(record);
     }
 
@@ -665,6 +665,7 @@ public class RecordService
     public Record handleUpdate(@NotNull final String recordSystemId,
                                @NotNull final Long version,
                                @NotNull final Record incomingRecord) {
+        bsmService.validateBSMList(incomingRecord.getReferenceBSMBase());
         Record existingRecord = getRecordOrThrow(recordSystemId);
         // Here copy all the values you are allowed to copy ....
         updateTitleAndDescription(incomingRecord, existingRecord);
@@ -760,8 +761,8 @@ public class RecordService
      * @return BSMMetadata object corresponding to the name
      */
     @Override
-    protected Optional<BSMMetadata> getBSMByName(String name) {
-        return bsmMetadataRepository.findByName(name);
+    protected Optional<BSMMetadata> findBSMByName(String name) {
+        return bsmService.findBSMByName(name);
     }
 
     @Override

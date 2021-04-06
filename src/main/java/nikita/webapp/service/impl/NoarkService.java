@@ -449,7 +449,7 @@ public class NoarkService
      * @param name Name of the BSM parameter to check
      * @return BSMMetadata object corresponding to the name
      */
-    protected Optional<BSMMetadata> getBSMByName(String name) {
+    protected Optional<BSMMetadata> findBSMByName(String name) {
         String error = name + " unable to find subclass to process";
         logger.error(error);
         throw new NikitaMisconfigurationException(error);
@@ -458,7 +458,7 @@ public class NoarkService
     private void checkBSM(List<BSMBase> bsm) {
         for (BSMBase bsmBase : bsm) {
             Optional<BSMMetadata> bsmMetadataOpt =
-                    getBSMByName(bsmBase.getValueName());
+                    findBSMByName(bsmBase.getValueName());
             if (bsmMetadataOpt.isEmpty()) {
                 String error = bsmBase.getValueName() + " is not a registered" +
                         " BSM datatype";

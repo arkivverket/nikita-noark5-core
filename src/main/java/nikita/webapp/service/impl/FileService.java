@@ -20,7 +20,6 @@ import nikita.common.model.noark5.v5.secondary.Comment;
 import nikita.common.model.noark5.v5.secondary.PartPerson;
 import nikita.common.model.noark5.v5.secondary.PartUnit;
 import nikita.common.repository.n5v5.IFileRepository;
-import nikita.common.repository.n5v5.other.IBSMMetadataRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IClassHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IFileHateoasHandler;
@@ -29,6 +28,7 @@ import nikita.webapp.hateoas.interfaces.nationalidentifier.INationalIdentifierHa
 import nikita.webapp.hateoas.interfaces.secondary.ICommentHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.IPartHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.interfaces.IBSMService;
 import nikita.webapp.service.interfaces.IFileService;
 import nikita.webapp.service.interfaces.INationalIdentifierService;
 import nikita.webapp.service.interfaces.IRecordService;
@@ -66,25 +66,25 @@ public class FileService
     private static final Logger logger =
             LoggerFactory.getLogger(FileService.class);
 
-    private IRecordService recordService;
-    private IFileRepository fileRepository;
-    private IBSMMetadataRepository bsmMetadataRepository;
-    private IFileHateoasHandler fileHateoasHandler;
-    private ISeriesHateoasHandler seriesHateoasHandler;
-    private IClassHateoasHandler classHateoasHandler;
-    private ICommentService commentService;
-    private IMetadataService metadataService;
-    private INationalIdentifierService nationalIdentifierService;
-    private IPartService partService;
-    private ICommentHateoasHandler commentHateoasHandler;
-    private INationalIdentifierHateoasHandler nationalIdentifierHateoasHandler;
-    private IPartHateoasHandler partHateoasHandler;
+    private final IRecordService recordService;
+    private final IFileRepository fileRepository;
+    private final IBSMService bsmService;
+    private final IFileHateoasHandler fileHateoasHandler;
+    private final ISeriesHateoasHandler seriesHateoasHandler;
+    private final IClassHateoasHandler classHateoasHandler;
+    private final ICommentService commentService;
+    private final IMetadataService metadataService;
+    private final INationalIdentifierService nationalIdentifierService;
+    private final IPartService partService;
+    private final ICommentHateoasHandler commentHateoasHandler;
+    private final INationalIdentifierHateoasHandler nationalIdentifierHateoasHandler;
+    private final IPartHateoasHandler partHateoasHandler;
 
     public FileService(EntityManager entityManager,
                        ApplicationEventPublisher applicationEventPublisher,
                        IRecordService recordService,
                        IFileRepository fileRepository,
-                       IBSMMetadataRepository bsmMetadataRepository,
+                       IBSMService bsmService,
                        IFileHateoasHandler fileHateoasHandler,
                        ISeriesHateoasHandler seriesHateoasHandler,
                        IClassHateoasHandler classHateoasHandler,
@@ -98,7 +98,7 @@ public class FileService
         super(entityManager, applicationEventPublisher);
         this.recordService = recordService;
         this.fileRepository = fileRepository;
-        this.bsmMetadataRepository = bsmMetadataRepository;
+        this.bsmService = bsmService;
         this.fileHateoasHandler = fileHateoasHandler;
         this.seriesHateoasHandler = seriesHateoasHandler;
         this.classHateoasHandler = classHateoasHandler;
@@ -114,6 +114,7 @@ public class FileService
     public FileHateoas save(File file) {
         validateDocumentMedium(metadataService, file);
         setFinaliseEntityValues(file);
+        bsmService.validateBSMList(file.getReferenceBSMBase());
         FileHateoas fileHateoas = new FileHateoas(fileRepository.save(file));
         fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(
@@ -125,6 +126,7 @@ public class FileService
     public File createFile(File file) {
         validateDocumentMedium(metadataService, file);
         setFinaliseEntityValues(file);
+        bsmService.validateBSMList(file.getReferenceBSMBase());
         return fileRepository.save(file);
     }
 
@@ -247,7 +249,6 @@ public class FileService
      * @return A FileHateoas object containing the children file's
      */
     @Override
-    @SuppressWarnings("unchecked")
     public FileHateoas findAllChildren(@NotNull String systemId) {
         FileHateoas fileHateoas = new
                 FileHateoas((List<INoarkEntity>)
@@ -291,7 +292,6 @@ public class FileService
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public NationalIdentifierHateoas getNationalIdentifierAssociatedWithFile(
             @NotNull final String systemID) {
         NationalIdentifierHateoas niHateoas = new NationalIdentifierHateoas(
@@ -305,6 +305,7 @@ public class FileService
     // All UPDATE operations
     public FileHateoas update(File file) {
         FileHateoas fileHateoas = new FileHateoas(fileRepository.save(file));
+        bsmService.validateBSMList(file.getReferenceBSMBase());
         fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityUpdatedEvent(this, file));
@@ -517,8 +518,8 @@ public class FileService
      * @return BSMMetadata object corresponding to the name
      */
     @Override
-    protected Optional<BSMMetadata> getBSMByName(String name) {
-        return bsmMetadataRepository.findByName(name);
+    protected Optional<BSMMetadata> findBSMByName(String name) {
+        return bsmService.findBSMByName(name);
     }
 
     /**
