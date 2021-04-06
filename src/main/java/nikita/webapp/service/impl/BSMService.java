@@ -28,7 +28,7 @@ public class BSMService
     private static final Logger logger =
             LoggerFactory.getLogger(BSMService.class);
 
-    private IBSMMetadataRepository metadataRepository;
+    private final IBSMMetadataRepository metadataRepository;
 
     public BSMService(EntityManager entityManager,
                       ApplicationEventPublisher applicationEventPublisher,
