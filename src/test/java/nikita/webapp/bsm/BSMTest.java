@@ -649,6 +649,61 @@ public class BSMTest {
     }
 
     /**
+     * add illegal BSM when creating a new file
+     * {
+     * "virksomhetsspesifikkeMetadata": {
+     * "ppt-v1:sakferdig": true,
+     * "ppt-v1:datohenvist": "2020-06-30+02:00",
+     * "ppt-v1:datotidvedtakferdig": "2020-06-30T15:35:43.128158+02:00",
+     * "ppt-v1:skolekontakt": "Harald Harfarge",
+     * "ppt-v1:refSkole": "https://skole.eksempel.com",
+     * "ppt-v1:snittKarakter": 1.2,
+     * "ppt-v1:antallDagerVurdert": 1,
+     * "ppt-v99:antallDagerVurdert": 1
+     * }
+     * }
+     *
+     * @throws Exception Serialising or validation exception
+     */
+    @Test
+    @Sql("/db-tests/basic_structure.sql")
+    @WithMockCustomUser
+    public void addNonRegisteredBSMWithNewFile() throws Exception {
+        File file = new File();
+
+        final List<BSMBase> bsmObjectsLocal = new ArrayList<>(bsmObjects);
+        BSMBase bsmBase = new BSMBase("non-existent:attribute", true);
+        bsmObjectsLocal.add(bsmBase);
+        file.setReferenceBSMBase(bsmObjectsLocal);
+        file.setTitle("Title of file");
+        String url = "/noark5v5/api/arkivstruktur/arkivdel" +
+                "/f1102ae8-6c4c-4d93-aaa5-7c6220e50c4d/ny-mappe";
+
+        JsonFactory factory = new JsonFactory();
+        StringWriter jsonFileWriter = new StringWriter();
+        JsonGenerator jsonFile = factory.createGenerator(jsonFileWriter);
+        jsonFile.writeStartObject();
+        printFileEntity(jsonFile, file);
+        printBSM(jsonFile, file);
+        jsonFile.writeEndObject();
+        jsonFile.close();
+
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .post(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON)
+                .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
+                .content(jsonFileWriter.toString()));
+
+        resultActions
+                .andExpect(status().isBadRequest());
+
+        resultActions.andDo(document("home",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint())));
+    }
+
+    /**
      * Update correspondencePart with PATCH request
      * {
      * "op": "add",
