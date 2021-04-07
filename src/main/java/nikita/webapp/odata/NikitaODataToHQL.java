@@ -102,10 +102,13 @@ public class NikitaODataToHQL
             // JOIN file_1.referenceBSM as BSM_1
             // where BSM_1.name
             // file_1.ownedBy = :parameter_0 and BSM_1.ppt-v1:skolekontakt like :parameter_1
-            addEntityToEntityJoin(entity, BSMBase.class.getSimpleName());
+            if (!this.entity.equals(BSMBase.class.getSimpleName())) {
+                addEntityToEntityJoin(this.entity, BSMBase.class.getSimpleName());
+            }
             statement.addCompareValue("bsmbase_1.valueName",
                     "=", ctx.getText());
             statement.addLogicalOperator("and");
+
             currentBSMId = UUID.randomUUID().toString();
             statement.bsmParameters.putIfAbsent(currentBSMId, new StringBuilder());
             processAttribute("bsmbase_1." + currentBSMId);
@@ -137,7 +140,12 @@ public class NikitaODataToHQL
         if (processingBSM) {
             StringBuilder currentBSM =
                     statement.bsmParameters.get(currentBSMId);
-            currentBSM.append(value.getClass().getSimpleName().toLowerCase());
+            if (null == value) {
+                // See variable isNull in BSMBase
+                currentBSM.append("isNull");
+            } else {
+                currentBSM.append(value.getClass().getSimpleName().toLowerCase());
+            }
         }
     }
 }
