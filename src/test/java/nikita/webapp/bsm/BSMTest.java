@@ -460,7 +460,9 @@ public class BSMTest {
      * @throws Exception Serialising or validation exception
      */
     @Test
-    @Sql("/db-tests/basic_structure.sql")
+    @Sql({"/db-tests/basic_structure.sql",
+            "/db-tests/bsm/registered_bsm_values.sql"})
+
     @WithMockCustomUser
     public void addBSMWithNewRecord() throws Exception {
         Record record = new Record();
@@ -593,7 +595,8 @@ public class BSMTest {
      * @throws Exception Serialising or validation exception
      */
     @Test
-    @Sql("/db-tests/basic_structure.sql")
+    @Sql({"/db-tests/basic_structure.sql",
+            "/db-tests/bsm/registered_bsm_values.sql"})
     @WithMockCustomUser
     public void addBSMWithNewFile() throws Exception {
         File file = new File();
@@ -1219,7 +1222,7 @@ public class BSMTest {
      * Make sure it is possible to search BSMMetadata using the entity name
      * virksomhetsspesifikkeMetadata and with $top
      * noark5v5/api/arkivstruktur/mappe
-     * ?$filter=virksomhetsspesifikkeMetadata/ppt-v1:skolekontakt neq
+     * ?$filter=virksomhetsspesifikkeMetadata/ppt-v1:skolekontakt ne
      * null&$top=1
      * <p>
      * The test should include:
@@ -1235,7 +1238,7 @@ public class BSMTest {
     public void searchFileUsingBSMEntityAndTop() throws Exception {
         String url = "/noark5v5/odata/api/arkivstruktur/mappe" +
                 "?$filter=virksomhetsspesifikkeMetadata/" +
-                "ppt-v1:skolekontakt neq null&$top=1";
+                "ppt-v1:skolekontakt ne null&$top=1";
 
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
                 .get(url)
@@ -1244,7 +1247,8 @@ public class BSMTest {
 
         resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$.results[0]." + SYSTEM_ID)
-                        .value("43d305de-b3c8-4922-86fd-45bd26f3bf01"));
+                        .value("43d305de-b3c8-4922-86fd-45bd26f3bf01"))
+                .andExpect(jsonPath("$.results", hasSize(1)));
     }
 
     /**
@@ -1261,13 +1265,14 @@ public class BSMTest {
      * @throws IOException if required
      */
     @Test
-    @Sql({"/db-tests/basic_structure.sql", "/db-tests/bsm/registered_bsm_values.sql",
+    @Sql({"/db-tests/basic_structure.sql",
+            "/db-tests/bsm/registered_bsm_values.sql",
             "/db-tests/bsm/bsm_values_to_object.sql"})
     @WithMockCustomUser
     public void searchFileUsingBSMEntityAndTopWitNull() throws Exception {
         String url = "/noark5v5/odata/api/arkivstruktur/mappe" +
                 "?$filter=virksomhetsspesifikkeMetadata/" +
-                "ppt-v1:skolekontakt eq null&$top=1";
+                "ppt-v1:skolekontakt ne null&$top=1";
 
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
                 .get(url)
@@ -1276,14 +1281,14 @@ public class BSMTest {
 
         resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$.results[0]." + SYSTEM_ID)
-                        .value("f1677c47-99e1-42a7-bda2-b0bbc64841b7"));
+                        .value("43d305de-b3c8-4922-86fd-45bd26f3bf01"));
     }
 
     /**
      * Make sure it is possible to search BSMMetadata using the entity name
-     * virksomhetsspesifikkeMetadata and with $top
+     * virksomhetsspesifikkeMetadata
      * noark5v5/api/arkivstruktur/virksomhetsspesifikkeMetadata/
-     * ?$filter=n5t-v1:real eq null&$top=1
+     * ?$filter=n5t-v1:real eq null
      *
      * @throws IOException if required
      */
@@ -1293,16 +1298,75 @@ public class BSMTest {
     @WithMockCustomUser
     public void searchBSMMetadataUsingBSMEntityAndTop() throws Exception {
         String url = "/noark5v5/odata/api/arkivstruktur/" +
-                "virksomhetsspesifikkeMetadata/" +
-                "ppt-v1:skolekontakt eq null&$top=1";
+                "virksomhetsspesifikkeMetadata?$filter=" +
+                "ppt-v1:skolekontakt eq null";
 
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
                 .get(url)
                 .contextPath("/noark5v5")
                 .accept(NOARK5_V5_CONTENT_TYPE_JSON));
 
-        resultActions.andExpect(status().isOk());
-        validateBSMArray(resultActions);
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.results[0]." + SYSTEM_ID)
+                        .value("ab4f2105-446a-4283-b129-319bef66aa87"))
+                .andExpect(jsonPath("$.results", hasSize(1)));
+    }
+
+    /**
+     * Make sure it is possible to search BSMMetadata using the entity name
+     * virksomhetsspesifikkeMetadata
+     * noark5v5/api/arkivstruktur/virksomhetsspesifikkeMetadata/
+     * ?$filter=n5t-v1:real ne null
+     *
+     * @throws IOException if required
+     */
+    @Test
+    @Sql({"/db-tests/basic_structure.sql", "/db-tests/bsm/registered_bsm_values.sql",
+            "/db-tests/bsm/bsm_values_to_object.sql"})
+    @WithMockCustomUser
+    public void searchBSMMetadataUsingBSMEntityNotNull() throws Exception {
+        String url = "/noark5v5/odata/api/arkivstruktur/" +
+                "virksomhetsspesifikkeMetadata?$filter=" +
+                "ppt-v1:skolekontakt ne null";
+
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON));
+
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.results[0]." + SYSTEM_ID)
+                        .value("eebe2161-3fcc-4b6d-9920-0b570b00bed8"))
+                .andExpect(jsonPath("$.results", hasSize(1)));
+    }
+
+    /**
+     * Make sure that a BSMMetadata search using the entity name
+     * virksomhetsspesifikkeMetadata that uses a non-existent attribute fails
+     * noark5v5/api/arkivstruktur/virksomhetsspesifikkeMetadata/
+     * ?$filter=non-existent:attribute ne null
+     *
+     * @throws IOException if required
+     */
+    @Test
+    @Sql({"/db-tests/basic_structure.sql",
+            "/db-tests/bsm/registered_bsm_values.sql",
+            "/db-tests/bsm/bsm_values_to_object.sql"})
+    @WithMockCustomUser
+    public void searchBSMMetadataUsingBSMEntityFakeEntity() throws Exception {
+        String url = "/noark5v5/odata/api/arkivstruktur/" +
+                "virksomhetsspesifikkeMetadata?$filter=" +
+                "non-existent:attribute ne null";
+
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON));
+
+        resultActions.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.results[0]." + SYSTEM_ID)
+                        .value("eebe2161-3fcc-4b6d-9920-0b570b00bed8"))
+                .andExpect(jsonPath("$.results", hasSize(1)));
     }
 
     private void validatePartPerson(ResultActions resultActions)

@@ -1895,7 +1895,7 @@ public class TestOData {
      * Attribute: VSM.valueName with value ppt-v1:meldingstidspunkt
      * <p>
      * ODATA Input:
-     * mappe?$filter=virksomhetsspesifikkeMetadata/ppt-v1:skolekontakt neq null&$top=1
+     * mappe?$filter=virksomhetsspesifikkeMetadata/ppt-v1:skolekontakt ne null&$top=1
      * <p>
      * Expected HQL:
      * SELECT file_1 FROM File as file_1
@@ -1913,7 +1913,7 @@ public class TestOData {
 
         String attributeName = "ppt-v1:skolekontakt";
         String odata = "mappe?$filter=virksomhetsspesifikkeMetadata/" +
-                attributeName + " neq null&$top=1";
+                attributeName + " ne null&$top=1";
 
         String hql = "SELECT file_1 FROM File AS file_1" +
                 " JOIN" +
@@ -1954,13 +1954,13 @@ public class TestOData {
 
         String attributeName = "ppt-v1:skolekontakt";
         String odata = "mappe?$filter=virksomhetsspesifikkeMetadata/" +
-                attributeName + " eq null&$top=1";
+                attributeName + " ne null&$top=1";
 
-        String hql = "SELECT file_1 FROM File AS file_1" +
-                " JOIN" +
-                " file_1.referenceBSMBase AS bsmbase_1" +
+        String hql = "SELECT bsmbase_1 FROM BSMBase AS bsmbase_1" +
                 " WHERE" +
-                " bsmbase_1.valueName is null";
+                " bsmbase_1.valueName = :parameter_0" +
+                " and" +
+                " bsmbase_1.isNullValue is not null";
 
         Query query = oDataService.convertODataToHQL(odata, "");
 
@@ -1991,11 +1991,49 @@ public class TestOData {
 
         String attributeName = "ppt-v1:skolekontakt";
         String odata = "virksomhetsspesifikkeMetadata?$filter=" +
-                attributeName + " eq null&$top=1";
+                attributeName + " eq null";
 
-        String hql = "SELECT file_1 FROM File AS file_1" +
+        String hql = "SELECT bsmbase_1 FROM BSMBase AS bsmbase_1" +
                 " WHERE" +
-                " bsmbase_1.valueName is null";
+                " bsmbase_1.valueName = :parameter_0" +
+                " and" +
+                " bsmbase_1.isNullValue is null";
+
+        Query query = oDataService.convertODataToHQL(odata, "");
+        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+                attributeName);
+        Assertions.assertEquals(query.getQueryString(), hql);
+    }
+
+    /**
+     * Check that it is possible to do a OData query on BSM
+     * Entity:  VSM
+     * Attribute: VSM.valueName with value ppt-v1:meldingstidspunkt
+     * <p>
+     * ODATA Input:
+     * virksomhetsspesifikkeMetadata?$filter=ppt-v1:skolekontakt eq null
+     * <p>
+     * Expected HQL:
+     * SELECT bsm_1 FROM BSM as bsm_1
+     * WHERE
+     * bsmbase_1.valueName is null
+     * <p>
+     * Additionally the parameter_0 value should be
+     * ppt-v1:skolekontakt
+     */
+    @Test
+    @Transactional
+    public void shouldReturnValidHQLBSMNotNullAttribute() {
+
+        String attributeName = "ppt-v1:skolekontakt";
+        String odata = "virksomhetsspesifikkeMetadata?$filter=" +
+                attributeName + " ne null";
+
+        String hql = "SELECT bsmbase_1 FROM BSMBase AS bsmbase_1" +
+                " WHERE" +
+                " bsmbase_1.valueName = :parameter_0" +
+                " and" +
+                " bsmbase_1.isNullValue is not null";
 
         Query query = oDataService.convertODataToHQL(odata, "");
         Assertions.assertEquals(query.getParameterValue("parameter_0"),
