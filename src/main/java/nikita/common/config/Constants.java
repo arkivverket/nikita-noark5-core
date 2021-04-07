@@ -632,6 +632,8 @@ public final class Constants {
             REL_LOGGING + EVENT_LOG + SLASH;
     public static final String REL_LOGGING_NEW_EVENT_LOG =
             REL_LOGGING + NEW_EVENT_LOG + SLASH;
+    public static final String REL_FONDS_STRUCTURE_BSM = REL_FONDS_STRUCTURE +
+            BSM_DEF + SLASH;
 
     // Metadata RELS
     public static final String REL_METADATA_DOCUMENT_MEDIUM =
@@ -1066,8 +1068,10 @@ public final class Constants {
             "national_identifier_file_id";
     public static final String BSM_FILE_ID = "fk_bsm_file_id";
     public static final String BSM_RECORD_ID = "fk_bsm_record_id";
-    public static final String BSM_CORRESPONDENCE_PART_ID = "" +
+    public static final String BSM_CORRESPONDENCE_PART_ID =
             "fk_bsm_correspondence_part_id";
+    public static final String BSM_DOCUMENT_DESCRIPTION_ID =
+            "fk_bsm_document_description_id";
     public static final String BSM_PART_ID = "fk_bsm_part_id";
     public static final String BSM_ADMINISTRATIVE_UNIT_ID =
             "fk_bsm_administrative_unit_id";
