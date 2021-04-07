@@ -26,6 +26,7 @@ noark5tester-runtest:
     - mvn spring-boot:run > nikita-run.log 2>&1 &
     - serverpid=$!
     - echo "Waiting for nikita to start"
+    - echo "baseurl is set to " $baseurl
     - count=0; while ! curl --silent $baseurl && [ 10 -gt "$count" ]; do sleep 20; printf "."; count=$(($count + 1)); done; if [ 10 -gt "$count" ]; then nikitastarted=true; else echo "Failed to start nikita"; tail -100 nikita-run.log; exit 1; fi
     - (cd noark5-tester && LC_ALL=C.UTF-8 ./runtest --baseurl $baseurl)
   artifacts:
