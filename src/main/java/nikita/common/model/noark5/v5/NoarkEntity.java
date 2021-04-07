@@ -23,9 +23,6 @@ import static nikita.common.config.Constants.NOARK_FONDS_STRUCTURE_PATH;
 import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
-/**
- * Created by tsodring on 5/8/17.
- */
 @MappedSuperclass
 public class NoarkEntity
         implements INoarkEntity {
