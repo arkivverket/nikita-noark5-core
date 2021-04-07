@@ -74,8 +74,8 @@ nikita:
   startup:
     create-demo-users: true # Populate database with some users
     create-directory-store: true # If not created, attempt to create
-    directory-store-name: /data/nikita/storage/ # Where to store documents
-    incoming-directory: /data/nikita/storage/incoming/ # Temporary storage area
+    directory-store-name: /data2/nikita/storage/ # Where to store documents
+    incoming-directory: /data2/nikita/storage/incoming/ # Temporary storage area
   application:
     pagination:
       max-page-size: 10 # Set number of results per page. Currently not used

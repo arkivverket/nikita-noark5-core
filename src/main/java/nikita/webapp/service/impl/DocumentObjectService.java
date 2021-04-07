@@ -94,7 +94,7 @@ public class DocumentObjectService
     @Value("${nikita.startup.directory-store-name}")
     private String directoryStoreName = "/data/nikita/storage";
     @Value("${nikita.startup.incoming-directory}")
-    private String incomingDirectoryName = "/data/nikita/storage/incoming";
+    private String incomingDirectoryName = "/data2/nikita/storage/incoming";
     @Value("${nikita.application.checksum-algorithm}")
     private String defaultChecksumAlgorithm = "SHA-256";
 

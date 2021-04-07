@@ -56,7 +56,7 @@ public class AfterApplicationStartup {
     private String directoryStoreName = "/data/nikita/storage";
 
     @Value("${nikita.startup.incoming-directory}")
-    private String incomingDirectoryName = "/data/nikita/storage/incoming";
+    private String incomingDirectoryName = "/data2/nikita/storage/incoming";
 
     public AfterApplicationStartup(@Qualifier("requestMappingHandlerMapping")
                                            RequestMappingHandlerMapping handlerMapping,
