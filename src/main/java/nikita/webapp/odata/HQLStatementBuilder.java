@@ -218,7 +218,7 @@ public class HQLStatementBuilder {
             String whereString = where.toString();
             // Check if there is any BSM values that need to be tidied up
             for (Map.Entry<String, StringBuilder> entry : bsmParameters.entrySet()) {
-                String colName = entry.getValue().toString().toLowerCase() + "Value";
+                String colName = entry.getValue().toString() + "Value";
                 whereString = whereString.replaceAll(entry.getKey(), colName);
             }
             query += "WHERE " + whereString;
