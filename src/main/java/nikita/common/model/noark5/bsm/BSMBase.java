@@ -1,55 +1,39 @@
 package nikita.common.model.noark5.bsm;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePart;
+import nikita.common.model.noark5.v5.hateoas.md_other.BSMBaseHateoas;
 import nikita.common.model.noark5.v5.secondary.Part;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
-import org.hibernate.annotations.Type;
+import nikita.common.util.deserialisers.BSMDeserialiser;
+import nikita.webapp.hateoas.metadata.BSMBaseHateoasHandler;
+import nikita.webapp.util.annotation.HateoasObject;
+import nikita.webapp.util.annotation.HateoasPacker;
 import org.hibernate.envers.Audited;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;
-import java.util.UUID;
 
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.*;
-import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
 @Inheritance(strategy = JOINED)
 @Table(name = TABLE_BSM_BASE)
-public class BSMBase {
-
-    /**
-     * M001 - systemID (xs:string)
-     */
-    @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator",
-            parameters = {@Parameter(
-                    name = "uuid_gen_strategy_class",
-                    value = "org.hibernate.id.uuid.CustomVersionOneStrategy")})
-    @Column(name = SYSTEM_ID, updatable = false, nullable = false)
-    @Type(type = "uuid-char")
-    private UUID systemId;
+@JsonDeserialize(using = BSMDeserialiser.class)
+@HateoasPacker(using = BSMBaseHateoasHandler.class)
+@HateoasObject(using = BSMBaseHateoas.class)
+public class BSMBase
+        extends SystemIdEntity {
 
     @Audited
-    @Column
+    @Column(nullable = false)
     protected String dataType;
 
     @Audited
@@ -66,6 +50,18 @@ public class BSMBase {
     @Column
     private Boolean booleanValue;
 
+
+    /*
+     * This value is used to indicate whether or not the actual value BSMBase
+     * refers to is null or not. When parsing an OData query for null, it is
+     * not possible to identify which of the values (booleanValue, stringValue
+     * etc) is the correct one to check null against. This is like a
+     * compile time/runtime issue. Therefore when setting a BSMBase value to
+     * null, the following flag must be set to true.
+     */
+    @Column
+    private Boolean isNullValue = false;
+
     @Column
     // Do not rename this variable as it is used for BSM query generation
     private OffsetDateTime offsetdatetimeValue;
@@ -78,48 +74,6 @@ public class BSMBase {
 
     @Column
     private String uriValue;
-
-    @CreatedBy
-    @Column(name = OWNED_BY)
-    @JsonProperty
-    @Audited
-    private String ownedBy;
-
-    /**
-     * M600 - opprettetDato (xs:dateTime)
-     */
-    @CreatedDate
-    @Column(name = CREATED_DATE_ENG)
-    @DateTimeFormat(iso = DATE_TIME)
-    @Audited
-    @JsonProperty(CREATED_DATE)
-    private OffsetDateTime createdDate;
-
-    /**
-     * M601 - opprettetAv (xs:string)
-     */
-    @CreatedBy
-    @Column(name = CREATED_BY_ENG)
-    @Audited
-    @JsonProperty(CREATED_BY)
-    private String createdBy;
-
-    /**
-     * M682 - endretDato (xs:dateTime)
-     */
-    @LastModifiedDate
-    @Column(name = LAST_MODIFIED_DATE_ENG)
-    @DateTimeFormat(iso = DATE_TIME)
-    @JsonProperty(LAST_MODIFIED_DATE)
-    private OffsetDateTime lastModifiedDate;
-
-    /**
-     * M683 - endretAv (xs:string)
-     */
-    @LastModifiedBy
-    @Column(name = LAST_MODIFIED_BY_ENG)
-    @JsonProperty(LAST_MODIFIED_BY)
-    private String lastModifiedBy;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = BSM_FILE_ID,
@@ -146,7 +100,7 @@ public class BSMBase {
     private CorrespondencePart referenceCorrespondencePart;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = BSM_CORRESPONDENCE_PART_ID,
+    @JoinColumn(name = BSM_DOCUMENT_DESCRIPTION_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     @JsonIgnore
     private DocumentDescription referenceDocumentDescription;
@@ -205,11 +159,6 @@ public class BSMBase {
     }
 
     public BSMBase() {
-
-    }
-
-    public UUID getSystemId() {
-        return systemId;
     }
 
     public String getValueName() {
@@ -252,6 +201,14 @@ public class BSMBase {
     public void setBooleanValue(Boolean booleanValue) {
         this.booleanValue = booleanValue;
         this.dataType = TYPE_BOOLEAN;
+    }
+
+    public Boolean getNullValue() {
+        return isNullValue;
+    }
+
+    public void setNullValue(Boolean nullValue) {
+        isNullValue = nullValue;
     }
 
     public OffsetDateTime getDateTimeValue() {
@@ -300,30 +257,6 @@ public class BSMBase {
         this.dataType = TYPE_URI;
     }
 
-    public String getOwnedBy() {
-        return ownedBy;
-    }
-
-    public void setOwnedBy(String ownedBy) {
-        this.ownedBy = ownedBy;
-    }
-
-    public OffsetDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public OffsetDateTime getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public String getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
     public File getReferenceFile() {
         return referenceFile;
     }
@@ -370,5 +303,9 @@ public class BSMBase {
 
     public void setReferenceAdministrativeUnit(AdministrativeUnit referenceAdministrativeUnit) {
         this.referenceAdministrativeUnit = referenceAdministrativeUnit;
+    }
+
+    public String getBaseRel() {
+        return REL_FONDS_STRUCTURE_BSM;
     }
 }

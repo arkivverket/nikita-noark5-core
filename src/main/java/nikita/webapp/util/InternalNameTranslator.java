@@ -54,6 +54,10 @@ public class InternalNameTranslator {
                         AUTHOR_ENG,
                         AUTHOR_ENG_OBJECT);
         addNorToEnglishNameMap
+                (BSM_DEF,
+                        BSM_DEF_ENG,
+                        BSM_DEF_OBJECT);
+        addNorToEnglishNameMap
                 (CASE_FILE,
                         CASE_FILE_ENG,
                         CASE_FILE_ENG_OBJECT);
