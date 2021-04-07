@@ -25,7 +25,6 @@ import static nikita.common.config.N5ResourceMappings.*;
 @JsonDeserialize(using = BSMMetadataDeserialiser.class)
 @HateoasPacker(using = BSMMetadataHateoasHandler.class)
 @HateoasObject(using = BSMMetadataHateoas.class)
-
 public class BSMMetadata
         extends SystemIdEntity {
 
