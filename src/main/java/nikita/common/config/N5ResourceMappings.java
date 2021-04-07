@@ -13,6 +13,8 @@ public final class N5ResourceMappings {
     public static final String REFERENCE_ADMINISTRATIVE_UNIT = "referanseAdministratitivEnhet";
     public static final String REFERENCE_CASE_HANDLER = "referanseSaksbehandler";
     public static final String BSM_DEF = "virksomhetsspesifikkeMetadata";
+    public static final String BSM_DEF_ENG = "business_specific_metadata";
+    public static final String BSM_DEF_OBJECT = "BSMBase";
     public static final String FILE = "mappe";
     public static final String CASE_FILE = "saksmappe";
     public static final String MEETING_FILE = "moetemappe";
@@ -510,7 +512,7 @@ public final class N5ResourceMappings {
     public static final String ADMINISTRATIVE_UNIT_PARENT_REFERENCE_ENG = "referanseOverordnetEnhet";
     public static final String ADMINISTRATIVE_UNIT_STATUS_ENG = "administrativEnhetsstatus";
     public static final String ASSOCIATED_WITH_RECORD_AS_ENG = "associated_with_record_as";
-    public static final String AUTHOR_ENG = "forfatter";
+    public static final String AUTHOR_ENG = "author";
     public static final String BUILDING_CHANGE_NUMBER_ENG = "building_change_number";
     public static final String BUILDING_NUMBER_ENG = "building_number";
     public static final String RECORD_ENG = "Record";
