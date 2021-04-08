@@ -878,7 +878,8 @@ var caseHandlerController = app.controller('CaseHandlerController',
                     console.log("Retrieved the following registryEntry " + JSON.stringify($scope.registryEntry));
                     console.log("The ETAG header for the registryEntry is " + $scope.registryEntryETag);
                     $scope.selectedDocumentMediumRegistryEntry = $scope.registryEntry.dokumentmedium;
-                    $scope.selectedRegistryEntryStatus = $scope.registryEntry.journalstatus;
+                    $scope.selectedRegistryEntryStatus = $scope.registryEntry.journalstatus.kodenavn;
+                    $scope.selectedRegistryEntryType = $scope.registryEntry.journalposttype.kodenavn;
                 });
             };
 

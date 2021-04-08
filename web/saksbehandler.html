@@ -195,7 +195,7 @@
                   {{ registryEntry.registreringsID}}
                 </td>
                 <td>
-                  {{ registryEntry.journalposttype }}
+                  {{ registryEntry.journalposttype.kodenavn }}
                 </td>
                 <td>
                   {{ registryEntry.journaldato | date: 'dd-mm-yyyy'}}
@@ -634,10 +634,10 @@
                   <label class="control-label" for="registryEntryType">Journalposttype:</label>
                   <select class="form-control form-control-lg rounded-1" data-placement="top"
                           data-toggle="tooltip"
-                          id="registryEntryType" ng-model="registryEntry.journalposttype"
+                          id="registryEntryType" ng-model="selectedRegistryEntryType"
                           title="Navn på type journalpost">
                     <option ng-repeat="registryEntryType in registryEntryTypeList"
-                            ng-selected="{{registryEntryType.value == registryEntry.journalposttype}}"
+                            ng-selected="{{registryEntryType.value == selectedRegistryEntryType}}"
                             value="{{registryEntryType.value}}">{{registryEntryType.value}}
                     </option>
                   </select>
