@@ -1843,6 +1843,7 @@ public final class CommonUtils {
                     throws IOException {
                 if (record != null) {
                     printSystemIdEntity(jgen, record);
+                    printCreateEntity(jgen, record);
                     printNullableDateTime(jgen, RECORD_ARCHIVED_DATE,
                             record.getArchivedDate());
                     printNullable(jgen, RECORD_ARCHIVED_BY,
