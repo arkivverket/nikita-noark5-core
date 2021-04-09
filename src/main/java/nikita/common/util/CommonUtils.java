@@ -1709,6 +1709,14 @@ public final class CommonUtils {
 
             public static void printNullable(JsonGenerator jgen,
                                              String fieldName,
+                                             Long value)
+                    throws IOException {
+                if (null != value)
+                    jgen.writeNumberField(fieldName, value);
+            }
+
+            public static void printNullable(JsonGenerator jgen,
+                                             String fieldName,
                                              Double value)
                     throws IOException {
                 if (null != value)
