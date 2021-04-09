@@ -58,11 +58,11 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import static java.util.UUID.randomUUID;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.ExceptionDetailsConstants.MISSING_DOCUMENT_DESCRIPTION_ERROR;
 import static nikita.common.config.FileConstants.FILE_EXTENSION_PDF_CODE;
 import static nikita.common.config.FileConstants.MIME_TYPE_PDF;
-import static nikita.common.config.FormatDetailsConstants.FORMAT_PDF_DETAILS;
 import static nikita.common.config.N5ResourceMappings.ARCHIVE_VERSION_CODE;
 import static nikita.common.config.N5ResourceMappings.PRODUCTION_VERSION_CODE;
 import static nikita.common.util.CommonUtils.FileUtils.mimeTypeIsConvertible;
@@ -377,28 +377,26 @@ public class DocumentObjectService
         validateFormat(archiveDocumentObject);
 
         archiveDocumentObject.setMimeType(MIME_TYPE_PDF);
-        archiveDocumentObject.setFormatDetails(FORMAT_PDF_DETAILS);
+        archiveDocumentObject.setFormatDetails("fmt/95");
 
         archiveDocumentObject
-            .setVariantFormat(new VariantFormat(ARCHIVE_VERSION_CODE));
+                .setVariantFormat(new VariantFormat(ARCHIVE_VERSION_CODE));
         validateVariantFormat(archiveDocumentObject);
 
         setFilenameAndExtensionForArchiveDocument(
                 productionDocumentObject, archiveDocumentObject);
 
+        // Setting a UUID here as the filename on disk will use this UUID value
+        archiveDocumentObject.setSystemId(randomUUID());
         Path archiveVersion = createIncomingFile(archiveDocumentObject);
-
         String command = "unoconv ";
         String toFormat = " -f pdf ";
         String fromFileLocation = productionVersion.
                 toAbsolutePath().toString();
-
         String toFileLocation = " -o " +
                 archiveVersion.toAbsolutePath().toString();
-
         String convertCommand = command + toFormat + toFileLocation + " " +
                 fromFileLocation;
-
         try {
             Process p = Runtime.getRuntime().exec(convertCommand);
             p.waitFor();
@@ -1007,10 +1005,12 @@ public class DocumentObjectService
 
         // Check if we can write something to the file
         if (!Files.isWritable(incoming)) {
-            throw new StorageException("The file (" +
+            String error = "The file (" +
                     incoming.getFileName() + ") is not writable " +
                     "server-side. This file is being associated with " +
-                    documentObject);
+                    documentObject;
+            logger.error(error);
+            throw new StorageException(error);
         }
         return path;
     }
