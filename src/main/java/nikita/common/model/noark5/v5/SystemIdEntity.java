@@ -8,7 +8,6 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -25,9 +24,6 @@ import static nikita.common.config.N5ResourceMappings.SYSTEM_ID;
 import static nikita.common.config.N5ResourceMappings.SYSTEM_ID_ENG;
 import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 
-/**
- * Created by tsodring on 5/8/17.
- */
 @Entity
 @Inheritance(strategy = JOINED)
 @EntityListeners(AuditingEntityListener.class)
@@ -42,13 +38,9 @@ public class SystemIdEntity
      * M001 - systemID (xs:string)
      */
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator",
-            parameters = {@Parameter(
-                    name = "uuid_gen_strategy_class",
-                    value = "org.hibernate.id.uuid.CustomVersionOneStrategy")})
+    @GenericGenerator(name = "uuid-gen",
+            strategy = "nikita.common.util.NikitaUUIDGenerator")
+    @GeneratedValue(generator = "uuid-gen")
     @Column(name = SYSTEM_ID_ENG, updatable = false, nullable = false)
     @Type(type = "uuid-char")
     private UUID systemId;
