@@ -2,6 +2,7 @@ package nikita.webapp.general;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.jayway.jsonpath.JsonPath;
 import nikita.N5CoreApp;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.metadata.AssociatedWithRecordAs;
@@ -17,6 +18,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
@@ -31,6 +34,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.transaction.Transactional;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.StringWriter;
 
 import static nikita.common.config.Constants.*;
@@ -46,6 +52,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static utils.DocumentObjectCreator.createDocumentObjectAsJSON;
 
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @SpringBootTest(classes = N5CoreApp.class,
@@ -301,6 +308,81 @@ public class GeneralTest {
                         .value("66b92e78-b75d-4b0f-9558-4204ab31c2d1"))
                 .andExpect(jsonPath("$.results[0]." + TITLE)
                         .value("test title bravo"));
+        resultActions.andDo(document("home",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint())));
+    }
+
+
+    /**
+     * Test that it is possible to upload a document and that nikita converts
+     * it to an archive format (PDF)
+     *
+     * @throws Exception Serialising or validation exception
+     */
+    @Test
+    @Sql("/db-tests/basic_structure.sql")
+    @WithMockCustomUser
+    public void checkPossibleToConvertDocumentToPDF() throws Exception {
+
+        String url = "/noark5v5/api/arkivstruktur/dokumentbeskrivelse" +
+                "/66b92e78-b75d-4b0f-9558-4204ab31c2d1/ny-dokumentobjekt";
+
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .post(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON)
+                .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
+                .content(createDocumentObjectAsJSON()));
+
+        resultActions
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$." + SYSTEM_ID)
+                        .exists());
+        MockHttpServletResponse response =
+                resultActions.andReturn().getResponse();
+        String uuid = JsonPath.read(response.getContentAsString(),
+                "$." + SYSTEM_ID);
+
+        url = "/noark5v5/api/arkivstruktur/dokumentobjekt/" + uuid +
+                "/referanseFil";
+
+        PathMatchingResourcePatternResolver resolver =
+                new PathMatchingResourcePatternResolver();
+        Resource resource = resolver.getResource(
+                "classpath:test_document.odt");
+
+        InputStream inputStream =
+                new BufferedInputStream(new FileInputStream
+                        (String.valueOf(resource.getFile().toPath())));
+        byte[] content = inputStream.readAllBytes();
+        resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .post(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON)
+                .contentType("application/vnd.oasis.opendocument.text")
+                .content(content));
+        response =
+                resultActions.andReturn().getResponse();
+        System.out.println(response.getContentAsString());
+
+        // Note change of URL to get direct access to OData endpoint
+        // Remember nikita redirects all odata queries to this endpoint
+        url = "/noark5v5/odata/api/arkivstruktur/dokumentbeskrivelse" +
+                "/66b92e78-b75d-4b0f-9558-4204ab31c2d1/dokumentobjekt" +
+                "?$filter=variantformat/kode eq 'A'";
+
+        url = "/noark5v5/odata/api/arkivstruktur/dokumentobjekt" +
+                "?$filter=variantformat/kode eq 'A'";
+
+        resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON));
+        response =
+                resultActions.andReturn().getResponse();
+        System.out.println(response.getContentAsString());
+
         resultActions.andDo(document("home",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint())));
