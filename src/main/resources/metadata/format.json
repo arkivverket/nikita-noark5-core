@@ -70,7 +70,15 @@
     },
     {
       "code": "fmt/136",
-      "codename": "OpenDocument Text (odt)"
+      "codename": "OpenDocument Text (odt) Version 1.0"
+    },
+    {
+      "code": "fmt/290",
+      "codename": "OpenDocument Text (odt) Version 1.1"
+    },
+    {
+      "code": "fmt/291",
+      "codename": "OpenDocument Text (odt) Version 1.2"
     },
     {
       "code": "fmt/137",
