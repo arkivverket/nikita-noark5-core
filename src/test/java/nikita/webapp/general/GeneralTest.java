@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.jayway.jsonpath.JsonPath;
 import nikita.N5CoreApp;
 import nikita.common.model.noark5.v5.DocumentDescription;
+import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.metadata.AssociatedWithRecordAs;
 import nikita.common.model.noark5.v5.metadata.DocumentStatus;
 import nikita.common.model.noark5.v5.metadata.DocumentType;
@@ -38,6 +39,7 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.time.OffsetDateTime;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.HREF;
@@ -313,7 +315,6 @@ public class GeneralTest {
                 preprocessResponse(prettyPrint())));
     }
 
-
     /**
      * Test that it is possible to upload a document and that nikita converts
      * it to an archive format (PDF)
@@ -386,5 +387,120 @@ public class GeneralTest {
         resultActions.andDo(document("home",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint())));
+    }
+
+
+    /**
+     * Test that it is possible to expand a File to a CaseFile
+     *
+     * @throws Exception Serialising or validation exception
+     */
+    @Test
+    @Sql("/db-tests/basic_structure.sql")
+    @WithMockCustomUser
+    public void checkPossibleToExpandFileToCaseFile() throws Exception {
+        // First create / POST file
+        File file = new File();
+        file.setTitle("Title of file");
+        String url = "/noark5v5/api/arkivstruktur/arkivdel" +
+                "/f1102ae8-6c4c-4d93-aaa5-7c6220e50c4d/ny-mappe";
+
+        JsonFactory factory = new JsonFactory();
+        StringWriter jsonFileWriter = new StringWriter();
+        JsonGenerator jsonFile = factory.createGenerator(jsonFileWriter);
+        jsonFile.writeStartObject();
+        printFileEntity(jsonFile, file);
+        jsonFile.writeEndObject();
+        jsonFile.close();
+
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .post(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON)
+                .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
+                .content(jsonFileWriter.toString()));
+
+        resultActions
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$." + SYSTEM_ID)
+                        .exists())
+                .andExpect(jsonPath("$." + TITLE)
+                        .value("Title of file"));
+        resultActions.andDo(document("home",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint())));
+
+        // Next see if we can get this File
+        MockHttpServletResponse response =
+                resultActions.andReturn().getResponse();
+        url = "/noark5v5/api/arkivstruktur/mappe/" +
+                JsonPath.read(response.getContentAsString(), "$." + SYSTEM_ID);
+
+        resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON));
+
+        // Next see if we can expand this File to a CaseFile
+        response = resultActions.andReturn().getResponse();
+        System.out.println(response.getContentAsString());
+        url = "/noark5v5/api/arkivstruktur/mappe/" +
+                JsonPath.read(response.getContentAsString(), "$." + SYSTEM_ID) +
+                "/" + FILE_EXPAND_TO_CASE_FILE;
+
+        // First get template of object for patch
+
+        resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON)
+                .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
+                .content(jsonFileWriter.toString()));
+
+        response = resultActions.andReturn().getResponse();
+        System.out.println(response.getContentAsString());
+        String caseStatusCode = JsonPath.read(response.getContentAsString(),
+                "$." + CASE_STATUS + "." + CODE);
+        String caseStatusCodeName = JsonPath.read(response.getContentAsString(),
+                "$." + CASE_STATUS + "." + CODE_NAME);
+        String caseResponsible = JsonPath.read(response.getContentAsString(),
+                "$." + CASE_RESPONSIBLE);
+        String caseDate = JsonPath.read(response.getContentAsString(),
+                "$." + CASE_DATE);
+
+        // Then create a PATCH MERGE object
+        StringWriter jsonPatchWriter = new StringWriter();
+        JsonGenerator jsonPatch = factory.createGenerator(jsonPatchWriter);
+        jsonPatch.writeStartObject();
+        jsonPatch.writeObjectFieldStart(CASE_STATUS);
+        jsonPatch.writeStringField(CODE, caseStatusCode);
+        jsonPatch.writeStringField(CODE_NAME, caseStatusCodeName);
+        jsonPatch.writeEndObject();
+        jsonPatch.writeStringField(CASE_RESPONSIBLE, caseResponsible);
+        jsonPatch.writeStringField(CASE_DATE, caseDate);
+        jsonPatch.writeEndObject();
+        jsonPatch.close();
+
+        System.out.println(jsonPatchWriter.toString());
+
+        resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .patch(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON)
+                .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
+                .content(jsonPatchWriter.toString()));
+
+        response = resultActions.andReturn().getResponse();
+        System.out.println(response.getContentAsString());
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$." + SYSTEM_ID)
+                        .exists())
+                .andExpect(jsonPath(
+                        "$._links.['" + SELF + "']").exists())
+                .andExpect(jsonPath(
+                        "$._links.['" + REL_CASE_HANDLING_CASE_FILE + "']")
+                        .exists());
     }
 }
