@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import nikita.common.model.nikita.PatchMerge;
 import nikita.common.model.nikita.PatchObjects;
 import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.File;
@@ -13,6 +14,7 @@ import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
 import nikita.common.model.noark5.v5.hateoas.FileHateoas;
 import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
 import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
 import nikita.common.model.noark5.v5.hateoas.secondary.CommentHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.PartHateoas;
@@ -1188,6 +1190,47 @@ public class FileHateoasController
                 .body(fileService.generateDefaultUnit());
     }
 
+
+    // Get default values to use when expanding a File to a CaseFile
+    // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/utvid-til-saksmappe
+    // REL https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/utvid-til-saksmappe/
+    @Operation(summary = "Expands a File identified by a systemId to a CaseFile",
+            description = "Returns the newly updated CaseFile")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "CaseFile " +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = NOT_FOUND_VAL,
+                    description = API_MESSAGE_PARENT_DOES_NOT_EXIST +
+                            " of type File"),
+            @ApiResponse(
+                    responseCode = CONFLICT_VAL,
+                    description = API_MESSAGE_CONFLICT),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
+            FILE_EXPAND_TO_CASE_FILE,
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<String> getExpandFileToCaseFileTemplate(
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of file to expand",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID)
+            throws NikitaException {
+        return ResponseEntity.status(OK)
+                .body(fileService.generateDefaultValuesToExpandToCaseFile(
+                        systemID));
+    }
+
     // API - All PUT Requests (CRUD - UPDATE)
 
     // Update a File with given values
@@ -1325,11 +1368,10 @@ public class FileHateoasController
     }
 
     // Expand a File to a CaseFile
-    // PUT [contextPath][api]/arkivstruktur/mappe/{systemId}/utvid-til-saksmappe
+    // POST [contextPath][api]/arkivstruktur/mappe/{systemId}/utvid-til-saksmappe
     // REL https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/utvid-til-saksmappe/
     @Operation(summary = "Expands a File identified by a systemId to a CaseFile",
-            description = "Returns the newly updated " +
-                    "CaseFile")
+            description = "Returns the newly updated CaseFile")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = OK_VAL,
@@ -1355,16 +1397,18 @@ public class FileHateoasController
             @ApiResponse(
                     responseCode = INTERNAL_SERVER_ERROR_VAL,
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
+    @PatchMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
             FILE_EXPAND_TO_CASE_FILE,
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
-    public ResponseEntity<ApiError> expandFileToCaseFile(
+    public ResponseEntity<CaseFileHateoas> expandFileToCaseFile(
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of file to expand",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID)
+            @PathVariable(SYSTEM_ID) final UUID systemID,
+            @RequestBody PatchMerge patchMerge)
             throws NikitaException {
-        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
+        return ResponseEntity.status(OK)
+                .body(fileService.expandToCaseFile(systemID, patchMerge));
     }
 
     // Create a new PartUnit and associate it with the given file
