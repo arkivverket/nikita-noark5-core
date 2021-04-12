@@ -216,7 +216,7 @@ public class NoarkService
             } else if ("add" .equalsIgnoreCase(patchObject.getOp())) {
                 return handlePatchAdd((UUID) object, patchObject);
             } else if ("move" .equalsIgnoreCase(patchObject.getOp())) {
-                handlePatchMove((UUID) object, patchObject);
+                return handlePatchMove((UUID) object, patchObject);
             } else {
                 String error = "Cannot handle this PatchObject : " +
                         patchObject.toString();
@@ -238,9 +238,9 @@ public class NoarkService
      * @param originalObjectId
      * @param patchObject
      */
-    protected void handlePatchMove(UUID originalObjectId,
-                                   PatchObject patchObject) {
-        patchService.handlePatch(originalObjectId, patchObject);
+    protected Object handlePatchMove(UUID originalObjectId,
+                                     PatchObject patchObject) {
+        return patchService.handlePatch(originalObjectId, patchObject);
     }
 
     /**

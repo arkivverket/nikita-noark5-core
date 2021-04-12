@@ -39,13 +39,13 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.StringWriter;
-import java.time.OffsetDateTime;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.HREF;
 import static nikita.common.config.HATEOASConstants.SELF;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Serialize.*;
+import static org.hamcrest.Matchers.endsWith;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
@@ -502,5 +502,73 @@ public class GeneralTest {
                 .andExpect(jsonPath(
                         "$._links.['" + REL_CASE_HANDLING_CASE_FILE + "']")
                         .exists());
+    }
+
+    /**
+     * Test that it is possible to move a File from one Series to another
+     * mappe: f1677c47-99e1-42a7-bda2-b0bbc64841b7
+     * from: f1102ae8-6c4c-4d93-aaa5-7c6220e50c4d
+     * to: f32c1fa0-8e42-4236-8f40-e006940ea70b
+     *
+     * @throws Exception Serialising or validation exception
+     */
+    @Test
+    @Sql("/db-tests/basic_structure.sql")
+    @WithMockCustomUser
+    public void checkMoveFileToAnotherSeries() throws Exception {
+
+        String what = "f1677c47-99e1-42a7-bda2-b0bbc64841b7";
+        String fromSeries = "f1102ae8-6c4c-4d93-aaa5-7c6220e50c4d";
+        String toSeries = "f32c1fa0-8e42-4236-8f40-e006940ea70b";
+
+        String url = "/noark5v5/api/arkivstruktur/mappe/" + what;
+
+        JsonFactory factory = new JsonFactory();
+        StringWriter jsonPatchWriter = new StringWriter();
+        JsonGenerator jsonPatch = factory.createGenerator(jsonPatchWriter);
+        jsonPatch.writeStartObject();
+        jsonPatch.writeStringField("op", "move");
+        jsonPatch.writeStringField("from", fromSeries);
+        jsonPatch.writeStringField("path", toSeries);
+        jsonPatch.writeEndObject();
+        jsonPatch.close();
+        System.out.println(jsonPatchWriter.toString());
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .patch(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON)
+                .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
+                .content(jsonPatchWriter.toString()));
+
+        MockHttpServletResponse response =
+                resultActions.andReturn().getResponse();
+        System.out.println(response.getContentAsString());
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$." + SYSTEM_ID)
+                        .value(what))
+                .andExpect(jsonPath("$._links.['"
+                                + REL_FONDS_STRUCTURE_SERIES + "']." + HREF,
+                        endsWith(toSeries)));
+        resultActions.andDo(document("home",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint())));
+
+        // Make sure the File has updated values
+        resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON));
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$." + SYSTEM_ID)
+                        .value(what))
+                .andExpect(jsonPath("$._links.['"
+                                + REL_FONDS_STRUCTURE_SERIES + "']." + HREF,
+                        endsWith(toSeries)));
+        response = resultActions.andReturn().getResponse();
+        System.out.println(response.getContentAsString());
     }
 }
