@@ -28,4 +28,5 @@ public interface ICaseFileRepository
     Page<CaseFile> findByReferenceSeries(Series series, Pageable page);
 
     long deleteByOwnedBy(String ownedBy);
+
 }
