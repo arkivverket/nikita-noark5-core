@@ -17,6 +17,7 @@ import nikita.webapp.hateoas.interfaces.IClassificationSystemHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IFileHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.ICaseFileService;
 import nikita.webapp.service.interfaces.IClassService;
 import nikita.webapp.service.interfaces.IFileService;
@@ -69,6 +70,7 @@ public class ClassService
 
     public ClassService(EntityManager entityManager,
                         ApplicationEventPublisher applicationEventPublisher,
+                        IPatchService patchService,
                         IClassRepository classRepository,
                         IFileService fileService,
                         ICaseFileService caseFileService,
@@ -78,7 +80,7 @@ public class ClassService
                                 classificationSystemHateoasHandler,
                         IFileHateoasHandler fileHateoasHandler,
                         IRecordHateoasHandler recordHateoasHandler) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, patchService);
         this.classRepository = classRepository;
         this.fileService = fileService;
         this.caseFileService = caseFileService;

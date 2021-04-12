@@ -31,6 +31,7 @@ import nikita.webapp.hateoas.interfaces.secondary.ICommentHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.ICorrespondencePartHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.IPartHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.IBSMService;
 import nikita.webapp.service.interfaces.INationalIdentifierService;
 import nikita.webapp.service.interfaces.IRecordService;
@@ -97,6 +98,7 @@ public class RecordService
     public RecordService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IPatchService patchService,
             DocumentDescriptionService documentDescriptionService,
             IRecordRepository recordRepository,
             IBSMService bsmService,
@@ -118,7 +120,7 @@ public class RecordService
             IPartHateoasHandler partHateoasHandler,
             IAuthorHateoasHandler authorHateoasHandler,
             ICommentHateoasHandler commentHateoasHandler) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, patchService);
         this.documentDescriptionService = documentDescriptionService;
         this.recordRepository = recordRepository;
         this.bsmService = bsmService;

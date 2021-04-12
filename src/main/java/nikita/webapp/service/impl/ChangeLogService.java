@@ -7,7 +7,7 @@ import nikita.common.repository.n5v5.IChangeLogRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IChangeLogHateoasHandler;
 import nikita.webapp.security.Authorisation;
-import nikita.webapp.service.impl.NoarkService;
+import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.IChangeLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,9 +38,10 @@ public class ChangeLogService
     public ChangeLogService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IPatchService patchService,
             IChangeLogRepository changeLogRepository,
             IChangeLogHateoasHandler changeLogHateoasHandler) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, patchService);
         this.changeLogRepository = changeLogRepository;
         this.changeLogHateoasHandler = changeLogHateoasHandler;
     }

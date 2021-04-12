@@ -9,6 +9,7 @@ import nikita.common.repository.n5v5.IFondsRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IFondsHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.IFondsCreatorService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import org.slf4j.Logger;
@@ -48,11 +49,12 @@ public class FondsCreatorService
     public FondsCreatorService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IPatchService patchService,
             IFondsCreatorRepository fondsCreatorRepository,
             IFondsRepository fondsRepository,
             IMetadataService metadataService,
             IFondsHateoasHandler fondsHateoasHandler) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, patchService);
         this.fondsCreatorRepository = fondsCreatorRepository;
         this.fondsRepository = fondsRepository;
         this.metadataService = metadataService;

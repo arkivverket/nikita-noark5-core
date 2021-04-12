@@ -6,6 +6,7 @@ import nikita.common.repository.n5v5.secondary.ISignOffRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.secondary.SignOffHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.casehandling.ISignOffService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
@@ -39,10 +40,11 @@ public class SignOffService
 
     public SignOffService(EntityManager entityManager,
                           ApplicationEventPublisher applicationEventPublisher,
+                          IPatchService patchService,
                           ISignOffRepository signOffRepository,
                           SignOffHateoasHandler signOffHateoasHandler,
                           IMetadataService metadataService) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, patchService);
         this.signOffRepository = signOffRepository;
         this.signOffHateoasHandler = signOffHateoasHandler;
         this.metadataService = metadataService;

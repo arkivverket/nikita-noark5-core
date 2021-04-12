@@ -15,6 +15,7 @@ import nikita.common.repository.n5v5.secondary.ICorrespondencePartRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.secondary.ICorrespondencePartHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.IBSMService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
@@ -59,10 +60,11 @@ public class CorrespondencePartService
     public CorrespondencePartService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IPatchService patchService,
             ICorrespondencePartRepository correspondencePartRepository,
             ICorrespondencePartHateoasHandler correspondencePartHateoasHandler,
             IMetadataService metadataService, IBSMService bsmService) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, patchService);
         this.correspondencePartRepository = correspondencePartRepository;
         this.correspondencePartHateoasHandler = correspondencePartHateoasHandler;
         this.metadataService = metadataService;

@@ -28,6 +28,7 @@ import nikita.webapp.hateoas.interfaces.secondary.IDocumentFlowHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.IPrecedenceHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.ISignOffHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.IRegistryEntryService;
 import nikita.webapp.service.interfaces.ISequenceNumberGeneratorService;
 import nikita.webapp.service.interfaces.admin.IAdministrativeUnitService;
@@ -86,6 +87,7 @@ public class RegistryEntryService
     public RegistryEntryService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IPatchService patchService,
             ICorrespondencePartService correspondencePartService,
             IDocumentFlowService documentFlowService,
             IPrecedenceService precedenceService,
@@ -99,7 +101,7 @@ public class RegistryEntryService
             ISignOffRepository signOffRepository,
             IUserRepository userRepository,
             IAdministrativeUnitService administrativeUnitService) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, patchService);
         this.correspondencePartService = correspondencePartService;
         this.documentFlowService = documentFlowService;
         this.precedenceService = precedenceService;

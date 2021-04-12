@@ -1,5 +1,6 @@
 package nikita.webapp.service.impl;
 
+import nikita.common.model.nikita.PatchMerge;
 import nikita.common.model.nikita.PatchObjects;
 import nikita.common.model.noark5.bsm.BSMBase;
 import nikita.common.model.noark5.v5.File;
@@ -8,6 +9,7 @@ import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
 import nikita.common.model.noark5.v5.hateoas.FileHateoas;
 import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
 import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
 import nikita.common.model.noark5.v5.hateoas.secondary.CommentHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.PartHateoas;
@@ -28,10 +30,8 @@ import nikita.webapp.hateoas.interfaces.nationalidentifier.INationalIdentifierHa
 import nikita.webapp.hateoas.interfaces.secondary.ICommentHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.IPartHateoasHandler;
 import nikita.webapp.security.Authorisation;
-import nikita.webapp.service.interfaces.IBSMService;
-import nikita.webapp.service.interfaces.IFileService;
-import nikita.webapp.service.interfaces.INationalIdentifierService;
-import nikita.webapp.service.interfaces.IRecordService;
+import nikita.webapp.service.application.IPatchService;
+import nikita.webapp.service.interfaces.*;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import nikita.webapp.service.interfaces.secondary.ICommentService;
 import nikita.webapp.service.interfaces.secondary.IPartService;
@@ -67,6 +67,7 @@ public class FileService
             LoggerFactory.getLogger(FileService.class);
 
     private final IRecordService recordService;
+    private final ICaseFileService caseFileService;
     private final IFileRepository fileRepository;
     private final IBSMService bsmService;
     private final IFileHateoasHandler fileHateoasHandler;
@@ -82,7 +83,9 @@ public class FileService
 
     public FileService(EntityManager entityManager,
                        ApplicationEventPublisher applicationEventPublisher,
+                       IPatchService patchService,
                        IRecordService recordService,
+                       ICaseFileService caseFileService,
                        IFileRepository fileRepository,
                        IBSMService bsmService,
                        IFileHateoasHandler fileHateoasHandler,
@@ -95,8 +98,9 @@ public class FileService
                        ICommentHateoasHandler commentHateoasHandler,
                        INationalIdentifierHateoasHandler nationalIdentifierHateoasHandler,
                        IPartHateoasHandler partHateoasHandler) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, patchService);
         this.recordService = recordService;
+        this.caseFileService = caseFileService;
         this.fileRepository = fileRepository;
         this.bsmService = bsmService;
         this.fileHateoasHandler = fileHateoasHandler;
@@ -258,6 +262,13 @@ public class FileService
     }
 
     @Override
+    public CaseFileHateoas expandToCaseFile(
+            @NotNull UUID systemId, @NotNull PatchMerge patchMerge) {
+        return caseFileService.expandFileAsCaseFileHateoas(
+                getFileOrThrow(systemId), patchMerge);
+    }
+
+    @Override
     public PartPersonHateoas generateDefaultPartPerson(String systemID) {
         return partService.generateDefaultPartPerson(systemID);
     }
@@ -265,6 +276,12 @@ public class FileService
     @Override
     public PartUnitHateoas generateDefaultPartUnit(String systemID) {
         return partService.generateDefaultPartUnit(systemID);
+    }
+
+    @Override
+    public String generateDefaultValuesToExpandToCaseFile(
+            @NotNull final UUID systemId) {
+        return caseFileService.generateDefaultExpandedCaseFile();
     }
 
     // ownedBy

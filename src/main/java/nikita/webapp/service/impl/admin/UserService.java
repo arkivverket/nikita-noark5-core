@@ -12,6 +12,7 @@ import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.admin.IUserHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.IUserService;
+import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.util.exceptions.UsernameExistsException;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
@@ -48,12 +49,13 @@ public class UserService
 
     public UserService(EntityManager entityManager,
                        ApplicationEventPublisher applicationEventPublisher,
+                       IPatchService patchService,
                        IUserRepository userRepository,
                        AuthorityRepository authorityRepository,
                        IUserHateoasHandler userHateoasHandler,
                        PasswordEncoder encoder,
                        AdministrativeUnitService administrativeUnitService) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, patchService);
         this.userRepository = userRepository;
         this.authorityRepository = authorityRepository;
         this.userHateoasHandler = userHateoasHandler;

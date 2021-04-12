@@ -11,6 +11,7 @@ import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IRecordNoteHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.IDocumentFlowHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.casehandling.IRecordNoteService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
@@ -30,7 +31,6 @@ import java.util.List;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.DOCUMENT_FLOW;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
 import static org.springframework.http.HttpStatus.*;
@@ -52,12 +52,13 @@ public class RecordNoteService
     public RecordNoteService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IPatchService patchService,
             IRecordNoteRepository recordNoteRepository,
             IDocumentFlowService documentFlowService,
             IMetadataService metadataService,
             IRecordNoteHateoasHandler recordNoteHateoasHandler,
             IDocumentFlowHateoasHandler documentFlowHateoasHandler) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, patchService);
         this.recordNoteRepository = recordNoteRepository;
         this.documentFlowService = documentFlowService;
         this.metadataService = metadataService;

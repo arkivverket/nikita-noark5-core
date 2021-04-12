@@ -9,6 +9,7 @@ import nikita.webapp.odata.ODataToHQL;
 import nikita.webapp.odata.base.ODataLexer;
 import nikita.webapp.odata.base.ODataParser;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.odata.IODataService;
 import nikita.webapp.util.AddressComponent;
@@ -53,8 +54,9 @@ public class ODataService
 
     public ODataService(EntityManager entityManager,
                         ApplicationEventPublisher applicationEventPublisher,
+                        IPatchService patchService,
                         AddressComponent address) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, patchService);
         this.entityManager = entityManager;
         this.address = address;
     }

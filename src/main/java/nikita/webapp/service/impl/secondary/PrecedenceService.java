@@ -10,6 +10,7 @@ import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.secondary.IPrecedenceHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.IUserService;
+import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import nikita.webapp.service.interfaces.secondary.IPrecedenceService;
@@ -41,13 +42,14 @@ public class PrecedenceService
     private IPrecedenceHateoasHandler precedenceHateoasHandler;
     private IUserService userService;
     public PrecedenceService
-        (EntityManager entityManager,
-         ApplicationEventPublisher applicationEventPublisher,
-         IMetadataService metadataService,
-         IPrecedenceRepository precedenceRepository,
-         IPrecedenceHateoasHandler precedenceHateoasHandler,
-         IUserService userService) {
-        super(entityManager, applicationEventPublisher);
+            (EntityManager entityManager,
+             ApplicationEventPublisher applicationEventPublisher,
+             IPatchService patchService,
+             IMetadataService metadataService,
+             IPrecedenceRepository precedenceRepository,
+             IPrecedenceHateoasHandler precedenceHateoasHandler,
+             IUserService userService) {
+        super(entityManager, applicationEventPublisher, patchService);
         this.precedenceRepository = precedenceRepository;
         this.precedenceHateoasHandler =  precedenceHateoasHandler;
         this.userService = userService;

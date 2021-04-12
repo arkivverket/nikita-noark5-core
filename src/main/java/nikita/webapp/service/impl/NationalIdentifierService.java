@@ -10,6 +10,7 @@ import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.nationalidentifier.INationalIdentifierHateoasHandler;
 import nikita.webapp.hateoas.interfaces.nationalidentifier.IPositionHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.INationalIdentifierService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import org.slf4j.Logger;
@@ -43,11 +44,12 @@ public class NationalIdentifierService
     public NationalIdentifierService
             (EntityManager entityManager,
              ApplicationEventPublisher applicationEventPublisher,
+             IPatchService patchService,
              INationalIdentifierRepository nationalIdentifierRepository,
              INationalIdentifierHateoasHandler nationalIdentifierHateoasHandler,
              IMetadataService metadataService,
              IPositionHateoasHandler positionHateoasHandler) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, patchService);
         this.nationalIdentifierRepository = nationalIdentifierRepository;
         this.nationalIdentifierHateoasHandler =
                 nationalIdentifierHateoasHandler;

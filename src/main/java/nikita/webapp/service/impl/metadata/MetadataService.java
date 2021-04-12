@@ -10,6 +10,7 @@ import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.common.util.exceptions.NoarkNotAcceptableException;
 import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import org.reflections.Reflections;
@@ -62,12 +63,13 @@ public class MetadataService
     public MetadataService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IPatchService patchService,
             IMetadataHateoasHandler metadataHateoasHandler,
             WebApplicationContext webAppContext)
             throws ClassNotFoundException, NoSuchMethodException,
             IllegalAccessException, InvocationTargetException,
             InstantiationException {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, patchService);
         this.metadataHateoasHandler = metadataHateoasHandler;
         buildMapping(webAppContext);
     }

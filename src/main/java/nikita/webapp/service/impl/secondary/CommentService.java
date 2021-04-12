@@ -10,6 +10,7 @@ import nikita.common.repository.n5v5.secondary.ICommentRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.secondary.ICommentHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import nikita.webapp.service.interfaces.secondary.ICommentService;
@@ -42,10 +43,11 @@ public class CommentService
     public CommentService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IPatchService patchService,
             IMetadataService metadataService,
             ICommentRepository commentRepository,
             ICommentHateoasHandler commentHateoasHandler) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, patchService);
         this.metadataService = metadataService;
         this.commentRepository = commentRepository;
         this.commentHateoasHandler = commentHateoasHandler;

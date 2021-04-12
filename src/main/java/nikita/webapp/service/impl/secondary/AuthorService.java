@@ -8,6 +8,7 @@ import nikita.common.repository.n5v5.secondary.IAuthorRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.secondary.IAuthorHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.secondary.IAuthorService;
 import org.slf4j.Logger;
@@ -35,9 +36,10 @@ public class AuthorService
     public AuthorService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IPatchService patchService,
             IAuthorRepository authorRepository,
             IAuthorHateoasHandler authorHateoasHandler) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, patchService);
         this.authorRepository = authorRepository;
         this.authorHateoasHandler = authorHateoasHandler;
     }

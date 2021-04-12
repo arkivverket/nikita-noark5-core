@@ -17,6 +17,7 @@ import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.IConversionHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.IDocumentObjectService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
@@ -108,13 +109,14 @@ public class DocumentObjectService
     public DocumentObjectService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IPatchService patchService,
             IConversionRepository conversionRepository,
             IDocumentObjectRepository documentObjectRepository,
             IMetadataService metadataService,
             IConversionHateoasHandler conversionHateoasHandler,
             IDocumentObjectHateoasHandler documentObjectHateoasHandler,
             IDocumentDescriptionHateoasHandler documentDescriptionHateoasHandler) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, patchService);
         this.conversionRepository = conversionRepository;
         this.documentObjectRepository = documentObjectRepository;
         this.metadataService = metadataService;

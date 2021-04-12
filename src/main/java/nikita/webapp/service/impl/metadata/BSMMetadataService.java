@@ -9,6 +9,7 @@ import nikita.common.repository.n5v5.other.IBSMMetadataRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.metadata.IBSMMetadataHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.IBSMMetadataService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
@@ -52,9 +53,10 @@ public class BSMMetadataService
     public BSMMetadataService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IPatchService patchService,
             IBSMMetadataHateoasHandler hateoasHandler,
             IBSMMetadataRepository metadataRepository) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, patchService);
         this.hateoasHandler = hateoasHandler;
         this.metadataRepository = metadataRepository;
     }
