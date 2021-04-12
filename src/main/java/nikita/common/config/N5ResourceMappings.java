@@ -1037,6 +1037,16 @@ public final class N5ResourceMappings {
     public static final String COMMENT_TYPE_CODE_ENG = "comment_type_code";
     public static final String COMMENT_TYPE_CODE_ENG_OBJECT = "commentTypeCode";
 
+    public static final String CASE_STATUS_CODE = "saksstatuskode";
+    public static final String CASE_STATUS_CODE_ENG = "case_status_code";
+    public static final String CASE_STATUS_CODE_OBJECT = "caseStatusCode";
+
+    public static final String CASE_STATUS_CODE_NAME = "saksstatuskodenavn";
+    public static final String CASE_STATUS_CODE_NAME_ENG =
+            "case_status_code_name";
+    public static final String CASE_STATUS_CODE_NAME_OBJECT =
+            "caseStatusCodename";
+
     public static final String COMMENT_TYPE_CODE_NAME = "merknadstypekodenavn";
     public static final String COMMENT_TYPE_CODE_NAME_ENG =
             "comment_type_code_name";
