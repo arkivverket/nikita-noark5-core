@@ -98,6 +98,13 @@ public class NoarkEntity
     }
 
     @Override
+    public void setVersion(Long version, Boolean override) {
+        if (override) {
+            this.version = version;
+        }
+    }
+
+    @Override
     public OffsetDateTime getLastModifiedDate() {
         return lastModifiedDate;
     }
