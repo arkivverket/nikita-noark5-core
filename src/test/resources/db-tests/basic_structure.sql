@@ -16,12 +16,18 @@ insert into system_id_entity(system_id, created_date, created_by, owned_by, vers
 values ('66b92e78-b75d-4b0f-9558-4204ab31c2d1', '2020-07-01 22:25:06', 'admin@example.com', 'admin@example.com', 0);
 insert into system_id_entity(system_id, created_date, created_by, owned_by, version)
 values ('ebcefc44-73e5-485e-94c9-1b210359c125', '2020-07-01 22:25:06', 'admin@example.com', 'admin@example.com', 0);
+insert into system_id_entity(system_id, created_date, created_by, owned_by, version)
+values ('f32c1fa0-8e42-4236-8f40-e006940ea70b', '2020-07-01 22:25:06', 'admin@example.com', 'admin@example.com', 0);
 
 insert into as_fonds (system_id, title, description)
 values ('3318a63f-11a7-4ec9-8bf1-4144b7f281cf', 'test title alpha', 'test description 1');
 
 insert into as_series (system_id, title, description, series_status_code, series_status_code_name, series_fonds_id)
 values ('f1102ae8-6c4c-4d93-aaa5-7c6220e50c4d', 'test title bravo', 'test description 2', 'O', 'Opprettet',
+        '3318a63f-11a7-4ec9-8bf1-4144b7f281cf');
+
+insert into as_series (system_id, title, description, series_status_code, series_status_code_name, series_fonds_id)
+values ('f32c1fa0-8e42-4236-8f40-e006940ea70b', 'test title charlie', 'test description charlie', 'O', 'Opprettet',
         '3318a63f-11a7-4ec9-8bf1-4144b7f281cf');
 
 insert into as_file (system_id, title, description, file_series_id)
