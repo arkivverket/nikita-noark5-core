@@ -576,7 +576,7 @@ public class CaseFileService
         Map<String, Object> caseStatus = (Map<String, Object>)
                 patchMerge.getValue(CASE_STATUS);
         String caseStatusCode = (String) caseStatus.get(CODE);
-        if (null != caseStatusCode) {
+        if (null == caseStatusCode) {
             caseStatusCode = "R";
         }
         String caseStatusCodeName = (String) caseStatus.get(CODE_NAME);
