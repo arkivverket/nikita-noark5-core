@@ -1,6 +1,7 @@
 package nikita.webapp.service.impl;
 
 import nikita.common.model.noark5.v5.File;
+import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.admin.User;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
@@ -36,6 +37,7 @@ import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import nikita.webapp.service.interfaces.secondary.ICorrespondencePartService;
 import nikita.webapp.service.interfaces.secondary.IDocumentFlowService;
 import nikita.webapp.service.interfaces.secondary.IPrecedenceService;
+import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
@@ -70,19 +72,19 @@ public class RegistryEntryService
 
     private static final Logger logger =
             LoggerFactory.getLogger(RegistryEntryService.class);
-    private ICorrespondencePartService correspondencePartService;
-    private IDocumentFlowService documentFlowService;
-    private IPrecedenceService precedenceService;
-    private IMetadataService metadataService;
-    private IRegistryEntryRepository registryEntryRepository;
-    private IRegistryEntryHateoasHandler registryEntryHateoasHandler;
-    private IDocumentFlowHateoasHandler documentFlowHateoasHandler;
-    private IPrecedenceHateoasHandler precedenceHateoasHandler;
-    private ISignOffHateoasHandler signOffHateoasHandler;
-    private ISequenceNumberGeneratorService numberGeneratorService;
-    private ISignOffRepository signOffRepository;
-    private IUserRepository userRepository;
-    private IAdministrativeUnitService administrativeUnitService;
+    private final ICorrespondencePartService correspondencePartService;
+    private final IDocumentFlowService documentFlowService;
+    private final IPrecedenceService precedenceService;
+    private final IMetadataService metadataService;
+    private final IRegistryEntryRepository registryEntryRepository;
+    private final IRegistryEntryHateoasHandler registryEntryHateoasHandler;
+    private final IDocumentFlowHateoasHandler documentFlowHateoasHandler;
+    private final IPrecedenceHateoasHandler precedenceHateoasHandler;
+    private final ISignOffHateoasHandler signOffHateoasHandler;
+    private final ISequenceNumberGeneratorService numberGeneratorService;
+    private final ISignOffRepository signOffRepository;
+    private final IUserRepository userRepository;
+    private final IAdministrativeUnitService administrativeUnitService;
 
     public RegistryEntryService(
             EntityManager entityManager,
@@ -119,29 +121,60 @@ public class RegistryEntryService
 
     @Override
     public RegistryEntry save(@NotNull RegistryEntry registryEntry) {
-        validateDocumentMedium(metadataService, registryEntry);
-        validateRegistryEntryStatus(registryEntry);
-        validateRegistryEntryType(registryEntry);
-        registryEntry.setRecordDate(OffsetDateTime.now());
-        File file = registryEntry.getReferenceFile();
-        if (null != file) {
-            long numberAssociated =
-                    registryEntryRepository.countByReferenceFile(file) + 1;
-            registryEntry.setRegistryEntryNumber((int) numberAssociated);
-            registryEntry.setRecordId(file.getFileId() + "-" + numberAssociated);
-            AdministrativeUnit administrativeUnit =
-                    getAdministrativeUnitIfMemberOrThrow(registryEntry);
-
-            // TODO. Pick up ZoneId value from spring configuration file
-            int year = Year.now(ZoneId.of("Europe/Oslo")).getValue();
-            registryEntry.setRecordYear(year);
-            registryEntry.setRecordSequenceNumber(
-                    numberGeneratorService.getNextRecordSequenceNumber(administrativeUnit));
-        }
+        processRegistryEntryBeforeSave(registryEntry);
         registryEntryRepository.save(registryEntry);
         return registryEntry;
     }
 
+    public RegistryEntryHateoas expandRecordAsRegistryEntryFileHateoas(
+            Record record) {
+        RegistryEntry registryEntry = new RegistryEntry(record);
+        RegistryEntryStatus registryEntryStatus =
+                new RegistryEntryStatus("J", "Journalført");
+        registryEntry.setRegistryEntryStatus(registryEntryStatus);
+
+        RegistryEntryType registryEntryType =
+                new RegistryEntryType("I", "Inngående dokument");
+        registryEntry.setRegistryEntryType(registryEntryType);
+
+        registryEntry.setReferenceFile(record.getReferenceFile());
+        processRegistryEntryBeforeSave(registryEntry);
+        record.setRecordId(registryEntry.getRecordId());
+
+        entityManager.createNativeQuery(
+                "INSERT INTO " + TABLE_REGISTRY_ENTRY +
+                        "(" +
+                        SYSTEM_ID_ENG + ", " +
+                        REGISTRY_ENTRY_NUMBER_ENG + ", " +
+                        REGISTRY_ENTRY_STATUS_CODE_ENG + ", " +
+                        REGISTRY_ENTRY_STATUS_CODE_NAME_ENG + "," +
+                        REGISTRY_ENTRY_TYPE_CODE_ENG + ", " +
+                        REGISTRY_ENTRY_TYPE_CODE_NAME_ENG + "," +
+                        REGISTRY_ENTRY_DATE_ENG + ", " +
+                        REGISTRY_ENTRY_YEAR_ENG + ", " +
+                        REGISTRY_ENTRY_SEQUENCE_NUMBER_ENG + ", " +
+                        CASE_RECORDS_MANAGEMENT_UNIT_ENG +
+                        ") VALUES (?,?,?,?,?,?,?,?,?,?)")
+                .setParameter(1, record.getSystemIdAsString())
+                .setParameter(2, registryEntry.getRegistryEntryNumber())
+                .setParameter(3,
+                        registryEntry.getRegistryEntryStatus().getCode())
+                .setParameter(4,
+                        registryEntry.getRegistryEntryStatus().getCodeName())
+                .setParameter(5, registryEntry.getRegistryEntryType().getCode())
+                .setParameter(6,
+                        registryEntry.getRegistryEntryType().getCodeName())
+                .setParameter(7, registryEntry.getRecordDate())
+                .setParameter(8, registryEntry.getRecordYear())
+                .setParameter(9,
+                        registryEntry.getRecordSequenceNumber())
+                .setParameter(10,
+                        registryEntry.getRecordsManagementUnit())
+                .executeUpdate();
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityCreatedEvent(this, registryEntry));
+        return packAsHateoas(registryEntry);
+    }
 
     @Override
     public PrecedenceHateoas generateDefaultPrecedence(String systemID) {
@@ -436,6 +469,15 @@ public class RegistryEntryService
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
         existingRegistryEntry.setVersion(version);
+        // tHE FOLLOWING LINE OF CODE is forcing version to be incremented
+        //by one. Find out why!
+        validateRegistryEntryStatus(incomingRegistryEntry);
+        existingRegistryEntry.setRegistryEntryStatus(
+                incomingRegistryEntry.getRegistryEntryStatus());
+        validateRegistryEntryType(incomingRegistryEntry);
+        existingRegistryEntry.setRegistryEntryType(
+                incomingRegistryEntry.getRegistryEntryType());
+
         registryEntryRepository.save(existingRegistryEntry);
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityUpdatedEvent(this, existingRegistryEntry));
@@ -718,5 +760,36 @@ public class RegistryEntryService
                 (SignOffMethod) metadataService.findValidMetadata(
                         incomingSignOff.getSignOffMethod());
         incomingSignOff.setSignOffMethodCodeName(signOffMethod.getCodeName());
+    }
+
+    private RegistryEntryHateoas packAsHateoas(RegistryEntry registryEntry) {
+        RegistryEntryHateoas registryEntryHateoas =
+                new RegistryEntryHateoas(registryEntry);
+        registryEntryHateoasHandler.addLinks(registryEntryHateoas,
+                new Authorisation());
+        setOutgoingRequestHeader(registryEntryHateoas);
+        return registryEntryHateoas;
+    }
+
+    private void processRegistryEntryBeforeSave(RegistryEntry registryEntry) {
+        validateDocumentMedium(metadataService, registryEntry);
+        validateRegistryEntryStatus(registryEntry);
+        validateRegistryEntryType(registryEntry);
+        registryEntry.setRecordDate(OffsetDateTime.now());
+        File file = registryEntry.getReferenceFile();
+        if (null != file) {
+            long numberAssociated =
+                    registryEntryRepository.countByReferenceFile(file) + 1;
+            registryEntry.setRegistryEntryNumber((int) numberAssociated);
+            registryEntry.setRecordId(file.getFileId() + "-" + numberAssociated);
+            AdministrativeUnit administrativeUnit =
+                    getAdministrativeUnitIfMemberOrThrow(registryEntry);
+
+            // TODO. Pick up ZoneId value from spring configuration file
+            int year = Year.now(ZoneId.of("Europe/Oslo")).getValue();
+            registryEntry.setRecordYear(year);
+            registryEntry.setRecordSequenceNumber(
+                    numberGeneratorService.getNextRecordSequenceNumber(administrativeUnit));
+        }
     }
 }

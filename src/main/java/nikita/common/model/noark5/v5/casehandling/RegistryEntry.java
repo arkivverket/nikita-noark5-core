@@ -226,6 +226,20 @@ public class RegistryEntry
             cascade = ALL)
     private ElectronicSignature referenceElectronicSignature;
 
+    public RegistryEntry() {
+        super();
+    }
+
+    public RegistryEntry(Record record) {
+        super();
+        setVersion(record.getVersion(), true);
+        this.setRecordId(record.getRecordId());
+        this.setTitle(record.getTitle());
+        this.setPublicTitle(record.getPublicTitle());
+        this.setDescription(record.getDescription());
+        this.setDocumentMedium(record.getDocumentMedium());
+    }
+
     public Integer getRecordYear() {
         return recordYear;
     }
