@@ -620,7 +620,7 @@
                   <label class="control-label" for="registryEntryStatus">Journalstatus:</label>
                   <select class="form-control form-control-lg rounded-1" data-placement="top"
                           data-toggle="tooltip"
-                          id="registryEntryStatus" ng-model="registryEntry.journalstatus"
+                          id="registryEntryStatus" ng-model="selectedRegistryEntryStatus"
                           title="Status på journalposten">
                     <option ng-repeat="registryEntryStatus in registryEntryStatusList"
                             ng-selected="{{registryEntryStatus.value == registryEntry.journalstatus}}"
@@ -1553,52 +1553,6 @@
                         rows="5"
                         title="En beskrivelse av journalpostet. Merk at dette er ikke en beskrivelse av organisasjonen.">
               </textarea>
-            </div>
-            <div class="col-1"></div>
-          </div>
-          <div class="row">
-            <div class="col-1"></div>
-            <div class="col-10">
-              <label class="control-label" for="nyDokumentmediumJournalpost">Dokumentmedium:</label>
-              <input class="form-control form-control-lg rounded-1" data-placement="top"
-                     data-toggle="tooltip"
-                     disabled="true" id="nyDokumentmediumJournalpost"
-                     title="Om materialet som skal registreres er elektronisk, analogt eller en kombinasjon av begge.'"
-                     type="text"
-                     value="Elektronisk arkiv"/>
-              <!--
-              <label class="control-label" for="nyDokumentmedium">Dokumentmedium:</label>
-              <select id="nyDokumentmediumJournalpost" class="form-control form-control-lg rounded-1"
-                      ng-model="selectedDocumentMediumNewRegistryEntry"
-                      data-toggle="tooltip" data-placement="top"
-                      title="Om materialet som skal registreres er elektronisk, analogt eller en kombinasjon av begge.">
-                <option ng-selected="{{documentMedium.value == selectedDocumentMediumNewRegistryEntry}}"
-                        ng-repeat="documentMedium in documentMediumList"
-                        value="{{documentMedium.value}}">{{documentMedium.value}}
-                </option>
-              </select>
-              -->
-            </div>
-            <div class="col-1"></div>
-          </div>
-          <div class="row">
-            <div class="col-1"></div>
-            <div class="col-10">
-              <div class="control-label"
-                   ng-show="selectedDocumentMediumNewRegistryEntry != 'Elektronisk arkiv'">
-                <label class="control-label" for="nyOppbevaringsStedJournalpost">Oppbevarings
-                  sted:</label>
-                <select class="form-control form-control-lg rounded-1"
-                        data-placement="top"
-                        data-toggle="tooltip"
-                        id="nyOppbevaringsStedJournalpost" ng-model="selectedStorageLocation"
-                        title="Hvor analogt materiale oppbevares.">
-                  <option ng-repeat="storageLocation in storageLocationList"
-                          ng-selected="{{storageLocation.value == selectedStorageLocation}}"
-                          value="{{storageLocation.value}}">{{storageLocation.value}}
-                  </option>
-                </select>
-              </div>
             </div>
             <div class="col-1"></div>
           </div>

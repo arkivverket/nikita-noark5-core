@@ -17,7 +17,7 @@
  */
 
 
-var caseHandlerController = app.controller('CaseHandlerController',
+var ksController = app.controller('KSController',
     ['$scope', '$http', 'loginService', 'nikitaService',
         function ($scope, $http, loginService, nikitaService) {
             // Grab a copy of the authentication token
@@ -118,11 +118,7 @@ var caseHandlerController = app.controller('CaseHandlerController',
             // From here you can used REL_FONDS_STRUCTURE to get a list of all fonds
             (async () => {
                 try {
-                    let seriesList = await nikitaService.getSeriesList($scope.token);
-                    $scope.seriesList = seriesList.results;
-                    $scope.$apply($scope.seriesList);
-                    $scope.selectedSeries = $scope.seriesList[0];
-                    $scope.caseFileList = await nikitaService.getCaseFileList($scope.token, $scope.selectedSeries);
+                    $scope.caseFileList = await nikitaService.getCaseFileList2($scope.token);
                     if ($scope.caseFileList === undefined) {
                         $scope.caseFileList = [];
                     }
@@ -399,18 +395,6 @@ var caseHandlerController = app.controller('CaseHandlerController',
                     if (formatList[i].value === $scope.selectedFormat) {
                         formatCode = formatList[i].id;
                         formatCodeName = formatList[i].value;
-
-                        if (formatCode === 'fmt/95') {
-                            $scope.selectedMimeType = 'application/pdf';
-                            $scope.document.mimeType = 'application/pdf';
-                        } else if (formatCode === 'fmt/354') {
-                            $scope.selectedMimeType = 'application/pdf';
-                            $scope.document.mimeType = 'application/pdf';
-                        }
-                        if (formatCode === 'fmt/136') {
-                            $scope.selectedMimeType = 'application/vnd.oasis.opendocument.text';
-                            $scope.document.mimeType = 'application/vnd.oasis.opendocument.text';
-                        }
                     }
                 }
                 console.log("Setting formatCode " + formatCode);
@@ -697,7 +681,7 @@ var caseHandlerController = app.controller('CaseHandlerController',
             $scope.doShowCaseFileListCard = function () {
                 (async () => {
                     try {
-                        $scope.caseFileList = await nikitaService.getCaseFileList($scope.token, $scope.selectedSeries);
+                        $scope.caseFileList = await nikitaService.getCaseFileList2($scope.token, $scope.selectedSeries);
                         $scope.$apply($scope.caseFileList);
                     } catch (error) {
                         console.log(error.message);
@@ -1004,10 +988,10 @@ var caseHandlerController = app.controller('CaseHandlerController',
                         }
                     });
                     xhr.open("POST", documentObject._links[REL_DOCUMENT_FILE].href);
-                    var blob = new Blob([file], {type: documentObject.mimeType});
-                    xhr.setRequestHeader('content-type', documentObject.mimeType);
-                    xhr.setRequestHeader('X-File-Name', file.name);
+                    var blob = new Blob([file], {type: documentObject.selectedMimeType});
+                    xhr.setRequestHeader('content-type', documentObject.selectedMimeType);
                     xhr.setRequestHeader('Authorization', $scope.token);
+                    xhr.setRequestHeader("X-File-Name", file.name);
                     xhr.send(blob);
                 }
             };

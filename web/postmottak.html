@@ -58,6 +58,24 @@
             </li>
         </ol>
     </nav>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-9">&nbsp;</div>
+                <div class="col-lg-3">
+                    <div class="form-group">
+                        <label class="control-label" for="dato">Dato</label>
+                        <input class="form-control form-control-lg rounded-1" data-placement="top"
+                               data-toggle="tooltip"
+                               id="dato"
+                               ng-model="dateForSearch"
+                               title="Dato du søker postmottak på"
+                               type="text"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Card for the File list view -->
     <div class="card border-light mb-3" ng-show="showFileListCard">
@@ -80,7 +98,7 @@
                                     {{file.opprettetDato | date:'yyyy-MM-dd'}}
                                 </td>
                                 <td>
-                                    {{file.virksomhetsspesifikkeMetadata.avsender}}
+                                    {{file.virksomhetsspesifikkeMetadata['postmottak:avsender']}}
                                 </td>
                                 <td>
                                     {{file.tittel}}
@@ -119,7 +137,7 @@
                                     <input class="form-control form-control-lg rounded-1" data-placement="top"
                                            data-toggle="tooltip" disabled
                                            id="emailFrom"
-                                           ng-model="file.virksomhetsspesifikkeMetadata.avsender"
+                                           ng-model="file.virksomhetsspesifikkeMetadata['postmottak:avsender']"
                                            title="Hvem som har sendt eposten"
                                            type="text"/>
                                 </div>
@@ -128,7 +146,7 @@
                                     <input class="form-control  form-control-lg rounded-1" data-placement="top"
                                            data-toggle="tooltip" disabled
                                            id="emailTo"
-                                           ng-model="file.virksomhetsspesifikkeMetadata.mottaker"
+                                           ng-model="file.virksomhetsspesifikkeMetadata['postmottak:mottaker']"
                                            title="Hvem som har motatt eposten"/>
                                 </div>
                             </div>
@@ -158,7 +176,8 @@
                                     <textarea class="form-control  form-control-lg rounded-1"
                                               data-placement="top" data-toggle="tooltip"
                                               id="emailContent"
-                                              ng-model="file.virksomhetsspesifikkeMetadata.innhold" rows="5"
+                                              ng-model="file.virksomhetsspesifikkeMetadata['postmottak:innhold']"
+                                              rows="5"
                                               title="Innholdet til eposten">
                 </textarea>
                                 </div>
@@ -286,7 +305,7 @@
                         ng-click="doDismissnewCaseFileModal()">
                     Lukk
                 </button>
-                <button class="btn btn-lg btn-success float-right" ng-click="createCaseFile()">Opprett saksmappe
+                <button class="btn btn-lg btn-success float-right" ng-click="expandToCaseFile()">Opprett saksmappe
                 </button>
             </div>
         </div>

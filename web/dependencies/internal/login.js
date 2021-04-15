@@ -80,8 +80,14 @@ var login = app.controller('LoginController',
                             ". Redirecting to page for " + $scope.selectedLoginRole);
                         if ($scope.selectedLoginRole === ROLE_RECORDS_MANAGER) {
                             changeLocation($scope, recordsManagerPage, true);
+                        } else if ($scope.selectedLoginRole === ROLE_LEADER) {
+                            changeLocation($scope, leaderPage, true);
                         } else if ($scope.selectedLoginRole === ROLE_CASE_HANDLER) {
+                            changeLocation($scope, postmottakPage, true);
+                        } else if ($scope.selectedLoginRole === ROLE_POST_MOTTAK) {
                             changeLocation($scope, caseHandlerPage, true);
+                        } else if ($scope.selectedLoginRole === ROLE_QUALITY_CONTROL) {
+                            changeLocation($scope, qualityPage, true);
                         }
                     } catch (error) {
                         $scope.errorMessage = JSON.stringify(error.message);

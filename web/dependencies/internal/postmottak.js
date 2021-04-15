@@ -61,14 +61,25 @@ var postMottakController = app.controller('PostMottakController',
             // For Registration
             $scope.newDescriptionForRegistration = "";
 
+            /*
             $scope.documentList = [
                 {
                     dokumentnummer: 1,
-                    filnavn: "Kul filnavn.pdf"
+                    filnavn: "Kul filnavn.pdf",
+                    tilknyttetRegistreringSom: {
+                        "kode": "H",
+                        "kodenavn": "Hoveddokument"
+                    },
+                    tilknyttetDato: "2020-06-30+02:00"
                 },
                 {
                     dokumentnummer: 2,
-                    filnavn: "Kul filnavn.pdf"
+                    filnavn: "Kul filnavn.pdf",
+                    tilknyttetRegistreringSom: {
+                        "kode": "V",
+                        "kodenavn": "Vedlegg"
+                    },
+                    tilknyttetDato: "2020-06-30+02:00"
                 }
             ];
 
@@ -96,7 +107,7 @@ var postMottakController = app.controller('PostMottakController',
                     }
                 }
             ];
-
+*/
             // GET the application root. There you get a HREF to REL_FILE_STRUCTURE
             // Then you GET the REL_FILE_STRUCTURE. Make a note of HREFS for:
             //    REL_FILE_STRUCTURE : Get a list of all file
@@ -105,28 +116,67 @@ var postMottakController = app.controller('PostMottakController',
 
             // GET the application root.
             // From here you can used REL_FONDS_STRUCTURE to get a list of all fonds
+            url = baseUrl + "api/arkivstruktur/mappe?" +
+                encodeURIComponent("$filter") + "=" +
+                encodeURIComponent("arkivdel/tittel eq 'Postmottak'");
 
-            /*
-                        (async () => {
-                            try {
-
-$scope.selectedUser;
-                                let seriesList = await nikitaService.getSeriesList($scope.token);
-                                $scope.seriesList = seriesList.results;
-                                $scope.$apply($scope.seriesList);
-                                $scope.selectedSeries = $scope.seriesList[0];
-                                $scope.fileList = await nikitaService.getFileList($scope.token, $scope.selectedSeries);
-                                if ($scope.fileList === undefined) {
-                                    $scope.fileList = [];
-                                }
-                                $scope.$apply($scope.fileList);
-
-                            } catch (error) {
-                                console.log(error.message);
+            $http({
+                url: url,
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/vnd.noark5+json',
+                    'Authorization': $scope.token
+                }
+            }).then(function successCallback(response) {
+                console.log("GET on file data returned= " + JSON.stringify(response.data));
+                $scope.fileList = response.data.results;
+                $scope.file = response.data.results[0];
+                urlRecord = $scope.file._links[REL_RECORD].href;
+                $http({
+                    url: urlRecord,
+                    method: "GET",
+                    headers: {
+                        'Accept': 'application/vnd.noark5+json',
+                        'Authorization': $scope.token
+                    }
+                }).then(function successCallback(response) {
+                    console.log("GET on Record data returned= " + JSON.stringify(response.data));
+                    record = response.data.results[0];
+                    urlDocDesc = record._links[REL_DOCUMENT_DESCRIPTION].href;
+                    $http({
+                        url: urlDocDesc,
+                        method: "GET",
+                        headers: {
+                            'Accept': 'application/vnd.noark5+json',
+                            'Authorization': $scope.token
+                        }
+                    }).then(function successCallback(response) {
+                        console.log("GET on DocDesc data returned= " + JSON.stringify(response.data));
+                        docdesc = response.data.results[0];
+                        urlDocObj = docdesc._links[REL_DOCUMENT_OBJECT].href;
+                        $http({
+                            url: urlDocObj,
+                            method: "GET",
+                            headers: {
+                                'Accept': 'application/vnd.noark5+json',
+                                'Authorization': $scope.token
                             }
-                        })();
+                        }).then(function successCallback(response) {
+                            console.log("GET on DocObj data returned= " + JSON.stringify(response.data));
+                            $scope.documentList = response.data.results;
+                        }, function errorCallback(request) {
+                            console.log("GET request failed for DocDesc Create = " + JSON.stringify(request));
+                        });
+                    }, function errorCallback(request) {
+                        console.log("GET request failed for DocDesc Create = " + JSON.stringify(request));
+                    });
+                }, function errorCallback(request) {
+                    console.log("GET request failed for Record Create = " + JSON.stringify(request));
+                });
+            }, function errorCallback(request) {
+                console.log("GET request failed for File Create = " + JSON.stringify(request));
+            });
 
-            */
 
             /**
              * As this is a single-page-application, we need to hide and show cards.
@@ -150,14 +200,14 @@ $scope.selectedUser;
             }
 
             $scope.doShowFileListCard = function () {
-                /*                (async () => {
-                                    try {
-                                        $scope.fileList = await nikitaService.getFileList($scope.token, $scope.selectedSeries);
-                                        $scope.$apply($scope.fileList);
-                                    } catch (error) {
-                                        console.log(error.message);
-                                    }
-                                })();*/
+                (async () => {
+                    try {
+                        $scope.fileList = await nikitaService.getFileList($scope.token);
+                        $scope.$apply($scope.fileList);
+                    } catch (error) {
+                        console.log(error.message);
+                    }
+                })();
                 disableAllCards();
                 $scope.showFileListCard = true;
                 hideAllBreadcrumbs();
@@ -182,27 +232,20 @@ $scope.selectedUser;
                 // Retrieve the latest copy of the data and pull out the ETAG
                 // Find the self link of the current file and issue a GET
 
-                $scope.file = file;
                 $scope.userList.push(file.opprettetAv)
                 $scope.selectedUser = file.opprettetAv;
-
-                /*
-                                $http({
-                                    method: 'GET',
-                                    url: file._links[REL_SELF].href,
-                                    headers: {'Authorization': $scope.token}
-                                }).then(function successCallback(response) {
-                                    $scope.file = response.data;
-                                    $scope.fileETag = response.headers('eTag');
-                                    console.log("Retrieved the following file " + JSON.stringify($scope.file));
-                                    console.log("The ETAG header for the file is " + $scope.fileETag);
-                                    for (let i = 0; i < fileStatusList.length; i++) {
-                                        if (fileStatusList[i].id === $scope.file.saksstatus.kode)
-                                            $scope.selectedFileStatus = fileStatusList[i].value;
-                                    }
-                                    $scope.$apply($scope.file);
-                                });
-                                */
+                $http({
+                    method: 'GET',
+                    url: file._links[REL_SELF].href,
+                    headers: {'Authorization': $scope.token}
+                }).then(function successCallback(response) {
+                    $scope.file = response.data;
+                    $scope.selectedFile = response.data;
+                    $scope.fileETag = response.headers('eTag');
+                    console.log("Retrieved the following file " + JSON.stringify($scope.file));
+                    console.log("The ETAG header for the file is " + $scope.fileETag);
+                    $scope.$apply($scope.file);
+                });
 
             };
 
@@ -238,6 +281,133 @@ $scope.selectedUser;
                     console.log("The ETAG header for the document is " + $scope.documentETag);
                 });
             };
+
+            $scope.doDismissNewCaseFileModal = function () {
+                $scope.dismissNewCaseFileModal();
+                $scope.newTitleForCaseFile = "";
+                $scope.newDescriptionForCaseFile = "";
+            };
+            /**
+             *
+             * First move the case file to the first active series it finds, then convert the
+             * file to a casefile.
+             */
+            $scope.expandToCaseFile = function () {
+
+                console.log("Calling GET series list with " + url);
+
+                // First get the systemId of the current Series
+                $http({
+                    method: 'GET',
+                    url: $scope.selectedFile._links[REL_SERIES].href,
+                    headers: {
+                        'Authorization': $scope.token,
+                    },
+                }).then(function successCallback(response) {
+                    let fromSeries = response.data.systemID;
+                    let url = baseUrl + "api/arkivstruktur/arkivdel?" +
+                        encodeURIComponent("$filter") + "=" +
+                        encodeURIComponent("tittel ne 'Postmottak'");
+                    console.log("curl -v " + url + " -H \"Authorization: " + $scope.token + "\"");
+                    // Next, get the systemID of the first available Series that we can put the file into
+                    $http({
+                        method: 'GET',
+                        url: url,
+                        headers: {'Authorization': $scope.token}
+                    }).then(function successCallback(response) {
+                            if (response.data.results.length === 0) {
+                                alert("Fant ingen arkivdeler i systemet. Legg til en arkivdel.");
+                            }
+                            console.log("Retrieved the following seriesList " +
+                                JSON.stringify(response.data.results));
+                            $scope.series = response.data.results[0];
+                            console.log("Assigning the following series " +
+                                JSON.stringify($scope.series));
+                            console.log("Calling expandToCaseFile with " + url);
+                            toSeries = $scope.series.systemID;
+
+                            console.log("Changing " + $scope.selectedFile._links[REL_SELF].href);
+                            console.log("From Series " + fromSeries);
+                            console.log("To Series " + toSeries);
+
+                            $http({
+                                url: $scope.selectedFile._links[REL_SELF].href,
+                                method: "PATCH",
+                                headers: {
+                                    'Content-Type': 'application/vnd.noark5+json',
+                                    'Authorization': $scope.token,
+                                },
+                                data: {
+                                    "op": "move",
+                                    "from": fromSeries,
+                                    "path": toSeries
+                                }
+                            }).then(function successCallback(response) {
+                                    console.log("PATCH to file to caseFile data returned= " + JSON.stringify(response.data));
+                                    $http({
+                                        url: $scope.selectedFile._links[REL_FILE_EXPAND_CASE_FILE].href,
+                                        method: "PATCH",
+                                        headers: {
+                                            'Content-Type': 'application/vnd.noark5+json',
+                                            'Authorization': $scope.token,
+                                        },
+                                        data: {
+                                            "saksstatus": {
+                                                "kode": "B",
+                                                "kodenavn": "Under behandling"
+                                            },
+                                            "saksansvarlig": $scope.selectedUser
+                                        }
+                                    }).then(function successCallback(response) {
+                                            console.log("PATCH to file to caseFile data returned= " + JSON.stringify(response.data));
+                                            $scope.doDismissNewCaseFileModal();
+                                            // Update the caseFile object so fields in GUI are changed
+                                            $scope.caseFile = response.data;
+                                        },
+                                        function errorCallback(response) {
+                                            if (response.status == -1) {
+                                                console.log(MSG_NIKITA_DOWN_LOG + JSON.stringify(response));
+                                                alert(MSG_NIKITA_DOWN);
+                                            } else {
+                                                console.log(MSG_NIKITA_UNKNOWN_ERROR_LOG + JSON.stringify(response));
+                                                alert(MSG_NIKITA_UNKNOWN_ERROR);
+                                            }
+                                        }
+                                    )
+                                },
+                                function errorCallback(response) {
+                                    if (response.status == -1) {
+                                        console.log(MSG_NIKITA_DOWN_LOG + JSON.stringify(response));
+                                        alert(MSG_NIKITA_DOWN);
+                                    } else {
+                                        console.log(MSG_NIKITA_UNKNOWN_ERROR_LOG + JSON.stringify(response));
+                                        alert(MSG_NIKITA_UNKNOWN_ERROR);
+                                    }
+                                }
+                            )
+                        }, function errorCallback(response) {
+                            if (response.status == -1) {
+                                console.log(MSG_NIKITA_DOWN_LOG + JSON.stringify(response));
+                                alert(MSG_NIKITA_DOWN);
+                            } else {
+                                console.log(MSG_NIKITA_UNKNOWN_ERROR_LOG + JSON.stringify(response));
+                                alert(MSG_NIKITA_UNKNOWN_ERROR);
+                            }
+                        }
+                    )
+                }, function errorCallback(response) {
+                    if (response.status == -1) {
+                        console.log(MSG_NIKITA_DOWN_LOG + JSON.stringify(response));
+                        alert(MSG_NIKITA_DOWN);
+                    } else {
+                        console.log(MSG_NIKITA_UNKNOWN_ERROR_LOG + JSON.stringify(response));
+                        alert(MSG_NIKITA_UNKNOWN_ERROR);
+                    }
+
+                });
+                ;
+            }
+
 
             $scope.getListDocument = function () {
                 $http({
