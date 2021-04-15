@@ -438,6 +438,7 @@ public class FondsService
             existingFonds.setDocumentMedium(
                 incomingFonds.getDocumentMedium());
         }
+        existingFonds.setFondsStatus(incomingFonds.getFondsStatus());
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
         existingFonds.setVersion(version);

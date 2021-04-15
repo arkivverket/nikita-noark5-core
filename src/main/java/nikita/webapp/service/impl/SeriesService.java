@@ -253,6 +253,7 @@ public class SeriesService
             existingSeries.setDocumentMedium(
                     incomingSeries.getDocumentMedium());
         }
+        existingSeries.setSeriesStatus(incomingSeries.getSeriesStatus());
 
         existingSeries.setReferencePrecursorSystemID
             (incomingSeries.getReferencePrecursorSystemID());
