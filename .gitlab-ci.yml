@@ -42,6 +42,7 @@ noark5tester-inoutin:
   before_script:
     - apt update
     - apt install -y git maven curl python3 python3-tz  python3-lxml jq python3-dateutil python3-stdnum
+    - apt install -y libxml2-utils
     - git clone https://github.com/petterreinholdtsen/noark5-tester
   script:
     - nikitastarted=false
@@ -62,11 +63,13 @@ noark5tester-inoutin:
     - depotdir="$(dirname "$(ls uttrekk-*/*/arkivstruktur.xml | head -1)")"
     - echo "Trying to load data from $depotdir"
     - ./import-uttrekk --baseurl $baseurl "$depotdir" --verbose
+    - (cd "$depotdir"; xmllint --noout  --schema arkivstruktur.xsd arkivstruktur.xml) > nikita-xml-validation-report.txt 2>&1 || true
   artifacts:
     paths:
       - nikita-run.log
       - noark5-tester/json-dump-*/*
       - noark5-tester/uttrekk-*/*
+      - noark5-tester/nikita-xml-validation-report.txt
 
 maven-build:
   before_script:
