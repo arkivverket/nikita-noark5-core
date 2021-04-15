@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import nikita.common.model.nikita.PatchMerge;
 import nikita.common.model.noark5.v5.File;
+import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.admin.User;
@@ -134,6 +135,15 @@ public class CaseFileService
                 .setParameter(7, caseFile.getCaseSequenceNumber())
                 .setParameter(8, caseFile.getRecordsManagementUnit())
                 .executeUpdate();
+        file.setFileId(caseFile.getFileId());
+        // Automatically update all records as RegistryEntry
+        // Note: This is just to make things easier for teaching. In reality
+        // the client will expand the records individually. Perhaps some
+        // records are meant to RecordNote
+        for (Record record : file.getReferenceRecord()) {
+            registryEntryService.expandRecordAsRegistryEntryFileHateoas(record);
+        }
+
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityCreatedEvent(this, caseFile));
         return packAsHateoas(caseFile);
