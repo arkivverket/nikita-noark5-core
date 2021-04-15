@@ -44,8 +44,18 @@ public class PatchService
             // e.g. Move File (what) from Series (fromObject) to Series
             // (toObject)
             // We need to call File::setReferenceSeries(what)
+            String toObjectName = toObject.getClass().getSimpleName();
+            // Some classes may be proxied and will have a name like
+            // Series$HibernateProxy$xsdrs. This does not allow us to re-use
+            // the name properly. This is a hint that perhaps we should use a
+            // different approach than picking out names. Perhaps use
+            // annotations in some way.
+            if (toObjectName.contains("$HibernateProxy")) {
+                toObjectName = toObjectName.split("\\$HibernateProxy")[0];
+            }
+
             String toMethodName = "setReference" + getEnglishNameObject(
-                    toObject.getClass().getSimpleName());
+                    toObjectName);
             Method updateWhat = what.getClass().getMethod(toMethodName,
                     toObject.getClass());
             updateWhat.invoke(what, toObject);
@@ -77,7 +87,7 @@ public class PatchService
                     fromObject.getClass().getSimpleName() +
                     " (" + fromObject.getSystemIdAsString() + ") to " +
                     toObject.getClass().getSimpleName() +
-                    " (" + fromObject.getSystemIdAsString() + ")");
+                    " (" + toObject.getSystemIdAsString() + ")");
         } catch (SecurityException | NoSuchMethodException |
                 IllegalArgumentException | IllegalAccessException |
                 InvocationTargetException e) {
