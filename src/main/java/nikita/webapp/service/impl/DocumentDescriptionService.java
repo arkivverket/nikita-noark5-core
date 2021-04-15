@@ -365,6 +365,14 @@ public class DocumentDescriptionService
                 existingDocumentDescription);
         updateDocumentDescription(incomingDocumentDescription,
                 existingDocumentDescription);
+
+        validateDocumentType(incomingDocumentDescription);
+        existingDocumentDescription.setDocumentType(
+                incomingDocumentDescription.getDocumentType());
+        validateDocumentStatus(incomingDocumentDescription);
+        existingDocumentDescription.setDocumentStatus(
+                incomingDocumentDescription.getDocumentStatus());
+
         bsmService.validateBSMList(incomingDocumentDescription
                 .getReferenceBSMBase());
         // Note setVersion can potentially result in a NoarkConcurrencyException
