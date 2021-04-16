@@ -131,9 +131,7 @@ public class CaseFileService
         CaseFile caseFile = new CaseFile(file);
 
         CaseStatus caseStatus = getCaseStatus(patchMerge);
-        if (null != caseStatus) {
-            caseFile.setCaseStatus(caseStatus);
-        }
+        caseFile.setCaseStatus(caseStatus);
 
         String caseResponsible = (String) patchMerge.getValue(CASE_RESPONSIBLE);
         if (null != caseResponsible && !caseResponsible.isEmpty()) {
