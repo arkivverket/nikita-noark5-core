@@ -13,6 +13,7 @@ import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.secondary.IDocumentFlowHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.IUserService;
+import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import nikita.webapp.service.interfaces.secondary.IDocumentFlowService;
@@ -48,11 +49,12 @@ public class DocumentFlowService
     public DocumentFlowService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IPatchService patchService,
             IUserService userService,
             IMetadataService metadataService,
             IDocumentFlowRepository documentFlowRepository,
             IDocumentFlowHateoasHandler documentFlowHateoasHandler) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, patchService);
         this.userService = userService;
         this.metadataService = metadataService;
         this.documentFlowRepository = documentFlowRepository;

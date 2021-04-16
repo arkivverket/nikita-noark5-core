@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html ng-app="nikita">
+<head>
+    <meta charset="UTF-8">
+    <title>nikita-noark5</title>
+    <script src="dependencies/internal/config.js"></script>
+    <script src="dependencies/vendor/META-INF/resources/webjars/jquery/3.3.1-1/jquery.min.js"></script>
+    <script src="dependencies/vendor/META-INF/resources/webjars/angularjs/1.7.0/angular.min.js"></script>
+    <script src="dependencies/vendor/META-INF/resources/webjars/popper.js/1.14.1/umd/popper.js"></script>
+    <script src="dependencies/vendor/META-INF/resources/webjars/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script
+            src="dependencies/vendor/META-INF/resources/webjars/angular-file-upload/12.2.13/ng-file-upload-all.js"></script>
+
+    <link href="dependencies/vendor/META-INF/resources/webjars/bootstrap/4.1.1/css/bootstrap.min.css"
+          rel="stylesheet" type="text/css">
+
+    <link
+            href="dependencies/vendor/META-INF/resources/webjars/font-awesome/5.0.9/web-fonts-with-css/css/fontawesome-all.css"
+            rel="stylesheet" type="text/css">
+
+    <script src="dependencies/internal/common_functionality.js"></script>
+    <script src="dependencies/internal/leder.js"></script>
+</head>
+
+<body ng-controller="LeaderController">
+
+<nav class="navbar navbar-expand-sm bg-light">
+    <a class="navbar-brand">nikita-noark5-core@oslomet</a>
+
+    <ul class="nav navbar-nav ml-auto">
+        <li class="nav-item dropdown">
+            <a class="nav-link" data-toggle="dropdown" href="#" id="navbardrop">
+                <span class="fa fa-bars"></span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a class="nav-link" href="#" ng-show="userIsAdmin">Innstillinger &nbsp; <span class="fas fa-cog"></span></a>
+                <a class="nav-link" href="#" ng-click="doLogout()">Logg ut &nbsp; <span
+                        class="fas fa-sign-out-alt"></span></a>
+            </div>
+        </li>
+    </ul>
+</nav>
+
+<div>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item" ng-click="doShowRegistryEntryListCard()">
+                <a href="#">Godkjenn utgående</a>
+            </li>
+            <li class="breadcrumb-item"
+                ng-show="showFileBreadcrumb">
+                <a href="#">Epost
+                    <span class="text-dark"
+                          ng-show="showFileCard==true">
+            ({{file.opprettetDato | date:'yyyy-MM-dd'}}, {{file.virksomhetsspesifikkeMetadata.avsender | limitTo:20}} : {{file.tittel | limitTo:20}} )
+          </span>
+                </a>
+            </li>
+        </ol>
+    </nav>
+
+    <!-- Card for the RegistryEntry list view -->
+    <div class="card border-light mb-3" ng-show="showRegistryEntryListCard">
+        <div class="card-header">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col col-12">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th style="width: 45%">tittel</th>
+                                <th style="width: 10%">registreringsID</th>
+                                <th style="width: 15%">journalposttype</th>
+                                <th style="width: 10%">journaldato</th>
+                                <th style="width: 20%">journalstatus</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-click="registryEntrySelected(registryEntry)"
+                                ng-repeat="registryEntry in registryEntryList">
+                                <td>
+                                    {{ registryEntry.tittel | limitTo:30 }}
+                                </td>
+                                <td>
+                                    {{ registryEntry.registreringsID}}
+                                </td>
+                                <td>
+                                    {{ registryEntry.journalposttype.kodenavn }}
+                                </td>
+                                <td>
+                                    {{ registryEntry.journaldato | date: 'YYYY-MM-DD'}}
+                                </td>
+                                <td>
+                                    {{ registryEntry.journalstatus.kodenavn}}
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End card for the RegistryEntry list view -->
+
+    <!-- Card for the Document list view -->
+    <div class="card border-light mb-3" ng-show="showDocumentListCard">
+        <div class="card-header">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col col-12">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th style="width: 4% ">nr</th>
+                                <th style="width: 16%">tilknyttet som</th>
+                                <th style="width: 30%">dokumentetsDato</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-click="documentSelected(document)" ng-repeat="document in documentList">
+                                <td>
+                                    {{ document.dokumentnummer }}
+                                </td>
+                                <td>
+                                    {{ document.tilknyttetRegistreringSom.kodenavn }}
+                                </td>
+                                <td>
+                                    {{ document.tilknyttetDato | date:'yyyy-MM-dd' }}
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End card for the Document list view -->
+
+    <!-- Card for an individual registryEntry -->
+    <div class="card border-light mb-3" ng-show="showRegistryEntryCard">
+        <div class="card-header">
+            <div class="col-lg-12">
+                <div class="btn-toolbar float-right">
+                    <button class="btn btn-primary" ng-click="doShowDocumentListCard()" type="button">
+                        Se dokumenter
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="container-fluid">
+                <div class="col-lg-12">
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <label for="systemIDForRegistryEntry">systemID</label>
+                            <input class="form-control form-control-lg rounded-1" disabled
+                                   id="systemIDForRegistryEntry"
+                                   ng-model="registryEntry.systemID" type="text"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <label class="control-label" for="titleForRegistryEntry">Tittel</label>
+                                    <input class="form-control form-control-lg rounded-1" data-placement="top"
+                                           data-toggle="tooltip"
+                                           id="titleForRegistryEntry"
+                                           ng-model="registryEntry.tittel"
+                                           title="En overordnet beskrivelse av innholdet i journalposten."
+                                           type="text"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <label class="control-label"
+                                           for="descriptionForRegistryEntry">Beskrivelse</label>
+                                    <textarea class="form-control  form-control-lg rounded-1"
+                                              data-placement="top" data-toggle="tooltip"
+                                              id="descriptionForRegistryEntry"
+                                              ng-model="registryEntry.beskrivelse" rows="5"
+                                              title="En beskrivelse av innholdet. Der det er behov for en utvidet beskrivelse av dokumentet og eventuelle vedlegg, kan det legges til her.">
+                </textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="row">
+                                <div class="col-lg-3">
+                                    <label class="control-label" for="registryEntryId">registreringsID:</label>
+                                    <input class="form-control form-control-lg rounded-1" data-placement="top"
+                                           data-toggle="tooltip"
+                                           disabled
+                                           id="registryEntryId" ng-model="registryEntry.registreringsID"
+                                           title="Entydig identifikasjon av registreringen innenfor arkivet."
+                                           type="text"/>
+                                </div>
+                                <div class="col-lg-3">
+                                    <label class="control-label" for="registryEntryDate">Journaldato:</label>
+                                    <input class="form-control form-control-lg rounded-1" data-placement="top"
+                                           data-toggle="tooltip"
+                                           disabled
+                                           id="registryEntryDate" ng-model="registryEntry.journaldato"
+                                           title="Datoen journalposten er opprettet/arkivert."
+                                           type="text"/>
+                                    </select>
+                                </div>
+                                <div class="col-lg-2">
+                                    <label class="control-label"
+                                           for="registryEntryNumber">Journalpostnummer:</label>
+                                    <input class="form-control form-control-lg rounded-1" data-placement="top"
+                                           data-toggle="tooltip"
+                                           disabled
+                                           id="registryEntryNumber" ng-model="registryEntry.journalpostnummer"
+                                           title="Viser rekkefølgen journalpostene ble opprettet innenfor saksmappen, f.eks. 2018/3869-8 (dokument nr. 8 i sak 2018/3869)."
+                                           type="text"/>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <label class="control-label" for="registryEntryStatus">Journalstatus:</label>
+                                    <select class="form-control form-control-lg rounded-1" data-placement="top"
+                                            data-toggle="tooltip"
+                                            id="registryEntryStatus" ng-model="selectedRegistryEntryStatus"
+                                            title="Status på journalposten">
+                                        <option ng-repeat="registryEntryStatus in registryEntryStatusList"
+
+                                                ng-selected="{{registryEntryStatus.value == selectedRegistryEntryStatus}}"
+                                                value="{{registryEntryStatus.value}}">{{registryEntryStatus.value}}
+                                        </option>
+                                        <!--ng-selected="{{registryEntryStatus.value == registryEntry.journalstatus}}" -->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <label class="control-label" for="registryEntryType">Journalposttype:</label>
+                                    <select class="form-control form-control-lg rounded-1" data-placement="top"
+                                            data-toggle="tooltip"
+                                            id="registryEntryType" ng-model="selectedRegistryEntryType"
+                                            title="Navn på type journalpost">
+                                        <option ng-repeat="registryEntryType in registryEntryTypeList"
+                                                ng-selected="{{registryEntryType.value == selectedRegistryEntryType}}"
+                                                value="{{registryEntryType.value}}">{{registryEntryType.value}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- we are removing this!!
+                            <div class="row">
+                              <div class="col-lg-12">
+                                <label class="control-label" for="documentMediumForRegistryEntry">Dokumentmedium:</label>
+                                <select id="documentMediumForRegistryEntry" class="form-control form-control-lg rounded-1"
+                                        ng-model="selectedDocumentMediumRegistryEntry"
+                                        data-toggle="tooltip" data-placement="top"
+                                        ng-change="checkDocumentMediumForRegistryEntry()"
+                                        title="Om materialet som skal registreres er elektronisk, analogt eller en kombinasjon av begge.">
+                                  <option ng-selected="{{documentMedium.value == selectedDocumentMediumRegistryEntry}}"
+                                          ng-repeat="documentMedium in documentMediumList"
+                                          value="{{documentMedium.value}}">{{documentMedium.value}}
+                                  </option>
+                                </select>
+                              </div>
+                            </div>
+                            -->
+                            <!-- oppbevaringsted. Note this fields is only shown if documentMedium is not electronic. This will
+                                 have to be editable later. -->
+                            <!-- we are removing this!!
+                            <div class="row" ng-show="selectedDocumentMediumRegistryEntry != 'Elektronisk arkiv'">
+                              <div class="col-lg-12">
+                                <label class="control-label" for="storageLocationForRegistryEntry">Oppbevarings sted:</label>
+                                <select id="storageLocationForRegistryEntry" class="form-control form-control-lg rounded-1"
+                                        ng-model="selectedStorageLocation"
+                                        data-toggle="tooltip" data-placement="top"
+                                        title="Hvor analogt materiale oppbevares.">
+                                  <option ng-selected="{{storageLocation.value == selectedStorageLocation}}"
+                                          ng-repeat="storageLocation in storageLocationList"
+                                          value="{{storageLocation.value}}">{{storageLocation.value}}
+                                  </option>
+                                </select>
+                              </div>
+                            </div>
+                            -->
+                        </div>
+                    </div>
+                    <!--
+                              <div class="row" >
+                                <ul class="nav nav-tabs">
+                                  <li class="active dropdown">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Korrespondansepart
+                                      <span class="caret"></span></a>
+                                    <ul class="dropdown-menu">
+                                      <li><a href="#">Ny korrespondansepart (person)</a></li>
+                                      <li><a href="#">Ny korrespondansepart (intern)</a></li>
+                                      <li><a href="#">Ny korrespondansepart (enhet)</a></li>
+                                    </ul>
+                                  </li>
+                                  <li><a href="#">Merknader</a></li>
+                                  <li><a href="#">Menu 3</a></li>
+                                </ul>
+                              </div>
+                    -->
+                    <!-- sistEndretDato sistEndretAv. Note these fields are not supported yet!
+                         Note. These fields are only shown if sistEndretDato has a value
+                    -->
+                    <div class="row" ng-show="registryEntry.sistEndretDato">
+                        <div class="col-lg-6">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <label class="control-label" for="lastChangedDateForRegistryEntry">sist
+                                        endretDato</label>
+                                    <input class="form-control form-control-lg rounded-1"
+                                           data-placement="top"
+                                           data-toggle="tooltip"
+                                           disabled
+                                           id="lastChangedDateForRegistryEntry"
+                                           ng-model="registryEntry.sistEndretDato"
+                                           title="Når den sisten endringen skjedde på denne arkivenheten."
+                                           type="text"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="control-label" for="lastChangedByForRegistryEntry">sist endretAv</label>
+                            <input class="form-control form-control-lg rounded-1" data-placement="top"
+                                   data-toggle="tooltip"
+                                   disabled
+                                   id="lastChangedByForRegistryEntry" ng-model="registryEntry.sistEndretAv"
+                                   title="Hvem som gjorde en endring på denne arkivenheten."
+                                   type="text"/>
+                        </div>
+                    </div>
+                    <!-- opprettetDato and opprettetAv. -->
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <label class="control-label"
+                                           for="createdDateForRegistryEntry">opprettetDato</label>
+                                    <input class="form-control form-control-lg rounded-1"
+                                           data-placement="top" data-toggle="tooltip"
+                                           disabled
+                                           id="createdDateForRegistryEntry" ng-model="registryEntry.opprettetDato"
+                                           title="Når denne arkivenheten ble opprettet."
+                                           type="text"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <label class="control-label" for="createdByForRegistryEntry">opprettetAv</label>
+                                    <input class="form-control form-control-lg rounded-1"
+                                           data-placement="top" data-toggle="tooltip"
+                                           disabled
+                                           id="createdByForRegistryEntry" ng-model="registryEntry.opprettetAv"
+                                           title="Hvem som opprettet denne arkivenheten."
+                                           type="text"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- avsluttetDato and avsluttetAv. Note. These fields are only shown if avsluttetDato has a value -->
+                    <div class="row" ng-show="registryEntry.avsluttetDato">
+                        <div class="col-lg-6">
+                            <label class="control-label" for="finalisedDateForRegistryEntry">avsluttetDato</label>
+                            <input class="form-control form-control-lg rounded-1" data-placement="top"
+                                   data-toggle="tooltip"
+                                   disabled
+                                   id="finalisedDateForRegistryEntry" ng-model="registryEntry.avsluttetDato"
+                                   title="Når denne arkivenheten ble avsluttet."
+                                   type="text"/>
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="control-label" for="finalisedByForRegistryEntry">avsluttetAv</label>
+                            <input class="form-control form-control-lg rounded-1" data-placement="top"
+                                   data-toggle="tooltip"
+                                   disabled
+                                   id="finalisedByForRegistryEntry" ng-model="registryEntry.avsluttetAv"
+                                   title="Hvem som avsluttet denne arkivenheten."
+                                   type="text"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <button class="btn btn-primary float-right" ng-click="updateRegistryEntry()"
+                                    type="button">
+                                Oppdater journalposten
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End card for an individual registryEntry -->
+
+    <!-- Card for an individual document -->
+    <div class="card border-light mb-3" ng-show="showDocumentCard">
+        <div class="card-header">
+            <div class="col-lg-12">
+                <div class="btn-toolbar float-right">
+                    <button class="btn btn-primary" data-target="#newDocumentObjectModal"
+                            data-toggle="modal" ng-click="doLoadDocumentObjectModal()"
+                            type="button">
+                        Opprett dokumentobjekt
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="container-fluid">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <label for="systemIDForDocument">systemID</label>
+                            <input class="form-control form-control-lg rounded-1" disabled
+                                   id="systemIDForDocument"
+                                   ng-model="documentDescription.systemID" type="text"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-1">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <label class="control-label" for="documentNumber">Nr</label>
+                                    <input class="form-control form-control-lg rounded-1" data-placement="top"
+                                           data-toggle="tooltip"
+                                           disabled
+                                           id="documentNumber" ng-model="documentDescription.dokumentnummer"
+                                           title="Dokumentnummer som viser rekkefølge av dokumentene i journalposten."
+                                           type="text"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-8">
+                            <label class="control-label" for="documentTitle">Tittel</label>
+                            <input class="form-control form-control-lg rounded-1" data-placement="top"
+                                   data-toggle="tooltip"
+                                   id="documentTitle"
+                                   ng-model="documentDescription.tittel"
+                                   title="Tittel på dokumentet. Kan kopieres fra journalposten ved behov."
+                                   type="text"/>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <label class="control-label"
+                                           for="associatedWithRecordAs">tilknyttetRegistreringSom</label>
+                                    <select class="form-control form-control-lg rounded-1"
+                                            data-placement="top"
+                                            data-toggle="tooltip"
+                                            id="associatedWithRecordAs" ng-model="selectedAssociatedWithRecordAs"
+                                            title="Dokumentet kan enten være tilknyttet som Hoveddokument eller Vedlegg">
+                                        <option ng-repeat="associatedWithRecordAs in associatedWithRecordAsList"
+                                                ng-selected="{{associatedWithRecordAs.value == selectedAssociatedWithRecordAs}}"
+                                                value="{{associatedWithRecordAs.value}}">
+                                            {{associatedWithRecordAs.value}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <label class="control-label" for="documentType">Dokumenttype</label>
+                                    <input class="form-control  form-control-lg rounded-1" data-placement="top"
+                                           data-toggle="tooltip"
+                                           id="documentType" ng-model="documentDescription.dokumenttype.kodenavn"
+                                           title="Ingen obligatoriske verdi, men aktuelle verdier kan f.eks. være: Brev, Rundskriv, Faktura, Ordrebekreftelser"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <label class="control-label" for="documentStatus">dokumentstatus</label>
+                                    <select class="form-control form-control-lg rounded-1" data-placement="top"
+                                            data-toggle="tooltip"
+                                            id="documentStatus" ng-model="selectedDocumentStatus"
+                                            title="Dokumentet er er enten 'under redigering' eller 'ferdigstilt'. ">
+                                        <option ng-repeat="documentStatus in documentStatusList"
+                                                ng-selected="{{documentStatus.value == selectedDocumentStatus}}"
+                                                value="{{documentStatus.value}}">{{documentStatus.value}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3" ng-click="selectDocumentObject(documentObject)"
+                         ng-repeat="documentObject in documentObjectList">
+                        <div class="col-lg-12">
+
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="card-header">
+                                        <h6 class="text-muted">dokumentObjekt</h6>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-3">
+                                            <label class="control-label" for="variantformat">Variantformat</label>
+                                            <select class="form-control form-control-lg rounded-1"
+                                                    data-placement="top"
+                                                    data-toggle="tooltip"
+                                                    id="variantformat" ng-model="selectedVariantFormat"
+                                                    title="'Produksjonsformat', 'Arkivformat', 'Dokument hvor deler av innholdet er skjermet'">
+                                                <option ng-repeat="variantformat in variantFormatList"
+                                                        ng-selected="{{variantformat.value == selectedVariantFormat}}"
+                                                        value="{{variantformat.value}}">{{variantformat.value}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-1">
+                                            <label class="control-label" for="version">versjonsnummer</label>
+                                            <input class="form-control  form-control-lg rounded-1"
+                                                   data-placement="top"
+                                                   data-toggle="tooltip"
+                                                   disabled id="version"
+                                                   ng-model="documentObject.versjonsnummer"
+                                                   title="Versjonsnummer gjelder bare arkiverte versjoner. Produksjonsversjoner genererer ikke metadata som skal følge med i et arkivuttrekk."/>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <label class="control-label" for="fileSize">filstørrelse</label>
+                                            <input class="form-control  form-control-lg rounded-1"
+                                                   data-placement="top"
+                                                   data-toggle="tooltip"
+                                                   disabled id="fileSize"
+                                                   ng-model="documentObject.filstoerrelse"
+                                                   title="Filstoerrelsen i bytes"/>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <label class="control-label" for="format">Format:</label>
+                                            <input class="form-control  form-control-lg rounded-1"
+                                                   data-placement="top"
+                                                   data-placement="top" data-toggle="tooltip"
+                                                   data-toggle="tooltip" disabled
+                                                   id="format" ng-model="documentObject.format.kodenavn"
+                                                   title="Filformatet feks odt, docx, png osv"/>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <label class="control-label" for="filename">Filnavn:</label>
+                                            <input class="form-control  form-control-lg rounded-1"
+                                                   data-placement="top"
+                                                   data-placement="top" data-toggle="tooltip"
+                                                   data-toggle="tooltip" disabled
+                                                   id="filename" ng-model="documentObject.filnavn"
+                                                   title="Filformatet feks odt, docx, png osv"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="input-group">
+                                            <div class="col-lg-7">
+                                                <label class="control-label" for="checksum">Sjekksum</label>
+                                                <input class="form-control  form-control-lg rounded-1"
+                                                       data-placement="top"
+                                                       data-toggle="tooltip"
+                                                       id="checksum" ng-model="documentObject.sjekksum"
+                                                       readonly
+                                                       title="En verdi som beregnes ut fra innholdet i dokumentet, og som dermed gir integritetssikring til dokumentets innhold"/>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <label class="control-label"
+                                                       for="checksumAlgorithm">sjekksumAlgoritme</label>
+                                                <input class="form-control form-control-lg rounded-1"
+                                                       data-placement="top"
+                                                       data-toggle="tooltip"
+                                                       disabled id="checksumAlgorithm"
+                                                       ng-model="documentObject.sjekksumAlgoritme"
+                                                       title="Algoritmen som er brukt for å beregne sjekksummen"/>
+                                            </div>
+                                            <div class="col-lg-2">
+
+                        <span class="input-group-btn">
+                        <button class="btn btn-info" id="download"
+                                ng-click="doDownloadDocument(documentObject)"
+                                ng-show="documentObject.sjekksum != null" type="button">
+                          <span class="fas fa-download fa-2x"></span>
+                        </button>
+                        </span>
+                                                <span class="input-group-btn">
+                        <button accept="pdf/*" class="btn btn-info"
+                                id="upload"
+                                ng-show="documentObject.sjekksum == null" ngf-max-height="1000"
+                                ngf-max-size="1MB" ngf-select="uploadFiles(documentObject, $file, $invalidFiles)"
+                                type="file">
+                          <span class="fas fa-upload fa-2x"></span>
+                        </button>
+                        </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- End card for an individual document -->
+
+</div>
+
+<!--modal to create new caseFile -->
+<div aria-hidden="true" class="modal fade" id="newCaseFileModal"
+     new-case-file-modal-dir role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Opprett ny saksmappe fra eposten</h4>
+                <button class="close" data-dismiss="modal" type="button">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-1"></div>
+                        <div class="col-10">
+                            <label class="control-label" for="nyTittelSaksmappe">Tittel</label>
+                            <input class="form-control form-control-lg rounded-1" data-placement="top"
+                                   data-toggle="tooltip"
+                                   id="nyTittelSaksmappe" ng-model="newTitleForCaseFile"
+                                   title="Beskrivende tittel for saksmappe 'Søknad om barnehageplass'. Merk denne kan inneholde sensitiv informasjon"
+                                   type="text"/>
+                        </div>
+                        <div class="col-1"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-1"></div>
+                        <div class="col-10">
+                            <label class="control-label"
+                                   for="nyOffentligTittelSaksmappe">Offentligtittel</label>
+                            <input class="form-control form-control-lg rounded-1" data-placement="top"
+                                   data-toggle="tooltip"
+                                   id="nyOffentligTittelSaksmappe" ng-model="newPublicTitleForCaseFile"
+                                   title="Hvis tittel inneholder sensitiv informasjon, kan en annen versjon av tittel brukes"
+                                   type="text"/>
+                        </div>
+                        <div class="col-1"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-1"></div>
+                        <div class="col-10">
+                            <label class="control-label" for="nyBeskrivelseSaksmappe">Beskrivelse</label>
+                            <textarea class="form-control form-control-lg rounded-1" data-placement="top"
+                                      data-toggle="tooltip"
+                                      id="nyBeskrivelseSaksmappe" ng-model="newDescriptionForCaseFile"
+                                      rows="5"
+                                      title="En beskrivelse av saksmappen."/>
+                            </textarea>
+                        </div>
+                        <div class="col-1"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-1"></div>
+                        <div class="col-lg-10">
+                            <label class="control-label" for="caseStatus">Saksstatus</label>
+                            <select class="form-control form-control-lg rounded-1" data-placement="top"
+                                    data-toggle="tooltip"
+                                    id="caseStatus" ng-model="selectedCaseStatus"
+                                    title="Status på saken. I utgangspunktet er det 'Under behandling' når den er
+                                    opprettet av arkivtjenesten">
+                                <option ng-repeat="caseStatus in caseStatusList"
+                                        ng-selected="{{caseStatus.value == selectedCaseStatus}}"
+                                        value="{{caseStatus.value}}">{{caseStatus.value}}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-1"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-1"></div>
+                        <div class="col-lg-10">
+                            <label class="control-label" for="user">bruker</label>
+                            <select class="form-control form-control-lg rounded-1" data-placement="top"
+                                    data-toggle="tooltip"
+                                    id="user" ng-model="selectedUser"
+                                    title="Dokumentet er er enten 'under redigering' eller 'ferdigstilt'. ">
+                                <option ng-repeat="user in userList"
+                                        ng-selected="{{user == selectedUser}}"
+                                        value="{{user}}">{{user}}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-1"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-lg btn-primary float-left" data-dismiss="modal"
+                        ng-click="doDismissnewCaseFileModal()">
+                    Lukk
+                </button>
+                <button class="btn btn-lg btn-success float-right" ng-click="createCaseFile()">Opprett saksmappe
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End modal to create a new caseFile -->
+</body>
+</html>

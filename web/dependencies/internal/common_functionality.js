@@ -141,6 +141,102 @@ let app = angular.module('nikita', ['ngFileUpload'])
             return result.results;
         };
 
+        this.getCaseFileList2 = async function (token) {
+
+            url = baseUrl + "api/sakarkiv/saksmappe?" +
+                encodeURIComponent("$filter") + "=" +
+                encodeURIComponent("saksstatus/kode eq 'F'");
+            console.log("curl -v " + url + " -H \"Authorization: " + token + "\"");
+
+            let response = await fetch(url, {
+                headers: {
+                    'Authorization': token
+                }
+            });
+            let result = await response.json();
+            if (Object.keys(result).length === 0) {
+                return [];
+            }
+            return result.results;
+        };
+
+        /**
+         * Using the baseUrl (manually set in config.js), get the root of arkivstruktur.
+         * First you use the url corresponding to the root of the application, then
+         */
+        this.getFileList = async function (token) {
+
+            url = baseUrl + "api/arkivstruktur/arkivdel?" +
+                encodeURIComponent("$filter") + "=" +
+                encodeURIComponent("tittel eq 'Postmottak'");
+            let response = await fetch(url, {
+                headers: {
+                    'Authorization': token
+                }
+            });
+
+            let result = await response.json();
+            console.log("curl -v " + url + " -H \"Authorization: " + token + "\"");
+            console.log(result);
+            url2 = result.results[0]._links[REL_FILE].href;
+            console.log(url2);
+            let response2 = await fetch(url2, {
+                headers: {
+                    'Authorization': token
+                }
+            });
+            let result2 = await response2.json();
+            if (Object.keys(result).length === 0) {
+                return [];
+            }
+            return result2.results;
+        };
+
+        /*
+            let newRecordURL = fileResponse.results[0]._links[REL_NEW_RECORD].href;
+            let recordResponse = await fetch(newRecordURL, {
+                method: 'POST',
+                headers: {
+                    "Content-type": "application/vnd.noark5+json",
+                    'Authorization': token,
+                },
+                body: JSON.stringify( {
+                    "tittel":"E-post tittel"
+                })
+            });
+            console.log(recordResponse);
+            let newDocDecURL = recordResponse.results[0]._links[REL_NEW_DOCUMENT_DESCRIPTION].href;
+            let docDecResponse= await fetch(newDocDecURL, {
+                method: 'POST',
+                headers: {
+                    "Content-type": "application/vnd.noark5+json",
+                    'Authorization': token,
+                },
+                body: JSON.stringify({
+                    "tittel": "E-post tittel",
+                    "tilknyttetRegistreringSom": { "kode": "H", "kodenavn": "Hoveddokument" },
+                    "dokumentstatus": { "kode": "F", "kodenavn": "Dokumentet er ferdigstilt" },
+                    "dokumenttype": { "kode": "B", "kodenavn": "Brev" }
+                })
+            });
+            console.log(docDecResponse);
+            let newDocObjURL = docDecResponse.results[0]._links[REL_NEW_DOCUMENT_OBJECT].href;
+            let docObjResponse= await fetch(newDocObjURL, {
+                method: 'POST',
+                headers: {
+                    "Content-type": "application/vnd.noark5+json",
+                    'Authorization': token,
+                },
+                body: JSON.stringify( {
+                    "variantformat": { "kode": "A", "kodenavn": "Arkivformat" },
+                    "format": { "kode": "fmt/95" },
+                    "filnavn" : "Brev fra jomar"
+                })
+            });
+            console.log(docObjResponse);
+        }
+*/
+
         /**
          * Using the given URL (rel=https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/arkiv/"),
          * get the list of fonds

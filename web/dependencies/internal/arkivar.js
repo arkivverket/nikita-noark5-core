@@ -76,12 +76,223 @@ app.controller('ArkivarController',
             })();
 
             /**
-             * function updateFonds
-             *
-             * Undertakes a PUT request to the core with applicable data fields from the webpage.
-             * Adds the following headers: Content-Type, Authorization and ETAG
+             * function createPostmottak
              *
              */
+            $scope.createVSM = function () {
+                url = baseUrl + "api/metadata/ny-virksomhetsspesifikkeMetadata";
+
+                $http({
+                    url: url,
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/vnd.noark5+json',
+                        'Authorization': $scope.token
+                    },
+                    data: {
+                        "navn": "postmottak:avsender",
+                        "type": "string",
+                        "utdatert": true,
+                        "beskrivelse": "Avsender til en epost",
+                        "kilde": "https://example.com"
+                    }
+                }).then(function successCallback(response) {
+                    console.log("POST for postmottak:avsender on " + url + " data returned= " + JSON.stringify(response.data));
+
+                }, function errorCallback(request) {
+                    console.log("POST request failed for postmottak:avsender on " + url + " Create = " + JSON.stringify(request));
+                });
+
+                $http({
+                    url: url,
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/vnd.noark5+json',
+                        'Authorization': $scope.token
+                    },
+                    data: {
+                        "navn": "postmottak:mottaker",
+                        "type": "string",
+                        "utdatert": true,
+                        "beskrivelse": "Avsender til en epost",
+                        "kilde": "https://example.com"
+                    }
+                }).then(function successCallback(response) {
+                    console.log("POST postmottak:mottaker on " + url + " data returned= " + JSON.stringify(response.data));
+
+                }, function errorCallback(request) {
+                    console.log("POST request failed for postmottak:mottaker " + url + " Create = " + JSON.stringify(request));
+                });
+
+                $http({
+                    url: url,
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/vnd.noark5+json',
+                        'Authorization': $scope.token
+                    },
+                    data: {
+                        "navn": "postmottak:innhold",
+                        "type": "string",
+                        "utdatert": true,
+                        "beskrivelse": "Innholdet (body) en epost",
+                        "kilde": "https://example.com"
+                    }
+                }).then(function successCallback(response) {
+                    console.log("POST postmottak:innhold on " + url + " data returned= " + JSON.stringify(response.data));
+
+                }, function errorCallback(request) {
+                    console.log("POST request failed for postmottak:innhold on  " + url + " Create = " + JSON.stringify(request));
+                });
+
+
+            }
+            /**
+             * function createPostmottak
+             *
+             */
+            $scope.createPMData = function () {
+
+                urlFonds = baseUrl + 'api/arkivstruktur/ny-arkiv';
+
+                $http({
+                    url: urlFonds,
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/vnd.noark5+json',
+                        'Authorization': $scope.token
+                    },
+                    data: {
+                        "tittel": "Organets arkiv",
+                        "beskrivelse": "Dette er den interne postmottaket til nikita. Denne trenger du ikke bruke, men den må være her.",
+                    }
+                }).then(function successCallback(response) {
+                    console.log("POST on fonds data returned= " + JSON.stringify(response.data));
+                    fonds = response.data;
+                    urlSeries = fonds._links[REL_NEW_SERIES].href;
+                    console.log("URL to create Series is " + urlSeries);
+                    $http({
+                        url: urlSeries,
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/vnd.noark5+json',
+                            'Authorization': $scope.token
+                        },
+                        data: {
+                            "tittel": "Saksbehandling",
+                            "arkivdelstatus": {"kode": "A", "kodenavn": "Aktiv periode"}
+                        }
+                    });
+                    $http({
+                        url: urlSeries,
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/vnd.noark5+json',
+                            'Authorization': $scope.token
+                        },
+                        data: {
+                            "tittel": "Postmottak",
+                            "arkivdelstatus": {"kode": "A", "kodenavn": "Aktiv periode"}
+                        }
+                    }).then(function successCallback(response) {
+                        console.log("POST on series data returned= " + JSON.stringify(response.data));
+                        series = response.data;
+                        urlFile = series._links[REL_NEW_FILE].href;
+
+                        for (i = 0; i < 5; i++) {
+                            title = i.toString() + " Seriøs forslag om å forbedre det norske folkehelse";
+                            $http({
+                                url: urlFile,
+                                method: "POST",
+                                headers: {
+                                    'Content-Type': 'application/vnd.noark5+json',
+                                    'Authorization': $scope.token
+                                },
+                                data: {
+                                    "tittel": title,
+                                    "virksomhetsspesifikkeMetadata": {
+                                        "postmottak:avsender": "jomar@example.com",
+                                        "postmottak:mottaker": "minister@sosdep.example.com",
+                                        "postmottak:innhold": "Hei, Jeg ber at ministeren straks ser på mitt forslag"
+                                    }
+                                }
+                            }).then(function successCallback(response) {
+                                console.log("POST on file data returned= " + JSON.stringify(response.data));
+                                file = response.data;
+                                urlRecord = file._links[REL_NEW_RECORD].href;
+                                $http({
+                                    url: urlRecord,
+                                    method: "POST",
+                                    headers: {
+                                        'Content-Type': 'application/vnd.noark5+json',
+                                        'Authorization': $scope.token
+                                    },
+                                    data: {
+                                        "tittel": "Record tittel"
+                                    }
+                                }).then(function successCallback(response) {
+                                    console.log("POST on Record data returned= " + JSON.stringify(response.data));
+                                    record = response.data;
+                                    urlDocDesc = record._links[REL_NEW_DOCUMENT_DESCRIPTION].href;
+                                    $http({
+                                        url: urlDocDesc,
+                                        method: "POST",
+                                        headers: {
+                                            'Content-Type': 'application/vnd.noark5+json',
+                                            'Authorization': $scope.token
+                                        },
+                                        data: {
+                                            "tittel": "E-post tittel",
+                                            "tilknyttetRegistreringSom": {"kode": "H", "kodenavn": "Hoveddokument"},
+                                            "dokumentstatus": {
+                                                "kode": "F",
+                                                "kodenavn": "Dokumentet er ferdigstilt"
+                                            },
+                                            "dokumenttype": {"kode": "B", "kodenavn": "Brev"}
+                                        }
+                                    }).then(function successCallback(response) {
+                                        console.log("POST on DocDesc data returned= " + JSON.stringify(response.data));
+                                        docdesc = response.data;
+                                        urlDocObj = docdesc._links[REL_NEW_DOCUMENT_OBJECT].href;
+                                        $http({
+                                            url: urlDocObj,
+                                            method: "POST",
+                                            headers: {
+                                                'Content-Type': 'application/vnd.noark5+json',
+                                                'Authorization': $scope.token
+                                            },
+                                            data: {
+                                                "variantformat": {"kode": "A", "kodenavn": "Arkivformat"},
+                                                "format": {"kode": "fmt/95"},
+                                                "filnavn": "Brev fra jomar.pdf",
+                                                "sjekksum": "19747d43bb8d5323163cc2a6a7c39730edc873e322265d4f0363d241ca3a9926",
+                                                "filstoerrelse": 375255
+                                            }
+                                        }).then(function successCallback(response) {
+                                            console.log("POST on DocObj data returned= " + JSON.stringify(response.data));
+
+                                        }, function errorCallback(request) {
+                                            console.log("POST request failed for DocDesc Create = " + JSON.stringify(request));
+                                        });
+                                    }, function errorCallback(request) {
+                                        console.log("POST request failed for DocDesc Create = " + JSON.stringify(request));
+                                    });
+                                }, function errorCallback(request) {
+                                    console.log("POST request failed for Record Create = " + JSON.stringify(request));
+                                });
+                            }, function errorCallback(request) {
+                                console.log("POST request failed for File Create = " + JSON.stringify(request));
+                            });
+
+                        } // end for
+                    }, function errorCallback(request) {
+                        console.log("POST request failed for Series Create = " + JSON.stringify(request));
+                    });
+                }, function errorCallback(request) {
+                    console.log("POST request failed for Fonds Create = " + JSON.stringify(request));
+                });
+            }
+
             $scope.updateFonds = function () {
 
                 let urlFonds = $scope.fonds._links[REL_SELF].href;
@@ -99,9 +310,9 @@ app.controller('ArkivarController',
                         tittel: $scope.fonds.tittel,
                         beskrivelse: $scope.fonds.beskrivelse,
                         arkivstatus: {
-			    kode: $scope.selectedFondsStatusCode,
-			    kodenavn: $scope.selectedFondsStatus
-			}
+                            kode: $scope.selectedFondsStatusCode,
+                            kodenavn: $scope.selectedFondsStatus
+                        }
                     }
                 }).then(function successCallback(response) {
                     console.log("PUT on fonds data returned= " + JSON.stringify(response.data));
@@ -125,6 +336,18 @@ app.controller('ArkivarController',
                 let urlSeries = $scope.series._links[REL_SELF].href;
                 console.log("Update series with following address = " + urlSeries);
                 console.log("Current ETAG is = [" + $scope.seriesETag + "]");
+
+                for (let i = 0; i < seriesStatusList.length; i++) {
+                    if (seriesStatusList[i].value === $scope.selectedSeriesStatus) {
+                        $scope.selectedSeriesStatusCode = seriesStatusList[i].id;
+                        $scope.selectedSeriesStatusCodename = seriesStatusList[i].value;
+                        break;
+                    }
+                }
+
+                console.log("code" + $scope.selectedSeriesStatusCode);
+                console.log("codename" + $scope.selectedSeriesStatusCodename);
+
                 $http({
                     url: urlSeries,
                     method: "PUT",
@@ -137,9 +360,9 @@ app.controller('ArkivarController',
                         tittel: $scope.series.tittel,
                         beskrivelse: $scope.series.beskrivelse,
                         arkivdelstatus: {
-			    kode: $scope.selectedSeriesStatusCode,
-			    kodenavn: $scope.selectedSeriesStatus
-			}
+                            kode: $scope.selectedSeriesStatusCode,
+                            kodenavn: $scope.selectedSeriesStatusCodename
+                        }
                     }
                 }).then(function successCallback(response) {
                     console.log("PUT on series data returned= " + JSON.stringify(response.data));
@@ -247,9 +470,9 @@ app.controller('ArkivarController',
                         tittel: $scope.newTitleForSeries,
                         beskrivelse: $scope.newDescriptionForSeries,
                         arkivdelstatus: {
-			    kode: "A",
-			    kodenavn: "Aktiv periode"
-			}
+                            kode: "A",
+                            kodenavn: "Aktiv periode"
+                        }
                     },
                 }).then(function successCallback(response) {
                     console.log("POST on series data returned= " +
@@ -288,9 +511,9 @@ app.controller('ArkivarController',
                         tittel: $.trim(document.getElementById("nyTittelArkiv").value),
                         beskrivelse: $.trim(document.getElementById("nyBeskrivelseArkiv").value),
                         arkivstatus: {
-			    'kode': $.trim($scope.selectedFondsStatusCode),
-			    'kodenavn': $.trim($scope.selectedFondsStatus)
-			}
+                            'kode': $.trim($scope.selectedFondsStatusCode),
+                            'kodenavn': $.trim($scope.selectedFondsStatus)
+                        }
                     }
                 }).then(function successCallback(response) {
                     console.log("POST to create new fonds data returned= " + JSON.stringify(response.data));

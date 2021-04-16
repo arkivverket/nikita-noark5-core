@@ -18,6 +18,7 @@ import nikita.webapp.hateoas.interfaces.IFondsCreatorHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IFondsHateoasHandler;
 import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.IFondsCreatorService;
 import nikita.webapp.service.interfaces.IFondsService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
@@ -64,6 +65,7 @@ public class FondsService
 
     public FondsService(EntityManager entityManager,
                         ApplicationEventPublisher applicationEventPublisher,
+                        IPatchService patchService,
                         IFondsRepository fondsRepository,
                         SeriesService seriesService,
                         IMetadataService metadataService,
@@ -72,7 +74,7 @@ public class FondsService
                         ISeriesHateoasHandler seriesHateoasHandler,
                         IFondsCreatorHateoasHandler
                                 fondsCreatorHateoasHandler) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, patchService);
         this.fondsRepository = fondsRepository;
         this.seriesService = seriesService;
         this.metadataService = metadataService;
@@ -436,6 +438,7 @@ public class FondsService
             existingFonds.setDocumentMedium(
                 incomingFonds.getDocumentMedium());
         }
+        existingFonds.setFondsStatus(incomingFonds.getFondsStatus());
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
         existingFonds.setVersion(version);

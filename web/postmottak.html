@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html ng-app="nikita">
+<head>
+    <meta charset="UTF-8">
+    <title>nikita-noark5</title>
+    <script src="dependencies/internal/config.js"></script>
+    <script src="dependencies/vendor/META-INF/resources/webjars/jquery/3.3.1-1/jquery.min.js"></script>
+    <script src="dependencies/vendor/META-INF/resources/webjars/angularjs/1.7.0/angular.min.js"></script>
+    <script src="dependencies/vendor/META-INF/resources/webjars/popper.js/1.14.1/umd/popper.js"></script>
+    <script src="dependencies/vendor/META-INF/resources/webjars/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script
+            src="dependencies/vendor/META-INF/resources/webjars/angular-file-upload/12.2.13/ng-file-upload-all.js"></script>
+
+    <link href="dependencies/vendor/META-INF/resources/webjars/bootstrap/4.1.1/css/bootstrap.min.css"
+          rel="stylesheet" type="text/css">
+
+    <link
+            href="dependencies/vendor/META-INF/resources/webjars/font-awesome/5.0.9/web-fonts-with-css/css/fontawesome-all.css"
+            rel="stylesheet" type="text/css">
+
+    <script src="dependencies/internal/common_functionality.js"></script>
+    <script src="dependencies/internal/postmottak.js"></script>
+</head>
+
+<body ng-controller="PostMottakController">
+
+<nav class="navbar navbar-expand-sm bg-light">
+    <a class="navbar-brand">nikita-noark5-core@oslomet</a>
+
+    <ul class="nav navbar-nav ml-auto">
+        <li class="nav-item dropdown">
+            <a class="nav-link" data-toggle="dropdown" href="#" id="navbardrop">
+                <span class="fa fa-bars"></span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a class="nav-link" href="#" ng-show="userIsAdmin">Innstillinger &nbsp; <span class="fas fa-cog"></span></a>
+                <a class="nav-link" href="#" ng-click="doLogout()">Logg ut &nbsp; <span
+                        class="fas fa-sign-out-alt"></span></a>
+            </div>
+        </li>
+    </ul>
+</nav>
+
+<div>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item" ng-click="doShowFileListCard()">
+                <a href="#">Postmottak</a>
+            </li>
+            <li class="breadcrumb-item"
+                ng-show="showFileBreadcrumb">
+                <a href="#">Epost
+                    <span class="text-dark"
+                          ng-show="showFileCard==true">
+            ({{file.opprettetDato | date:'yyyy-MM-dd'}}, {{file.virksomhetsspesifikkeMetadata.avsender | limitTo:20}} : {{file.tittel | limitTo:20}} )
+          </span>
+                </a>
+            </li>
+        </ol>
+    </nav>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-9">&nbsp;</div>
+                <div class="col-lg-3">
+                    <div class="form-group">
+                        <label class="control-label" for="dato">Dato</label>
+                        <input class="form-control form-control-lg rounded-1" data-placement="top"
+                               data-toggle="tooltip"
+                               id="dato"
+                               ng-model="dateForSearch"
+                               title="Dato du søker postmottak på"
+                               type="text"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card for the File list view -->
+    <div class="card border-light mb-3" ng-show="showFileListCard">
+        <div class="card-body">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th style="width: 10%">dato</th>
+                                <th style="width: 20%">avsender</th>
+                                <th style="width: 40%">tittel</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-click="fileSelected(file)"
+                                ng-repeat="file in fileList track by $index">
+                                <td>
+                                    {{file.opprettetDato | date:'yyyy-MM-dd'}}
+                                </td>
+                                <td>
+                                    {{file.virksomhetsspesifikkeMetadata['postmottak:avsender']}}
+                                </td>
+                                <td>
+                                    {{file.tittel}}
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End card for the CaseFile list view -->
+
+    <!-- Card for an individual file -->
+    <div class="card border-light mb-3" ng-show="showFileCard">
+        <div class="card-header">
+            <div class="col-lg-12">
+                <div class="btn-toolbar float-right">
+                    <button class="btn btn-primary" data-target="#newCaseFileModal"
+                            data-toggle="modal" ng-click="doLoadCreateCaseFileModal()"
+                            type="button">
+                        Opprett Saksmappe
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="container-fluid">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <label class="control-label" for="emailFrom">Fra</label>
+                                    <input class="form-control form-control-lg rounded-1" data-placement="top"
+                                           data-toggle="tooltip" disabled
+                                           id="emailFrom"
+                                           ng-model="file.virksomhetsspesifikkeMetadata['postmottak:avsender']"
+                                           title="Hvem som har sendt eposten"
+                                           type="text"/>
+                                </div>
+                                <div class="col-lg-6">
+                                    <label class="control-label" for="emailTo">Til</label>
+                                    <input class="form-control  form-control-lg rounded-1" data-placement="top"
+                                           data-toggle="tooltip" disabled
+                                           id="emailTo"
+                                           ng-model="file.virksomhetsspesifikkeMetadata['postmottak:mottaker']"
+                                           title="Hvem som har motatt eposten"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <label for="subject">Emne</label>
+                            <input class="form-control form-control-lg rounded-1" disabled id="subject"
+                                   ng-model="file.tittel" type="text"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <label class="control-label" for="receivedDate">Mottatt dato</label>
+                            <input class="form-control form-control-lg rounded-1" disabled id="receivedDate"
+                                   ng-model="file.opprettetDato | date:'yyyy-MM-dd'"
+                                   type="text"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <label class="control-label"
+                                           for="emailContent">Innhold</label>
+                                    <textarea class="form-control  form-control-lg rounded-1"
+                                              data-placement="top" data-toggle="tooltip"
+                                              id="emailContent"
+                                              ng-model="file.virksomhetsspesifikkeMetadata['postmottak:innhold']"
+                                              rows="5"
+                                              title="Innholdet til eposten">
+                </textarea>
+                                </div>
+                                <div class="col-lg-6">
+                                    <label class="control-label"
+                                           for="attachments">Vedlegg</label>
+                                    <table class="table table-hover" id="attachments">
+                                        <thead>
+                                        <tr>
+                                            <th style="width: 4% ">nr</th>
+                                            <th style="width: 50%">filnavn</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr ng-click="doDownloadDocument(document)"
+                                            ng-repeat="document in documentList">
+                                            <td>
+                                                {{ document.dokumentnummer }}
+                                            </td>
+                                            <td>
+                                                {{ document.filnavn | limitTo:30 }}
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End card for an individual caseFile -->
+    </div>
+    <!-- End card for an individual file -->
+
+</div>
+
+<!--modal to create new caseFile -->
+<div aria-hidden="true" class="modal fade" id="newCaseFileModal"
+     new-case-file-modal-dir role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Opprett ny saksmappe fra eposten</h4>
+                <button class="close" data-dismiss="modal" type="button">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-1"></div>
+                        <div class="col-10">
+                            <label class="control-label" for="nyTittelSaksmappe">Tittel</label>
+                            <input class="form-control form-control-lg rounded-1" data-placement="top"
+                                   data-toggle="tooltip"
+                                   id="nyTittelSaksmappe" ng-model="newTitleForCaseFile"
+                                   title="Beskrivende tittel for saksmappe 'Søknad om barnehageplass'. Merk denne kan inneholde sensitiv informasjon"
+                                   type="text"/>
+                        </div>
+                        <div class="col-1"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-1"></div>
+                        <div class="col-10">
+                            <label class="control-label"
+                                   for="nyOffentligTittelSaksmappe">Offentligtittel</label>
+                            <input class="form-control form-control-lg rounded-1" data-placement="top"
+                                   data-toggle="tooltip"
+                                   id="nyOffentligTittelSaksmappe" ng-model="newPublicTitleForCaseFile"
+                                   title="Hvis tittel inneholder sensitiv informasjon, kan en annen versjon av tittel brukes"
+                                   type="text"/>
+                        </div>
+                        <div class="col-1"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-1"></div>
+                        <div class="col-10">
+                            <label class="control-label" for="nyBeskrivelseSaksmappe">Beskrivelse</label>
+                            <textarea class="form-control form-control-lg rounded-1" data-placement="top"
+                                      data-toggle="tooltip"
+                                      id="nyBeskrivelseSaksmappe" ng-model="newDescriptionForCaseFile"
+                                      rows="5"
+                                      title="En beskrivelse av saksmappen."/>
+                            </textarea>
+                        </div>
+                        <div class="col-1"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-1"></div>
+                        <div class="col-lg-10">
+                            <label class="control-label" for="caseStatus">Saksstatus</label>
+                            <select class="form-control form-control-lg rounded-1" data-placement="top"
+                                    data-toggle="tooltip"
+                                    id="caseStatus" ng-model="selectedCaseStatus"
+                                    title="Status på saken. I utgangspunktet er det 'Under behandling' når den er
+                                    opprettet av arkivtjenesten">
+                                <option ng-repeat="caseStatus in caseStatusList"
+                                        ng-selected="{{caseStatus.value == selectedCaseStatus}}"
+                                        value="{{caseStatus.value}}">{{caseStatus.value}}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-1"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-1"></div>
+                        <div class="col-lg-10">
+                            <label class="control-label" for="user">bruker</label>
+                            <select class="form-control form-control-lg rounded-1" data-placement="top"
+                                    data-toggle="tooltip"
+                                    id="user" ng-model="selectedUser"
+                                    title="Dokumentet er er enten 'under redigering' eller 'ferdigstilt'. ">
+                                <option ng-repeat="user in userList"
+                                        ng-selected="{{user == selectedUser}}"
+                                        value="{{user}}">{{user}}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-1"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-lg btn-primary float-left" data-dismiss="modal"
+                        ng-click="doDismissnewCaseFileModal()">
+                    Lukk
+                </button>
+                <button class="btn btn-lg btn-success float-right" ng-click="expandToCaseFile()">Opprett saksmappe
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End modal to create a new caseFile -->
+</body>
+</html>

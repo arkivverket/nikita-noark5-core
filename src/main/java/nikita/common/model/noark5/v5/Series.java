@@ -329,7 +329,7 @@ public class Series
 
     public void removeFile(File file) {
         this.referenceFile.remove(file);
-        file.setReferenceSeries(this);
+        file.setReferenceSeries(null);
     }
 
     public List<Record> getReferenceRecord() {
@@ -347,7 +347,7 @@ public class Series
 
     public void removeRecord(Record record) {
         this.referenceRecord.remove(record);
-        record.setReferenceSeries(this);
+        record.setReferenceSeries(null);
     }
 
     @Override

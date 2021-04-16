@@ -2,8 +2,10 @@ package nikita.webapp.general;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.jayway.jsonpath.JsonPath;
 import nikita.N5CoreApp;
 import nikita.common.model.noark5.v5.DocumentDescription;
+import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.metadata.AssociatedWithRecordAs;
 import nikita.common.model.noark5.v5.metadata.DocumentStatus;
 import nikita.common.model.noark5.v5.metadata.DocumentType;
@@ -17,6 +19,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
@@ -31,6 +35,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.transaction.Transactional;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.StringWriter;
 
 import static nikita.common.config.Constants.*;
@@ -38,6 +45,7 @@ import static nikita.common.config.HATEOASConstants.HREF;
 import static nikita.common.config.HATEOASConstants.SELF;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Serialize.*;
+import static org.hamcrest.Matchers.endsWith;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
@@ -46,6 +54,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static utils.DocumentObjectCreator.createDocumentObjectAsJSON;
 
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @SpringBootTest(classes = N5CoreApp.class,
@@ -304,5 +313,262 @@ public class GeneralTest {
         resultActions.andDo(document("home",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint())));
+    }
+
+    /**
+     * Test that it is possible to upload a document and that nikita converts
+     * it to an archive format (PDF)
+     *
+     * @throws Exception Serialising or validation exception
+     */
+    @Test
+    @Sql("/db-tests/basic_structure.sql")
+    @WithMockCustomUser
+    public void checkPossibleToConvertDocumentToPDF() throws Exception {
+
+        String url = "/noark5v5/api/arkivstruktur/dokumentbeskrivelse" +
+                "/66b92e78-b75d-4b0f-9558-4204ab31c2d1/ny-dokumentobjekt";
+
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .post(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON)
+                .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
+                .content(createDocumentObjectAsJSON()));
+
+        resultActions
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$." + SYSTEM_ID)
+                        .exists());
+        MockHttpServletResponse response =
+                resultActions.andReturn().getResponse();
+        String uuid = JsonPath.read(response.getContentAsString(),
+                "$." + SYSTEM_ID);
+
+        url = "/noark5v5/api/arkivstruktur/dokumentobjekt/" + uuid +
+                "/referanseFil";
+
+        PathMatchingResourcePatternResolver resolver =
+                new PathMatchingResourcePatternResolver();
+        Resource resource = resolver.getResource(
+                "classpath:test_document.odt");
+
+        InputStream inputStream =
+                new BufferedInputStream(new FileInputStream
+                        (String.valueOf(resource.getFile().toPath())));
+        byte[] content = inputStream.readAllBytes();
+        resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .post(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON)
+                .contentType("application/vnd.oasis.opendocument.text")
+                .content(content));
+        response =
+                resultActions.andReturn().getResponse();
+        System.out.println(response.getContentAsString());
+
+        // Note change of URL to get direct access to OData endpoint
+        // Remember nikita redirects all odata queries to this endpoint
+        url = "/noark5v5/odata/api/arkivstruktur/dokumentbeskrivelse" +
+                "/66b92e78-b75d-4b0f-9558-4204ab31c2d1/dokumentobjekt" +
+                "?$filter=variantformat/kode eq 'A'";
+
+        url = "/noark5v5/odata/api/arkivstruktur/dokumentobjekt" +
+                "?$filter=variantformat/kode eq 'A'";
+
+        resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON));
+        response =
+                resultActions.andReturn().getResponse();
+        System.out.println(response.getContentAsString());
+
+        resultActions.andDo(document("home",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint())));
+    }
+
+
+    /**
+     * Test that it is possible to expand a File to a CaseFile
+     *
+     * @throws Exception Serialising or validation exception
+     */
+    @Test
+    @Sql("/db-tests/basic_structure.sql")
+    @WithMockCustomUser
+    public void checkPossibleToExpandFileToCaseFile() throws Exception {
+        // First create / POST file
+        File file = new File();
+        file.setTitle("Title of file");
+        String url = "/noark5v5/api/arkivstruktur/arkivdel" +
+                "/f1102ae8-6c4c-4d93-aaa5-7c6220e50c4d/ny-mappe";
+
+        JsonFactory factory = new JsonFactory();
+        StringWriter jsonFileWriter = new StringWriter();
+        JsonGenerator jsonFile = factory.createGenerator(jsonFileWriter);
+        jsonFile.writeStartObject();
+        printFileEntity(jsonFile, file);
+        jsonFile.writeEndObject();
+        jsonFile.close();
+
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .post(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON)
+                .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
+                .content(jsonFileWriter.toString()));
+
+        resultActions
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$." + SYSTEM_ID)
+                        .exists())
+                .andExpect(jsonPath("$." + TITLE)
+                        .value("Title of file"));
+        resultActions.andDo(document("home",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint())));
+
+        // Next see if we can get this File
+        MockHttpServletResponse response =
+                resultActions.andReturn().getResponse();
+        url = "/noark5v5/api/arkivstruktur/mappe/" +
+                JsonPath.read(response.getContentAsString(), "$." + SYSTEM_ID);
+
+        resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON));
+
+        // Next see if we can expand this File to a CaseFile
+        response = resultActions.andReturn().getResponse();
+        System.out.println(response.getContentAsString());
+        url = "/noark5v5/api/arkivstruktur/mappe/" +
+                JsonPath.read(response.getContentAsString(), "$." + SYSTEM_ID) +
+                "/" + FILE_EXPAND_TO_CASE_FILE;
+
+        // First get template of object for patch
+
+        resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON)
+                .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
+                .content(jsonFileWriter.toString()));
+
+        response = resultActions.andReturn().getResponse();
+        System.out.println(response.getContentAsString());
+        String caseStatusCode = JsonPath.read(response.getContentAsString(),
+                "$." + CASE_STATUS + "." + CODE);
+        String caseStatusCodeName = JsonPath.read(response.getContentAsString(),
+                "$." + CASE_STATUS + "." + CODE_NAME);
+        String caseResponsible = JsonPath.read(response.getContentAsString(),
+                "$." + CASE_RESPONSIBLE);
+        String caseDate = JsonPath.read(response.getContentAsString(),
+                "$." + CASE_DATE);
+
+        // Then create a PATCH MERGE object
+        StringWriter jsonPatchWriter = new StringWriter();
+        JsonGenerator jsonPatch = factory.createGenerator(jsonPatchWriter);
+        jsonPatch.writeStartObject();
+        jsonPatch.writeObjectFieldStart(CASE_STATUS);
+        jsonPatch.writeStringField(CODE, caseStatusCode);
+        jsonPatch.writeStringField(CODE_NAME, caseStatusCodeName);
+        jsonPatch.writeEndObject();
+        jsonPatch.writeStringField(CASE_RESPONSIBLE, caseResponsible);
+        jsonPatch.writeStringField(CASE_DATE, caseDate);
+        jsonPatch.writeEndObject();
+        jsonPatch.close();
+
+        System.out.println(jsonPatchWriter.toString());
+
+        resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .patch(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON)
+                .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
+                .content(jsonPatchWriter.toString()));
+
+        response = resultActions.andReturn().getResponse();
+        System.out.println(response.getContentAsString());
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$." + SYSTEM_ID)
+                        .exists())
+                .andExpect(jsonPath(
+                        "$._links.['" + SELF + "']").exists())
+                .andExpect(jsonPath(
+                        "$._links.['" + REL_CASE_HANDLING_CASE_FILE + "']")
+                        .exists());
+    }
+
+    /**
+     * Test that it is possible to move a File from one Series to another
+     * mappe: f1677c47-99e1-42a7-bda2-b0bbc64841b7
+     * from: f1102ae8-6c4c-4d93-aaa5-7c6220e50c4d
+     * to: f32c1fa0-8e42-4236-8f40-e006940ea70b
+     *
+     * @throws Exception Serialising or validation exception
+     */
+    @Test
+    @Sql("/db-tests/basic_structure.sql")
+    @WithMockCustomUser
+    public void checkMoveFileToAnotherSeries() throws Exception {
+
+        String what = "f1677c47-99e1-42a7-bda2-b0bbc64841b7";
+        String fromSeries = "f1102ae8-6c4c-4d93-aaa5-7c6220e50c4d";
+        String toSeries = "f32c1fa0-8e42-4236-8f40-e006940ea70b";
+
+        String url = "/noark5v5/api/arkivstruktur/mappe/" + what;
+
+        JsonFactory factory = new JsonFactory();
+        StringWriter jsonPatchWriter = new StringWriter();
+        JsonGenerator jsonPatch = factory.createGenerator(jsonPatchWriter);
+        jsonPatch.writeStartObject();
+        jsonPatch.writeStringField("op", "move");
+        jsonPatch.writeStringField("from", fromSeries);
+        jsonPatch.writeStringField("path", toSeries);
+        jsonPatch.writeEndObject();
+        jsonPatch.close();
+        System.out.println(jsonPatchWriter.toString());
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .patch(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON)
+                .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
+                .content(jsonPatchWriter.toString()));
+
+        MockHttpServletResponse response =
+                resultActions.andReturn().getResponse();
+        System.out.println(response.getContentAsString());
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$." + SYSTEM_ID)
+                        .value(what))
+                .andExpect(jsonPath("$._links.['"
+                                + REL_FONDS_STRUCTURE_SERIES + "']." + HREF,
+                        endsWith(toSeries)));
+        resultActions.andDo(document("home",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint())));
+
+        // Make sure the File has updated values
+        resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON));
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$." + SYSTEM_ID)
+                        .value(what))
+                .andExpect(jsonPath("$._links.['"
+                                + REL_FONDS_STRUCTURE_SERIES + "']." + HREF,
+                        endsWith(toSeries)));
+        response = resultActions.andReturn().getResponse();
+        System.out.println(response.getContentAsString());
     }
 }

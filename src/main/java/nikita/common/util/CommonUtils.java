@@ -76,23 +76,24 @@ public final class CommonUtils {
     private static Map<String, FileExtensionAndMimeType> archiveVersion =
             new HashMap<>();
 
-    // Example 2020-06-30+02:00
+    // Example 2020-06-30+02:00, 2020-06-30Z
     public static final Pattern DATE_PATTERN = Pattern.compile(
             "\\d{4}-(0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01])" +
-                    "\\+?\\d{2}:\\d{2}$");
+                    "((\\+?\\d{2}:\\d{2}$)|(Z))");
 
     // Example 2020-06-30 02:00
     public static final Pattern DB_DATE_PATTERN = Pattern.compile(
             "\\d{4}-(0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01])" +
                     "(\\s|\\-|\\+)?\\d{2}:\\d{2}$");
 
-    // Example 2020-06-30T16:25:50.041651+02:00
+    // Example 2020-06-30T16:25:50.041651+02:00,
+    // 2020-06-30T16:25:50.041651Z,
     public static final Pattern DATE_TIME_PATTERN = Pattern.compile(
             "\\d{4}-(0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01])T" +
                     "(00|[0-9]|1[0-9]|2[0-3]):([0-9]|[0-5][0-9]):" +
                     "([0-9]|[0-5][0-9])" +
                     "\\.?[0-9]*" +
-                    "(\\+|\\-)\\d{2}:\\d{2}$");
+                    "((\\+|\\-)\\d{2}:\\d{2}$|(Z))");
 
     // Example 2020-06-30T16:25:50.041651+02:00
     // Does not require T and drops ms part
@@ -1709,6 +1710,14 @@ public final class CommonUtils {
 
             public static void printNullable(JsonGenerator jgen,
                                              String fieldName,
+                                             Long value)
+                    throws IOException {
+                if (null != value)
+                    jgen.writeNumberField(fieldName, value);
+            }
+
+            public static void printNullable(JsonGenerator jgen,
+                                             String fieldName,
                                              Double value)
                     throws IOException {
                 if (null != value)
@@ -1843,6 +1852,7 @@ public final class CommonUtils {
                     throws IOException {
                 if (record != null) {
                     printSystemIdEntity(jgen, record);
+                    printCreateEntity(jgen, record);
                     printNullableDateTime(jgen, RECORD_ARCHIVED_DATE,
                             record.getArchivedDate());
                     printNullable(jgen, RECORD_ARCHIVED_BY,

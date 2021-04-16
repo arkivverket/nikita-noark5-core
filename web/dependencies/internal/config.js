@@ -8,6 +8,9 @@ var baseUrl = 'http://localhost:8092/noark5v5/';
 console.log("Setting nikita app_url: " + baseUrl);
 var recordsManagerPage = 'arkivar.html';
 var caseHandlerPage = 'saksbehandler.html';
+var qualityPage = 'ks.html';
+var leaderPage = 'leder.html';
+var postmottakPage = 'postmottak.html';
 var loginPage = 'login.html';
 var oauthClientId = "nikita-client";
 
@@ -27,7 +30,13 @@ var REL_CORRESPONDENCE_PART_PERSON = 'https://rel.arkivverket.no/noark5/v5/api/a
 var REL_CASE_FILE = 'https://rel.arkivverket.no/noark5/v5/api/sakarkiv/saksmappe/';
 var REL_NEW_CASE_FILE = 'https://rel.arkivverket.no/noark5/v5/api/sakarkiv/ny-saksmappe/';
 var REL_DOCUMENT_FILE = 'https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/fil/';
+var REL_NEW_SERIES = "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-arkivdel/";
 var REL_SERIES = "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/arkivdel/";
+var REL_FILE = "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/mappe/";
+var REL_FILE_EXPAND_CASE_FILE = "https://rel.arkivverket.no/noark5/v5/api/sakarkiv/utvid-til-saksmappe/";
+var REL_NEW_FILE = "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-mappe/";
+var REL_NEW_RECORD = "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-registrering/";
+var REL_RECORD = "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/registrering/";
 var REL_FONDS_STRUCTURE = 'https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/';
 var REL_FONDS_STRUCTURE_FONDS = 'https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/arkiv/';
 var REL_FONDS_STRUCTURE_NEW_FONDS = 'https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-arkiv/';
@@ -43,7 +52,10 @@ var REL_ADMIN_NEW_USER = 'https://rel.arkivverket.no/noark5/v5/api/admin/ny-bruk
 var REL_OIDC = 'https://rel.arkivverket.no/noark5/v5/api/login/oidc/';
 
 let ROLE_CASE_HANDLER = "saksbehandler";
+let ROLE_POST_MOTTAK = "postmottak";
+let ROLE_QUALITY_CONTROL = "kvalitetsikring";
 let ROLE_RECORDS_MANAGER = "arkivar";
+let ROLE_LEADER = "leder";
 
 let LOGIN_ENDPOINT = "authorization_endpoint";
 let LOGOUT_ENDPOINT = "revocation_endpoint";
@@ -162,7 +174,7 @@ var formatList = [
     {"id": "fmt/703", "value": "WAV"},
     {"id": "fmt/950", "value": "Email RFC 2045 MIME message"},
     {"id": "x-fmt/18", "value": "CSV"},
-    {"id": "fmt/136", "value": "OpenDocument Text (odt)"},
+    {"id": "fmt/136", "value": "OpenDocument Text (odt) Version 1.0"},
     {"id": "fmt/137", "value": "OpenDocument Spreadsheet (ods)"},
     {"id": "x-fmt/138", "value": "OpenDocument Presentation (odp)"}
 ];
@@ -174,7 +186,11 @@ var emptyList = [{id: '', value: ''},
 
 var loginOptions = [
     {id: 'SA', value: "saksbehandler"},
-    {id: 'AR', value: "arkivar"}];
+    {id: 'LR', value: "leder"},
+    {id: 'AR', value: "arkivar"},
+    {id: 'KS', value: "kvalitetsikring"},
+    {id: 'PK', value: "postmottak"}
+];
 
 var SetUserToken = function (t) {
     localStorage.setItem("token", t);

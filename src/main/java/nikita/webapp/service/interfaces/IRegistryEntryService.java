@@ -1,5 +1,6 @@
 package nikita.webapp.service.interfaces;
 
+import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
@@ -18,6 +19,8 @@ public interface IRegistryEntryService {
 
     // All save methods
     RegistryEntry save(RegistryEntry registryEntry);
+
+    RegistryEntryHateoas expandRecordAsRegistryEntryFileHateoas(Record record);
 
     PrecedenceHateoas createPrecedenceAssociatedWithRecord(
             String registryEntrysystemID, Precedence precedence);

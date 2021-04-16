@@ -20,6 +20,7 @@ import nikita.common.repository.n5v5.secondary.IPartRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.secondary.IPartHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.IBSMService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
@@ -62,12 +63,13 @@ public class PartService
 
     public PartService(EntityManager entityManager,
                        ApplicationEventPublisher applicationEventPublisher,
+                       IPatchService patchService,
                        IPartRoleRepository partRoleRepository,
                        IPartRepository partRepository,
                        IMetadataService metadataService,
                        IPartHateoasHandler partHateoasHandler,
                        IBSMService bsmService) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, patchService);
         this.partRoleRepository = partRoleRepository;
         this.partRepository = partRepository;
         this.metadataService = metadataService;

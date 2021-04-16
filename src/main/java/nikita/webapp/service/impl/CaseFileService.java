@@ -1,5 +1,10 @@
 package nikita.webapp.service.impl;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import nikita.common.model.nikita.PatchMerge;
+import nikita.common.model.noark5.v5.File;
+import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.admin.User;
@@ -15,11 +20,13 @@ import nikita.common.model.noark5.v5.metadata.CaseStatus;
 import nikita.common.model.noark5.v5.secondary.Precedence;
 import nikita.common.repository.n5v5.ICaseFileRepository;
 import nikita.common.repository.nikita.IUserRepository;
+import nikita.common.util.exceptions.NikitaMisconfigurationException;
 import nikita.common.util.exceptions.NoarkAdministrativeUnitMemberException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.ICaseFileHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.IPrecedenceHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.ICaseFileService;
 import nikita.webapp.service.interfaces.IRegistryEntryService;
 import nikita.webapp.service.interfaces.ISequenceNumberGeneratorService;
@@ -38,15 +45,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
+import java.io.StringWriter;
 import java.time.OffsetDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
-import static nikita.common.config.Constants.DEFAULT_CASE_STATUS_CODE;
-import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
-import static nikita.common.config.N5ResourceMappings.CASE_STATUS;
+import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.util.CommonUtils.Hateoas.Serialize.formatDateTime;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
 import static org.springframework.http.HttpStatus.OK;
@@ -60,20 +65,21 @@ public class CaseFileService
     private static final Logger logger =
             LoggerFactory.getLogger(CaseFileService.class);
 
-    private IRegistryEntryService registryEntryService;
-    private IRecordNoteService recordNoteService;
-    private ICaseFileRepository caseFileRepository;
-    private ISequenceNumberGeneratorService numberGeneratorService;
-    private IAdministrativeUnitService administrativeUnitService;
-    private IPrecedenceService precedenceService;
-    private IUserRepository userRepository;
-    private IMetadataService metadataService;
-    private IPrecedenceHateoasHandler precedenceHateoasHandler;
-    private ICaseFileHateoasHandler caseFileHateoasHandler;
+    private final IRegistryEntryService registryEntryService;
+    private final IRecordNoteService recordNoteService;
+    private final ICaseFileRepository caseFileRepository;
+    private final ISequenceNumberGeneratorService numberGeneratorService;
+    private final IAdministrativeUnitService administrativeUnitService;
+    private final IPrecedenceService precedenceService;
+    private final IUserRepository userRepository;
+    private final IMetadataService metadataService;
+    private final IPrecedenceHateoasHandler precedenceHateoasHandler;
+    private final ICaseFileHateoasHandler caseFileHateoasHandler;
 
     public CaseFileService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IPatchService patchService,
             IRegistryEntryService registryEntryService,
             IRecordNoteService recordNoteService,
             ICaseFileRepository caseFileRepository,
@@ -84,7 +90,7 @@ public class CaseFileService
             IMetadataService metadataService,
             IPrecedenceHateoasHandler precedenceHateoasHandler,
             ICaseFileHateoasHandler caseFileHateoasHandler) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, patchService);
         this.registryEntryService = registryEntryService;
         this.recordNoteService = recordNoteService;
         this.caseFileRepository = caseFileRepository;
@@ -93,50 +99,87 @@ public class CaseFileService
         this.precedenceService = precedenceService;
         this.userRepository = userRepository;
         this.metadataService = metadataService;
-        this.metadataService = metadataService;
-        this.precedenceHateoasHandler =  precedenceHateoasHandler;
+        this.precedenceHateoasHandler = precedenceHateoasHandler;
         this.caseFileHateoasHandler = caseFileHateoasHandler;
     }
 
     @Override
     public CaseFile save(CaseFile caseFile) {
-        validateDocumentMedium(metadataService, caseFile);
+        processCaseFileBeforeSave(caseFile);
+        return caseFileRepository.save(caseFile);
+    }
 
-        validateCaseStatus(caseFile);
+    /**
+     * Expand a file to a casefile object and save it to the database
+     * <p>
+     * This method 'cheats' a little as the session has a File object with
+     * the identified systemId and it is not possible to cast File to
+     * CaseFile and save it. So a native query is created that inserts the
+     * required values to the casefile table. Then a CaseFile object is
+     * created with all the required values and links. For a client, this
+     * CaseFile returned looks like a normal caseFile. It's important to note
+     * this approach as it deviates with the 'normal' approach.
+     *
+     * @param file       the File object to expand
+     * @param patchMerge the incoming values to use when expanding
+     * @return a CaseFile object that holds the values of the persisted
+     * CaseFile
+     */
+    @Override
+    public CaseFileHateoas expandFileAsCaseFileHateoas(
+            File file, PatchMerge patchMerge) {
+        CaseFile caseFile = new CaseFile(file);
 
-        // If the caseResponsible isn't set, set it to the owner of
-        // this object
-        if (null == caseFile.getCaseResponsible()) {
-            caseFile.setCaseResponsible(getUser());
+        CaseStatus caseStatus = getCaseStatus(patchMerge);
+        caseFile.setCaseStatus(caseStatus);
+
+        String caseResponsible = (String) patchMerge.getValue(CASE_RESPONSIBLE);
+        if (null != caseResponsible && !caseResponsible.isEmpty()) {
+            caseFile.setCaseResponsible(caseResponsible);
+        }
+        OffsetDateTime caseDate = (OffsetDateTime)
+                patchMerge.getValue(CASE_DATE);
+        if (null != caseDate) {
+            caseFile.setCaseDate(caseDate);
+        }
+        processCaseFileBeforeSave(caseFile);
+        entityManager.createNativeQuery(
+                "INSERT INTO " + TABLE_CASE_FILE +
+                        "(" + SYSTEM_ID_ENG + ", " + CASE_DATE_ENG + ", " +
+                        CASE_RESPONSIBLE_ENG + ", " + CASE_STATUS_CODE_ENG +
+                        ", " + CASE_STATUS_CODE_NAME_ENG + "," + CASE_YEAR_ENG +
+                        ", " + CASE_SEQUENCE_NUMBER_ENG + ", " +
+                        CASE_RECORDS_MANAGEMENT_UNIT_ENG +
+                        ") VALUES (?,?,?,?,?,?,?,?)")
+                .setParameter(1, file.getSystemIdAsString())
+                .setParameter(2, caseFile.getCaseDate())
+                .setParameter(3, caseFile.getCaseResponsible())
+                .setParameter(4, caseFile.getCaseStatus().getCode())
+                .setParameter(5, caseFile.getCaseStatus().getCodeName())
+                .setParameter(6, caseFile.getCaseYear())
+                .setParameter(7, caseFile.getCaseSequenceNumber())
+                .setParameter(8, caseFile.getRecordsManagementUnit())
+                .executeUpdate();
+        file.setFileId(caseFile.getFileId());
+        // Automatically update all records as RegistryEntry
+        // Note: This is just to make things easier for teaching. In reality
+        // the client will expand the records individually. Perhaps some
+        // records are meant to RecordNote
+        for (Record record : file.getReferenceRecord()) {
+            registryEntryService.expandRecordAsRegistryEntryFileHateoas(record);
         }
 
-        // Before assigning ownership make sure the owner is part of the
-        // administrative unit
-        AdministrativeUnit administrativeUnit =
-                getAdministrativeUnitIfMemberOrThrow(caseFile);
-        caseFile.setReferenceAdministrativeUnit(administrativeUnit);
-
-        // Set case year
-        Integer currentYear = OffsetDateTime.now().getYear();
-        caseFile.setCaseYear(currentYear);
-        caseFile.setCaseDate(OffsetDateTime.now());
-        caseFile.setCaseSequenceNumber(getNextSequenceNumber(
-                administrativeUnit));
-        caseFile.setFileId(currentYear.toString() + "/" +
-                caseFile.getCaseSequenceNumber());
-        return caseFileRepository.save(caseFile);
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityCreatedEvent(this, caseFile));
+        return packAsHateoas(caseFile);
     }
 
     @Override
     public CaseFileHateoas saveHateoas(CaseFile caseFile) {
         CaseFile caseFileNew = save(caseFile);
-        CaseFileHateoas caseFileHateoas = new
-                CaseFileHateoas(caseFileNew);
-        caseFileHateoasHandler.addLinks(caseFileHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityCreatedEvent(
-                        this, caseFileNew));
-        return caseFileHateoas;
+                new AfterNoarkEntityCreatedEvent(this, caseFileNew));
+        return packAsHateoas(caseFile);
     }
 
     // systemId
@@ -208,8 +251,7 @@ public class CaseFileService
      * required values.
      *
      * @param fileSystemId systemID of the caseFile
-     * @param recordNote the incoming RecordNote object
-     *
+     * @param recordNote   the incoming RecordNote object
      * @return the recordNote object wrapped as a Hateoas object, further
      * wrapped as a ResponseEntity
      */
@@ -273,7 +315,6 @@ public class CaseFileService
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public ResponseEntity<CaseFileHateoas> findAllCaseFileBySeries(Series series) {
         CaseFileHateoas caseFileHateoas = new CaseFileHateoas(
                 (List<INoarkEntity>)
@@ -380,8 +421,8 @@ public class CaseFileService
         defaultCaseFile.setCaseResponsible(getUser());
         defaultCaseFile.setCaseDate(OffsetDateTime.now());
         CaseStatus caseStatus = (CaseStatus)
-            metadataService.findValidMetadataByEntityTypeOrThrow
-                (CASE_STATUS, DEFAULT_CASE_STATUS_CODE, null);
+                metadataService.findValidMetadataByEntityTypeOrThrow
+                        (CASE_STATUS, DEFAULT_CASE_STATUS_CODE, null);
         defaultCaseFile.setCaseStatus(caseStatus);
 
         CaseFileHateoas caseFileHateoas = new
@@ -389,6 +430,31 @@ public class CaseFileService
         caseFileHateoasHandler.addLinksOnTemplate(caseFileHateoas,
                 new Authorisation());
         return caseFileHateoas;
+    }
+
+    @Override
+    public String generateDefaultExpandedCaseFile() {
+        try {
+            JsonFactory factory = new JsonFactory();
+            StringWriter jsonPatchWriter = new StringWriter();
+            JsonGenerator jsonPatch = factory.createGenerator(jsonPatchWriter);
+            jsonPatch.writeStartObject();
+            jsonPatch.writeObjectFieldStart(CASE_STATUS);
+            jsonPatch.writeStringField(CODE, "R");
+            jsonPatch.writeStringField(CODE_NAME, "Opprettet av saksbehandler");
+            jsonPatch.writeEndObject();
+            jsonPatch.writeStringField(CASE_RESPONSIBLE, getUser());
+            jsonPatch.writeStringField(CASE_DATE,
+                    formatDateTime(OffsetDateTime.now()));
+            jsonPatch.writeEndObject();
+            jsonPatch.close();
+            return jsonPatchWriter.toString();
+        } catch (Exception e) {
+            String error = "Error creating default JSON for default " +
+                    "utvid-til-saksmappe";
+            logger.error(error);
+            throw new NikitaMisconfigurationException(error);
+        }
     }
 
     /**
@@ -506,5 +572,49 @@ public class CaseFileService
                     .findValidMetadata(caseFile.getCaseStatus());
             caseFile.setCaseStatus(caseStatus);
         }
+    }
+
+    private CaseFileHateoas packAsHateoas(CaseFile caseFile) {
+        CaseFileHateoas caseFileHateoas = new CaseFileHateoas(caseFile);
+        caseFileHateoasHandler.addLinks(caseFileHateoas, new Authorisation());
+        setOutgoingRequestHeader(caseFileHateoas);
+        return caseFileHateoas;
+    }
+
+    private void processCaseFileBeforeSave(CaseFile caseFile) {
+        validateDocumentMedium(metadataService, caseFile);
+        validateCaseStatus(caseFile);
+        // If the caseResponsible isn't set, set it to the owner of
+        // this object
+        if (null == caseFile.getCaseResponsible()) {
+            caseFile.setCaseResponsible(getUser());
+        }
+
+        // Before assigning ownership make sure the owner is part of the
+        // administrative unit
+        AdministrativeUnit administrativeUnit =
+                getAdministrativeUnitIfMemberOrThrow(caseFile);
+        caseFile.setReferenceAdministrativeUnit(administrativeUnit);
+
+        // Set case year
+        Integer currentYear = OffsetDateTime.now().getYear();
+        caseFile.setCaseYear(currentYear);
+        caseFile.setCaseDate(OffsetDateTime.now());
+        caseFile.setCaseSequenceNumber(getNextSequenceNumber(
+                administrativeUnit));
+        caseFile.setFileId(currentYear.toString() + "/" +
+                caseFile.getCaseSequenceNumber());
+    }
+
+
+    private CaseStatus getCaseStatus(PatchMerge patchMerge) {
+        Map<String, Object> caseStatus = (Map<String, Object>)
+                patchMerge.getValue(CASE_STATUS);
+        String caseStatusCode = (String) caseStatus.get(CODE);
+        if (null == caseStatusCode) {
+            caseStatusCode = "R";
+        }
+        String caseStatusCodeName = (String) caseStatus.get(CODE_NAME);
+        return new CaseStatus(caseStatusCode, caseStatusCodeName);
     }
 }

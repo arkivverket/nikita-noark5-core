@@ -465,8 +465,6 @@ public class StructureTest {
         jsonCorrespondencePart.close();
         jsonCorrespondencePartWriter.close();
 
-        System.out.println(jsonCorrespondencePartWriter.toString());
-
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
                 .post(url)
                 .contextPath("/noark5v5")

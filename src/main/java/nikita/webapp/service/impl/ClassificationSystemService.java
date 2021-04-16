@@ -13,6 +13,7 @@ import nikita.webapp.hateoas.interfaces.IClassHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IClassificationSystemHateoasHandler;
 import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.IClassService;
 import nikita.webapp.service.interfaces.IClassificationSystemService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
@@ -66,6 +67,7 @@ public class ClassificationSystemService
     public ClassificationSystemService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IPatchService patchService,
             IMetadataService metadataService,
             IClassService classService,
             IClassificationSystemRepository classificationSystemRepository,
@@ -73,7 +75,7 @@ public class ClassificationSystemService
                     classificationSystemHateoasHandler,
             IClassHateoasHandler classHateoasHandler,
             ISeriesHateoasHandler seriesHateoasHandler) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, patchService);
         this.metadataService = metadataService;
         this.classService = classService;
         this.classificationSystemRepository = classificationSystemRepository;

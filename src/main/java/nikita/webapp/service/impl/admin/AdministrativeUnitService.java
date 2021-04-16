@@ -4,6 +4,7 @@ import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.admin.User;
 import nikita.common.repository.n5v5.admin.IAdministrativeUnitRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
+import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.ISequenceNumberGeneratorService;
 import nikita.webapp.service.interfaces.admin.IAdministrativeUnitService;
@@ -38,9 +39,10 @@ public class AdministrativeUnitService
     public AdministrativeUnitService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IPatchService patchService,
             IAdministrativeUnitRepository administrativeUnitRepository,
             ISequenceNumberGeneratorService numberGeneratorService) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, patchService);
         this.administrativeUnitRepository = administrativeUnitRepository;
         this.numberGeneratorService = numberGeneratorService;
     }

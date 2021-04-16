@@ -1,6 +1,7 @@
 package nikita.webapp.service.interfaces;
 
 
+import nikita.common.model.nikita.PatchMerge;
 import nikita.common.model.nikita.PatchObjects;
 import nikita.common.model.noark5.bsm.BSMBase;
 import nikita.common.model.noark5.v5.File;
@@ -9,6 +10,7 @@ import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
 import nikita.common.model.noark5.v5.hateoas.FileHateoas;
 import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
 import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
 import nikita.common.model.noark5.v5.hateoas.secondary.CommentHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.PartHateoas;
@@ -29,10 +31,13 @@ public interface IFileService {
     // -- All CREATE operations
     File createFile(File file);
 
+    CaseFileHateoas expandToCaseFile(
+            @NotNull final UUID systemId, @NotNull final PatchMerge patchMerge);
+
     FileHateoas createFileAssociatedWithFile(String systemId, File file);
 
     CommentHateoas createCommentAssociatedWithFile
-        (String systemID, Comment comment);
+            (String systemID, Comment comment);
 
     PartPersonHateoas createPartPersonAssociatedWithFile(
             String systemID, PartPerson partPerson);
@@ -51,6 +56,9 @@ public interface IFileService {
     PartPersonHateoas generateDefaultPartPerson(String systemID);
 
     PartUnitHateoas generateDefaultPartUnit(String systemID);
+
+    String generateDefaultValuesToExpandToCaseFile(
+            @NotNull final UUID systemId);
 
     BuildingHateoas
     createBuildingAssociatedWithFile(

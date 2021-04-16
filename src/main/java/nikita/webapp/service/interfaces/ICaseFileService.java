@@ -1,5 +1,7 @@
 package nikita.webapp.service.interfaces;
 
+import nikita.common.model.nikita.PatchMerge;
+import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.casehandling.RecordNote;
@@ -20,6 +22,9 @@ public interface ICaseFileService {
     CaseFile save(@NotNull CaseFile caseFile);
 
     CaseFileHateoas saveHateoas(@NotNull CaseFile caseFile);
+
+    CaseFileHateoas expandFileAsCaseFileHateoas(
+            @NotNull File file, PatchMerge patchMerge);
 
     PrecedenceHateoas createPrecedenceAssociatedWithFile(
             String caseFileSystemID, Precedence precedence);
@@ -60,9 +65,11 @@ public interface ICaseFileService {
 
     PrecedenceHateoas generateDefaultPrecedence(String systemID);
 
+    String generateDefaultExpandedCaseFile();
+
     // All DELETE operations
+
     void deleteEntity(@NotNull String systemId);
 
     long deleteAllByOwnedBy();
-
 }

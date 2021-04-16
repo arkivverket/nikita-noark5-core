@@ -14,6 +14,7 @@ import nikita.common.util.exceptions.NoarkEntityEditWhenClosedException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.*;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.ICaseFileService;
 import nikita.webapp.service.interfaces.IClassificationSystemService;
 import nikita.webapp.service.interfaces.IFileService;
@@ -63,6 +64,7 @@ public class SeriesService
     public SeriesService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IPatchService patchService,
             IClassificationSystemService classificationSystemService,
             IFileService fileService,
             ICaseFileService caseFileService,
@@ -74,7 +76,7 @@ public class SeriesService
             IFondsHateoasHandler fondsHateoasHandler,
             IClassificationSystemHateoasHandler
                     classificationSystemHateoasHandler) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, patchService);
         this.metadataService = metadataService;
         this.fileService = fileService;
         this.caseFileService = caseFileService;
@@ -251,6 +253,7 @@ public class SeriesService
             existingSeries.setDocumentMedium(
                     incomingSeries.getDocumentMedium());
         }
+        existingSeries.setSeriesStatus(incomingSeries.getSeriesStatus());
 
         existingSeries.setReferencePrecursorSystemID
             (incomingSeries.getReferencePrecursorSystemID());

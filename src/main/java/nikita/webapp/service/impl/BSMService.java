@@ -4,6 +4,7 @@ import nikita.common.model.noark5.bsm.BSMBase;
 import nikita.common.model.noark5.v5.md_other.BSMMetadata;
 import nikita.common.repository.n5v5.other.IBSMMetadataRepository;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
+import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.IBSMService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,8 +33,9 @@ public class BSMService
 
     public BSMService(EntityManager entityManager,
                       ApplicationEventPublisher applicationEventPublisher,
+                      IPatchService patchService,
                       IBSMMetadataRepository metadataRepository) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, patchService);
         this.metadataRepository = metadataRepository;
     }
 

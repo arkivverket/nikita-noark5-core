@@ -898,7 +898,8 @@ public final class N5ResourceMappings {
     public static final String DOCUMENT_OBJECT_FORMAT_ENG_OBJECT = "format";
     public static final String DOCUMENT_OBJECT_MIME_TYPE_ENG_OBJECT = "mimeType";
     public static final String DOCUMENT_OBJECT_REFERENCE_DOCUMENT_FILE_ENG_OBJECT = "referenceDocumentFile";
-    public static final String DOCUMENT_OBJECT_VARIANT_FORMAT_ENG_OBJECT = "variantformat";
+    public static final String DOCUMENT_OBJECT_VARIANT_FORMAT_ENG_OBJECT =
+            "variantFormat";
     public static final String DOCUMENT_OBJECT_VERSION_NUMBER_ENG_OBJECT = "versionNumber";
     public static final String DOCUMENT_STATUS_ENG_OBJECT = "DocumentStatus";
     public static final String DOCUMENT_TYPE_ENG_OBJECT = "DocumentType";
@@ -1027,7 +1028,7 @@ public final class N5ResourceMappings {
     public static final String TITLE_ENG_OBJECT = "title";
     public static final String USER_ENG_OBJECT = "bruker";
     public static final String USER_NAME_ENG_OBJECT = "brukerNavn";
-    public static final String VARIANT_FORMAT_ENG_OBJECT = "variantformat";
+    public static final String VARIANT_FORMAT_ENG_OBJECT = "variantFormat";
     public static final String X_ENG_OBJECT = "x";
     public static final String Y_ENG_OBJECT = "y";
     public static final String Z_ENG_OBJECT = "z";
@@ -1035,6 +1036,16 @@ public final class N5ResourceMappings {
     public static final String COMMENT_TYPE_CODE = "merknadstypekode";
     public static final String COMMENT_TYPE_CODE_ENG = "comment_type_code";
     public static final String COMMENT_TYPE_CODE_ENG_OBJECT = "commentTypeCode";
+
+    public static final String CASE_STATUS_CODE = "saksstatuskode";
+    public static final String CASE_STATUS_CODE_ENG = "case_status_code";
+    public static final String CASE_STATUS_CODE_OBJECT = "caseStatusCode";
+
+    public static final String CASE_STATUS_CODE_NAME = "saksstatuskodenavn";
+    public static final String CASE_STATUS_CODE_NAME_ENG =
+            "case_status_code_name";
+    public static final String CASE_STATUS_CODE_NAME_OBJECT =
+            "caseStatusCodename";
 
     public static final String COMMENT_TYPE_CODE_NAME = "merknadstypekodenavn";
     public static final String COMMENT_TYPE_CODE_NAME_ENG =

@@ -223,6 +223,10 @@ public class BSMTest {
                 .contentType(CONTENT_TYPE_JSON_MERGE_PATCH)
                 .content(jsonPatchWriter.toString()));
 
+        MockHttpServletResponse response = resultActions.andReturn()
+                .getResponse();
+        System.out.println(response.getContentAsString());
+
         resultActions
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$." + DESCRIPTION)
@@ -264,7 +268,7 @@ public class BSMTest {
                 .contextPath("/noark5v5")
                 .accept(NOARK5_V5_CONTENT_TYPE_JSON));
 
-        MockHttpServletResponse response =
+        response =
                 resultActions.andReturn().getResponse();
         System.out.println(response.getContentAsString());
 

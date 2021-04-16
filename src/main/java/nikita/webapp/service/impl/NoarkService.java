@@ -1,6 +1,5 @@
 package nikita.webapp.service.impl;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import nikita.common.model.nikita.PatchMerge;
 import nikita.common.model.nikita.PatchObject;
 import nikita.common.model.nikita.PatchObjects;
@@ -16,6 +15,7 @@ import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import nikita.common.util.exceptions.NikitaMisconfigurationException;
 import nikita.common.util.exceptions.NoarkConcurrencyException;
 import nikita.common.util.exceptions.PatchMisconfigurationException;
+import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.INoarkService;
 import nikita.webapp.util.annotation.Updatable;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -60,11 +60,14 @@ public class NoarkService
 
     protected EntityManager entityManager;
     protected ApplicationEventPublisher applicationEventPublisher;
+    protected final IPatchService patchService;
 
     public NoarkService(EntityManager entityManager,
-                        ApplicationEventPublisher applicationEventPublisher) {
+                        ApplicationEventPublisher applicationEventPublisher,
+                        IPatchService patchService) {
         this.entityManager = entityManager;
         this.applicationEventPublisher = applicationEventPublisher;
+        this.patchService = patchService;
     }
 
     protected void updateTitleAndDescription(
@@ -212,7 +215,7 @@ public class NoarkService
             } else if ("add" .equalsIgnoreCase(patchObject.getOp())) {
                 return handlePatchAdd((UUID) object, patchObject);
             } else if ("move" .equalsIgnoreCase(patchObject.getOp())) {
-                handlePatchMove(object, patchObject);
+                return handlePatchMove((UUID) object, patchObject);
             } else {
                 String error = "Cannot handle this PatchObject : " +
                         patchObject.toString();
@@ -223,8 +226,20 @@ public class NoarkService
         return null;
     }
 
-    protected void handlePatchMove(Object object, PatchObject patchObject) {
-
+    /**
+     * registrering/systemID (what)
+     * {
+     * "op": "move",
+     * "from": "mappe/systemID", (fromObject)
+     * "path": "mappe/systemID" (toObject)
+     * }
+     *
+     * @param originalObjectId
+     * @param patchObject
+     */
+    protected Object handlePatchMove(UUID originalObjectId,
+                                     PatchObject patchObject) {
+        return patchService.handlePatch(originalObjectId, patchObject);
     }
 
     /**
@@ -262,32 +277,9 @@ public class NoarkService
     }
 
     protected void handlePatchMerge(Object object, PatchMerge patchMerge) {
+
         for (Map.Entry<String, Object> entry : patchMerge.getMap().entrySet()) {
-            JsonNode valueNode = (JsonNode) entry.getValue();
-            if (valueNode != null) {
-                if (valueNode.isBoolean()) {
-                    updateObject(object, valueNode.booleanValue(),
-                            entry.getKey());
-                } else if (valueNode.isDouble()) {
-                    updateObject(object, valueNode.doubleValue(),
-                            entry.getKey());
-                } else if (valueNode.isInt()) {
-                    updateObject(object, valueNode.intValue(), entry.getKey());
-                } else if (valueNode.isTextual()) {
-                    String value = valueNode.textValue();
-                    if (DATE_TIME_PATTERN.matcher(value).matches()) {
-                        updateObject(object,
-                                deserializeDateTime(value),
-                                entry.getKey());
-                    } else if (DATE_PATTERN.matcher(value).matches()) {
-                        updateObject(object,
-                                deserializeDate(value),
-                                entry.getKey());
-                    } else {
-                        updateObject(object, value, entry.getKey());
-                    }
-                }
-            }
+            updateObject(object, entry.getValue(), entry.getKey());
         }
     }
 

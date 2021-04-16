@@ -23,6 +23,7 @@ import nikita.webapp.hateoas.interfaces.secondary.IAuthorHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.ICommentHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.IPartHateoasHandler;
 import nikita.webapp.security.Authorisation;
+import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.IBSMService;
 import nikita.webapp.service.interfaces.IDocumentDescriptionService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
@@ -72,6 +73,7 @@ public class DocumentDescriptionService
     public DocumentDescriptionService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IPatchService patchService,
             DocumentObjectService documentObjectService,
             IDocumentDescriptionRepository documentDescriptionRepository,
             IDocumentDescriptionHateoasHandler
@@ -86,7 +88,7 @@ public class DocumentDescriptionService
             IAuthorHateoasHandler authorHateoasHandler,
             ICommentHateoasHandler commentHateoasHandler,
             IBSMService bsmService) {
-        super(entityManager, applicationEventPublisher);
+        super(entityManager, applicationEventPublisher, patchService);
         this.documentObjectService = documentObjectService;
         this.documentDescriptionRepository = documentDescriptionRepository;
         this.documentDescriptionHateoasHandler =
@@ -357,17 +359,26 @@ public class DocumentDescriptionService
             @NotNull DocumentDescription incomingDocumentDescription) {
         DocumentDescription existingDocumentDescription =
                 getDocumentDescriptionOrThrow(systemId);
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
+        existingDocumentDescription.setVersion(version);
         updateDeletion(incomingDocumentDescription,
                 existingDocumentDescription);
         updateTitleAndDescription(incomingDocumentDescription,
                 existingDocumentDescription);
         updateDocumentDescription(incomingDocumentDescription,
                 existingDocumentDescription);
+
+        validateDocumentType(incomingDocumentDescription);
+        existingDocumentDescription.setDocumentType(
+                incomingDocumentDescription.getDocumentType());
+        validateDocumentStatus(incomingDocumentDescription);
+        existingDocumentDescription.setDocumentStatus(
+                incomingDocumentDescription.getDocumentStatus());
+
         bsmService.validateBSMList(incomingDocumentDescription
                 .getReferenceBSMBase());
-        // Note setVersion can potentially result in a NoarkConcurrencyException
-        // exception as it checks the ETAG value
-        existingDocumentDescription.setVersion(version);
+
         DocumentDescriptionHateoas documentDescriptionHateoas =
                 new DocumentDescriptionHateoas
                         (documentDescriptionRepository.save(existingDocumentDescription));

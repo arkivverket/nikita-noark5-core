@@ -87,20 +87,24 @@ public class CaseFile
     @JsonProperty(CASE_RECORDS_MANAGEMENT_UNIT)
     private String recordsManagementUnit;
 
+    // Links to Precedence
+    @ManyToMany(cascade = {PERSIST, MERGE})
+    @JoinTable(name = TABLE_CASE_FILE_PRECEDENCE,
+            joinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_CASE_FILE_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
+            inverseJoinColumns = @JoinColumn(
+                    name = FOREIGN_KEY_PRECEDENCE_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
+    private final Set<Precedence> referencePrecedence = new HashSet<>();
     /**
      * M??? - saksstatus kode (xs:string)
      */
     @NotNull
-    @Column(name = "case_status_code", nullable = false)
+    @Column(name = CASE_STATUS_CODE_ENG, nullable = false)
+    @JsonProperty(CASE_STATUS_CODE)
     @Audited
     private String caseStatusCode;
-
-    /**
-     * M??? - saksstatus name (xs:string)
-     */
-    @Column(name = "case_status_code_name")
-    @Audited
-    private String caseStatusCodeName;
 
     /**
      * M106 - utlaantDato (xs:date)
@@ -118,17 +122,13 @@ public class CaseFile
     @Audited
     @JsonProperty(CASE_LOANED_TO)
     private String loanedTo;
-
-    // Links to Precedence
-    @ManyToMany(cascade = {PERSIST, MERGE})
-    @JoinTable(name = TABLE_CASE_FILE_PRECEDENCE,
-            joinColumns = @JoinColumn(
-                    name = FOREIGN_KEY_CASE_FILE_PK,
-                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
-            inverseJoinColumns = @JoinColumn(
-                    name = FOREIGN_KEY_PRECEDENCE_PK,
-                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private Set<Precedence> referencePrecedence = new HashSet<>();
+    /**
+     * M??? - saksstatus name (xs:string)
+     */
+    @Column(name = CASE_STATUS_CODE_NAME_ENG)
+    @JsonProperty(CASE_STATUS_CODE_NAME)
+    @Audited
+    private String caseStatusCodeName;
 
     // Link to AdministrativeUnit
     @ManyToOne(fetch = LAZY)
@@ -136,6 +136,26 @@ public class CaseFile
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     @JsonIgnore
     private AdministrativeUnit referenceAdministrativeUnit;
+
+    public CaseFile(File file) {
+        super();
+        setSystemId(file.getSystemId());
+        setVersion(file.getVersion(), true);
+        setTitle(file.getTitle());
+        setPublicTitle(file.getPublicTitle());
+        setDocumentMedium(file.getDocumentMedium());
+        setFileId(file.getFileId());
+        // Is this a potential problem if the person that expands the file to
+        // a caseFile is not the same person? However the expanded portion
+        // (CaseFile) should not have a different owner than File
+        setCreatedBy(file.getCreatedBy());
+        setCaseDate(file.getCreatedDate());
+        setLastModifiedDate(file.getLastModifiedDate());
+        setLastModifiedBy(file.getLastModifiedBy());
+    }
+
+    public CaseFile() {
+    }
 
     public Integer getCaseYear() {
         return caseYear;

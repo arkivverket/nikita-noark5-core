@@ -2,7 +2,6 @@ package nikita.common.model.noark5.v5.interfaces.entities;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.UUID;
 
 public interface INoarkEntity
         extends Serializable, ICreate, ILastModified {
@@ -14,6 +13,8 @@ public interface INoarkEntity
     Long getVersion();
 
     void setVersion(Long version);
+
+    void setVersion(Long version, Boolean override);
 
     /**
      * Tell nikita what you are. A Fonds returns "arkiv", a File "mappe" and

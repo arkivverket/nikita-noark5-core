@@ -35,7 +35,6 @@ public class InternalNameTranslator {
         addNorToEnglishNameMap
                 ("eier", "owned_by", DM_OWNED_BY);
 
-
         // Add entity name mappings
         addNorToEnglishNameMap
                 (ADMINISTRATIVE_UNIT_FIELD,
@@ -61,6 +60,14 @@ public class InternalNameTranslator {
                 (CASE_FILE,
                         CASE_FILE_ENG,
                         CASE_FILE_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (CASE_STATUS_CODE,
+                        CASE_STATUS_CODE_ENG,
+                        CASE_STATUS_CODE_OBJECT);
+        addNorToEnglishNameMap
+                (CASE_STATUS_CODE_NAME,
+                        CASE_STATUS_CODE_NAME_ENG,
+                        CASE_STATUS_CODE_NAME_OBJECT);
         addNorToEnglishNameMap
                 (CLASSIFIED_CODE,
                         CLASSIFIED_CODE_ENG,
