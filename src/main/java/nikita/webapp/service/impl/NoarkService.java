@@ -1,6 +1,5 @@
 package nikita.webapp.service.impl;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import nikita.common.model.nikita.PatchMerge;
 import nikita.common.model.nikita.PatchObject;
 import nikita.common.model.nikita.PatchObjects;
@@ -278,32 +277,9 @@ public class NoarkService
     }
 
     protected void handlePatchMerge(Object object, PatchMerge patchMerge) {
+
         for (Map.Entry<String, Object> entry : patchMerge.getMap().entrySet()) {
-            JsonNode valueNode = (JsonNode) entry.getValue();
-            if (valueNode != null) {
-                if (valueNode.isBoolean()) {
-                    updateObject(object, valueNode.booleanValue(),
-                            entry.getKey());
-                } else if (valueNode.isDouble()) {
-                    updateObject(object, valueNode.doubleValue(),
-                            entry.getKey());
-                } else if (valueNode.isInt()) {
-                    updateObject(object, valueNode.intValue(), entry.getKey());
-                } else if (valueNode.isTextual()) {
-                    String value = valueNode.textValue();
-                    if (DATE_TIME_PATTERN.matcher(value).matches()) {
-                        updateObject(object,
-                                deserializeDateTime(value),
-                                entry.getKey());
-                    } else if (DATE_PATTERN.matcher(value).matches()) {
-                        updateObject(object,
-                                deserializeDate(value),
-                                entry.getKey());
-                    } else {
-                        updateObject(object, value, entry.getKey());
-                    }
-                }
-            }
+            updateObject(object, entry.getValue(), entry.getKey());
         }
     }
 

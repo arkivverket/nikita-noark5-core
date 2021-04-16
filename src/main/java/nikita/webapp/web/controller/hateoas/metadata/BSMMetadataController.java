@@ -104,8 +104,8 @@ public class BSMMetadataController
                 .body("{}");
     }
 
-    // Update a BSMMetadata with given values
-    // PATCH [contextPath][api]/metadata/virksomhetsspesifikkeMetadata/{systemId}
+    // Get a BSMMetadata with given values
+    // GET [contextPath][api]/metadata/virksomhetsspesifikkeMetadata/{systemId}
     @Operation(summary = "Updates a BSMMetadata identified by a given systemId",
             description = "Returns the newly updated bsmMetadata")
     @ApiResponses(value = {
