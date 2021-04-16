@@ -1,5 +1,6 @@
 package nikita.webapp.odata;
 
+import nikita.webapp.util.annotation.ANationalIdentifier;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
@@ -8,12 +9,12 @@ import org.slf4j.LoggerFactory;
 import javax.persistence.*;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.InternalServerErrorException;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class HibernateEntityReflections {
 
@@ -21,6 +22,7 @@ public class HibernateEntityReflections {
             LoggerFactory.getLogger(HibernateEntityReflections.class);
 
     private final Map<String, Class<?>> entityMap = new HashMap<>();
+    private final Map<String, Class<?>> natIdentMap = new HashMap<>();
 
     public HibernateEntityReflections() {
         constructEntityList();
@@ -87,6 +89,10 @@ public class HibernateEntityReflections {
                 }
             }
         }
+
+        if (foreignKeyName.isEmpty() && null != natIdentMap.get(toClassName)) {
+            foreignKeyName = "referenceNationalIdentifier";
+        }
         return foreignKeyName;
     }
 
@@ -113,17 +119,18 @@ public class HibernateEntityReflections {
 
     protected void constructEntityList() {
         Reflections ref = new Reflections("nikita.common.model.noark5.v5");
-        Set<String> entities1 =
-                ref.getTypesAnnotatedWith(
-                        javax.persistence.Entity.class)
-                        .stream().map(Class::getName).collect(Collectors.toSet());
-
         Iterator<Class<?>> itr =
                 ref.getTypesAnnotatedWith(Entity.class).iterator();
         while (itr.hasNext()) {
             Class klass = itr.next();
             String simpleName = klass.getSimpleName();
             entityMap.put(simpleName, klass);
+            if (klass.isAnnotationPresent(ANationalIdentifier.class)) {
+                Annotation annotation =
+                        klass.getAnnotation(ANationalIdentifier.class);
+                natIdentMap.put(
+                        ((ANationalIdentifier) annotation).name(), klass);
+            }
         }
     }
 }

@@ -8,6 +8,7 @@ import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.ICad
 import nikita.common.util.deserialisers.nationalidentifier.CadastralUnitDeserializer;
 import nikita.common.util.serializers.noark5v5.hateoas.nationalidentifier.CadastralUnitSerializer;
 import nikita.webapp.hateoas.nationalidentifier.CadastralUnitHateoasHandler;
+import nikita.webapp.util.annotation.ANationalIdentifier;
 import nikita.webapp.util.annotation.HateoasObject;
 import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -31,6 +32,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @JsonDeserialize(using = CadastralUnitDeserializer.class)
 @HateoasPacker(using = CadastralUnitHateoasHandler.class)
 @HateoasObject(using = CadastralUnitHateoas.class)
+@ANationalIdentifier(name = CADASTRAL_UNIT)
 public class CadastralUnit
         extends NationalIdentifier
         implements ICadastralUnitEntity {

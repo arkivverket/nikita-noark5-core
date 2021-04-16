@@ -8,6 +8,7 @@ import nikita.common.model.noark5.v5.interfaces.entities.nationalidentifier.IUni
 import nikita.common.util.deserialisers.nationalidentifier.UnitDeserializer;
 import nikita.common.util.serializers.noark5v5.hateoas.nationalidentifier.UnitSerializer;
 import nikita.webapp.hateoas.nationalidentifier.UnitHateoasHandler;
+import nikita.webapp.util.annotation.ANationalIdentifier;
 import nikita.webapp.util.annotation.HateoasObject;
 import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -31,6 +32,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @JsonDeserialize(using = UnitDeserializer.class)
 @HateoasPacker(using = UnitHateoasHandler.class)
 @HateoasObject(using = UnitHateoas.class)
+@ANationalIdentifier(name = UNIT_IDENTIFIER_ENG_OBJECT)
 public class Unit
         extends NationalIdentifier
         implements IUnitEntity {
