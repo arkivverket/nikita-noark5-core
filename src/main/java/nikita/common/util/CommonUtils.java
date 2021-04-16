@@ -76,10 +76,10 @@ public final class CommonUtils {
     private static Map<String, FileExtensionAndMimeType> archiveVersion =
             new HashMap<>();
 
-    // Example 2020-06-30+02:00
+    // Example 2020-06-30+02:00, 2020-06-30Z
     public static final Pattern DATE_PATTERN = Pattern.compile(
             "\\d{4}-(0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01])" +
-                    "\\+?\\d{2}:\\d{2}$");
+                    "(\\+?\\d{2}:\\d{2}$)|(Z)");
 
     // Example 2020-06-30 02:00
     public static final Pattern DB_DATE_PATTERN = Pattern.compile(

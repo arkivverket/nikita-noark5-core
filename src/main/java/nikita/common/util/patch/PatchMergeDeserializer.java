@@ -68,6 +68,8 @@ public class PatchMergeDeserializer
             return node.intValue();
         } else if (node.isTextual()) {
             String value = node.textValue();
+            System.out.println("FLAG TO LOCATE IN GITLAB CI WINDOW YYZZXX: " +
+                    value);
             if (DATE_TIME_PATTERN.matcher(value).matches()) {
                 return deserializeDateTime(value);
             } else if (DATE_PATTERN.matcher(value).matches()) {
