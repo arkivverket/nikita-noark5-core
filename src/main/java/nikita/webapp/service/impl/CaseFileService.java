@@ -109,14 +109,41 @@ public class CaseFileService
         return caseFileRepository.save(caseFile);
     }
 
+    /**
+     * Expand a file to a casefile object and save it to the database
+     * <p>
+     * This method 'cheats' a little as the session has a File object with
+     * the identified systemId and it is not possible to cast File to
+     * CaseFile and save it. So a native query is created that inserts the
+     * required values to the casefile table. Then a CaseFile object is
+     * created with all the required values and links. For a client, this
+     * CaseFile returned looks like a normal caseFile. It's important to note
+     * this approach as it deviates with the 'normal' approach.
+     *
+     * @param file       the File object to expand
+     * @param patchMerge the incoming values to use when expanding
+     * @return a CaseFile object that holds the values of the persisted
+     * CaseFile
+     */
     @Override
     public CaseFileHateoas expandFileAsCaseFileHateoas(
             File file, PatchMerge patchMerge) {
         CaseFile caseFile = new CaseFile(file);
-        caseFile.setCaseStatus(getCaseStatus(patchMerge));
-        caseFile.setCaseResponsible((String)
-                patchMerge.getValue(CASE_RESPONSIBLE));
-        caseFile.setCaseDate((OffsetDateTime) patchMerge.getValue(CASE_DATE));
+
+        CaseStatus caseStatus = getCaseStatus(patchMerge);
+        if (null != caseStatus) {
+            caseFile.setCaseStatus(caseStatus);
+        }
+
+        String caseResponsible = (String) patchMerge.getValue(CASE_RESPONSIBLE);
+        if (null != caseResponsible && !caseResponsible.isEmpty()) {
+            caseFile.setCaseResponsible(caseResponsible);
+        }
+        OffsetDateTime caseDate = (OffsetDateTime)
+                patchMerge.getValue(CASE_DATE);
+        if (null != caseDate) {
+            caseFile.setCaseDate(caseDate);
+        }
         processCaseFileBeforeSave(caseFile);
         entityManager.createNativeQuery(
                 "INSERT INTO " + TABLE_CASE_FILE +
