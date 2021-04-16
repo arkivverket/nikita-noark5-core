@@ -359,6 +359,9 @@ public class DocumentDescriptionService
             @NotNull DocumentDescription incomingDocumentDescription) {
         DocumentDescription existingDocumentDescription =
                 getDocumentDescriptionOrThrow(systemId);
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
+        existingDocumentDescription.setVersion(version);
         updateDeletion(incomingDocumentDescription,
                 existingDocumentDescription);
         updateTitleAndDescription(incomingDocumentDescription,
@@ -375,9 +378,7 @@ public class DocumentDescriptionService
 
         bsmService.validateBSMList(incomingDocumentDescription
                 .getReferenceBSMBase());
-        // Note setVersion can potentially result in a NoarkConcurrencyException
-        // exception as it checks the ETAG value
-        existingDocumentDescription.setVersion(version);
+
         DocumentDescriptionHateoas documentDescriptionHateoas =
                 new DocumentDescriptionHateoas
                         (documentDescriptionRepository.save(existingDocumentDescription));
