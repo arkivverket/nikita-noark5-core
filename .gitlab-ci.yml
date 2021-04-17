@@ -6,6 +6,7 @@ stages:
   - build
   - test
   - use
+  - deploy
 
 include:
   - template: Code-Quality.gitlab-ci.yml
@@ -95,7 +96,7 @@ docker-build-master:
   before_script:
     - apt-get update
   image: maven:3.6.1-jdk-11
-  stage: build
+  stage: deploy
   script:
     - mvn compile jib:build -Djib.to.image=registry.hub.docker.com/oslometabi/nikita-noark5-core:latest -Djib.to.auth.username=$DOCKER_HUB_USER -Djib.to.auth.password=$DOCKER_HUB_PASSWORD
   only:
