@@ -375,8 +375,23 @@ public class GeneralTest {
                 .get(url)
                 .contextPath("/noark5v5")
                 .accept(NOARK5_V5_CONTENT_TYPE_JSON));
-        response =
-                resultActions.andReturn().getResponse();
+        response = resultActions.andReturn().getResponse();
+        resultActions.andDo(document("home",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint())));
+
+        System.out.println(response.getContentAsString());
+        uuid = JsonPath.read(response.getContentAsString(),
+                "$.results[0]." + SYSTEM_ID);
+
+        url = "/noark5v5/api/arkivstruktur/dokumentobjekt/" +
+                uuid + "/konvertering";
+
+        resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON));
+        response = resultActions.andReturn().getResponse();
         System.out.println(response.getContentAsString());
 
         resultActions.andDo(document("home",
