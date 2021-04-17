@@ -363,16 +363,11 @@ public class GeneralTest {
                 .accept(NOARK5_V5_CONTENT_TYPE_JSON)
                 .contentType("application/vnd.oasis.opendocument.text")
                 .content(content));
-        response =
-                resultActions.andReturn().getResponse();
+        response = resultActions.andReturn().getResponse();
         System.out.println(response.getContentAsString());
 
         // Note change of URL to get direct access to OData endpoint
         // Remember nikita redirects all odata queries to this endpoint
-        url = "/noark5v5/odata/api/arkivstruktur/dokumentbeskrivelse" +
-                "/66b92e78-b75d-4b0f-9558-4204ab31c2d1/dokumentobjekt" +
-                "?$filter=variantformat/kode eq 'A'";
-
         url = "/noark5v5/odata/api/arkivstruktur/dokumentobjekt" +
                 "?$filter=variantformat/kode eq 'A'";
 
