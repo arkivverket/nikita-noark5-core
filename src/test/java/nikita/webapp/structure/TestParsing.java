@@ -1521,7 +1521,7 @@ public class TestParsing {
         String uuid = UUID.randomUUID().toString();
         String json = "{ "
                 + "  \"systemID\": \"" + systemID + "\" "
-                + ", \"presedensDato\": \"1865-02-13Z\" "
+                + ", \"presedensDato\": \"1865-02-13T12:30:00+02:00\" "
                 + ", \"opprettetDato\": \"1865-02-13T12:30:00+02:00\" "
                 + ", \"opprettetAv\": \"Some One\" "
                 //+ ", \"referanseOpprettetAv\": \"" + uuid + "\" "

@@ -17,6 +17,7 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;
@@ -27,6 +28,7 @@ import java.util.UUID;
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
 @Table(name = TABLE_PRECEDENCE)
@@ -41,6 +43,7 @@ public class Precedence
      * M111 - presedensDato (xs:date)
      */
     @Column(name = PRECEDENCE_DATE_ENG)
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(PRECEDENCE_DATE)
     private OffsetDateTime precedenceDate;

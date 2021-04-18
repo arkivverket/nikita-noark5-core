@@ -40,7 +40,8 @@ public class PrecedenceDeserializer
         deserialiseNoarkFinaliseEntity(precedence, objectNode, errors);
 
         // Deserialize precedenceDate
-        precedence.setPrecedenceDate(deserializeDate(PRECEDENCE_DATE, objectNode, errors, true));
+        precedence.setPrecedenceDate(
+                deserializeDateTime(PRECEDENCE_DATE, objectNode, errors, true));
 
         // Deserialize precedenceAuthority
         JsonNode currentNode = objectNode.get(PRECEDENCE_AUTHORITY);

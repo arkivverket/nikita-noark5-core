@@ -2,9 +2,9 @@
 package nikita.common.util.serializers.noark5v5.hateoas.secondary;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import nikita.common.model.noark5.v5.secondary.Precedence;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.secondary.Precedence;
 import nikita.common.util.serializers.noark5v5.hateoas.HateoasSerializer;
 import nikita.common.util.serializers.noark5v5.hateoas.interfaces.IHateoasSerializer;
 
@@ -35,8 +35,8 @@ public class PrecedenceHateoasSerializer extends HateoasSerializer implements IH
 
         jgen.writeStartObject();
         printSystemIdEntity(jgen, precedence);
-        printNullableDate(jgen, PRECEDENCE_DATE,
-                          precedence.getPrecedenceDate());
+        printNullableDateTime(jgen, PRECEDENCE_DATE,
+                precedence.getPrecedenceDate());
         printCreateEntity(jgen, precedence);
         printTitleAndDescription(jgen, precedence);
         printNullable(jgen, PRECEDENCE_AUTHORITY,
