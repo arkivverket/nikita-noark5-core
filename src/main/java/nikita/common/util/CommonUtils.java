@@ -1805,7 +1805,7 @@ public final class CommonUtils {
                     jgen.writeNumberField(CASE_SEQUENCE_NUMBER,
                             caseFile.getCaseSequenceNumber());
                 }
-                printNullableDate(jgen, CASE_DATE, caseFile.getCaseDate());
+                printNullableDateTime(jgen, CASE_DATE, caseFile.getCaseDate());
                 printNullable(jgen, CASE_RESPONSIBLE,
                         caseFile.getCaseResponsible());
                 printNullable(jgen, CASE_RECORDS_MANAGEMENT_UNIT,

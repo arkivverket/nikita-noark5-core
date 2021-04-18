@@ -576,7 +576,7 @@ public class TestParsing {
                 + "  } "
                 + ", \"saksaar\": 1942 "
                 + ", \"sakssekvensnummer\": 1 "
-                + ", \"saksdato\": \"1942-07-25Z\" "
+                + ", \"saksdato\": \"1942-07-25T00:00:00+00:00\" "
                 //+", \"administrativEnhet\": \"Management\" "
                 + ", \"saksansvarlig\": \"Another Person\" "
                 + ", \"journalenhet\": \"PR departement\" "
