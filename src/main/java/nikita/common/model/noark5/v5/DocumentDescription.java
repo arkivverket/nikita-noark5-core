@@ -33,7 +33,7 @@ import static javax.persistence.CascadeType.*;
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
-import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
 @Table(name = TABLE_DOCUMENT_DESCRIPTION)
@@ -149,7 +149,7 @@ public class DocumentDescription
      */
     @NotNull
     @Column(name = DOCUMENT_DESCRIPTION_ASSOCIATED_DATE_ENG)
-    @DateTimeFormat(iso = DATE)
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(DOCUMENT_DESCRIPTION_ASSOCIATED_DATE)
     private OffsetDateTime associationDate;
