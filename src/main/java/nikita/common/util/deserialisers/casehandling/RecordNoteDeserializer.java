@@ -85,7 +85,7 @@ public class RecordNoteDeserializer
 
         // Deserialize documentDate
         recordNote.setDocumentDate(
-                deserializeDate(REGISTRY_ENTRY_DOCUMENT_DATE, objectNode,
+                deserializeDateTime(REGISTRY_ENTRY_DOCUMENT_DATE, objectNode,
                         errors));
 
         // Deserialize receivedDate

@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
-import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.common.model.noark5.v5.metadata.RegistryEntryStatus;
 import nikita.common.model.noark5.v5.metadata.RegistryEntryType;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
@@ -135,7 +134,7 @@ public class RegistryEntryDeserializer
 
         // Deserialize documentDate
         registryEntry.setDocumentDate(
-                deserializeDate(REGISTRY_ENTRY_DOCUMENT_DATE, objectNode,
+                deserializeDateTime(REGISTRY_ENTRY_DOCUMENT_DATE, objectNode,
                         errors));
 
         // Deserialize receivedDate

@@ -121,7 +121,7 @@ public class RegistryEntry
      * M103 - dokumentetsDato (xs:date)
      */
     @Column(name = REGISTRY_ENTRY_DOCUMENT_DATE_ENG)
-    @DateTimeFormat(iso = DATE)
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(REGISTRY_ENTRY_DOCUMENT_DATE)
     private OffsetDateTime documentDate;

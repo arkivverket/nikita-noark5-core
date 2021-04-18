@@ -1873,7 +1873,7 @@ public final class CommonUtils {
                     JsonGenerator jgen, IRecordNoteEntity recordNote)
                     throws IOException {
                 if (recordNote != null) {
-                    printNullableDate(jgen, REGISTRY_ENTRY_DOCUMENT_DATE,
+                    printNullableDateTime(jgen, REGISTRY_ENTRY_DOCUMENT_DATE,
                             recordNote.getDocumentDate());
                     printNullableDateTime(jgen, REGISTRY_ENTRY_RECEIVED_DATE,
                             recordNote.getReceivedDate());
