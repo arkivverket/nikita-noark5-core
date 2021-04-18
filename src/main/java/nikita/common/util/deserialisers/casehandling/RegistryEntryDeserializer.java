@@ -148,7 +148,7 @@ public class RegistryEntryDeserializer
 
         // Deserialize dueDate
         registryEntry.setDueDate(
-                deserializeDate(REGISTRY_ENTRY_DUE_DATE, objectNode, errors));
+                deserializeDateTime(REGISTRY_ENTRY_DUE_DATE, objectNode, errors));
 
         // Deserialize freedomAssessmentDate
         registryEntry.setFreedomAssessmentDate(

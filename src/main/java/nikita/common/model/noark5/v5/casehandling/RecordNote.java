@@ -64,9 +64,10 @@ public class RecordNote
     /**
      * M109 - forfallsdato (xs:date)
      */
-    @Column(name = "due_date")
-    @DateTimeFormat(iso = DATE)
+    @Column(name = REGISTRY_ENTRY_DUE_DATE_ENG)
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
+    @JsonProperty(REGISTRY_ENTRY_DUE_DATE)
     private OffsetDateTime dueDate;
 
     /**

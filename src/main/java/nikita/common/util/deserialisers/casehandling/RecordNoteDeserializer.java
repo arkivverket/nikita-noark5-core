@@ -99,7 +99,7 @@ public class RecordNoteDeserializer
 
         // Deserialize dueDate
         recordNote.setDueDate(
-                deserializeDate(REGISTRY_ENTRY_DUE_DATE, objectNode, errors));
+                deserializeDateTime(REGISTRY_ENTRY_DUE_DATE, objectNode, errors));
 
         // Deserialize freedomAssessmentDate
         recordNote.setFreedomAssessmentDate(
