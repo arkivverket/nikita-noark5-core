@@ -89,7 +89,7 @@ public class RecordNote
      * M106 - utlaantDato (xs:date)
      */
     @Column(name = "loaned_date")
-    @DateTimeFormat(iso = DATE)
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
     private OffsetDateTime loanedDate;
 

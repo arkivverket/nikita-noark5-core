@@ -112,7 +112,7 @@ public class RecordNoteDeserializer
                                 objectNode, errors, false));
         // Deserialize loanedDate
         recordNote.setLoanedDate(
-                deserializeDate(CASE_LOANED_DATE, objectNode, errors));
+                deserializeDateTime(CASE_LOANED_DATE, objectNode, errors));
 
         // Deserialize loanedTo
         currentNode = objectNode.get(CASE_LOANED_TO);

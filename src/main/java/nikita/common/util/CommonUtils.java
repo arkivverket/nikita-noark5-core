@@ -1812,7 +1812,7 @@ public final class CommonUtils {
                         caseFile.getRecordsManagementUnit());
                 printNullableMetadata(jgen, CASE_STATUS,
                         caseFile.getCaseStatus());
-                printNullableDate(jgen, CASE_LOANED_DATE,
+                printNullableDateTime(jgen, CASE_LOANED_DATE,
                         caseFile.getLoanedDate());
                 printNullable(jgen, CASE_LOANED_TO,
                         caseFile.getLoanedTo());
@@ -1888,7 +1888,7 @@ public final class CommonUtils {
                         jgen.writeNumberField(REGISTRY_ENTRY_NUMBER_OF_ATTACHMENTS,
                                 recordNote.getNumberOfAttachments());
                     }
-                    printNullableDate(jgen, CASE_LOANED_DATE,
+                    printNullableDateTime(jgen, CASE_LOANED_DATE,
                             recordNote.getLoanedDate());
                     printNullable(jgen, CASE_LOANED_TO,
                             recordNote.getLoanedTo());

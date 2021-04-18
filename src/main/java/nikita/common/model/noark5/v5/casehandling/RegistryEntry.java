@@ -174,7 +174,7 @@ public class RegistryEntry
      * M106 - utlaantDato (xs:date)
      */
     @Column(name = CASE_LOANED_DATE_ENG)
-    @DateTimeFormat(iso = DATE)
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(CASE_LOANED_DATE)
     private OffsetDateTime loanedDate;

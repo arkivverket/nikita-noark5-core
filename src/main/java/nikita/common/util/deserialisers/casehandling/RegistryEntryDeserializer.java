@@ -161,7 +161,7 @@ public class RegistryEntryDeserializer
                                 objectNode, errors, false));
         // Deserialize loanedDate
         registryEntry.setLoanedDate(
-                deserializeDate(CASE_LOANED_DATE, objectNode, errors));
+                deserializeDateTime(CASE_LOANED_DATE, objectNode, errors));
 
         // Deserialize loanedTo
         currentNode = objectNode.get(CASE_LOANED_TO);
