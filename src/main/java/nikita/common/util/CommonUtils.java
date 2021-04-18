@@ -1877,7 +1877,7 @@ public final class CommonUtils {
                             recordNote.getDocumentDate());
                     printNullableDateTime(jgen, REGISTRY_ENTRY_RECEIVED_DATE,
                             recordNote.getReceivedDate());
-                    printNullableDate(jgen, REGISTRY_ENTRY_SENT_DATE,
+                    printNullableDateTime(jgen, REGISTRY_ENTRY_SENT_DATE,
                             recordNote.getSentDate());
                     printNullableDate(jgen, REGISTRY_ENTRY_DUE_DATE,
                             recordNote.getDueDate());
