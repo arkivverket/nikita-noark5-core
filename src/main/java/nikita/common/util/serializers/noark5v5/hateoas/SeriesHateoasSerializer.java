@@ -36,21 +36,21 @@ public class SeriesHateoasSerializer
         printSystemIdEntity(jgen, series);
         printTitleAndDescription(jgen, series);
         printNullableMetadata(jgen, SERIES_STATUS,
-                              series.getSeriesStatus());
+                series.getSeriesStatus());
         printDocumentMedium(jgen, series);
         printStorageLocation(jgen, series);
         printFinaliseEntity(jgen, series);
         printCreateEntity(jgen, series);
         printModifiedEntity(jgen, series);
-        printNullableDate(jgen, SERIES_START_DATE, series.getSeriesStartDate());
-        printNullableDate(jgen, SERIES_END_DATE, series.getSeriesEndDate());
+        printNullableDateTime(jgen, SERIES_START_DATE, series.getSeriesStartDate());
+        printNullableDateTime(jgen, SERIES_END_DATE, series.getSeriesEndDate());
         if (null != series.getReferencePrecursorSystemID()) {
             print(jgen, SERIES_ASSOCIATE_AS_PRECURSOR,
-                  series.getReferencePrecursorSystemID());
+                    series.getReferencePrecursorSystemID());
         }
         if (null != series.getReferenceSuccessorSystemID()) {
             print(jgen, SERIES_ASSOCIATE_AS_SUCCESSOR,
-                  series.getReferenceSuccessorSystemID());
+                    series.getReferenceSuccessorSystemID());
         }
         printDisposal(jgen, series);
         printDisposalUndertaken(jgen, series);

@@ -28,7 +28,7 @@ import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
-import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
 @Table(name = TABLE_SERIES)
@@ -62,7 +62,7 @@ public class Series
      * M107 - arkivperiodeStartDato (xs:date)
      */
     @Column(name = SERIES_START_DATE_ENG)
-    @DateTimeFormat(iso = DATE)
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(SERIES_START_DATE)
     private OffsetDateTime seriesStartDate;
@@ -71,7 +71,7 @@ public class Series
      * M108 - arkivperiodeSluttDato (xs:date)
      */
     @Column(name = SERIES_END_DATE_ENG)
-    @DateTimeFormat(iso = DATE)
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(SERIES_END_DATE)
     private OffsetDateTime seriesEndDate;
