@@ -157,7 +157,7 @@ public class RegistryEntry
      * M110 - offentlighetsvurdertDato (xs:date)
      */
     @Column(name = REGISTRY_ENTRY_RECORD_FREEDOM_ASSESSMENT_DATE_ENG)
-    @DateTimeFormat(iso = DATE)
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(REGISTRY_ENTRY_RECORD_FREEDOM_ASSESSMENT_DATE)
     private OffsetDateTime freedomAssessmentDate;

@@ -152,7 +152,7 @@ public class RegistryEntryDeserializer
 
         // Deserialize freedomAssessmentDate
         registryEntry.setFreedomAssessmentDate(
-                deserializeDate(REGISTRY_ENTRY_RECORD_FREEDOM_ASSESSMENT_DATE,
+                deserializeDateTime(REGISTRY_ENTRY_RECORD_FREEDOM_ASSESSMENT_DATE,
                         objectNode, errors));
 
         // Deserialize numberOfAttachments

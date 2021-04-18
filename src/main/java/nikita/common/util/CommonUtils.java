@@ -1881,7 +1881,7 @@ public final class CommonUtils {
                             recordNote.getSentDate());
                     printNullableDateTime(jgen, REGISTRY_ENTRY_DUE_DATE,
                             recordNote.getDueDate());
-                    printNullableDate
+                    printNullableDateTime();
                             (jgen, REGISTRY_ENTRY_RECORD_FREEDOM_ASSESSMENT_DATE,
                                     recordNote.getFreedomAssessmentDate());
                     if (recordNote.getNumberOfAttachments() != null) {
