@@ -1915,7 +1915,7 @@ public final class CommonUtils {
                             registryEntry.getRegistryEntryType());
                     printNullableMetadata(jgen, REGISTRY_ENTRY_STATUS,
                             registryEntry.getRegistryEntryStatus());
-                    printNullableDate(jgen, REGISTRY_ENTRY_DATE,
+                    printNullableDateTime(jgen, REGISTRY_ENTRY_DATE,
                             registryEntry.getRecordDate());
                     printNullable(jgen, CASE_RECORDS_MANAGEMENT_UNIT,
                             registryEntry.getRecordsManagementUnit());

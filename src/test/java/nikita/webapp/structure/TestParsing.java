@@ -727,7 +727,7 @@ public class TestParsing {
                 + ", \"journalpostnummer\": 1 "
                 + ", \"journalposttype\": { \"kode\": \"I\", \"kodenavn\": \"Inngående dokument\" } "
                 + ", \"journalstatus\": { \"kode\": \"A\", \"kodenavn\": \"Arkivert\" } "
-                + ", \"journaldato\": \"1942-07-25Z\" "
+                + ", \"journaldato\": \"1942-07-25T12:00:00Z\" "
                 + ", \"dokumentetsDato\": \"1942-07-25T12:00:00Z\" "
                 + ", \"mottattDato\": \"2070-02-13T12:00:00+00:00\" "
                 + ", \"sendtDato\": \"1942-07-25T12:00:00Z\" "

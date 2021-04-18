@@ -130,7 +130,7 @@ public class RegistryEntryDeserializer
         registryEntry.setRegistryEntryStatus(registryEntryStatus);
         // Deserialize recordDate
         registryEntry.setRecordDate(
-                deserializeDate(REGISTRY_ENTRY_DATE, objectNode, errors));
+                deserializeDateTime(REGISTRY_ENTRY_DATE, objectNode, errors));
 
         // Deserialize documentDate
         registryEntry.setDocumentDate(
