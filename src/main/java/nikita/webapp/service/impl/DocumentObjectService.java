@@ -492,7 +492,6 @@ public class DocumentObjectService
                     originalDocumentObject.getFormat());
             conversion.setConvertedToFormat(
                     archiveDocumentObject.getFormat());
-            conversion.setReferenceDocumentObject(archiveDocumentObject);
             archiveDocumentObject.addReferenceConversion(conversion);
 
             // Tie the new document object and document description together
