@@ -27,7 +27,7 @@ import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.REL_CASE_HANDLING_SIGN_OFF;
 import static nikita.common.config.Constants.TABLE_SIGN_OFF;
 import static nikita.common.config.N5ResourceMappings.*;
-import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
 @Table(name = TABLE_SIGN_OFF)
@@ -42,7 +42,7 @@ public class SignOff
      * M617 - avskrivningsdato
      */
     @Column(name = SIGN_OFF_DATE_ENG)
-    @DateTimeFormat(iso = DATE)
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(SIGN_OFF_DATE)
     private OffsetDateTime signOffDate;

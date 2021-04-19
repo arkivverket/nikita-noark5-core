@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
-import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.common.model.noark5.v5.metadata.RegistryEntryStatus;
 import nikita.common.model.noark5.v5.metadata.RegistryEntryType;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
@@ -131,11 +130,11 @@ public class RegistryEntryDeserializer
         registryEntry.setRegistryEntryStatus(registryEntryStatus);
         // Deserialize recordDate
         registryEntry.setRecordDate(
-                deserializeDate(REGISTRY_ENTRY_DATE, objectNode, errors));
+                deserializeDateTime(REGISTRY_ENTRY_DATE, objectNode, errors));
 
         // Deserialize documentDate
         registryEntry.setDocumentDate(
-                deserializeDate(REGISTRY_ENTRY_DOCUMENT_DATE, objectNode,
+                deserializeDateTime(REGISTRY_ENTRY_DOCUMENT_DATE, objectNode,
                         errors));
 
         // Deserialize receivedDate
@@ -149,11 +148,11 @@ public class RegistryEntryDeserializer
 
         // Deserialize dueDate
         registryEntry.setDueDate(
-                deserializeDate(REGISTRY_ENTRY_DUE_DATE, objectNode, errors));
+                deserializeDateTime(REGISTRY_ENTRY_DUE_DATE, objectNode, errors));
 
         // Deserialize freedomAssessmentDate
         registryEntry.setFreedomAssessmentDate(
-                deserializeDate(REGISTRY_ENTRY_RECORD_FREEDOM_ASSESSMENT_DATE,
+                deserializeDateTime(REGISTRY_ENTRY_RECORD_FREEDOM_ASSESSMENT_DATE,
                         objectNode, errors));
 
         // Deserialize numberOfAttachments
@@ -162,7 +161,7 @@ public class RegistryEntryDeserializer
                                 objectNode, errors, false));
         // Deserialize loanedDate
         registryEntry.setLoanedDate(
-                deserializeDate(CASE_LOANED_DATE, objectNode, errors));
+                deserializeDateTime(CASE_LOANED_DATE, objectNode, errors));
 
         // Deserialize loanedTo
         currentNode = objectNode.get(CASE_LOANED_TO);

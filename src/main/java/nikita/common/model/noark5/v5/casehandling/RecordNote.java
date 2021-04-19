@@ -1,11 +1,11 @@
 package nikita.common.model.noark5.v5.casehandling;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RecordNoteHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.IRecordNoteEntity;
 import nikita.common.model.noark5.v5.secondary.DocumentFlow;
-import nikita.common.model.noark5.v5.secondary.Precedence;
 import nikita.common.util.deserialisers.casehandling.RecordNoteDeserializer;
 import nikita.webapp.hateoas.casehandling.RecordNoteHateoasHandler;
 import nikita.webapp.util.annotation.HateoasObject;
@@ -22,7 +22,7 @@ import java.util.List;
 
 import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.RECORD_NOTE;
+import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
@@ -39,9 +39,10 @@ public class RecordNote
     /**
      * M103 - dokumentetsDato (xs:date)
      */
-    @Column(name = "document_date")
-    @DateTimeFormat(iso = DATE)
+    @Column(name = REGISTRY_ENTRY_DOCUMENT_DATE_ENG)
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
+    @JsonProperty(REGISTRY_ENTRY_DOCUMENT_DATE)
     private OffsetDateTime documentDate;
 
     /**
@@ -63,9 +64,10 @@ public class RecordNote
     /**
      * M109 - forfallsdato (xs:date)
      */
-    @Column(name = "due_date")
-    @DateTimeFormat(iso = DATE)
+    @Column(name = REGISTRY_ENTRY_DUE_DATE_ENG)
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
+    @JsonProperty(REGISTRY_ENTRY_DUE_DATE)
     private OffsetDateTime dueDate;
 
     /**
@@ -87,7 +89,7 @@ public class RecordNote
      * M106 - utlaantDato (xs:date)
      */
     @Column(name = "loaned_date")
-    @DateTimeFormat(iso = DATE)
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
     private OffsetDateTime loanedDate;
 

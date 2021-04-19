@@ -30,7 +30,7 @@ import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
-import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
 @Table(name = TABLE_CASE_FILE)
@@ -65,7 +65,7 @@ public class CaseFile
      */
     @NotNull
     @Column(name = CASE_DATE_ENG, nullable = false)
-    @DateTimeFormat(iso = DATE)
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(CASE_DATE)
     private OffsetDateTime caseDate;
@@ -110,7 +110,7 @@ public class CaseFile
      * M106 - utlaantDato (xs:date)
      */
     @Column(name = CASE_LOANED_DATE_ENG)
-    @DateTimeFormat(iso = DATE)
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(CASE_LOANED_DATE)
     private OffsetDateTime loanedDate;

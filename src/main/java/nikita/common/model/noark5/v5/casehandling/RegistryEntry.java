@@ -34,7 +34,6 @@ import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
-import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
@@ -112,7 +111,7 @@ public class RegistryEntry
      */
     @NotNull
     @Column(name = REGISTRY_ENTRY_DATE_ENG, nullable = false)
-    @DateTimeFormat(iso = DATE)
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(REGISTRY_ENTRY_DATE)
     private OffsetDateTime recordDate;
@@ -121,7 +120,7 @@ public class RegistryEntry
      * M103 - dokumentetsDato (xs:date)
      */
     @Column(name = REGISTRY_ENTRY_DOCUMENT_DATE_ENG)
-    @DateTimeFormat(iso = DATE)
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(REGISTRY_ENTRY_DOCUMENT_DATE)
     private OffsetDateTime documentDate;
@@ -148,7 +147,7 @@ public class RegistryEntry
      * M109 - forfallsdato (xs:date)
      */
     @Column(name = REGISTRY_ENTRY_DUE_DATE_ENG)
-    @DateTimeFormat(iso = DATE)
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(REGISTRY_ENTRY_DUE_DATE)
     private OffsetDateTime dueDate;
@@ -157,7 +156,7 @@ public class RegistryEntry
      * M110 - offentlighetsvurdertDato (xs:date)
      */
     @Column(name = REGISTRY_ENTRY_RECORD_FREEDOM_ASSESSMENT_DATE_ENG)
-    @DateTimeFormat(iso = DATE)
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(REGISTRY_ENTRY_RECORD_FREEDOM_ASSESSMENT_DATE)
     private OffsetDateTime freedomAssessmentDate;
@@ -174,7 +173,7 @@ public class RegistryEntry
      * M106 - utlaantDato (xs:date)
      */
     @Column(name = CASE_LOANED_DATE_ENG)
-    @DateTimeFormat(iso = DATE)
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(CASE_LOANED_DATE)
     private OffsetDateTime loanedDate;

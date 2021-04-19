@@ -7,6 +7,7 @@ import nikita.common.model.noark5.v5.interfaces.entities.IDisposalUndertakenEnti
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,6 +19,7 @@ import java.util.List;
 
 import static nikita.common.config.Constants.TABLE_DISPOSAL_UNDERTAKEN;
 import static nikita.common.config.N5ResourceMappings.DISPOSAL_UNDERTAKEN;
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
 @Table(name = TABLE_DISPOSAL_UNDERTAKEN)
@@ -38,6 +40,7 @@ public class DisposalUndertaken
      * M630 - kassertDato (xs:dateTime)
      */
     @Column(name = "disposal_date")
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
     private OffsetDateTime disposalDate;
 

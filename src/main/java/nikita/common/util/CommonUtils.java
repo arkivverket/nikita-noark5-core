@@ -949,7 +949,8 @@ public final class CommonUtils {
                         (deserializeInteger(DISPOSAL_PRESERVATION_TIME,
                                 objectNode, errors, false));
                 // Deserialize disposalDate
-                disposalEntity.setDisposalDate(deserializeDate(DISPOSAL_DATE, objectNode, errors));
+                disposalEntity.setDisposalDate(
+                        deserializeDateTime(DISPOSAL_DATE, objectNode, errors));
             }
 
             public static DisposalUndertaken deserialiseDisposalUndertaken(
@@ -1557,7 +1558,8 @@ public final class CommonUtils {
                                 errors, false);
                 screeningEntity.setScreeningDocument(screeningDocument);
                 // Deserialize screeningExpiresDate
-                screeningEntity.setScreeningExpiresDate(deserializeDate(SCREENING_EXPIRES_DATE, objectNode, errors));
+                screeningEntity.setScreeningExpiresDate(
+                        deserializeDateTime(SCREENING_EXPIRES_DATE, objectNode, errors));
 
                 // Deserialize screeningDuration
                 screeningEntity.setScreeningDuration
@@ -1660,7 +1662,7 @@ public final class CommonUtils {
                         objectNode.get(ELECTRONIC_SIGNATURE_VERIFIED_DATE);
                 if (null != currentNode) {
                     electronicSignature.setVerifiedDate(
-                            deserializeDate(currentNode.textValue(),
+                            deserializeDateTime(currentNode.textValue(),
                                     objectNode, errors));
                     objectNode.remove(ELECTRONIC_SIGNATURE_VERIFIED_DATE);
                 } else {
@@ -1805,14 +1807,14 @@ public final class CommonUtils {
                     jgen.writeNumberField(CASE_SEQUENCE_NUMBER,
                             caseFile.getCaseSequenceNumber());
                 }
-                printNullableDate(jgen, CASE_DATE, caseFile.getCaseDate());
+                printNullableDateTime(jgen, CASE_DATE, caseFile.getCaseDate());
                 printNullable(jgen, CASE_RESPONSIBLE,
                         caseFile.getCaseResponsible());
                 printNullable(jgen, CASE_RECORDS_MANAGEMENT_UNIT,
                         caseFile.getRecordsManagementUnit());
                 printNullableMetadata(jgen, CASE_STATUS,
                         caseFile.getCaseStatus());
-                printNullableDate(jgen, CASE_LOANED_DATE,
+                printNullableDateTime(jgen, CASE_LOANED_DATE,
                         caseFile.getLoanedDate());
                 printNullable(jgen, CASE_LOANED_TO,
                         caseFile.getLoanedTo());
@@ -1873,22 +1875,22 @@ public final class CommonUtils {
                     JsonGenerator jgen, IRecordNoteEntity recordNote)
                     throws IOException {
                 if (recordNote != null) {
-                    printNullableDate(jgen, REGISTRY_ENTRY_DOCUMENT_DATE,
+                    printNullableDateTime(jgen, REGISTRY_ENTRY_DOCUMENT_DATE,
                             recordNote.getDocumentDate());
                     printNullableDateTime(jgen, REGISTRY_ENTRY_RECEIVED_DATE,
                             recordNote.getReceivedDate());
                     printNullableDateTime(jgen, REGISTRY_ENTRY_SENT_DATE,
                             recordNote.getSentDate());
-                    printNullableDate(jgen, REGISTRY_ENTRY_DUE_DATE,
+                    printNullableDateTime(jgen, REGISTRY_ENTRY_DUE_DATE,
                             recordNote.getDueDate());
-                    printNullableDate
-                            (jgen, REGISTRY_ENTRY_RECORD_FREEDOM_ASSESSMENT_DATE,
-                                    recordNote.getFreedomAssessmentDate());
+                    printNullableDateTime(jgen,
+                            REGISTRY_ENTRY_RECORD_FREEDOM_ASSESSMENT_DATE,
+                            recordNote.getFreedomAssessmentDate());
                     if (recordNote.getNumberOfAttachments() != null) {
                         jgen.writeNumberField(REGISTRY_ENTRY_NUMBER_OF_ATTACHMENTS,
                                 recordNote.getNumberOfAttachments());
                     }
-                    printNullableDate(jgen, CASE_LOANED_DATE,
+                    printNullableDateTime(jgen, CASE_LOANED_DATE,
                             recordNote.getLoanedDate());
                     printNullable(jgen, CASE_LOANED_TO,
                             recordNote.getLoanedTo());
@@ -1915,7 +1917,7 @@ public final class CommonUtils {
                             registryEntry.getRegistryEntryType());
                     printNullableMetadata(jgen, REGISTRY_ENTRY_STATUS,
                             registryEntry.getRegistryEntryStatus());
-                    printNullableDate(jgen, REGISTRY_ENTRY_DATE,
+                    printNullableDateTime(jgen, REGISTRY_ENTRY_DATE,
                             registryEntry.getRecordDate());
                     printNullable(jgen, CASE_RECORDS_MANAGEMENT_UNIT,
                             registryEntry.getRecordsManagementUnit());
@@ -2297,7 +2299,7 @@ public final class CommonUtils {
                     jgen.writeObjectFieldStart(ELECTRONIC_SIGNATURE);
                     printNullable(jgen, ELECTRONIC_SIGNATURE_VERIFIED_BY,
                             es.getVerifiedBy());
-                    printNullableDate(jgen, ELECTRONIC_SIGNATURE_VERIFIED_DATE,
+                    printNullableDateTime(jgen, ELECTRONIC_SIGNATURE_VERIFIED_DATE,
                             es.getVerifiedDate());
                     printNullableMetadata
                             (jgen, ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD,
@@ -2305,7 +2307,7 @@ public final class CommonUtils {
                     printNullableMetadata
                             (jgen, ELECTRONIC_SIGNATURE_VERIFIED_FIELD,
                                     es.getElectronicSignatureVerified());
-                    printNullableDate(jgen, ELECTRONIC_SIGNATURE_VERIFIED_DATE,
+                    printNullableDateTime(jgen, ELECTRONIC_SIGNATURE_VERIFIED_DATE,
                             es.getVerifiedDate());
                     jgen.writeEndObject();
                 }
@@ -2382,7 +2384,7 @@ public final class CommonUtils {
                                 disposal.getDisposalAuthority());
                         printNullable(jgen, DISPOSAL_PRESERVATION_TIME,
                                 disposal.getPreservationTime());
-                        printNullableDate(jgen, DISPOSAL_DATE,
+                        printNullableDateTime(jgen, DISPOSAL_DATE,
                                 disposal.getDisposalDate());
                         jgen.writeEndObject();
                     }
@@ -2436,7 +2438,7 @@ public final class CommonUtils {
                                 screening.getScreeningMetadata());
                         printNullableMetadata(jgen, SCREENING_SCREENING_DOCUMENT,
                                 screening.getScreeningDocument());
-                        printNullableDate(jgen, SCREENING_EXPIRES_DATE,
+                        printNullableDateTime(jgen, SCREENING_EXPIRES_DATE,
                                 screening.getScreeningExpiresDate());
                         printNullable(jgen, SCREENING_DURATION,
                                 screening.getScreeningDuration());

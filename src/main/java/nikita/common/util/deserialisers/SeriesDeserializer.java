@@ -50,10 +50,10 @@ public class SeriesDeserializer
                         new SeriesStatus(), errors, false);
         series.setSeriesStatus(seriesStatus);
         // Deserialize seriesStartDate
-        series.setSeriesStartDate(deserializeDate(SERIES_START_DATE,
+        series.setSeriesStartDate(deserializeDateTime(SERIES_START_DATE,
                 objectNode, errors));
         // Deserialize seriesEndDate
-        series.setSeriesEndDate(deserializeDate(SERIES_END_DATE,
+        series.setSeriesEndDate(deserializeDateTime(SERIES_END_DATE,
                 objectNode, errors));
         // Deserialize referencePrecursor
         JsonNode currentNode = objectNode.get(SERIES_ASSOCIATE_AS_PRECURSOR);

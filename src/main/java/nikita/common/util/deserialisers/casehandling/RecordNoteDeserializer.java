@@ -85,7 +85,7 @@ public class RecordNoteDeserializer
 
         // Deserialize documentDate
         recordNote.setDocumentDate(
-                deserializeDate(REGISTRY_ENTRY_DOCUMENT_DATE, objectNode,
+                deserializeDateTime(REGISTRY_ENTRY_DOCUMENT_DATE, objectNode,
                         errors));
 
         // Deserialize receivedDate
@@ -99,11 +99,11 @@ public class RecordNoteDeserializer
 
         // Deserialize dueDate
         recordNote.setDueDate(
-                deserializeDate(REGISTRY_ENTRY_DUE_DATE, objectNode, errors));
+                deserializeDateTime(REGISTRY_ENTRY_DUE_DATE, objectNode, errors));
 
         // Deserialize freedomAssessmentDate
         recordNote.setFreedomAssessmentDate(
-                deserializeDate(REGISTRY_ENTRY_RECORD_FREEDOM_ASSESSMENT_DATE,
+                deserializeDateTime(REGISTRY_ENTRY_RECORD_FREEDOM_ASSESSMENT_DATE,
                         objectNode, errors));
 
         // Deserialize numberOfAttachments
@@ -112,7 +112,7 @@ public class RecordNoteDeserializer
                                 objectNode, errors, false));
         // Deserialize loanedDate
         recordNote.setLoanedDate(
-                deserializeDate(CASE_LOANED_DATE, objectNode, errors));
+                deserializeDateTime(CASE_LOANED_DATE, objectNode, errors));
 
         // Deserialize loanedTo
         currentNode = objectNode.get(CASE_LOANED_TO);

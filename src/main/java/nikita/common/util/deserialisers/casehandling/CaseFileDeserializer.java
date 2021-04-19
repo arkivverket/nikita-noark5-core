@@ -73,7 +73,7 @@ public class CaseFileDeserializer
                                 objectNode, errors, false));
 
         // Deserialize caseDate
-        caseFile.setCaseDate(deserializeDate(CASE_DATE, objectNode, errors));
+        caseFile.setCaseDate(deserializeDateTime(CASE_DATE, objectNode, errors));
 
         // Deserialize caseResponsible
         currentNode = objectNode.get(CASE_RESPONSIBLE);
@@ -92,7 +92,7 @@ public class CaseFileDeserializer
         deserialiseCaseStatus(caseFile, objectNode, errors);
 
         // Deserialize loanedDate
-        caseFile.setLoanedDate(deserializeDate(
+        caseFile.setLoanedDate(deserializeDateTime(
                 CASE_LOANED_DATE, objectNode, errors));
 
         // Deserialize loanedTo
