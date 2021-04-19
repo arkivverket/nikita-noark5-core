@@ -1660,7 +1660,7 @@ public final class CommonUtils {
                         objectNode.get(ELECTRONIC_SIGNATURE_VERIFIED_DATE);
                 if (null != currentNode) {
                     electronicSignature.setVerifiedDate(
-                            deserializeDate(currentNode.textValue(),
+                            deserializeDateTime(currentNode.textValue(),
                                     objectNode, errors));
                     objectNode.remove(ELECTRONIC_SIGNATURE_VERIFIED_DATE);
                 } else {
@@ -2297,7 +2297,7 @@ public final class CommonUtils {
                     jgen.writeObjectFieldStart(ELECTRONIC_SIGNATURE);
                     printNullable(jgen, ELECTRONIC_SIGNATURE_VERIFIED_BY,
                             es.getVerifiedBy());
-                    printNullableDate(jgen, ELECTRONIC_SIGNATURE_VERIFIED_DATE,
+                    printNullableDateTime(jgen, ELECTRONIC_SIGNATURE_VERIFIED_DATE,
                             es.getVerifiedDate());
                     printNullableMetadata
                             (jgen, ELECTRONIC_SIGNATURE_SECURITY_LEVEL_FIELD,
@@ -2305,7 +2305,7 @@ public final class CommonUtils {
                     printNullableMetadata
                             (jgen, ELECTRONIC_SIGNATURE_VERIFIED_FIELD,
                                     es.getElectronicSignatureVerified());
-                    printNullableDate(jgen, ELECTRONIC_SIGNATURE_VERIFIED_DATE,
+                    printNullableDateTime(jgen, ELECTRONIC_SIGNATURE_VERIFIED_DATE,
                             es.getVerifiedDate());
                     jgen.writeEndObject();
                 }
