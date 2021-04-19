@@ -1558,7 +1558,8 @@ public final class CommonUtils {
                                 errors, false);
                 screeningEntity.setScreeningDocument(screeningDocument);
                 // Deserialize screeningExpiresDate
-                screeningEntity.setScreeningExpiresDate(deserializeDate(SCREENING_EXPIRES_DATE, objectNode, errors));
+                screeningEntity.setScreeningExpiresDate(
+                        deserializeDateTime(SCREENING_EXPIRES_DATE, objectNode, errors));
 
                 // Deserialize screeningDuration
                 screeningEntity.setScreeningDuration
@@ -2437,7 +2438,7 @@ public final class CommonUtils {
                                 screening.getScreeningMetadata());
                         printNullableMetadata(jgen, SCREENING_SCREENING_DOCUMENT,
                                 screening.getScreeningDocument());
-                        printNullableDate(jgen, SCREENING_EXPIRES_DATE,
+                        printNullableDateTime(jgen, SCREENING_EXPIRES_DATE,
                                 screening.getScreeningExpiresDate());
                         printNullable(jgen, SCREENING_DURATION,
                                 screening.getScreeningDuration());

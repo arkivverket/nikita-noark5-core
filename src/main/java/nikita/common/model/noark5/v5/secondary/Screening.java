@@ -20,7 +20,7 @@ import java.util.List;
 
 import static nikita.common.config.Constants.TABLE_SCREENING;
 import static nikita.common.config.N5ResourceMappings.SCREENING;
-import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
 @Table(name = TABLE_SCREENING)
@@ -75,7 +75,7 @@ public class Screening
      * M505 - skjermingOpphoererDato n4(JP.AGDATO)
      */
     @Column(name = "screening_expires")
-    @DateTimeFormat(iso = DATE)
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
     private OffsetDateTime screeningExpiresDate;
 
