@@ -6,6 +6,7 @@ import nikita.common.model.noark5.v5.interfaces.entities.IDisposalEntity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +18,7 @@ import java.util.List;
 
 import static nikita.common.config.Constants.TABLE_DISPOSAL;
 import static nikita.common.config.N5ResourceMappings.DISPOSAL;
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 /**
  * Created by tsodring on 4/10/16.
@@ -54,6 +56,7 @@ public class Disposal
      * M452 - kassasjonsdato (xs:date)
      */
     @Column(name = "disposal_date")
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
     private OffsetDateTime disposalDate;
 

@@ -949,7 +949,8 @@ public final class CommonUtils {
                         (deserializeInteger(DISPOSAL_PRESERVATION_TIME,
                                 objectNode, errors, false));
                 // Deserialize disposalDate
-                disposalEntity.setDisposalDate(deserializeDate(DISPOSAL_DATE, objectNode, errors));
+                disposalEntity.setDisposalDate(
+                        deserializeDateTime(DISPOSAL_DATE, objectNode, errors));
             }
 
             public static DisposalUndertaken deserialiseDisposalUndertaken(
@@ -2382,7 +2383,7 @@ public final class CommonUtils {
                                 disposal.getDisposalAuthority());
                         printNullable(jgen, DISPOSAL_PRESERVATION_TIME,
                                 disposal.getPreservationTime());
-                        printNullableDate(jgen, DISPOSAL_DATE,
+                        printNullableDateTime(jgen, DISPOSAL_DATE,
                                 disposal.getDisposalDate());
                         jgen.writeEndObject();
                     }
