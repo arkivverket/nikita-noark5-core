@@ -51,7 +51,6 @@ import java.util.*;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserializeDateTime;
 import static nikita.common.util.CommonUtils.Hateoas.Serialize.formatDateTime;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
@@ -138,10 +137,10 @@ public class CaseFileService
         if (null != caseResponsible && !caseResponsible.isEmpty()) {
             caseFile.setCaseResponsible(caseResponsible);
         }
-        OffsetDateTime caseDate = deserializeDateTime(
-                (String) patchMerge.getValue(CASE_DATE));
-        if (null != caseDate) {
-            caseFile.setCaseDate(caseDate);
+
+        if (null != patchMerge.getValue(CASE_DATE)) {
+            caseFile.setCaseDate((OffsetDateTime)
+                    patchMerge.getValue(CASE_DATE));
         }
         processCaseFileBeforeSave(caseFile);
         entityManager.createNativeQuery(
