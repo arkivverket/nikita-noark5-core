@@ -238,7 +238,7 @@ public class MetadataDetails extends APIDetails {
                         listpath, officialrelation, true));
         aPIDetails.add(new APIDetail(
                 publicUrlPath + HREF_BASE_METADATA + SLASH + newpath,
-                NIKITA_CONFORMANCE_REL + NOARK_METADATA_PATH + SLASH +
+                NOARK_BASE_REL + NOARK_METADATA_PATH + SLASH +
                         newpath + SLASH,
                 false));
     }

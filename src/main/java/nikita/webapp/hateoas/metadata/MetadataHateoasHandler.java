@@ -4,7 +4,6 @@ import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
 import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
-import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.webapp.hateoas.HateoasHandler;
 import nikita.webapp.hateoas.interfaces.metadata.IMetadataHateoasHandler;
 import nikita.webapp.security.IAuthorisation;
@@ -13,11 +12,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.DOCUMENT_MEDIUM;
 
 /**
- * Created by tsodring on 2/6/17.
- * <p>
  * Used to add hateoas links for metadata entities with specific information
  */
 @Component()
@@ -134,7 +130,7 @@ public class MetadataHateoasHandler
             INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_METADATA + SLASH + NEW + DASH +
-                entity.getBaseTypeName(),NIKITA_CONFORMANCE_REL + NEW +
+                entity.getBaseTypeName(), NOARK_BASE_REL + NEW +
                 DASH + entity.getBaseTypeName() + SLASH));
     }
 }

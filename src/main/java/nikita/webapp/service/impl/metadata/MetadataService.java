@@ -36,6 +36,7 @@ import java.util.regex.Pattern;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.ErrorMessagesConstants.*;
 import static nikita.common.config.MetadataConstants.METADATA_PACKAGE;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpStatus.*;
 
 /**
@@ -55,10 +56,12 @@ public class MetadataService
 
     private static final Logger logger =
             LoggerFactory.getLogger(MetadataService.class);
-    private IMetadataHateoasHandler metadataHateoasHandler;
-    private Map<String, IMetadataRepository> repositoryMap = new HashMap<>();
-    private Pattern pattern = Pattern.compile(".*" + HATEOAS_API_PATH + SLASH +
-            NOARK_METADATA_PATH + "/(?:[n][y][\\-])?(\\w+).*");
+    private final IMetadataHateoasHandler metadataHateoasHandler;
+    private final Map<String, IMetadataRepository> repositoryMap =
+            new HashMap<>();
+    private final Pattern pattern = Pattern.compile(
+            ".*" + HATEOAS_API_PATH + SLASH + NOARK_METADATA_PATH +
+                    "/(?:[n][y][\\-])?(\\w+).*");
 
     public MetadataService(
             EntityManager entityManager,
@@ -155,6 +158,7 @@ public class MetadataService
     @Override
     public ResponseEntity<String> generateTemplateMetadata() {
         return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
                 .body("{}");
     }
 
