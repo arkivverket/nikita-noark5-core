@@ -343,20 +343,6 @@ public class PartService
      *                     retrieve
      * @return the retrieved Part
      */
-    private Part getPartOrThrow(@NotNull String partSystemId) {
-        return getPartOrThrow(UUID.fromString(partSystemId));
-    }
-
-    /**
-     * Internal helper method. Rather than having a find and try catch in
-     * multiple methods, we have it here once. If you call this, be aware
-     * that you will only ever get a valid Part back. If there
-     * is no valid Part, an exception is thrown
-     *
-     * @param partSystemId systemId of part to
-     *                     retrieve
-     * @return the retrieved Part
-     */
     private Part getPartOrThrow(@NotNull UUID partSystemId) {
         Part part = partRepository.findBySystemId(partSystemId);
         if (part == null) {
