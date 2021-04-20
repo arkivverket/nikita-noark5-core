@@ -78,7 +78,7 @@ public class PartService
     }
 
     @Override
-    public Part findBySystemId(@NotNull String systemId) {
+    public Part findBySystemId(@NotNull UUID systemId) {
         return getPartOrThrow(systemId);
     }
 
@@ -98,7 +98,7 @@ public class PartService
     @Override
     public PartPerson
     updatePartPerson(
-            @NotNull String systemId, @NotNull Long version,
+            @NotNull UUID systemId, @NotNull Long version,
             @NotNull PartPerson incomingPart) {
         PartPerson existingPart = (PartPerson) getPartOrThrow(systemId);
 
@@ -132,7 +132,7 @@ public class PartService
 
     @Override
     public PartUnit updatePartUnit(
-            @NotNull String systemId, @NotNull Long version,
+            @NotNull UUID systemId, @NotNull Long version,
             @NotNull PartUnit incomingPart) {
 
         PartUnit existingPart = (PartUnit) getPartOrThrow(systemId);
@@ -280,12 +280,12 @@ public class PartService
     }
 
     @Override
-    public void deletePartPerson(@NotNull String systemId) {
+    public void deletePartPerson(@NotNull UUID systemId) {
         deleteEntity(getPartOrThrow(systemId));
     }
 
     @Override
-    public void deletePartUnit(@NotNull String systemId) {
+    public void deletePartUnit(@NotNull UUID systemId) {
         deleteEntity(getPartOrThrow(systemId));
     }
 
