@@ -55,7 +55,7 @@ public class PartService
             LoggerFactory.getLogger(PartService.class);
 
     private final IPartRepository partRepository;
-    private IMetadataService metadataService;
+    private final IMetadataService metadataService;
     private final IPartHateoasHandler partHateoasHandler;
     private final IBSMService bsmService;
 
