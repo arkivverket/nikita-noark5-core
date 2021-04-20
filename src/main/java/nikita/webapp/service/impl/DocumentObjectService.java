@@ -13,7 +13,6 @@ import nikita.common.repository.n5v5.secondary.IConversionRepository;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.*;
 import nikita.webapp.config.WebappProperties;
-import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.IConversionHateoasHandler;
 import nikita.webapp.security.Authorisation;
@@ -91,20 +90,18 @@ public class DocumentObjectService
     private final Logger logger =
             LoggerFactory.getLogger(DocumentObjectService.class);
 
-    private IDocumentObjectRepository documentObjectRepository;
-    @Value("${nikita.startup.directory-store-name}")
-    private String directoryStoreName = "/data/nikita/storage";
-    @Value("${nikita.startup.incoming-directory}")
-    private String incomingDirectoryName = "/data2/nikita/storage/incoming";
-    @Value("${nikita.application.checksum-algorithm}")
-    private String defaultChecksumAlgorithm = "SHA-256";
+    private final IDocumentObjectRepository documentObjectRepository;
+    private final IConversionRepository conversionRepository;
+    private final IMetadataService metadataService;
+    private final IConversionHateoasHandler conversionHateoasHandler;
+    private final IDocumentObjectHateoasHandler documentObjectHateoasHandler;
 
-    private IConversionRepository conversionRepository;
-    private IMetadataService metadataService;
-    private IConversionHateoasHandler conversionHateoasHandler;
-    private IDocumentObjectHateoasHandler documentObjectHateoasHandler;
-    private IDocumentDescriptionHateoasHandler
-            documentDescriptionHateoasHandler;
+    @Value("${nikita.startup.directory-store-name}")
+    private final String directoryStoreName = "/data/nikita/storage";
+    @Value("${nikita.startup.incoming-directory}")
+    private final String incomingDirectoryName = "/data2/nikita/storage/incoming";
+    @Value("${nikita.application.checksum-algorithm}")
+    private final String defaultChecksumAlgorithm = "SHA-256";
 
     public DocumentObjectService(
             EntityManager entityManager,
@@ -114,16 +111,13 @@ public class DocumentObjectService
             IDocumentObjectRepository documentObjectRepository,
             IMetadataService metadataService,
             IConversionHateoasHandler conversionHateoasHandler,
-            IDocumentObjectHateoasHandler documentObjectHateoasHandler,
-            IDocumentDescriptionHateoasHandler documentDescriptionHateoasHandler) {
+            IDocumentObjectHateoasHandler documentObjectHateoasHandler) {
         super(entityManager, applicationEventPublisher, patchService);
         this.conversionRepository = conversionRepository;
         this.documentObjectRepository = documentObjectRepository;
         this.metadataService = metadataService;
         this.conversionHateoasHandler = conversionHateoasHandler;
         this.documentObjectHateoasHandler = documentObjectHateoasHandler;
-        this.documentDescriptionHateoasHandler =
-                documentDescriptionHateoasHandler;
     }
 
     // All CREATE operations
@@ -531,7 +525,7 @@ public class DocumentObjectService
             org.springframework.http.MediaType.parseMediaType(mimeType);
         List<org.springframework.http.MediaType> acceptTypes =
                 org.springframework.http.MediaType.parseMediaTypes(accept);
-        Boolean match = false;
+        boolean match = false;
         for (org.springframework.http.MediaType acceptType : acceptTypes) {
             if (acceptType.isCompatibleWith(mime)) {
                 match = true;
@@ -828,28 +822,14 @@ public class DocumentObjectService
             throws IOException {
 
         long bytesTotal;
-        try { // Try close without exceptions if copy() threw an exception.
+        try (digestInputStream; outputStream) {
             bytesTotal = IOUtils.copyLarge(digestInputStream, outputStream);
-
-            // Tidy up and close outputStream
             outputStream.flush();
-            outputStream.close();
-
-            // Finished with inputStream now as well
-            digestInputStream.close();
-
-        } finally {
-            try { // Try close without exceptions if copy() threw an exception.
-                digestInputStream.close();
-            } catch (IOException e) {
-                // swallow any error to expose exceptions from IOUtil.copy()
-            }
-            try { // same for outputStream
-                outputStream.close();
-            } catch (IOException e) {
-                // empty
-            }
         }
+        // Try close without exceptions if copy() threw an exception.
+        // swallow any error to expose exceptions from IOUtil.copy()
+        // same for outputStream
+        // empty
         return bytesTotal;
     }
 
@@ -898,13 +878,12 @@ public class DocumentObjectService
 
         // Check that content-length is set, > 0 and in agreement with the
         // value set in documentObject
-        Long contentLength = 0L;
         if (request.getHeader("content-length") == null) {
             throw new StorageException("Attempt to upload a document without " +
                     "content-length set. The document was attempted to be " +
                     "associated with " + documentObject);
         }
-        contentLength = (long) request.getIntHeader("content-length");
+        long contentLength = request.getIntHeader("content-length");
         if (contentLength < 1) {
             throw new StorageException("Attempt to upload a document with 0 " +
                     "or negative content-length set. Actual value was (" +
