@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
@@ -370,13 +371,12 @@ public class DocumentObjectHateoasController
     }
 
     // Delete a DocumentObject identified by systemID
-    // DELETE [contextPath][api]/arkivstruktur/dokumentobjekt/{systemId}/
-    @Operation(summary = "Deletes a single DocumentObject entity identified " +
-            "by systemID")
+    // DELETE [contextPath][api]/arkivstruktur/dokumentobjekt/{systemId}
+    @Operation(summary = "Deletes a single DocumentObject object")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = NO_CONTENT_VAL,
-                    description = "DocumentObject deleted"),
+                    description = "Conversion deleted"),
             @ApiResponse(
                     responseCode = UNAUTHORIZED_VAL,
                     description = API_MESSAGE_UNAUTHENTICATED_USER),
@@ -393,6 +393,40 @@ public class DocumentObjectHateoasController
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         documentObjectService.deleteEntity(systemID);
+        return ResponseEntity.
+                status(NO_CONTENT).
+                body(DELETE_RESPONSE);
+    }
+
+    // Delete a Conversion object identified by dokumentobjekt and
+    // Conversion systemID
+    // DELETE [contextPath][api]/arkivstruktur/dokumentobjekt/{systemId}/konvertering/{systemId}
+    @Operation(summary = "Deletes a single Conversion object associated with " +
+            "the given DocumentObject")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = NO_CONTENT_VAL,
+                    description = "Conversion deleted"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @DeleteMapping(value = SLASH + SYSTEM_ID_PARAMETER +
+            SLASH + CONVERSION + SLASH + SUB_SYSTEM_ID_PARAMETER)
+    public ResponseEntity<String> deleteConversionByDocumentObjectAndSystemId(
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the documentObject to delete",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID,
+            @Parameter(name = "subSystemID",
+                    required = true)
+            @PathVariable("subSystemID") final UUID subSystemID) {
+        documentObjectService.deleteConversion(systemID, subSystemID);
         return ResponseEntity.
                 status(NO_CONTENT).
                 body(DELETE_RESPONSE);

@@ -530,7 +530,7 @@ public class DocumentObjectService
         org.springframework.util.MimeType mime =
             org.springframework.http.MediaType.parseMediaType(mimeType);
         List<org.springframework.http.MediaType> acceptTypes =
-            org.springframework.http.MediaType.parseMediaTypes(accept);
+                org.springframework.http.MediaType.parseMediaTypes(accept);
         Boolean match = false;
         for (org.springframework.http.MediaType acceptType : acceptTypes) {
             if (acceptType.isCompatibleWith(mime)) {
@@ -540,6 +540,18 @@ public class DocumentObjectService
         return match;
     }
 
+    /**
+     * Delete a conversion object associated with the documentObject.
+     *
+     * @param documentObjectSystemID UUID of the documentObject object
+     * @param conversionSystemID     UUID of the Conversion object
+     */
+    @Override
+    public void deleteConversion(
+            UUID documentObjectSystemID, UUID conversionSystemID) {
+        conversionRepository.delete(getConversionOrThrow(
+                conversionSystemID.toString()));
+    }
 
     @Override
     public Resource loadAsResource(String systemId, HttpServletRequest request,
