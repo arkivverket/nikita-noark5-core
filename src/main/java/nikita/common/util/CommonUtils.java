@@ -91,9 +91,8 @@ public final class CommonUtils {
     public static final Pattern DATE_TIME_PATTERN = Pattern.compile(
             "\\d{4}-(0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01])T" +
                     "(00|[0-9]|1[0-9]|2[0-3]):([0-9]|[0-5][0-9]):" +
-                    "([0-9]|[0-5][0-9])" +
-                    "\\.?[0-9]*" +
-                    "((\\+|\\-)\\d{2}:\\d{2}$|(Z))");
+                    "([0-9]|[0-5][0-9])" + "\\.?[0-9]*" +
+                    "((\\+|\\-)\\d{2}:\\d{2}|(Z))");
 
     // Example 2020-06-30T16:25:50.041651+02:00
     // Does not require T and drops ms part
