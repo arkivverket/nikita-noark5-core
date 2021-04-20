@@ -446,6 +446,7 @@ public class Record
         part.getReferenceRecord().add(this);
     }
 
+    @Override
     public void removePart(Part part) {
         this.referencePart.remove(part);
         part.getReferenceRecord().remove(this);
