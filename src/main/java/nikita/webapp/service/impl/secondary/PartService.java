@@ -15,7 +15,6 @@ import nikita.common.model.noark5.v5.metadata.PartRole;
 import nikita.common.model.noark5.v5.secondary.Part;
 import nikita.common.model.noark5.v5.secondary.PartPerson;
 import nikita.common.model.noark5.v5.secondary.PartUnit;
-import nikita.common.repository.n5v5.metadata.IPartRoleRepository;
 import nikita.common.repository.n5v5.secondary.IPartRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.secondary.IPartHateoasHandler;
@@ -55,7 +54,6 @@ public class PartService
     private static final Logger logger =
             LoggerFactory.getLogger(PartService.class);
 
-    private final IPartRoleRepository partRoleRepository;
     private final IPartRepository partRepository;
     private IMetadataService metadataService;
     private final IPartHateoasHandler partHateoasHandler;
@@ -64,13 +62,11 @@ public class PartService
     public PartService(EntityManager entityManager,
                        ApplicationEventPublisher applicationEventPublisher,
                        IPatchService patchService,
-                       IPartRoleRepository partRoleRepository,
                        IPartRepository partRepository,
                        IMetadataService metadataService,
                        IPartHateoasHandler partHateoasHandler,
                        IBSMService bsmService) {
         super(entityManager, applicationEventPublisher, patchService);
-        this.partRoleRepository = partRoleRepository;
         this.partRepository = partRepository;
         this.metadataService = metadataService;
         this.partHateoasHandler = partHateoasHandler;
