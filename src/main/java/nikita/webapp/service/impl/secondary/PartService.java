@@ -281,12 +281,20 @@ public class PartService
 
     @Override
     public void deletePartPerson(@NotNull UUID systemId) {
-        deleteEntity(getPartOrThrow(systemId));
+        PartPerson partPerson = (PartPerson) getPartOrThrow(systemId);
+        for (Record record : partPerson.getReferenceRecord()) {
+            record.removePart(partPerson);
+        }
+        partRepository.delete(partPerson);
     }
 
     @Override
     public void deletePartUnit(@NotNull UUID systemId) {
-        deleteEntity(getPartOrThrow(systemId));
+        PartUnit partUnit = (PartUnit) getPartOrThrow(systemId);
+        for (Record record : partUnit.getReferenceRecord()) {
+            record.removePart(partUnit);
+        }
+        partRepository.delete(partUnit);
     }
 
     // Internal helper methods
