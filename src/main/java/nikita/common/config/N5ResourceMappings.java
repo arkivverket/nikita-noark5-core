@@ -131,6 +131,7 @@ public final class N5ResourceMappings {
     public static final String CASE_STATUS = "saksstatus";
     public static final String CASE_LOANED_DATE = "utlaantDato";
     public static final String CASE_LOANED_TO = "utlaantTil";
+    public static final String CASE_FILE_CLOSED_CODE_VALUE = "A";
 
     // Part
     public static final String PART_ROLE = "partrolle";
@@ -174,6 +175,8 @@ public final class N5ResourceMappings {
     public static final String REGISTRY_ENTRY_NUMBER = "journalpostnummer";
     public static final String REGISTRY_ENTRY_TYPE = "journalposttype";
     public static final String REGISTRY_ENTRY_STATUS = "journalstatus";
+    public static final String REGISTRY_ENTRY_ARCHIVED_CODE_VALUE = "A";
+
 
     // CorrespondencePart
     public static final String CORRESPONDENCE_PART = "korrespondansepart";
