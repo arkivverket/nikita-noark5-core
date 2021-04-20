@@ -16,6 +16,7 @@ import java.util.UUID;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
 @RequestMapping(value = HREF_BASE_CASE_HANDLING + SLASH + SIGN_OFF,
@@ -55,9 +56,9 @@ public class SignOffHateoasController
         return signOffService.findBySystemId(signOffSystemId);
     }
 
-    // API - All GET Requests (CRUD - UPDATE)
+    // API - All PUT Requests (CRUD - UPDATE)
     // Update a SignOff identified by systemID
-    // GET [contextPath][api]/sakarkiv/avskrivning/{systemId}
+    // PUT [contextPath][api]/sakarkiv/avskrivning/{systemId}
     @Operation(summary = "Update a single SignOff entity given a systemId")
     @ApiResponses(value = {
             @ApiResponse(
@@ -83,5 +84,33 @@ public class SignOffHateoasController
                     required = true)
             @RequestBody SignOff signOff) {
         return signOffService.updateSignOff(signOffSystemId, signOff);
+    }
+
+    // API - All DELETE Requests (CRUD - DELETE)
+    // Delete a SignOff identified by systemID
+    // DELETE [contextPath][api]/sakarkiv/avskrivning/{systemId}
+    @Operation(summary = "Delete a single SignOff entity given a systemId")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = NO_CONTENT_VAL,
+                    description = "SignOff deleted"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @DeleteMapping(value = SLASH + SYSTEM_ID_PARAMETER)
+    public ResponseEntity<String> deleteSignOff(
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the signOff to update",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID signOffSystemId) {
+        signOffService.deleteSignOff(signOffSystemId);
+        return ResponseEntity.status(NO_CONTENT).
+                body(DELETE_RESPONSE);
     }
 }
