@@ -28,6 +28,7 @@ import org.junit.jupiter.api.Test;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
+import static nikita.common.util.CommonUtils.DATE_TIME_PATTERN;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserializeDate;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserializeDateTime;
 import static nikita.common.util.CommonUtils.Hateoas.Serialize.formatDate;
@@ -35,35 +36,59 @@ import static nikita.common.util.CommonUtils.Hateoas.Serialize.formatDateTime;
 
 public class TestParsing {
 
+    String[] datetimemust = {
+            "1997-07-16T19:20+01:00",
+            "1997-07-16T19:20:30+01:00",
+            "1997-07-16T19:20:30.45+01:00",
+            "2012-10-10T15:00:00Z",
+            "2014-11-22T15:15:02.956+01:00",
+
+            // These could be handled too
+            "1997-07-16Z",
+            "1865-02-13T00:00:00Z",
+            "1865-02-13T00:00:00+00:00",
+            "1865-02-13T00:00:00+01:00",
+            "1865-02-13T00:00:00-01:00",
+            "1864-10-09T00:00:00Z",
+            "1864-10-09T00:00:00+00:00",
+    };
+    String[] datetimereject = {
+            "2014-11-22 15:15:02.956+01:00",
+            "1997-07-16T19:20+0100",
+            "1997-07-16T19:20-0100",
+            "1997-07-16T19:20+01",
+            "1997-07-16T19:20-01",
+            "1997",
+            "1997-07",
+            "1997-07-16",
+    };
+
+    @Test
+    public void parsedates() throws Exception {
+
+        System.out.println("info: testing parsing of date and datetime ");
+        for (String teststr : datetimemust) {
+            if (DATE_TIME_PATTERN.matcher(teststr).matches()) {
+                System.out.println("success: datetime '" + teststr +
+                        "' can be parsed");
+            }
+        }
+
+        for (String teststr : datetimereject) {
+            if (!DATE_TIME_PATTERN.matcher(teststr).matches()) {
+                System.out.println("success: datetime '" + teststr +
+                        "' cannot be parsed");
+            } else {
+                System.out.println("error: datetime '" + teststr +
+                        "' parsed successfully. It should fail!");
+            }
+        }
+    }
+
     @Test
     public void validdates() throws Exception {
         System.out.println("info: testing date and datetime parsing");
-        String[] datetimemust = {
-                "1997-07-16T19:20+01:00",
-                "1997-07-16T19:20:30+01:00",
-                "1997-07-16T19:20:30.45+01:00",
-                "2012-10-10T15:00:00Z",
-                "2014-11-22T15:15:02.956+01:00",
 
-                // These could be handled too
-                "1997-07-16Z",
-                "1865-02-13T00:00:00Z",
-                "1865-02-13T00:00:00+00:00",
-                "1865-02-13T00:00:00+01:00",
-                "1865-02-13T00:00:00-01:00",
-                "1864-10-09T00:00:00Z",
-                "1864-10-09T00:00:00+00:00",
-        };
-        String[] datetimereject = {
-                "2014-11-22 15:15:02.956+01:00",
-                "1997-07-16T19:20+0100",
-                "1997-07-16T19:20-0100",
-                "1997-07-16T19:20+01",
-                "1997-07-16T19:20-01",
-                "1997",
-                "1997-07",
-                "1997-07-16",
-        };
         for (String teststr : datetimemust) {
             StringBuilder errors = new StringBuilder();
             String json = "{ \"d\": \"" + teststr + "\"}";
