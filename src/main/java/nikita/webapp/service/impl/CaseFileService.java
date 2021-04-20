@@ -49,6 +49,7 @@ import java.io.StringWriter;
 import java.time.OffsetDateTime;
 import java.util.*;
 
+import static java.time.OffsetDateTime.now;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Serialize.formatDateTime;
@@ -419,7 +420,7 @@ public class CaseFileService
     public CaseFileHateoas generateDefaultCaseFile() {
         CaseFile defaultCaseFile = new CaseFile();
         defaultCaseFile.setCaseResponsible(getUser());
-        defaultCaseFile.setCaseDate(OffsetDateTime.now());
+        defaultCaseFile.setCaseDate(now());
         CaseStatus caseStatus = (CaseStatus)
                 metadataService.findValidMetadataByEntityTypeOrThrow
                         (CASE_STATUS, DEFAULT_CASE_STATUS_CODE, null);
@@ -445,7 +446,7 @@ public class CaseFileService
             jsonPatch.writeEndObject();
             jsonPatch.writeStringField(CASE_RESPONSIBLE, getUser());
             jsonPatch.writeStringField(CASE_DATE,
-                    formatDateTime(OffsetDateTime.now()));
+                    formatDateTime(now()));
             jsonPatch.writeEndObject();
             jsonPatch.close();
             return jsonPatchWriter.toString();
@@ -596,16 +597,35 @@ public class CaseFileService
                 getAdministrativeUnitIfMemberOrThrow(caseFile);
         caseFile.setReferenceAdministrativeUnit(administrativeUnit);
 
+        if (isOpen(caseFile)) {
+            if (null == caseFile.getCaseDate()) {
+                caseFile.setCaseDate(now());
+            }
+        }
         // Set case year
-        Integer currentYear = OffsetDateTime.now().getYear();
+        Integer currentYear = now().getYear();
         caseFile.setCaseYear(currentYear);
-        caseFile.setCaseDate(OffsetDateTime.now());
         caseFile.setCaseSequenceNumber(getNextSequenceNumber(
                 administrativeUnit));
         caseFile.setFileId(currentYear.toString() + "/" +
                 caseFile.getCaseSequenceNumber());
     }
 
+    /**
+     * is this caseFile open. A caseFile is open if it does not have a
+     * caseStatus value equal to 'A'
+     *
+     * @param caseFile the CaseFile object to check
+     * @return true if open, false if closed
+     */
+    private boolean isOpen(@NotNull CaseFile caseFile) {
+        CaseStatus caseStatus = caseFile.getCaseStatus();
+        if (null != caseStatus &&
+                caseStatus.getCode().equals(CASE_FILE_CLOSED_CODE_VALUE)) {
+            return false;
+        }
+        return true;
+    }
 
     private CaseStatus getCaseStatus(PatchMerge patchMerge) {
         Map<String, Object> caseStatus = (Map<String, Object>)

@@ -57,6 +57,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import static java.time.OffsetDateTime.now;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
@@ -775,7 +776,13 @@ public class RegistryEntryService
         validateDocumentMedium(metadataService, registryEntry);
         validateRegistryEntryStatus(registryEntry);
         validateRegistryEntryType(registryEntry);
-        registryEntry.setRecordDate(OffsetDateTime.now());
+
+        if (!isArchived(registryEntry)) {
+            if (null == registryEntry.getRecordDate()) {
+                registryEntry.setRecordDate(now());
+            }
+        }
+
         File file = registryEntry.getReferenceFile();
         if (null != file) {
             long numberAssociated =
@@ -791,5 +798,18 @@ public class RegistryEntryService
             registryEntry.setRecordSequenceNumber(
                     numberGeneratorService.getNextRecordSequenceNumber(administrativeUnit));
         }
+    }
+
+    private boolean isArchived(@NotNull RegistryEntry registryEntry) {
+        RegistryEntryStatus registryEntryStatus = registryEntry
+                .getRegistryEntryStatus();
+        if (null != registryEntryStatus) {
+            return false;
+        }
+        if (registryEntryStatus.getCode()
+                .equals(REGISTRY_ENTRY_ARCHIVED_CODE_VALUE)) {
+            return true;
+        }
+        return false;
     }
 }
