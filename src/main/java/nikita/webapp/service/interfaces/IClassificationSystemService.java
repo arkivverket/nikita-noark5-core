@@ -41,7 +41,7 @@ public interface IClassificationSystemService {
             @NotNull final ClassificationSystem incomingClassificationSystem);
 
     // All DELETE operations
-    void deleteEntity(@NotNull String classificationSystemSystemId);
+    void deleteClassificationSystem(@NotNull String systemId);
 
     long deleteAllByOwnedBy();
 

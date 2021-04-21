@@ -311,7 +311,7 @@ public class ClassificationSystemHateoasController
                             "delete",
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
-        classificationSystemService.deleteEntity(systemID);
+        classificationSystemService.deleteClassificationSystem(systemID);
         return ResponseEntity.status(NO_CONTENT)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(DELETE_RESPONSE);

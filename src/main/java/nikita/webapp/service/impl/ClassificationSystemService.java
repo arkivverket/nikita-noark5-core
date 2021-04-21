@@ -2,10 +2,10 @@ package nikita.webapp.service.impl;
 
 import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.ClassificationSystem;
+import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
 import nikita.common.model.noark5.v5.hateoas.ClassificationSystemHateoas;
 import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.ClassificationType;
 import nikita.common.repository.n5v5.IClassificationSystemRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
@@ -29,9 +29,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 import java.util.UUID;
 
+import static java.util.List.copyOf;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setFinaliseEntityValues;
@@ -56,13 +56,13 @@ public class ClassificationSystemService
     private static final Logger logger = LoggerFactory.getLogger(
             ClassificationSystemService.class);
 
-    private IMetadataService metadataService;
-    private IClassService classService;
-    private IClassificationSystemRepository classificationSystemRepository;
-    private IClassificationSystemHateoasHandler
+    private final IMetadataService metadataService;
+    private final IClassService classService;
+    private final IClassificationSystemRepository classificationSystemRepository;
+    private final IClassificationSystemHateoasHandler
             classificationSystemHateoasHandler;
-    private IClassHateoasHandler classHateoasHandler;
-    private ISeriesHateoasHandler seriesHateoasHandler;
+    private final IClassHateoasHandler classHateoasHandler;
+    private final ISeriesHateoasHandler seriesHateoasHandler;
 
     public ClassificationSystemService(
             EntityManager entityManager,
@@ -197,11 +197,10 @@ public class ClassificationSystemService
 
 
     @Override
-    @SuppressWarnings("unchecked")
     public ClassificationSystemHateoas findAllClassificationSystem() {
         ClassificationSystemHateoas classificationSystemHateoas = new
-                ClassificationSystemHateoas((List<INoarkEntity>)
-                (List) classificationSystemRepository.findAll());
+                ClassificationSystemHateoas(
+                copyOf(classificationSystemRepository.findAll()));
         classificationSystemHateoasHandler.addLinks(classificationSystemHateoas,
                 new Authorisation());
         return classificationSystemHateoas;
@@ -213,7 +212,7 @@ public class ClassificationSystemService
         ClassificationSystem classificationSystem =
                 getClassificationSystemOrThrow(classificationSystemSystemId);
         ClassHateoas classHateoas = new ClassHateoas(
-                List.copyOf(classificationSystem.getReferenceClass()));
+                copyOf(classificationSystem.getReferenceClass()));
         classHateoasHandler.addLinks(classHateoas, new Authorisation());
         return classHateoas;
     }
@@ -223,7 +222,7 @@ public class ClassificationSystemService
     findSeriesAssociatedWithClassificationSystem(
             @NotNull final String systemId) {
         SeriesHateoas seriesHateoas = new SeriesHateoas(
-                List.copyOf(getClassificationSystemOrThrow(systemId)
+                copyOf(getClassificationSystemOrThrow(systemId)
                         .getReferenceSeries()));
         seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());
         return ResponseEntity.status(OK)
@@ -292,9 +291,12 @@ public class ClassificationSystemService
 
     // All DELETE operations
     @Override
-    public void deleteEntity(@NotNull String classificationSystemSystemId) {
-        deleteEntity(getClassificationSystemOrThrow(
-                classificationSystemSystemId));
+    public void deleteClassificationSystem(@NotNull String systemId) {
+        ClassificationSystem classificationSystem =
+                getClassificationSystemOrThrow(systemId);
+        for (Series series : classificationSystem.getReferenceSeries()) {
+            series.removeClassificationSystem(classificationSystem);
+        }
     }
 
     /**
