@@ -335,8 +335,14 @@ public class CorrespondencePartService
      */
     @Override
     public void deleteCorrespondencePartUnit(@NotNull String systemId) {
-        correspondencePartRepository.delete(
-                getCorrespondencePartOrThrow(systemId));
+        CorrespondencePartUnit correspondencePartUnit = (CorrespondencePartUnit)
+                getCorrespondencePartOrThrow(systemId);
+        Record record = correspondencePartUnit.getReferenceRecord();
+        record.removeCorrespondencePart(correspondencePartUnit);
+        for (BSMBase bsmBase : correspondencePartUnit.getReferenceBSMBase()) {
+            bsmBase.setReferenceCorrespondencePart(null);
+        }
+        correspondencePartRepository.delete(correspondencePartUnit);
     }
 
     /**
@@ -349,8 +355,14 @@ public class CorrespondencePartService
      */
     @Override
     public void deleteCorrespondencePartPerson(@NotNull String systemId) {
-        correspondencePartRepository.delete(
-                getCorrespondencePartOrThrow(systemId));
+        CorrespondencePartPerson correspondencePartPerson = (CorrespondencePartPerson)
+                getCorrespondencePartOrThrow(systemId);
+        Record record = correspondencePartPerson.getReferenceRecord();
+        record.removeCorrespondencePart(correspondencePartPerson);
+        for (BSMBase bsmBase : correspondencePartPerson.getReferenceBSMBase()) {
+            bsmBase.setReferenceCorrespondencePart(null);
+        }
+        correspondencePartRepository.delete(correspondencePartPerson);
     }
 
     /**
