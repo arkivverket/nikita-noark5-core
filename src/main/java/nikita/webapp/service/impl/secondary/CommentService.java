@@ -141,7 +141,18 @@ public class CommentService
 
     @Override
     public void deleteComment(UUID systemID) {
-        deleteEntity(getCommentOrThrow(systemID));
+        Comment comment = getCommentOrThrow(systemID);
+        for (DocumentDescription documentDescription :
+                comment.getReferenceDocumentDescription()) {
+            comment.removeDocumentDescription(documentDescription);
+        }
+        for (Record record : comment.getReferenceRecord()) {
+            comment.removeRecord(record);
+        }
+        for (File file : comment.getReferenceFile()) {
+            comment.removeFile(file);
+        }
+        commentRepository.delete(comment);
     }
 
     protected Comment getCommentOrThrow(@NotNull UUID commentSystemId) {
