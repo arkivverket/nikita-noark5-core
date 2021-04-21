@@ -33,6 +33,7 @@ import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserializeDate
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserializeDateTime;
 import static nikita.common.util.CommonUtils.Hateoas.Serialize.formatDate;
 import static nikita.common.util.CommonUtils.Hateoas.Serialize.formatDateTime;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class TestParsing {
 
@@ -1632,6 +1633,7 @@ public class TestParsing {
         assert (systemID.equals(eventLog.getSystemIdAsString()));
         assert (uuid.equals(eventLog.getReferenceChangedBy()));
         EventType m = eventLog.getEventType();
+        assertNotNull(m);
         assert ("C".equals(m.getCode()));
         assert ("Opprett".equals(m.getCodeName()));
     }
