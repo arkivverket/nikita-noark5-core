@@ -58,7 +58,7 @@ noark5tester-inoutin:
     - ./runtest  --baseurl $baseurl --keep
     - ./export-all --baseurl $baseurl --verbose
     - firstseries=$(jq -r '.results []._links.self.href' json-dump-*/api/arkivstruktur/arkivdel.json | head -1)
-    - ./import-email --baseurl $baseurl --saksmappe --mbox testdata/nikita-noark.mbox --storageurl "$firstseries" --maxinserts 10
+    - ./import-email --verbose --baseurl $baseurl --saksmappe --mbox testdata/nikita-noark.mbox --storageurl "$firstseries" --maxinserts 10
     - ./export-all --baseurl $baseurl --xml --verbose
     - find uttrekk-*
     - depotdir="$(dirname "$(ls uttrekk-*/*/arkivstruktur.xml | head -1)")"
