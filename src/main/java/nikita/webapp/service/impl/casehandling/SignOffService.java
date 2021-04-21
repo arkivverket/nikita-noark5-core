@@ -1,5 +1,6 @@
 package nikita.webapp.service.impl.casehandling;
 
+import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.hateoas.secondary.SignOffHateoas;
 import nikita.common.model.noark5.v5.secondary.SignOff;
 import nikita.common.repository.n5v5.secondary.ISignOffRepository;
@@ -9,7 +10,6 @@ import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.casehandling.ISignOffService;
-import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -36,22 +36,20 @@ public class SignOffService
 
     private final ISignOffRepository signOffRepository;
     private final SignOffHateoasHandler signOffHateoasHandler;
-    private final IMetadataService metadataService;
 
     public SignOffService(EntityManager entityManager,
                           ApplicationEventPublisher applicationEventPublisher,
                           IPatchService patchService,
                           ISignOffRepository signOffRepository,
-                          SignOffHateoasHandler signOffHateoasHandler,
-                          IMetadataService metadataService) {
+                          SignOffHateoasHandler signOffHateoasHandler) {
         super(entityManager, applicationEventPublisher, patchService);
         this.signOffRepository = signOffRepository;
         this.signOffHateoasHandler = signOffHateoasHandler;
-        this.metadataService = metadataService;
     }
 
     @Override
-    public ResponseEntity<SignOffHateoas> findBySystemId(@NotNull UUID systemId) {
+    public ResponseEntity<SignOffHateoas>
+    findBySystemId(@NotNull UUID systemId) {
         SignOffHateoas signOffHateoas = new
                 SignOffHateoas(getSignOffOrThrow(systemId));
         signOffHateoasHandler.addLinks(signOffHateoas, new Authorisation());
@@ -77,6 +75,20 @@ public class SignOffService
                 .body(signOffHateoas);
     }
 
+    /**
+     * Delete a SignOff identified by the given systemId
+     *
+     * @param systemId The systemId of the SignOff object you wish to delete
+     */
+    @Override
+    public void deleteSignOff(@NotNull UUID systemId) {
+        SignOff signOff = getSignOffOrThrow(systemId);
+        for (RegistryEntry registryEntry : signOff.getReferenceRecord()) {
+            registryEntry.removeSignOff(signOff);
+        }
+        signOffRepository.delete(signOff);
+    }
+
     // All helper methods
 
     /**
@@ -93,7 +105,7 @@ public class SignOffService
         if (signOff == null) {
             String info = INFO_CANNOT_FIND_OBJECT +
                     " SignOff, using systemId " + systemId;
-            logger.info(info);
+            logger.error(info);
             throw new NoarkEntityNotFoundException(info);
         }
         return signOff;

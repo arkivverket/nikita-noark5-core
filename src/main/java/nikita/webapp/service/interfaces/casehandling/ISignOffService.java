@@ -15,4 +15,6 @@ public interface ISignOffService {
 
     ResponseEntity<SignOffHateoas> updateSignOff(
             @NotNull UUID signOffSystemId, @NotNull SignOff signOff);
+
+    void deleteSignOff(@NotNull UUID signOffSystemId);
 }

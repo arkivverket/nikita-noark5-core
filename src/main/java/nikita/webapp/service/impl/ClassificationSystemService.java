@@ -2,10 +2,10 @@ package nikita.webapp.service.impl;
 
 import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.ClassificationSystem;
+import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
 import nikita.common.model.noark5.v5.hateoas.ClassificationSystemHateoas;
 import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.ClassificationType;
 import nikita.common.repository.n5v5.IClassificationSystemRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
@@ -29,9 +29,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 import java.util.UUID;
 
+import static java.util.List.copyOf;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setFinaliseEntityValues;
@@ -56,13 +56,13 @@ public class ClassificationSystemService
     private static final Logger logger = LoggerFactory.getLogger(
             ClassificationSystemService.class);
 
-    private IMetadataService metadataService;
-    private IClassService classService;
-    private IClassificationSystemRepository classificationSystemRepository;
-    private IClassificationSystemHateoasHandler
+    private final IMetadataService metadataService;
+    private final IClassService classService;
+    private final IClassificationSystemRepository classificationSystemRepository;
+    private final IClassificationSystemHateoasHandler
             classificationSystemHateoasHandler;
-    private IClassHateoasHandler classHateoasHandler;
-    private ISeriesHateoasHandler seriesHateoasHandler;
+    private final IClassHateoasHandler classHateoasHandler;
+    private final ISeriesHateoasHandler seriesHateoasHandler;
 
     public ClassificationSystemService(
             EntityManager entityManager,
@@ -100,7 +100,7 @@ public class ClassificationSystemService
      */
     @Override
     public ClassificationSystemHateoas save(
-            ClassificationSystem classificationSystem) {
+            final ClassificationSystem classificationSystem) {
         validateClassificationType(classificationSystem);
         setFinaliseEntityValues(classificationSystem);
         ClassificationSystemHateoas classificationSystemHateoas = new
@@ -133,8 +133,8 @@ public class ClassificationSystemService
      */
     @Override
     public ClassHateoas createClassAssociatedWithClassificationSystem(
-            @NotNull String classificationSystemSystemId,
-            @NotNull Class klass) {
+            @NotNull final UUID classificationSystemSystemId,
+            @NotNull final Class klass) {
         ClassificationSystem classificationSystem =
                 getClassificationSystemOrThrow(classificationSystemSystemId);
         klass.setReferenceClassificationSystem(classificationSystem);
@@ -150,19 +150,19 @@ public class ClassificationSystemService
      * user and the business area they are working with. A generic Noark core
      * like this does not have scope for that kind of functionality.
      *
-     * @param classificationSystemSystemId The systemId of the
-     *                                     classificationSystem object you
-     *                                     wish to generate a default Class for
+     * @param systemId The systemId of the
+     *                 classificationSystem object you
+     *                 wish to generate a default Class for
      * @return the Class object wrapped as a ClassHateoas object
      */
     @Override
     public ClassHateoas generateDefaultClass(
-            @NotNull String classificationSystemSystemId) {
-
+            @NotNull final UUID systemId) {
         Class defaultClass = new Class();
         ClassHateoas classHateoas = new
                 ClassHateoas(defaultClass);
-        classHateoasHandler.addLinksOnTemplate(classHateoas, new Authorisation());
+        classHateoasHandler.addLinksOnTemplate(classHateoas,
+                new Authorisation());
         return classHateoas;
     }
 
@@ -171,7 +171,7 @@ public class ClassificationSystemService
     /**
      * Retrieve a single ClassificationSystem objects from the database.
      *
-     * @param classificationSystemSystemId The systemId of the
+     * @param systemId The systemId of the
      *                                     ClassificationSystem  object you
      *                                     wish to retrieve
      * @return the ClassificationSystem object wrapped as a
@@ -179,15 +179,11 @@ public class ClassificationSystemService
      */
     @Override
     public ClassificationSystemHateoas findSingleClassificationSystem(
-            @NotNull String classificationSystemSystemId) {
+            @NotNull final UUID systemId) {
         ClassificationSystem classificationSystem =
-                getClassificationSystemOrThrow(classificationSystemSystemId);
-
+                getClassificationSystemOrThrow(systemId);
         ClassificationSystemHateoas classificationSystemHateoas = new
-                ClassificationSystemHateoas(
-                classificationSystemRepository.
-                        findBySystemId(
-                                UUID.fromString(classificationSystemSystemId)));
+                ClassificationSystemHateoas(classificationSystem);
         classificationSystemHateoasHandler.addLinks(classificationSystemHateoas,
                 new Authorisation());
         applicationEventPublisher.publishEvent(
@@ -197,11 +193,10 @@ public class ClassificationSystemService
 
 
     @Override
-    @SuppressWarnings("unchecked")
     public ClassificationSystemHateoas findAllClassificationSystem() {
         ClassificationSystemHateoas classificationSystemHateoas = new
-                ClassificationSystemHateoas((List<INoarkEntity>)
-                (List) classificationSystemRepository.findAll());
+                ClassificationSystemHateoas(
+                copyOf(classificationSystemRepository.findAll()));
         classificationSystemHateoasHandler.addLinks(classificationSystemHateoas,
                 new Authorisation());
         return classificationSystemHateoas;
@@ -209,11 +204,11 @@ public class ClassificationSystemService
 
     @Override
     public ClassHateoas findAllClassAssociatedWithClassificationSystem(
-            @NotNull String classificationSystemSystemId) {
+            @NotNull final UUID systemId) {
         ClassificationSystem classificationSystem =
-                getClassificationSystemOrThrow(classificationSystemSystemId);
+                getClassificationSystemOrThrow(systemId);
         ClassHateoas classHateoas = new ClassHateoas(
-                List.copyOf(classificationSystem.getReferenceClass()));
+                copyOf(classificationSystem.getReferenceClass()));
         classHateoasHandler.addLinks(classHateoas, new Authorisation());
         return classHateoas;
     }
@@ -221,9 +216,9 @@ public class ClassificationSystemService
     @Override
     public ResponseEntity<SeriesHateoas>
     findSeriesAssociatedWithClassificationSystem(
-            @NotNull final String systemId) {
+            @NotNull final UUID systemId) {
         SeriesHateoas seriesHateoas = new SeriesHateoas(
-                List.copyOf(getClassificationSystemOrThrow(systemId)
+                copyOf(getClassificationSystemOrThrow(systemId)
                         .getReferenceSeries()));
         seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());
         return ResponseEntity.status(OK)
@@ -265,7 +260,7 @@ public class ClassificationSystemService
      */
     @Override
     public ClassificationSystemHateoas
-    handleUpdate(@NotNull final String systemId, @NotNull final Long version,
+    handleUpdate(@NotNull final UUID systemId, @NotNull final Long version,
                  @NotNull final ClassificationSystem
                          incomingClassificationSystem) {
         ClassificationSystem existingClassificationSystem =
@@ -292,9 +287,12 @@ public class ClassificationSystemService
 
     // All DELETE operations
     @Override
-    public void deleteEntity(@NotNull String classificationSystemSystemId) {
-        deleteEntity(getClassificationSystemOrThrow(
-                classificationSystemSystemId));
+    public void deleteClassificationSystem(@NotNull final UUID systemId) {
+        ClassificationSystem classificationSystem =
+                getClassificationSystemOrThrow(systemId);
+        for (Series series : classificationSystem.getReferenceSeries()) {
+            series.removeClassificationSystem(classificationSystem);
+        }
     }
 
     /**
@@ -314,13 +312,17 @@ public class ClassificationSystemService
      * user and the business area they are working with. A generic Noark core
      * like this does not have scope for that kind of functionality.
      *
-     * @return the ClassificationSystem object wrapped as a ClassificationSystemHateoas object
+     * @return the ClassificationSystem object wrapped as a
+     * ClassificationSystemHateoas object
      */
     @Override
     public ClassificationSystemHateoas generateDefaultClassificationSystem() {
-        ClassificationSystem defaultClassificationSystem = new ClassificationSystem();
-        ClassificationSystemHateoas classificationSystemHateoas = new ClassificationSystemHateoas(defaultClassificationSystem);
-        classificationSystemHateoasHandler.addLinksOnTemplate(classificationSystemHateoas, new Authorisation());
+        ClassificationSystem defaultClassificationSystem =
+                new ClassificationSystem();
+        ClassificationSystemHateoas classificationSystemHateoas =
+                new ClassificationSystemHateoas(defaultClassificationSystem);
+        classificationSystemHateoasHandler.addLinksOnTemplate(
+                classificationSystemHateoas, new Authorisation());
         return classificationSystemHateoas;
     }
 
@@ -332,22 +334,18 @@ public class ClassificationSystemService
      * that you will only ever get a valid ClassificationSystem back. If
      * there is no validClassificationSystem, an exception is thrown
      *
-     * @param classificationSystemSystemId systemId of the classificationSystem
-     *                                     object to retrieve
+     * @param systemId systemId of the classificationSystem object to retrieve
      * @return the classificationSystem object
      */
     protected ClassificationSystem getClassificationSystemOrThrow(
-            @NotNull String classificationSystemSystemId) {
+            @NotNull final UUID systemId) {
         ClassificationSystem classificationSystem =
-                classificationSystemRepository.
-                        findBySystemId(
-                                UUID.fromString(classificationSystemSystemId));
+                classificationSystemRepository.findBySystemId(systemId);
         if (classificationSystem == null) {
-            String info = INFO_CANNOT_FIND_OBJECT +
-                    " ClassificationSystem, using systemId " +
-                    classificationSystemSystemId;
-            logger.info(info);
-            throw new NoarkEntityNotFoundException(info);
+            String error = INFO_CANNOT_FIND_OBJECT +
+                    " ClassificationSystem, using systemId " + systemId;
+            logger.error(error);
+            throw new NoarkEntityNotFoundException(error);
         }
         return classificationSystem;
     }

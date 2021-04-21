@@ -447,6 +447,12 @@ public class Record
     }
 
     @Override
+    public void removePart(Part part) {
+        this.referencePart.remove(part);
+        part.getReferenceRecord().remove(this);
+    }
+
+    @Override
     public List<CorrespondencePart> getReferenceCorrespondencePart() {
         return referenceCorrespondencePart;
     }

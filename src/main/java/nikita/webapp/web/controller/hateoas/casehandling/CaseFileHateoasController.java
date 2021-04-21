@@ -61,7 +61,7 @@ public class CaseFileHateoasController
     // API - All POST Requests (CRUD - CREATE)
 
     // Create a RecordNote entity
-    // POST [contextPath][api]/sakarkiv/{systemId}/ny-journalpost
+    // POST [contextPath][api]/sakarkiv/{systemId}/ny-arkivnotat
     @Operation(summary = "Persists a RecordNote object associated with the " +
             "given Series systemId",
             description = "Returns the newly created record object after it " +

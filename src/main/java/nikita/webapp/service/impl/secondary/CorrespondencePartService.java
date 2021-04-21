@@ -36,7 +36,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
-import static nikita.common.config.DatabaseConstants.DELETE_FROM_RECORD_CORRESPONDENCE_PART;
 import static nikita.common.config.MetadataConstants.CORRESPONDENCE_PART_CODE_EA;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
@@ -326,26 +325,48 @@ public class CorrespondencePartService
         return correspondencePartInternalHateoas;
     }
 
+    /**
+     * Delete a CorrespondencePartUnit identified by the given systemId
+     * <p>
+     * Note. This assumes all children have also been deleted.
+     *
+     * @param systemId The systemId of the CorrespondencePart object you wish
+     *                 to delete
+     */
     @Override
     public void deleteCorrespondencePartUnit(@NotNull String systemId) {
-        CorrespondencePart correspondencePart =
+        CorrespondencePartUnit correspondencePartUnit = (CorrespondencePartUnit)
                 getCorrespondencePartOrThrow(systemId);
-        disassociateForeignKeys(correspondencePart,
-                DELETE_FROM_RECORD_CORRESPONDENCE_PART);
-        deleteEntity(correspondencePart);
-    }
-
-    @Override
-    public void deleteCorrespondencePartPerson(@NotNull String systemId) {
-        CorrespondencePart correspondencePart =
-                getCorrespondencePartOrThrow(systemId);
-        disassociateForeignKeys(correspondencePart,
-                DELETE_FROM_RECORD_CORRESPONDENCE_PART);
-        deleteEntity(correspondencePart);
+        Record record = correspondencePartUnit.getReferenceRecord();
+        record.removeCorrespondencePart(correspondencePartUnit);
+        for (BSMBase bsmBase : correspondencePartUnit.getReferenceBSMBase()) {
+            bsmBase.setReferenceCorrespondencePart(null);
+        }
+        correspondencePartRepository.delete(correspondencePartUnit);
     }
 
     /**
-     * Delete a CorrespondencePart identified by the given systemId
+     * Delete a CorrespondencePartPerson identified by the given systemId
+     * <p>
+     * Note. This assumes all children have also been deleted.
+     *
+     * @param systemId The systemId of the CorrespondencePart object you wish
+     *                 to delete
+     */
+    @Override
+    public void deleteCorrespondencePartPerson(@NotNull String systemId) {
+        CorrespondencePartPerson correspondencePartPerson = (CorrespondencePartPerson)
+                getCorrespondencePartOrThrow(systemId);
+        Record record = correspondencePartPerson.getReferenceRecord();
+        record.removeCorrespondencePart(correspondencePartPerson);
+        for (BSMBase bsmBase : correspondencePartPerson.getReferenceBSMBase()) {
+            bsmBase.setReferenceCorrespondencePart(null);
+        }
+        correspondencePartRepository.delete(correspondencePartPerson);
+    }
+
+    /**
+     * Delete a CorrespondencePartInternal identified by the given systemId
      * <p>
      * Note. This assumes all children have also been deleted.
      *
@@ -354,7 +375,8 @@ public class CorrespondencePartService
      */
     @Override
     public void deleteCorrespondencePartInternal(@NotNull String systemId) {
-        deleteEntity(getCorrespondencePartOrThrow(systemId));
+        correspondencePartRepository.delete(
+                getCorrespondencePartOrThrow(systemId));
     }
 
     /**

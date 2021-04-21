@@ -2,7 +2,6 @@ package nikita.webapp.service.interfaces;
 
 
 import nikita.common.model.noark5.v5.DocumentObject;
-import nikita.common.model.noark5.v5.hateoas.DocumentDescriptionHateoas;
 import nikita.common.model.noark5.v5.hateoas.DocumentObjectHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.ConversionHateoas;
 import nikita.common.model.noark5.v5.secondary.Conversion;
@@ -13,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
+import java.util.UUID;
 
 public interface IDocumentObjectService {
 
@@ -79,4 +78,11 @@ public interface IDocumentObjectService {
                             @NotNull HttpServletRequest request,
                             @NotNull HttpServletResponse response);
 
+    /**
+     * Delete a conversion object associated with the documentObject.
+     *
+     * @param documentObjectSystemID UUID of the documentObject object
+     * @param conversionSystemID     UUID of the Conversion object
+     */
+    void deleteConversion(UUID documentObjectSystemID, UUID conversionSystemID);
 }

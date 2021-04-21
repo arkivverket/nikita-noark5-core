@@ -9,39 +9,40 @@ import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
 import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 public interface IClassificationSystemService {
 
-	// -- All CREATE operations
+    // -- All CREATE operations
     ClassificationSystemHateoas save(
-            @NotNull ClassificationSystem classificationSystem);
+            @NotNull final ClassificationSystem classificationSystem);
 
     ClassHateoas createClassAssociatedWithClassificationSystem(
-            @NotNull String systemId, @NotNull Class klass);
+            @NotNull final UUID systemId, @NotNull final Class klass);
 
-    ClassHateoas generateDefaultClass(@NotNull String classSystemId);
+    ClassHateoas generateDefaultClass(@NotNull final UUID systemId);
 
     // -- All READ operations
     ClassificationSystemHateoas findSingleClassificationSystem(
-            @NotNull String classificationSystemSystemId);
+            @NotNull final UUID systemId);
 
     ClassificationSystemHateoas findAllClassificationSystem();
 
     ClassHateoas findAllClassAssociatedWithClassificationSystem(
-            @NotNull String classificationSystemSystemId);
+            @NotNull final UUID systemId);
 
     ResponseEntity<SeriesHateoas>
     findSeriesAssociatedWithClassificationSystem(
-            @NotNull final String systemId);
+            @NotNull final UUID systemId);
 
     // All UPDATE operations
     ClassificationSystemHateoas handleUpdate(
-            @NotNull final String systemId,
+            @NotNull final UUID systemId,
             @NotNull final Long version,
             @NotNull final ClassificationSystem incomingClassificationSystem);
 
     // All DELETE operations
-    void deleteEntity(@NotNull String classificationSystemSystemId);
+    void deleteClassificationSystem(@NotNull final UUID systemId);
 
     long deleteAllByOwnedBy();
 

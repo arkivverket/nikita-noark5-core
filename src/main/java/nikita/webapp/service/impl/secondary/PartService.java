@@ -15,7 +15,6 @@ import nikita.common.model.noark5.v5.metadata.PartRole;
 import nikita.common.model.noark5.v5.secondary.Part;
 import nikita.common.model.noark5.v5.secondary.PartPerson;
 import nikita.common.model.noark5.v5.secondary.PartUnit;
-import nikita.common.repository.n5v5.metadata.IPartRoleRepository;
 import nikita.common.repository.n5v5.secondary.IPartRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.secondary.IPartHateoasHandler;
@@ -55,22 +54,19 @@ public class PartService
     private static final Logger logger =
             LoggerFactory.getLogger(PartService.class);
 
-    private final IPartRoleRepository partRoleRepository;
     private final IPartRepository partRepository;
-    private IMetadataService metadataService;
+    private final IMetadataService metadataService;
     private final IPartHateoasHandler partHateoasHandler;
     private final IBSMService bsmService;
 
     public PartService(EntityManager entityManager,
                        ApplicationEventPublisher applicationEventPublisher,
                        IPatchService patchService,
-                       IPartRoleRepository partRoleRepository,
                        IPartRepository partRepository,
                        IMetadataService metadataService,
                        IPartHateoasHandler partHateoasHandler,
                        IBSMService bsmService) {
         super(entityManager, applicationEventPublisher, patchService);
-        this.partRoleRepository = partRoleRepository;
         this.partRepository = partRepository;
         this.metadataService = metadataService;
         this.partHateoasHandler = partHateoasHandler;
@@ -78,7 +74,7 @@ public class PartService
     }
 
     @Override
-    public Part findBySystemId(@NotNull String systemId) {
+    public Part findBySystemId(@NotNull UUID systemId) {
         return getPartOrThrow(systemId);
     }
 
@@ -98,7 +94,7 @@ public class PartService
     @Override
     public PartPerson
     updatePartPerson(
-            @NotNull String systemId, @NotNull Long version,
+            @NotNull UUID systemId, @NotNull Long version,
             @NotNull PartPerson incomingPart) {
         PartPerson existingPart = (PartPerson) getPartOrThrow(systemId);
 
@@ -132,7 +128,7 @@ public class PartService
 
     @Override
     public PartUnit updatePartUnit(
-            @NotNull String systemId, @NotNull Long version,
+            @NotNull UUID systemId, @NotNull Long version,
             @NotNull PartUnit incomingPart) {
 
         PartUnit existingPart = (PartUnit) getPartOrThrow(systemId);
@@ -280,13 +276,39 @@ public class PartService
     }
 
     @Override
-    public void deletePartPerson(@NotNull String systemId) {
-        deleteEntity(getPartOrThrow(systemId));
+    public void deletePartPerson(@NotNull UUID systemId) {
+        PartPerson partPerson = (PartPerson) getPartOrThrow(systemId);
+        for (Record record : partPerson.getReferenceRecord()) {
+            record.removePart(partPerson);
+        }
+        for (File file : partPerson.getReferenceFile()) {
+            file.removePart(partPerson);
+        }
+        for (BSMBase bsmBase : partPerson.getReferenceBSMBase()) {
+            bsmBase.setReferencePart(null);
+            partPerson.getReferenceBSMBase().remove(bsmBase);
+        }
+        partRepository.delete(partPerson);
     }
 
     @Override
-    public void deletePartUnit(@NotNull String systemId) {
-        deleteEntity(getPartOrThrow(systemId));
+    public void deletePartUnit(@NotNull UUID systemId) {
+        PartUnit partUnit = (PartUnit) getPartOrThrow(systemId);
+        for (Record record : partUnit.getReferenceRecord()) {
+            record.removePart(partUnit);
+        }
+        for (File file : partUnit.getReferenceFile()) {
+            file.removePart(partUnit);
+        }
+        for (BSMBase bsmBase : partUnit.getReferenceBSMBase()) {
+            bsmBase.setReferencePart(null);
+            partUnit.getReferenceBSMBase().remove(bsmBase);
+        }
+        for (DocumentDescription documentDescription :
+                partUnit.getReferenceDocumentDescription()) {
+            documentDescription.removePart(partUnit);
+        }
+        partRepository.delete(partUnit);
     }
 
     // Internal helper methods
@@ -327,20 +349,6 @@ public class PartService
             businessAddress.getSimpleAddress().setAddressType(BUSINESS_ADDRESS);
             businessAddress.setPartUnit(part);
         }
-    }
-
-    /**
-     * Internal helper method. Rather than having a find and try catch in
-     * multiple methods, we have it here once. If you call this, be aware
-     * that you will only ever get a valid Part back. If there
-     * is no valid Part, an exception is thrown
-     *
-     * @param partSystemId systemId of part to
-     *                     retrieve
-     * @return the retrieved Part
-     */
-    private Part getPartOrThrow(@NotNull String partSystemId) {
-        return getPartOrThrow(UUID.fromString(partSystemId));
     }
 
     /**

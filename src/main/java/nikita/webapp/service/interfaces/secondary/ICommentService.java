@@ -7,6 +7,7 @@ import nikita.common.model.noark5.v5.hateoas.secondary.CommentHateoas;
 import nikita.common.model.noark5.v5.secondary.Comment;
 
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 public interface ICommentService {
 
@@ -19,11 +20,11 @@ public interface ICommentService {
     CommentHateoas createNewComment
         (Comment comment, DocumentDescription documentDescription);
 
-    CommentHateoas findSingleComment(String commentSystemId);
+    CommentHateoas findSingleComment(UUID commentSystemId);
 
-    CommentHateoas handleUpdate(@NotNull String systemId,
+    CommentHateoas handleUpdate(@NotNull UUID systemId,
                                 @NotNull Long version,
                                 @NotNull Comment incomingComment);
 
-    void deleteEntity(@NotNull String systemId);
+    void deleteComment(UUID systemId);
 }

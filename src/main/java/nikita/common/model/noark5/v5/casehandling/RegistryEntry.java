@@ -207,7 +207,7 @@ public class RegistryEntry
             inverseJoinColumns = @JoinColumn(
                     name = FOREIGN_KEY_SIGN_OFF_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private Set<SignOff> referenceSignOff = new HashSet<>();
+    private final Set<SignOff> referenceSignOff = new HashSet<>();
 
     // Links to Precedence
     @ManyToMany(cascade = {PERSIST, MERGE})
@@ -218,7 +218,7 @@ public class RegistryEntry
             inverseJoinColumns = @JoinColumn(
                     name = FOREIGN_KEY_PRECEDENCE_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private Set<Precedence> referencePrecedence = new HashSet<>();
+    private final Set<Precedence> referencePrecedence = new HashSet<>();
 
     // Link to ElectronicSignature
     @OneToOne(mappedBy = REFERENCE_REGISTRY_ENTRY_DB, fetch = LAZY,
@@ -424,6 +424,11 @@ public class RegistryEntry
     public void addSignOff(SignOff signOff) {
         this.referenceSignOff.add(signOff);
         signOff.getReferenceRecord().add(this);
+    }
+
+    public void removeSignOff(SignOff signOff) {
+        this.referenceSignOff.remove(signOff);
+        signOff.getReferenceRecord().remove(this);
     }
 
     @Override

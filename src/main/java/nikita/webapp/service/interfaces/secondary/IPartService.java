@@ -18,11 +18,11 @@ import java.util.UUID;
 public interface IPartService {
 
     PartPerson updatePartPerson(
-            @NotNull String systemId, @NotNull Long version,
+            @NotNull UUID systemId, @NotNull Long version,
             @NotNull PartPerson incomingPart);
 
     PartUnit updatePartUnit(
-            @NotNull String systemId, @NotNull Long version,
+            @NotNull UUID systemId, @NotNull Long version,
             @NotNull PartUnit incomingPart);
 
     PartUnitHateoas createNewPartUnit(
@@ -52,13 +52,13 @@ public interface IPartService {
             @NotNull PartPerson partPerson,
             @NotNull DocumentDescription documentDescription);
 
-    Part findBySystemId(@NotNull String systemID);
+    Part findBySystemId(@NotNull UUID systemId);
 
     // All DELETE operations
 
-    void deletePartUnit(@NotNull String systemID);
+    void deletePartUnit(@NotNull UUID systemId);
 
-    void deletePartPerson(@NotNull String systemID);
+    void deletePartPerson(@NotNull UUID systemId);
 
     // All template operations
     PartUnitHateoas generateDefaultPartUnit(

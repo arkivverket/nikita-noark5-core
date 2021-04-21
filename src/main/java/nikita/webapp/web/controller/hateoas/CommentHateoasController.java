@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
@@ -53,9 +54,9 @@ public class CommentHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemId of comment to retrieve.",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         CommentHateoas commentHateoas =
-	    commentService.findSingleComment(systemID);
+                commentService.findSingleComment(systemID);
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(commentHateoas.getEntityVersion().toString())
@@ -99,7 +100,7 @@ public class CommentHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemId of comment to update.",
                     required = true)
-            @PathVariable(SYSTEM_ID) String systemID,
+            @PathVariable(SYSTEM_ID) UUID systemID,
             @Parameter(name = "comment",
                     description = "Incoming comment object",
                     required = true)
@@ -134,8 +135,8 @@ public class CommentHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the comment to delete",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
-        commentService.deleteEntity(systemID);
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        commentService.deleteComment(systemID);
         return ResponseEntity.status(NO_CONTENT)
                 .body(DELETE_RESPONSE);
     }

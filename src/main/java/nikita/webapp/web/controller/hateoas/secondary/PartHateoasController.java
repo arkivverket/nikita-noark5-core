@@ -66,7 +66,7 @@ public class PartHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the partPerson to retrieve",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String partPersonSystemId) {
+            @PathVariable(SYSTEM_ID) final UUID partPersonSystemId) {
         PartPerson partPerson =
                 (PartPerson) partService.findBySystemId(partPersonSystemId);
         PartPersonHateoas partPersonHateoas =
@@ -99,7 +99,7 @@ public class PartHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the partUnit to retrieve",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String partUnitSystemId) {
+            @PathVariable(SYSTEM_ID) final UUID partUnitSystemId) {
         PartUnit partUnit =
                 (PartUnit) partService.findBySystemId(partUnitSystemId);
         PartUnitHateoas partUnitHateoas = new PartUnitHateoas(partUnit);
@@ -145,7 +145,7 @@ public class PartHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemId of partUnit to update",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID,
+            @PathVariable(SYSTEM_ID) final UUID systemID,
             @Parameter(name = "PartUnit",
                     description = "Incoming partUnit object",
                     required = true)
@@ -198,7 +198,7 @@ public class PartHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemId of partPerson to update",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID,
+            @PathVariable(SYSTEM_ID) final UUID systemID,
             @Parameter(name = "PartPerson",
                     description = "Incoming partPerson object",
                     required = true)
@@ -277,7 +277,7 @@ public class PartHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the partUnit to delete",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         partService.deletePartUnit(systemID);
         return ResponseEntity.status(NO_CONTENT)
                 .body(DELETE_RESPONSE);
@@ -304,7 +304,7 @@ public class PartHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the partPerson to delete",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         partService.deletePartPerson(systemID);
         return ResponseEntity.status(NO_CONTENT)
                 .body(DELETE_RESPONSE);
