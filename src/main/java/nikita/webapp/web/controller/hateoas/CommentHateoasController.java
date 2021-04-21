@@ -54,9 +54,9 @@ public class CommentHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemId of comment to retrieve.",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         CommentHateoas commentHateoas =
-	    commentService.findSingleComment(systemID);
+                commentService.findSingleComment(systemID);
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(commentHateoas.getEntityVersion().toString())
@@ -100,7 +100,7 @@ public class CommentHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemId of comment to update.",
                     required = true)
-            @PathVariable(SYSTEM_ID) String systemID,
+            @PathVariable(SYSTEM_ID) UUID systemID,
             @Parameter(name = "comment",
                     description = "Incoming comment object",
                     required = true)
