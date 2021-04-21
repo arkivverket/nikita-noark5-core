@@ -102,7 +102,7 @@ public class CommentService
     }
 
     @Override
-    public CommentHateoas findSingleComment(String commentSystemId) {
+    public CommentHateoas findSingleComment(UUID commentSystemId) {
         Comment existingComment = getCommentOrThrow(commentSystemId);
 
         CommentHateoas commentHateoas =
@@ -112,7 +112,7 @@ public class CommentService
     }
 
     @Override
-    public CommentHateoas handleUpdate(@NotNull String commentSystemId,
+    public CommentHateoas handleUpdate(@NotNull UUID commentSystemId,
                                        @NotNull Long version,
                                        @NotNull Comment incomingComment) {
         Comment existingComment = getCommentOrThrow(commentSystemId);
@@ -139,13 +139,13 @@ public class CommentService
         return commentHateoas;
     }
 
-    public void deleteEntity(String systemID) {
+    @Override
+    public void deleteComment(UUID systemID) {
         deleteEntity(getCommentOrThrow(systemID));
     }
 
-    protected Comment getCommentOrThrow(@NotNull String commentSystemId) {
-        Comment comment = commentRepository.
-                findBySystemId(UUID.fromString(commentSystemId));
+    protected Comment getCommentOrThrow(@NotNull UUID commentSystemId) {
+        Comment comment = commentRepository.findBySystemId(commentSystemId);
         if (comment == null) {
             String info = INFO_CANNOT_FIND_OBJECT +
                     " Comment, using systemId " + commentSystemId;
