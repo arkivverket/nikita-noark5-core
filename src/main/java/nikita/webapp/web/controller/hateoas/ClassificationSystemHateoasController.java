@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
@@ -125,7 +126,7 @@ public class ClassificationSystemHateoasController
                     description = "systemID of classificationSystem to " +
                             "associate the class with.",
                     required = true)
-            @PathVariable String systemID,
+            @PathVariable UUID systemID,
             @Parameter(name = "klass",
                     description = "Incoming class object",
                     required = true)
@@ -149,7 +150,7 @@ public class ClassificationSystemHateoasController
                     description = "systemID of classificationSystem to " +
                             "retrieve.",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         ClassificationSystemHateoas classificationSystemHateoas =
                 classificationSystemService.
                         findSingleClassificationSystem(systemID);
@@ -186,7 +187,7 @@ public class ClassificationSystemHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the classificationSystem",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return classificationSystemService.
                 findSeriesAssociatedWithClassificationSystem(systemID);
     }
@@ -245,7 +246,7 @@ public class ClassificationSystemHateoasController
                     description = "systemID of ClassificationSystem you want " +
                             "retrieve associated  Class objects for",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(classificationSystemService.
@@ -279,7 +280,7 @@ public class ClassificationSystemHateoasController
                     name = SYSTEM_ID,
                     description = "systemID of Class to associate Class with.",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(classificationSystemService.generateDefaultClass(systemID));
@@ -310,7 +311,7 @@ public class ClassificationSystemHateoasController
                     description = "systemID of the ClassificationSystem to " +
                             "delete",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         classificationSystemService.deleteClassificationSystem(systemID);
         return ResponseEntity.status(NO_CONTENT)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
@@ -379,7 +380,7 @@ public class ClassificationSystemHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of classificationSystem to update.",
                     required = true)
-            @PathVariable(SYSTEM_ID) String systemID,
+            @PathVariable(SYSTEM_ID) UUID systemID,
             @Parameter(name = "classificationSystem",
                     description = "Incoming classificationSystem object",
                     required = true)
