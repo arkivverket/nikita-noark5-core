@@ -58,7 +58,6 @@ import java.util.UUID;
 
 import static java.time.OffsetDateTime.now;
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.DatabaseConstants.DELETE_FROM_CORRESPONDENCE_PART_RECORD;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -698,11 +697,9 @@ public class RecordService
 
     // All DELETE operations
     @Override
-    public void deleteEntity(@NotNull String systemID) {
+    public void deleteRecord(@NotNull UUID systemID) {
         Record record = getRecordOrThrow(systemID);
-        disassociateForeignKeys(record,
-                DELETE_FROM_CORRESPONDENCE_PART_RECORD);
-        deleteEntity(record);
+        recordRepository.delete(record);
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityDeletedEvent(this, record));
     }

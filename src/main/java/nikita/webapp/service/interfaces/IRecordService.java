@@ -131,7 +131,7 @@ public interface IRecordService {
                         @NotNull Long version, @NotNull Record record);
 
     // -- All DELETE operations
-    void deleteEntity(@NotNull String systemId);
+    void deleteRecord(@NotNull UUID systemID);
 
     long deleteAllByOwnedBy();
 

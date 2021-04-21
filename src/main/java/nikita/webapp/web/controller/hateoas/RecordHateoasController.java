@@ -1803,8 +1803,8 @@ public class RecordHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the record to delete",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
-        recordService.deleteEntity(systemID);
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        recordService.deleteRecord(systemID);
         return ResponseEntity.status(NO_CONTENT)
                 .body(DELETE_RESPONSE);
     }
