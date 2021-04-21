@@ -281,6 +281,13 @@ public class PartService
         for (Record record : partPerson.getReferenceRecord()) {
             record.removePart(partPerson);
         }
+        for (File file : partPerson.getReferenceFile()) {
+            file.removePart(partPerson);
+        }
+        for (BSMBase bsmBase : partPerson.getReferenceBSMBase()) {
+            bsmBase.setReferencePart(null);
+            partPerson.getReferenceBSMBase().remove(bsmBase);
+        }
         partRepository.delete(partPerson);
     }
 
@@ -289,6 +296,17 @@ public class PartService
         PartUnit partUnit = (PartUnit) getPartOrThrow(systemId);
         for (Record record : partUnit.getReferenceRecord()) {
             record.removePart(partUnit);
+        }
+        for (File file : partUnit.getReferenceFile()) {
+            file.removePart(partUnit);
+        }
+        for (BSMBase bsmBase : partUnit.getReferenceBSMBase()) {
+            bsmBase.setReferencePart(null);
+            partUnit.getReferenceBSMBase().remove(bsmBase);
+        }
+        for (DocumentDescription documentDescription :
+                partUnit.getReferenceDocumentDescription()) {
+            documentDescription.removePart(partUnit);
         }
         partRepository.delete(partUnit);
     }

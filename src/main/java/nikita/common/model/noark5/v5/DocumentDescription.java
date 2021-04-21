@@ -518,6 +518,11 @@ public class DocumentDescription
         part.getReferenceDocumentDescription().add(this);
     }
 
+    public void removePart(Part part) {
+        this.referencePart.remove(part);
+        part.getReferenceDocumentDescription().remove(this);
+    }
+
 
     public List<BSMBase> getReferenceBSMBase() {
         return referenceBSMBase;
