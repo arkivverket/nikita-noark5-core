@@ -13,6 +13,7 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class PatchTest {
 
@@ -44,7 +45,7 @@ public class PatchTest {
 
         PatchObjects patchObjects = new ObjectMapper()
                 .readValue(jsonPatchWriter.toString(), PatchObjects.class);
-
+        assertNotNull(patchObjects);
         List<PatchObject> list = patchObjects.getPatchObjects();
         assertThat(list, hasSize(2));
     }
