@@ -58,7 +58,6 @@ import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentM
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
-@Transactional
 public class CaseFileService
         extends NoarkService
         implements ICaseFileService {
@@ -105,6 +104,7 @@ public class CaseFileService
     }
 
     @Override
+    @Transactional
     public CaseFile save(CaseFile caseFile) {
         processCaseFileBeforeSave(caseFile);
         return caseFileRepository.save(caseFile);
@@ -127,6 +127,7 @@ public class CaseFileService
      * CaseFile
      */
     @Override
+    @Transactional
     public CaseFileHateoas expandFileAsCaseFileHateoas(
             File file, PatchMerge patchMerge) {
         CaseFile caseFile = new CaseFile(file);
@@ -176,6 +177,7 @@ public class CaseFileService
     }
 
     @Override
+    @Transactional
     public CaseFileHateoas saveHateoas(CaseFile caseFile) {
         CaseFile caseFileNew = save(caseFile);
         applicationEventPublisher.publishEvent(
@@ -183,7 +185,6 @@ public class CaseFileService
         return packAsHateoas(caseFile);
     }
 
-    // systemId
     public CaseFile findBySystemId(String systemId) {
         return getCaseFileOrThrow(systemId);
     }
@@ -215,6 +216,7 @@ public class CaseFileService
     }
 
     @Override
+    @Transactional
     public PrecedenceHateoas createPrecedenceAssociatedWithFile(
             String caseFileSystemID, Precedence precedence) {
         CaseFile caseFile = getCaseFileOrThrow(caseFileSystemID);
@@ -235,6 +237,7 @@ public class CaseFileService
      * wrapped as a ResponseEntity
      */
     @Override
+    @Transactional
     public RegistryEntry createRegistryEntryAssociatedWithCaseFile(
             @NotNull String fileSystemId,
             @NotNull RegistryEntry registryEntry) {
@@ -257,6 +260,7 @@ public class CaseFileService
      * wrapped as a ResponseEntity
      */
     @Override
+    @Transactional
     public ResponseEntity<RecordNoteHateoas> createRecordNoteToCaseFile(
             @NotNull String fileSystemId,
             @NotNull RecordNote recordNote) {
@@ -351,6 +355,7 @@ public class CaseFileService
      * @return the updated caseFile object after it is persisted
      */
     @Override
+    @Transactional
     public CaseFile handleUpdate(@NotNull final String systemId,
                                  @NotNull final Long version,
                                  @NotNull final CaseFile incomingCaseFile) {
@@ -366,6 +371,7 @@ public class CaseFileService
 
     // All DELETE operations
     @Override
+    @Transactional
     public void deleteEntity(@NotNull String caseFileSystemId) {
         CaseFile caseFile = getCaseFileOrThrow(caseFileSystemId);
         applicationEventPublisher.publishEvent(
@@ -379,6 +385,7 @@ public class CaseFileService
      * @return the number of objects deleted
      */
     @Override
+    @Transactional
     public long deleteAllByOwnedBy() {
         return caseFileRepository.deleteByOwnedBy(getUser());
     }
@@ -412,6 +419,7 @@ public class CaseFileService
      * @param administrativeUnit The administrativeUnit
      * @return the sequence number
      */
+    @Transactional
     protected Integer getNextSequenceNumber(AdministrativeUnit
                                                     administrativeUnit) {
         return numberGeneratorService.getNextCaseFileSequenceNumber(administrativeUnit);
@@ -553,6 +561,7 @@ public class CaseFileService
      * @param incomingCaseFile the incoming caseFile
      * @param existingCaseFile the existing caseFile
      */
+    @Transactional
     private void updateValues(@NotNull final CaseFile incomingCaseFile,
                               @NotNull final CaseFile existingCaseFile) {
         existingCaseFile.setRecordsManagementUnit(
