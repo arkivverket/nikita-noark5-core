@@ -45,8 +45,6 @@ public class RecordHateoasSerializer
         // TODO: FIX THIS printCrossReference(jgen, record);
         if (record instanceof RegistryEntry) {
             printElectronicSignature(jgen, (RegistryEntry) record);
-
-        } else if (record instanceof RecordNote) {
         }
         printBSM(jgen, record);
         printHateoasLinks(jgen, recordHateoas.getLinks(record));
