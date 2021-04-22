@@ -249,8 +249,8 @@ public class UserService
             user = userGetBySystemId(systemID);
         }
         if (null != user &&
-                (user.getUsername() != username
-                        || user.getSystemId() != systemID)) {
+                (!user.getUsername().equals(username)
+                        || !user.getSystemId().equals(systemID))) {
             String info = "Inconsistent " + type + " values rejected. ";
             throw new NikitaMalformedInputDataException(info);
         }
