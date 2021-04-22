@@ -64,7 +64,6 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
-@Transactional
 public class RecordService
         extends NoarkService
         implements IRecordService {
@@ -145,7 +144,9 @@ public class RecordService
     }
 
     // All CREATE operations
+
     @Override
+    @Transactional
     public ResponseEntity<RecordHateoas> save(Record record) {
         validateDocumentMedium(metadataService, record);
         bsmService.validateBSMList(record.getReferenceBSMBase());
@@ -158,6 +159,8 @@ public class RecordService
                 .body(recordHateoas);
     }
 
+    @Override
+    @Transactional
     public DocumentDescriptionHateoas
     createDocumentDescriptionAssociatedWithRecord(
             String systemID, DocumentDescription documentDescription) {
@@ -349,6 +352,7 @@ public class RecordService
      * CorrespondencePartPersonHateoas object
      */
     @Override
+    @Transactional
     public CorrespondencePartPersonHateoas
     createCorrespondencePartPersonAssociatedWithRecord(
             @NotNull final String systemID,
@@ -359,6 +363,7 @@ public class RecordService
     }
 
     @Override
+    @Transactional
     public PartPersonHateoas
     createPartPersonAssociatedWithRecord(
             @NotNull String systemID, @NotNull PartPerson partPerson) {
@@ -368,6 +373,7 @@ public class RecordService
     }
 
     @Override
+    @Transactional
     public PartUnitHateoas
     createPartUnitAssociatedWithRecord(
             @NotNull String systemID, @NotNull PartUnit partUnit) {
@@ -386,6 +392,7 @@ public class RecordService
      * CorrespondencePartInternalHateoas object
      */
     @Override
+    @Transactional
     public CorrespondencePartInternalHateoas
     createCorrespondencePartInternalAssociatedWithRecord(
             String systemID, CorrespondencePartInternal correspondencePart) {
@@ -405,6 +412,7 @@ public class RecordService
      * CorrespondencePartUnitHateoas object
      */
     @Override
+    @Transactional
     public CorrespondencePartUnitHateoas
     createCorrespondencePartUnitAssociatedWithRecord(
             String systemID, CorrespondencePartUnit correspondencePart) {
@@ -414,6 +422,7 @@ public class RecordService
     }
 
     @Override
+    @Transactional
     public BuildingHateoas
     createBuildingAssociatedWithRecord(
             @NotNull String systemID, @NotNull Building building) {
@@ -422,6 +431,7 @@ public class RecordService
     }
 
     @Override
+    @Transactional
     public CadastralUnitHateoas
     createCadastralUnitAssociatedWithRecord(
             @NotNull String systemID, @NotNull CadastralUnit cadastralUnit) {
@@ -430,6 +440,7 @@ public class RecordService
     }
 
     @Override
+    @Transactional
     public DNumberHateoas
     createDNumberAssociatedWithRecord(
             @NotNull String systemID, @NotNull DNumber dNumber) {
@@ -438,6 +449,7 @@ public class RecordService
     }
 
     @Override
+    @Transactional
     public PlanHateoas
     createPlanAssociatedWithRecord(
             @NotNull String systemID, @NotNull Plan plan) {
@@ -454,6 +466,7 @@ public class RecordService
     }
 
     @Override
+    @Transactional
     public SocialSecurityNumberHateoas
     createSocialSecurityNumberAssociatedWithRecord(
             @NotNull String systemID,
@@ -464,6 +477,7 @@ public class RecordService
     }
 
     @Override
+    @Transactional
     public UnitHateoas
     createUnitAssociatedWithRecord(
             @NotNull String systemID, @NotNull Unit unit) {
@@ -472,6 +486,7 @@ public class RecordService
     }
 
     @Override
+    @Transactional
     public CommentHateoas createCommentAssociatedWithRecord
         (String systemID, Comment comment) {
         return commentService.createNewComment
@@ -624,14 +639,16 @@ public class RecordService
      * @return author object wrapped as a AuthorHateaos
      */
     @Override
+    @Transactional
     public AuthorHateoas associateAuthorWithRecord(
             String systemId, Author author) {
         return authorService.associateAuthorWithRecord
-            (author, getRecordOrThrow(systemId));
+                (author, getRecordOrThrow(systemId));
     }
 
     // All UPDATE operations
-    public Record update(Record record) {
+
+    private Record update(Record record) {
         bsmService.validateBSMList(record.getReferenceBSMBase());
         return recordRepository.save(record);
     }
@@ -663,6 +680,7 @@ public class RecordService
      * @return The updatedRecord after it is persisted
      */
     @Override
+    @Transactional
     public Record handleUpdate(@NotNull final String recordSystemId,
                                @NotNull final Long version,
                                @NotNull final Record incomingRecord) {
@@ -682,6 +700,7 @@ public class RecordService
     }
 
     @Override
+    @Transactional
     public ResponseEntity<RecordHateoas> handleUpdate(
             UUID systemID, PatchObjects patchObjects) {
         Record record = (Record) handlePatch(systemID, patchObjects);
@@ -697,6 +716,7 @@ public class RecordService
 
     // All DELETE operations
     @Override
+    @Transactional
     public void deleteRecord(@NotNull UUID systemID) {
         Record record = getRecordOrThrow(systemID);
         recordRepository.delete(record);
@@ -710,6 +730,7 @@ public class RecordService
      * @return the number of objects deleted
      */
     @Override
+    @Transactional
     public long deleteAllByOwnedBy() {
         return recordRepository.deleteByOwnedBy(getUser());
     }
@@ -765,6 +786,7 @@ public class RecordService
     }
 
     @Override
+    @Transactional
     public Object associateBSM(@NotNull UUID systemId,
                                @NotNull List<BSMBase> bsm) {
         Record record = getRecordOrThrow(systemId);
