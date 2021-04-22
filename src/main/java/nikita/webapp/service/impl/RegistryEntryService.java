@@ -803,13 +803,13 @@ public class RegistryEntryService
     private boolean isArchived(@NotNull RegistryEntry registryEntry) {
         RegistryEntryStatus registryEntryStatus = registryEntry
                 .getRegistryEntryStatus();
-        if (null != registryEntryStatus) {
+        // null means it is not set, therefore it cannot be archived
+        // however, it should never actually be null
+        if (null == registryEntryStatus) {
             return false;
         }
-        if (registryEntryStatus.getCode()
-                .equals(REGISTRY_ENTRY_ARCHIVED_CODE_VALUE)) {
-            return true;
-        }
-        return false;
+        return null != registryEntryStatus.getCode() &&
+                registryEntryStatus.getCode()
+                        .equals(REGISTRY_ENTRY_ARCHIVED_CODE_VALUE);
     }
 }
