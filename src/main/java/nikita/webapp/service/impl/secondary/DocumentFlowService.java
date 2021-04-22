@@ -35,17 +35,18 @@ import static nikita.common.config.N5ResourceMappings.DOCUMENT_FLOW_FLOW_FROM;
 import static nikita.common.config.N5ResourceMappings.DOCUMENT_FLOW_FLOW_TO;
 
 @Service
-@Transactional
 public class DocumentFlowService
     extends NoarkService
     implements IDocumentFlowService {
 
     private static final Logger logger =
             LoggerFactory.getLogger(DocumentFlowService.class);
+
     private IUserService userService;
     private IMetadataService metadataService;
     private IDocumentFlowRepository documentFlowRepository;
     private IDocumentFlowHateoasHandler documentFlowHateoasHandler;
+
     public DocumentFlowService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
@@ -62,6 +63,7 @@ public class DocumentFlowService
     }
 
     @Override
+    @Transactional
     public DocumentFlowHateoas associateDocumentFlowWithRegistryEntry
         (DocumentFlow documentFlow, RegistryEntry registryEntry) {
         validateFlowStatus(documentFlow);
@@ -79,6 +81,7 @@ public class DocumentFlowService
     }
 
     @Override
+    @Transactional
     public DocumentFlowHateoas associateDocumentFlowWithRecordNote
         (DocumentFlow documentFlow, RecordNote recordNote) {
         validateFlowStatus(documentFlow);
@@ -96,6 +99,7 @@ public class DocumentFlowService
     }
 
     @Override
+    @Transactional
     public DocumentFlowHateoas updateDocumentFlowBySystemId
         (String systemId, Long version, DocumentFlow incoming) {
         DocumentFlow existing = getDocumentFlowOrThrow(systemId);
