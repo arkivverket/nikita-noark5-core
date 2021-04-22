@@ -24,15 +24,16 @@ import java.util.UUID;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 
 @Service
-@Transactional
 public class AuthorService
     extends NoarkService
     implements IAuthorService {
 
     private static final Logger logger =
             LoggerFactory.getLogger(AuthorService.class);
+
     private IAuthorRepository authorRepository;
     private IAuthorHateoasHandler authorHateoasHandler;
+
     public AuthorService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
@@ -45,6 +46,7 @@ public class AuthorService
     }
 
     @Override
+    @Transactional
     public AuthorHateoas associateAuthorWithDocumentDescription
         (Author author, DocumentDescription documentDescription) {
         author.setReferenceDocumentDescription(documentDescription);
@@ -57,6 +59,7 @@ public class AuthorService
     }
 
     @Override
+    @Transactional
     public AuthorHateoas associateAuthorWithRecord
         (Author author, Record record) {
         author.setReferenceRecord(record);
@@ -67,7 +70,9 @@ public class AuthorService
         setOutgoingRequestHeader(authorHateoas);
         return authorHateoas;
     }
+
     @Override
+    @Transactional
     public AuthorHateoas updateAuthorBySystemId(String systemId, Long version,
                                                 Author incomingAuthor) {
         Author existingAuthor = getAuthorOrThrow(systemId);
@@ -81,6 +86,7 @@ public class AuthorService
     }
 
     @Override
+    @Transactional
     public void deleteAuthorBySystemId(String systemID) {
         deleteEntity(getAuthorOrThrow(systemID));
     }
