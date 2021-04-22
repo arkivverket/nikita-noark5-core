@@ -28,7 +28,6 @@ import java.util.UUID;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 
 @Service
-@Transactional
 public class CommentService
         extends NoarkService
         implements ICommentService {
@@ -65,6 +64,7 @@ public class CommentService
     }
 
     @Override
+    @Transactional
     public CommentHateoas createNewComment(Comment comment, File file) {
         checkCommentType(comment);
         if (null == comment.getCommentDate())
@@ -77,6 +77,7 @@ public class CommentService
     }
 
     @Override
+    @Transactional
     public CommentHateoas createNewComment(Comment comment, Record record) {
         checkCommentType(comment);
         if (null == comment.getCommentDate())
@@ -89,6 +90,7 @@ public class CommentService
     }
 
     @Override
+    @Transactional
     public CommentHateoas createNewComment
             (Comment comment, DocumentDescription documentDescription) {
         checkCommentType(comment);
@@ -112,6 +114,7 @@ public class CommentService
     }
 
     @Override
+    @Transactional
     public CommentHateoas handleUpdate(@NotNull UUID commentSystemId,
                                        @NotNull Long version,
                                        @NotNull Comment incomingComment) {
@@ -140,6 +143,7 @@ public class CommentService
     }
 
     @Override
+    @Transactional
     public void deleteComment(UUID systemID) {
         Comment comment = getCommentOrThrow(systemID);
         for (DocumentDescription documentDescription :
