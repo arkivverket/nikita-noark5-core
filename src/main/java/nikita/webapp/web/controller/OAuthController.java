@@ -42,10 +42,10 @@ public class OAuthController {
             String tokenValue = authHeader.replace("Bearer", "").trim();
             OAuth2AccessToken accessToken = tokenStore.readAccessToken(tokenValue);
             tokenStore.removeAccessToken(accessToken);
-            return status(OK).
-                    body("{\"status\" : \"Success\"}");
+            return status(OK)
+                    .body("{\"status\" : \"Success\"}");
         }
-        return status(NOT_FOUND).
-                body("{\"status\" : \"Du var ikke pålogget\"}");
+        return status(NOT_FOUND)
+                .body("{\"status\" : \"Du var ikke pålogget\"}");
     }
 }
