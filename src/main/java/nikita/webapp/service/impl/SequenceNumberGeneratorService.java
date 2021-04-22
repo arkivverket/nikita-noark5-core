@@ -29,7 +29,7 @@ public class SequenceNumberGeneratorService
     private static final Logger logger =
             LoggerFactory.getLogger(SequenceNumberGenerator.class);
 
-    private ISequenceNumberGeneratorRepository numberGeneratorRepository;
+    private final ISequenceNumberGeneratorRepository numberGeneratorRepository;
 
     public SequenceNumberGeneratorService(
             ISequenceNumberGeneratorRepository numberGeneratorRepository) {
