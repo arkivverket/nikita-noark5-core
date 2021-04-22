@@ -51,7 +51,6 @@ import static org.springframework.http.HttpStatus.OK;
  * All public methods return Hateoas objects
  */
 @Service
-@Transactional
 public class ClassService
         extends NoarkService
         implements IClassService {
@@ -103,6 +102,7 @@ public class ClassService
      * @return the newly persisted class object wrapped as a classHateaos object
      */
     @Override
+    @Transactional
     public ClassHateoas save(Class klass) {
         setFinaliseEntityValues(klass);
         ClassHateoas classHateoas = new
@@ -126,6 +126,7 @@ public class ClassService
      * @return the newly persisted class object wrapped as a classHateaos object
      */
     @Override
+    @Transactional
     public ClassHateoas createClassAssociatedWithClass(
             String parentClassSystemId, Class klass) {
         klass.setReferenceParentClass(getClassOrThrow(parentClassSystemId));
@@ -144,6 +145,7 @@ public class ClassService
      * @return the newly persisted File object wrapped as a FileHateaos object
      */
     @Override
+    @Transactional
     public FileHateoas createFileAssociatedWithClass(
             String classSystemId, File file) {
         file.setReferenceClass(getClassOrThrow(classSystemId));
@@ -163,6 +165,7 @@ public class ClassService
      * object
      */
     @Override
+    @Transactional
     public CaseFileHateoas createCaseFileAssociatedWithClass(
             String classSystemId, CaseFile caseFile) {
         caseFile.setReferenceClass(getClassOrThrow(classSystemId));
@@ -204,6 +207,7 @@ public class ClassService
      * object
      */
     @Override
+    @Transactional
     public ResponseEntity<RecordHateoas> createRecordAssociatedWithClass(
             String classSystemId, Record record) {
         record.setReferenceClass(getClassOrThrow(classSystemId));
@@ -359,6 +363,7 @@ public class ClassService
      * @return the updated Class object as a ClassHateoas object
      */
     @Override
+    @Transactional
     public ClassHateoas handleUpdate(
             @NotNull final String systemId, @NotNull final Long version,
             @NotNull final Class incomingClass) {
@@ -392,6 +397,7 @@ public class ClassService
      * @param classSystemId systemId of the Class object to delete
      */
     @Override
+    @Transactional
     public void deleteEntity(@NotNull String classSystemId) {
         deleteEntity(getClassOrThrow(classSystemId));
     }
@@ -402,6 +408,7 @@ public class ClassService
      * @return the number of objects deleted
      */
     @Override
+    @Transactional
     public long deleteAllByOwnedBy() {
         return classRepository.deleteByOwnedBy(getUser());
     }
@@ -422,10 +429,10 @@ public class ClassService
                 classRepository.
                         findBySystemId(UUID.fromString(classSystemId));
         if (!klass.isPresent()) {
-            String info = INFO_CANNOT_FIND_OBJECT + " Class, using systemId " +
+            String error = INFO_CANNOT_FIND_OBJECT + " Class, using systemId " +
                     classSystemId;
-            logger.info(info);
-            throw new NoarkEntityNotFoundException(info);
+            logger.error(error);
+            throw new NoarkEntityNotFoundException(error);
         }
         return klass.get();
     }
