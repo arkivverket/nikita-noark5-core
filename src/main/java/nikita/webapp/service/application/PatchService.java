@@ -116,7 +116,7 @@ public class PatchService
             return systemIdEntity.get();
         } else {
             String error = "Could not find Noark object with systemID " +
-                    originalObjectId.toString();
+                    originalObjectId;
             logger.error(error);
             throw new NoarkEntityNotFoundException(error);
         }
