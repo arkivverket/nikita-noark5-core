@@ -47,16 +47,16 @@ public class SeriesService
     private static final Logger logger =
             LoggerFactory.getLogger(SeriesService.class);
 
-    private IMetadataService metadataService;
-    private IFileService fileService;
-    private ICaseFileService caseFileService;
-    private IClassificationSystemService classificationSystemService;
-    private ISeriesRepository seriesRepository;
-    private ISeriesHateoasHandler seriesHateoasHandler;
-    private IRecordHateoasHandler recordHateoasHandler;
-    private IFileHateoasHandler fileHateoasHandler;
-    private IFondsHateoasHandler fondsHateoasHandler;
-    private IClassificationSystemHateoasHandler
+    private final IMetadataService metadataService;
+    private final IFileService fileService;
+    private final ICaseFileService caseFileService;
+    private final IClassificationSystemService classificationSystemService;
+    private final ISeriesRepository seriesRepository;
+    private final ISeriesHateoasHandler seriesHateoasHandler;
+    private final IRecordHateoasHandler recordHateoasHandler;
+    private final IFileHateoasHandler fileHateoasHandler;
+    private final IFondsHateoasHandler fondsHateoasHandler;
+    private final IClassificationSystemHateoasHandler
             classificationSystemHateoasHandler;
 
     public SeriesService(
@@ -78,7 +78,6 @@ public class SeriesService
         this.metadataService = metadataService;
         this.fileService = fileService;
         this.caseFileService = caseFileService;
-        this.metadataService = metadataService;
         this.seriesRepository = seriesRepository;
         this.classificationSystemService = classificationSystemService;
         this.seriesHateoasHandler = seriesHateoasHandler;
@@ -132,6 +131,7 @@ public class SeriesService
 
     // All READ operations
     @Override
+    @SuppressWarnings("unchecked")
     public ResponseEntity<SeriesHateoas> findAll() {
         SeriesHateoas seriesHateoas = new
                 SeriesHateoas((List<INoarkEntity>) (List)
@@ -150,6 +150,7 @@ public class SeriesService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public ResponseEntity<RecordHateoas> findAllRecordAssociatedWithSeries(
             String systemId) {
         RecordHateoas recordHateoas = new RecordHateoas(
@@ -162,6 +163,7 @@ public class SeriesService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public ResponseEntity<FileHateoas> findAllFileAssociatedWithSeries(
             String systemId) {
         FileHateoas fileHateoas = new FileHateoas(
