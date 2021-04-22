@@ -36,16 +36,16 @@ import static nikita.common.config.N5ResourceMappings.DOCUMENT_FLOW_FLOW_TO;
 
 @Service
 public class DocumentFlowService
-    extends NoarkService
-    implements IDocumentFlowService {
+        extends NoarkService
+        implements IDocumentFlowService {
 
     private static final Logger logger =
             LoggerFactory.getLogger(DocumentFlowService.class);
 
-    private IUserService userService;
-    private IMetadataService metadataService;
-    private IDocumentFlowRepository documentFlowRepository;
-    private IDocumentFlowHateoasHandler documentFlowHateoasHandler;
+    private final IUserService userService;
+    private final IMetadataService metadataService;
+    private final IDocumentFlowRepository documentFlowRepository;
+    private final IDocumentFlowHateoasHandler documentFlowHateoasHandler;
 
     public DocumentFlowService(
             EntityManager entityManager,
