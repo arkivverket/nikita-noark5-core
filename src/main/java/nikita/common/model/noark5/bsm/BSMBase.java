@@ -18,6 +18,7 @@ import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;
+import java.util.Objects;
 
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.InheritanceType.JOINED;
@@ -49,7 +50,6 @@ public class BSMBase
 
     @Column
     private Boolean booleanValue;
-
 
     /*
      * This value is used to indicate whether or not the actual value BSMBase
@@ -307,5 +307,46 @@ public class BSMBase
 
     public String getBaseRel() {
         return REL_FONDS_STRUCTURE_BSM;
+    }
+
+    @Override
+    public String toString() {
+        return "BSMBase{" +
+                "dataType='" + dataType + '\'' +
+                ", valueName='" + valueName + '\'' +
+                ", valueNamespace='" + valueNamespace + '\'' +
+                ", stringValue='" + stringValue + '\'' +
+                ", booleanValue=" + booleanValue +
+                ", isNullValue=" + isNullValue +
+                ", offsetdatetimeValue=" + offsetdatetimeValue +
+                ", doubleValue=" + doubleValue +
+                ", integerValue=" + integerValue +
+                ", uriValue='" + uriValue + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        BSMBase bsmBase = (BSMBase) o;
+        return Objects.equals(dataType, bsmBase.dataType) &&
+                Objects.equals(valueName, bsmBase.valueName) &&
+                Objects.equals(valueNamespace, bsmBase.valueNamespace) &&
+                Objects.equals(stringValue, bsmBase.stringValue) &&
+                Objects.equals(booleanValue, bsmBase.booleanValue) &&
+                Objects.equals(isNullValue, bsmBase.isNullValue) &&
+                Objects.equals(offsetdatetimeValue, bsmBase.offsetdatetimeValue) &&
+                Objects.equals(doubleValue, bsmBase.doubleValue) &&
+                Objects.equals(integerValue, bsmBase.integerValue) &&
+                Objects.equals(uriValue, bsmBase.uriValue);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), dataType, valueName,
+                valueNamespace, stringValue, booleanValue, isNullValue,
+                offsetdatetimeValue, doubleValue, integerValue, uriValue);
     }
 }
