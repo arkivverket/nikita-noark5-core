@@ -67,7 +67,7 @@ public class DNumber
 
     @Override
     public String toString() {
-        return "DNumber{" +
+        return "DNumber{" + super.toString() + '\'' +
                 "dNumber='" + dNumber + '\'' +
                 '}';
     }

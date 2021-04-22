@@ -67,7 +67,7 @@ public class SocialSecurityNumber
 
     @Override
     public String toString() {
-        return "SocialSecurityNumber{" +
+        return "SocialSecurityNumber{" + super.toString() + '\'' +
                 "socialSecurityNumber='" + socialSecurityNumber + '\'' +
                 '}';
     }
