@@ -27,7 +27,6 @@ import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.N5ResourceMappings.COORDINATE_SYSTEM;
 
 @Service
-@Transactional
 public class NationalIdentifierService
         extends NoarkService
         implements INationalIdentifierService {
@@ -63,6 +62,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public BuildingHateoas createNewBuilding
             (@NotNull Building building, @NotNull Record record) {
         record.addNationalIdentifier(building);
@@ -75,6 +75,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public BuildingHateoas createNewBuilding
             (@NotNull Building building, @NotNull File file) {
         file.addNationalIdentifier(building);
@@ -88,6 +89,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public CadastralUnitHateoas createNewCadastralUnit
             (@NotNull CadastralUnit cadastralUnit, @NotNull Record record) {
         record.addNationalIdentifier(cadastralUnit);
@@ -101,6 +103,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public CadastralUnitHateoas createNewCadastralUnit
             (@NotNull CadastralUnit cadastralUnit, @NotNull File file) {
         file.addNationalIdentifier(cadastralUnit);
@@ -114,6 +117,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public DNumberHateoas createNewDNumber
             (@NotNull DNumber dNumber, @NotNull Record record) {
         record.addNationalIdentifier(dNumber);
@@ -126,6 +130,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public DNumberHateoas createNewDNumber
             (@NotNull DNumber dNumber, @NotNull File file) {
         file.addNationalIdentifier(dNumber);
@@ -138,6 +143,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public PlanHateoas createNewPlan
             (@NotNull Plan plan, @NotNull Record record) {
         record.addNationalIdentifier(plan);
@@ -150,6 +156,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public PlanHateoas createNewPlan
             (@NotNull Plan plan, @NotNull File file) {
         file.addNationalIdentifier(plan);
@@ -162,6 +169,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public PositionHateoas createNewPosition
             (@NotNull Position position, @NotNull Record record) {
         record.addNationalIdentifier(position);
@@ -172,6 +180,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public PositionHateoas createNewPosition
             (@NotNull Position position, @NotNull File file) {
         file.addNationalIdentifier(position);
@@ -182,6 +191,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public SocialSecurityNumberHateoas createNewSocialSecurityNumber
             (@NotNull SocialSecurityNumber socialSecurityNumber, @NotNull Record record) {
         record.addNationalIdentifier(socialSecurityNumber);
@@ -195,6 +205,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public SocialSecurityNumberHateoas createNewSocialSecurityNumber
             (@NotNull SocialSecurityNumber socialSecurityNumber, @NotNull File file) {
         file.addNationalIdentifier(socialSecurityNumber);
@@ -208,6 +219,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public UnitHateoas createNewUnit
             (@NotNull Unit unit, @NotNull Record record) {
         record.addNationalIdentifier(unit);
@@ -219,6 +231,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public UnitHateoas createNewUnit
             (@NotNull Unit unit, @NotNull File file) {
         file.addNationalIdentifier(unit);
@@ -230,6 +243,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public Building updateBuilding(
             @NotNull String systemId, @NotNull Long version,
             @NotNull Building incomingBuilding) {
@@ -252,6 +266,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public CadastralUnit updateCadastralUnit(
             @NotNull String systemId, @NotNull Long version,
             @NotNull CadastralUnit incomingCadastralUnit) {
@@ -280,6 +295,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public DNumber updateDNumber(
             @NotNull String systemId, @NotNull Long version,
             @NotNull DNumber incomingDNumber) {
@@ -300,6 +316,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public Plan updatePlan(
             @NotNull String systemId, @NotNull Long version,
             @NotNull Plan incomingPlan) {
@@ -326,6 +343,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public Position updatePosition(
             @NotNull String systemId, @NotNull Long version,
             @NotNull Position incomingPosition) {
@@ -349,6 +367,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public SocialSecurityNumber updateSocialSecurityNumber(
             @NotNull String systemId, @NotNull Long version,
             @NotNull SocialSecurityNumber incomingSocialSecurityNumber) {
@@ -369,6 +388,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public Unit updateUnit(
             @NotNull String systemId, @NotNull Long version,
             @NotNull Unit incomingUnit) {
@@ -389,36 +409,43 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public void deleteBuilding(@NotNull String systemId) {
         deleteEntity(getNationalIdentifierOrThrow(systemId));
     }
 
     @Override
+    @Transactional
     public void deleteCadastralUnit(@NotNull String systemId) {
         deleteEntity(getNationalIdentifierOrThrow(systemId));
     }
 
     @Override
+    @Transactional
     public void deleteDNumber(@NotNull String systemId) {
         deleteEntity(getNationalIdentifierOrThrow(systemId));
     }
 
     @Override
+    @Transactional
     public void deletePlan(@NotNull String systemId) {
         deleteEntity(getNationalIdentifierOrThrow(systemId));
     }
 
     @Override
+    @Transactional
     public void deletePosition(@NotNull String systemId) {
         deleteEntity(getNationalIdentifierOrThrow(systemId));
     }
 
     @Override
+    @Transactional
     public void deleteSocialSecurityNumber(@NotNull String systemId) {
         deleteEntity(getNationalIdentifierOrThrow(systemId));
     }
 
     @Override
+    @Transactional
     public void deleteUnit(@NotNull String systemId) {
         deleteEntity(getNationalIdentifierOrThrow(systemId));
     }
