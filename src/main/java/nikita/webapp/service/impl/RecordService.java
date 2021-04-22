@@ -185,166 +185,6 @@ public class RecordService
         return documentDescriptionHateoas;
     }
 
-    // All READ operations
-    public List<Record> findAll() {
-        return recordRepository.findAll();
-    }
-
-    /**
-     * Retrieve all record associated with the documentDescription identified by
-     * the documentDescriptions systemId.
-     *
-     * @param systemId systemId of the associated documentDescription
-     * @return The list of record packed as a ResponseEntity
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public ResponseEntity<RecordHateoas>
-    findByReferenceDocumentDescription(@NotNull final String systemId) {
-        RecordHateoas recordHateoas = new RecordHateoas(
-                (List<INoarkEntity>) (List)
-                        recordRepository.
-                                findAllByReferenceDocumentDescription(
-                                        documentDescriptionService.
-                                                findDocumentDescriptionBySystemId(
-                                                        systemId)));
-        recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .body(recordHateoas);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public AuthorHateoas findAllAuthorWithRecordBySystemId(String systemId) {
-        Record record = getRecordOrThrow(systemId);
-        AuthorHateoas authorHateoas =
-                new AuthorHateoas((List<INoarkEntity>)
-                        (List) record.getReferenceAuthor());
-        authorHateoasHandler.addLinks(authorHateoas, new Authorisation());
-        setOutgoingRequestHeader(authorHateoas);
-        return authorHateoas;
-    }
-
-    /**
-     * Retrieve all File associated with the record identified by
-     * the records systemId.
-     *
-     * @param systemId systemId of the record
-     * @return The parent File packed as a ResponseEntity
-     */
-    @Override
-    public ResponseEntity<FileHateoas>
-    findFileAssociatedWithRecord(@NotNull final String systemId) {
-        FileHateoas fileHateoas = new FileHateoas(
-                recordRepository.
-                        findBySystemId(
-                                UUID.fromString(systemId)).getReferenceFile());
-        fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(fileHateoas.getEntityVersion().toString())
-                .body(fileHateoas);
-    }
-
-    /**
-     * Retrieve all Class associated with the record identified by
-     * the records systemId.
-     *
-     * @param systemId systemId of the record
-     * @return The parent Class packed as a ResponseEntity
-     */
-    @Override
-    public ResponseEntity<ClassHateoas>
-    findClassAssociatedWithRecord(@NotNull final String systemId) {
-        ClassHateoas classHateoas = new ClassHateoas(
-                recordRepository.findBySystemId(UUID.fromString(systemId)).
-                        getReferenceClass());
-
-        classHateoasHandler.addLinks(classHateoas, new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(classHateoas.getEntityVersion().toString())
-                .body(classHateoas);
-    }
-
-    /**
-     * Retrieve all Series associated with the record identified by
-     * the records systemId.
-     *
-     * @param systemId systemId of the record
-     * @return The parent Series packed as a ResponseEntity
-     */
-    @Override
-    public ResponseEntity<SeriesHateoas>
-    findSeriesAssociatedWithRecord(@NotNull final String systemId) {
-        SeriesHateoas seriesHateoas = new SeriesHateoas(
-                recordRepository.findBySystemId(UUID.fromString(systemId)).
-                        getReferenceSeries());
-
-        seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(seriesHateoas.getEntityVersion().toString())
-                .body(seriesHateoas);
-    }
-
-    // systemId
-    public Record findBySystemId(String systemId) {
-        return getRecordOrThrow(systemId);
-    }
-
-    // ownedBy
-    @Override
-    public List<Record> findByOwnedBy() {
-        return recordRepository.findByOwnedBy(getUser());
-    }
-
-    @Override
-    public CommentHateoas getCommentAssociatedWithRecord(
-            @NotNull final String systemID) {
-        CommentHateoas commentHateoas =
-                new CommentHateoas(List.copyOf(
-                        getRecordOrThrow(systemID).getReferenceComment()));
-        commentHateoasHandler.addLinks(commentHateoas, new Authorisation());
-        return commentHateoas;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public CorrespondencePartHateoas
-    getCorrespondencePartAssociatedWithRecord(
-            final String systemID) {
-        CorrespondencePartHateoas correspondencePartHateoas =
-            new CorrespondencePartHateoas(
-                (List<INoarkEntity>) (List) getRecordOrThrow(systemID).
-                        getReferenceCorrespondencePart());
-        correspondencePartHateoasHandler.addLinks(
-                correspondencePartHateoas, new Authorisation());
-        return correspondencePartHateoas;
-    }
-
-    @Override
-    public PartHateoas
-    getPartAssociatedWithRecord(final String systemID) {
-        PartHateoas partHateoas = new PartHateoas(List.copyOf(
-                getRecordOrThrow(systemID).getReferencePart()));
-        partHateoasHandler.addLinks(partHateoas, new Authorisation());
-        return partHateoas;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public NationalIdentifierHateoas getNationalIdentifierAssociatedWithRecord(
-            @NotNull final String systemID) {
-        NationalIdentifierHateoas niHateoas = new NationalIdentifierHateoas(
-                (List<INoarkEntity>) (List) getRecordOrThrow(systemID).
-                        getReferenceNationalIdentifier());
-        nationalIdentifierHateoasHandler
-            .addLinks(niHateoas, new Authorisation());
-        return niHateoas;
-    }
-
     /**
      * Create a CorrespondencePartPerson object and associate it with the
      * identified record
@@ -476,8 +316,8 @@ public class RecordService
             @NotNull String systemID,
             @NotNull SocialSecurityNumber socialSecurityNumber) {
         return nationalIdentifierService
-            .createNewSocialSecurityNumber(socialSecurityNumber,
-                                           getRecordOrThrow(systemID));
+                .createNewSocialSecurityNumber(socialSecurityNumber,
+                        getRecordOrThrow(systemID));
     }
 
     @Override
@@ -492,10 +332,294 @@ public class RecordService
     @Override
     @Transactional
     public CommentHateoas createCommentAssociatedWithRecord
-        (String systemID, Comment comment) {
+            (String systemID, Comment comment) {
         return commentService.createNewComment
-            (comment, getRecordOrThrow(systemID));
+                (comment, getRecordOrThrow(systemID));
     }
+
+    // All READ operations
+
+    public List<Record> findAll() {
+        return recordRepository.findAll();
+    }
+
+    /**
+     * Retrieve all record associated with the documentDescription identified by
+     * the documentDescriptions systemId.
+     *
+     * @param systemId systemId of the associated documentDescription
+     * @return The list of record packed as a ResponseEntity
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public ResponseEntity<RecordHateoas>
+    findByReferenceDocumentDescription(@NotNull final String systemId) {
+        RecordHateoas recordHateoas = new RecordHateoas(
+                (List<INoarkEntity>) (List)
+                        recordRepository.
+                                findAllByReferenceDocumentDescription(
+                                        documentDescriptionService.
+                                                findDocumentDescriptionBySystemId(
+                                                        systemId)));
+        recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .body(recordHateoas);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public AuthorHateoas findAllAuthorWithRecordBySystemId(String systemId) {
+        Record record = getRecordOrThrow(systemId);
+        AuthorHateoas authorHateoas =
+                new AuthorHateoas((List<INoarkEntity>)
+                        (List) record.getReferenceAuthor());
+        authorHateoasHandler.addLinks(authorHateoas, new Authorisation());
+        setOutgoingRequestHeader(authorHateoas);
+        return authorHateoas;
+    }
+
+    /**
+     * Retrieve all File associated with the record identified by
+     * the records systemId.
+     *
+     * @param systemId systemId of the record
+     * @return The parent File packed as a ResponseEntity
+     */
+    @Override
+    public ResponseEntity<FileHateoas>
+    findFileAssociatedWithRecord(@NotNull final String systemId) {
+        FileHateoas fileHateoas = new FileHateoas(
+                recordRepository.
+                        findBySystemId(
+                                UUID.fromString(systemId)).getReferenceFile());
+        fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .eTag(fileHateoas.getEntityVersion().toString())
+                .body(fileHateoas);
+    }
+
+    /**
+     * Retrieve all Class associated with the record identified by
+     * the records systemId.
+     *
+     * @param systemId systemId of the record
+     * @return The parent Class packed as a ResponseEntity
+     */
+    @Override
+    public ResponseEntity<ClassHateoas>
+    findClassAssociatedWithRecord(@NotNull final String systemId) {
+        ClassHateoas classHateoas = new ClassHateoas(
+                recordRepository.findBySystemId(UUID.fromString(systemId)).
+                        getReferenceClass());
+
+        classHateoasHandler.addLinks(classHateoas, new Authorisation());
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .eTag(classHateoas.getEntityVersion().toString())
+                .body(classHateoas);
+    }
+
+    /**
+     * Retrieve all Series associated with the record identified by
+     * the records systemId.
+     *
+     * @param systemId systemId of the record
+     * @return The parent Series packed as a ResponseEntity
+     */
+    @Override
+    public ResponseEntity<SeriesHateoas>
+    findSeriesAssociatedWithRecord(@NotNull final String systemId) {
+        SeriesHateoas seriesHateoas = new SeriesHateoas(
+                recordRepository.findBySystemId(UUID.fromString(systemId)).
+                        getReferenceSeries());
+
+        seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .eTag(seriesHateoas.getEntityVersion().toString())
+                .body(seriesHateoas);
+    }
+
+    public Record findBySystemId(String systemId) {
+        return getRecordOrThrow(systemId);
+    }
+
+    @Override
+    public List<Record> findByOwnedBy() {
+        return recordRepository.findByOwnedBy(getUser());
+    }
+
+    @Override
+    public CommentHateoas getCommentAssociatedWithRecord(
+            @NotNull final String systemID) {
+        CommentHateoas commentHateoas =
+                new CommentHateoas(List.copyOf(
+                        getRecordOrThrow(systemID).getReferenceComment()));
+        commentHateoasHandler.addLinks(commentHateoas, new Authorisation());
+        return commentHateoas;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public CorrespondencePartHateoas
+    getCorrespondencePartAssociatedWithRecord(
+            final String systemID) {
+        CorrespondencePartHateoas correspondencePartHateoas =
+            new CorrespondencePartHateoas(
+                (List<INoarkEntity>) (List) getRecordOrThrow(systemID).
+                        getReferenceCorrespondencePart());
+        correspondencePartHateoasHandler.addLinks(
+                correspondencePartHateoas, new Authorisation());
+        return correspondencePartHateoas;
+    }
+
+    @Override
+    public PartHateoas
+    getPartAssociatedWithRecord(final String systemID) {
+        PartHateoas partHateoas = new PartHateoas(List.copyOf(
+                getRecordOrThrow(systemID).getReferencePart()));
+        partHateoasHandler.addLinks(partHateoas, new Authorisation());
+        return partHateoas;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public NationalIdentifierHateoas getNationalIdentifierAssociatedWithRecord(
+            @NotNull final String systemID) {
+        NationalIdentifierHateoas niHateoas = new NationalIdentifierHateoas(
+                (List<INoarkEntity>) (List) getRecordOrThrow(systemID).
+                        getReferenceNationalIdentifier());
+        nationalIdentifierHateoasHandler
+            .addLinks(niHateoas, new Authorisation());
+        return niHateoas;
+    }
+
+    /**
+     * Used to retrieve a BSMBase object so parent can can check that the
+     * BSMMetadata object exists and is not outdated.
+     * Done to simplify coding.
+     *
+     * @param name Name of the BSM parameter to check
+     * @return BSMMetadata object corresponding to the name
+     */
+    @Override
+    protected Optional<BSMMetadata> findBSMByName(String name) {
+        return bsmService.findBSMByName(name);
+    }
+
+    // All UPDATE operations
+
+    /**
+     * Updates a Record object in the database. First we try to locate the
+     * Record object. If the Record object does not exist a
+     * NoarkEntityNotFoundException exception is thrown that the caller has
+     * to deal with.
+     * <p>
+     * After this the values you are allowed to update are copied from the
+     * incomingRecord object to the existingRecord object and the existingRecord
+     * object will be persisted to the database when the transaction boundary
+     * is over.
+     * <p>
+     * Note, the version corresponds to the version number, when the object
+     * was initially retrieved from the database. If this number is not the
+     * same as the version number when re-retrieving the Record object from
+     * the database a NoarkConcurrencyException is thrown. Note. This happens
+     * when the call to Record.setVersion() occurs.
+     * <p>
+     * It's a little unclear if it's possible to update this as it has no
+     * fields that are updatable. It's also unclear how to set the archivedBy
+     * value.
+     *
+     * @param recordSystemId The systemId of the record object to retrieve
+     * @param version        The last known version number (derived from an ETAG)
+     * @param incomingRecord The incoming record object
+     * @return The updatedRecord after it is persisted
+     */
+    @Override
+    @Transactional
+    public Record handleUpdate(@NotNull final String recordSystemId,
+                               @NotNull final Long version,
+                               @NotNull final Record incomingRecord) {
+        bsmService.validateBSMList(incomingRecord.getReferenceBSMBase());
+        Record existingRecord = getRecordOrThrow(recordSystemId);
+        // Here copy all the values you are allowed to copy ....
+        updateTitleAndDescription(incomingRecord, existingRecord);
+        if (null != incomingRecord.getDocumentMedium()) {
+            existingRecord.setDocumentMedium(
+                    incomingRecord.getDocumentMedium());
+        }
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
+        existingRecord.setVersion(version);
+        recordRepository.save(existingRecord);
+        return existingRecord;
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<RecordHateoas> handleUpdate(
+            UUID systemID, PatchObjects patchObjects) {
+        Record record = (Record) handlePatch(systemID, patchObjects);
+        RecordHateoas recordHateoas = new RecordHateoas(record);
+        recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityUpdatedEvent(this, record));
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .eTag(recordHateoas.getEntityVersion().toString())
+                .body(recordHateoas);
+    }
+
+    /**
+     * Persist and associate the incoming author object with the record
+     * identified by systemId
+     *
+     * @param systemId The sytsemId of the record to associate with
+     * @param author   The incoming author object
+     * @return author object wrapped as a AuthorHateaos
+     */
+    @Override
+    @Transactional
+    public AuthorHateoas associateAuthorWithRecord(
+            String systemId, Author author) {
+        return authorService.associateAuthorWithRecord
+                (author, getRecordOrThrow(systemId));
+    }
+
+    @Override
+    @Transactional
+    public Object associateBSM(@NotNull UUID systemId,
+                               @NotNull List<BSMBase> bsm) {
+        Record record = getRecordOrThrow(systemId);
+        record.setReferenceBSMBase(bsm);
+        return record;
+    }
+
+    // All DELETE operations
+
+    @Override
+    @Transactional
+    public void deleteRecord(@NotNull UUID systemID) {
+        Record record = getRecordOrThrow(systemID);
+        recordRepository.delete(record);
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityDeletedEvent(this, record));
+    }
+
+    /**
+     * Delete all objects belonging to the user identified by ownedBy
+     *
+     * @return the number of objects deleted
+     */
+    @Override
+    @Transactional
+    public long deleteAllByOwnedBy() {
+        return recordRepository.deleteByOwnedBy(getUser());
+    }
+
+    // All template methods
 
     /**
      * Generate a Default CorrespondencePartUnit object that can be
@@ -634,106 +758,6 @@ public class RecordService
         return authorService.generateDefaultAuthor();
     }
 
-    /**
-     * Persist and associate the incoming author object with the record
-     * identified by systemId
-     *
-     * @param systemId The sytsemId of the record to associate with
-     * @param author   The incoming author object
-     * @return author object wrapped as a AuthorHateaos
-     */
-    @Override
-    @Transactional
-    public AuthorHateoas associateAuthorWithRecord(
-            String systemId, Author author) {
-        return authorService.associateAuthorWithRecord
-                (author, getRecordOrThrow(systemId));
-    }
-
-    // All UPDATE operations
-
-    /**
-     * Updates a Record object in the database. First we try to locate the
-     * Record object. If the Record object does not exist a
-     * NoarkEntityNotFoundException exception is thrown that the caller has
-     * to deal with.
-     * <p>
-     * After this the values you are allowed to update are copied from the
-     * incomingRecord object to the existingRecord object and the existingRecord
-     * object will be persisted to the database when the transaction boundary
-     * is over.
-     * <p>
-     * Note, the version corresponds to the version number, when the object
-     * was initially retrieved from the database. If this number is not the
-     * same as the version number when re-retrieving the Record object from
-     * the database a NoarkConcurrencyException is thrown. Note. This happens
-     * when the call to Record.setVersion() occurs.
-     * <p>
-     * It's a little unclear if it's possible to update this as it has no
-     * fields that are updatable. It's also unclear how to set the archivedBy
-     * value.
-     *
-     * @param recordSystemId The systemId of the record object to retrieve
-     * @param version        The last known version number (derived from an ETAG)
-     * @param incomingRecord The incoming record object
-     * @return The updatedRecord after it is persisted
-     */
-    @Override
-    @Transactional
-    public Record handleUpdate(@NotNull final String recordSystemId,
-                               @NotNull final Long version,
-                               @NotNull final Record incomingRecord) {
-        bsmService.validateBSMList(incomingRecord.getReferenceBSMBase());
-        Record existingRecord = getRecordOrThrow(recordSystemId);
-        // Here copy all the values you are allowed to copy ....
-        updateTitleAndDescription(incomingRecord, existingRecord);
-        if (null != incomingRecord.getDocumentMedium()) {
-            existingRecord.setDocumentMedium(
-                    incomingRecord.getDocumentMedium());
-        }
-        // Note setVersion can potentially result in a NoarkConcurrencyException
-        // exception as it checks the ETAG value
-        existingRecord.setVersion(version);
-        recordRepository.save(existingRecord);
-        return existingRecord;
-    }
-
-    @Override
-    @Transactional
-    public ResponseEntity<RecordHateoas> handleUpdate(
-            UUID systemID, PatchObjects patchObjects) {
-        Record record = (Record) handlePatch(systemID, patchObjects);
-        RecordHateoas recordHateoas = new RecordHateoas(record);
-        recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityUpdatedEvent(this, record));
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(recordHateoas.getEntityVersion().toString())
-                .body(recordHateoas);
-    }
-
-    // All DELETE operations
-    @Override
-    @Transactional
-    public void deleteRecord(@NotNull UUID systemID) {
-        Record record = getRecordOrThrow(systemID);
-        recordRepository.delete(record);
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityDeletedEvent(this, record));
-    }
-
-    /**
-     * Delete all objects belonging to the user identified by ownedBy
-     *
-     * @return the number of objects deleted
-     */
-    @Override
-    @Transactional
-    public long deleteAllByOwnedBy() {
-        return recordRepository.deleteByOwnedBy(getUser());
-    }
-
     @Override
     public BuildingHateoas generateDefaultBuilding() {
         return nationalIdentifierService.generateDefaultBuilding();
@@ -770,28 +794,6 @@ public class RecordService
     }
 
     // All HELPER operations
-
-    /**
-     * Used to retrieve a BSMBase object so parent can can check that the
-     * BSMMetadata object exists and is not outdated.
-     * Done to simplify coding.
-     *
-     * @param name Name of the BSM parameter to check
-     * @return BSMMetadata object corresponding to the name
-     */
-    @Override
-    protected Optional<BSMMetadata> findBSMByName(String name) {
-        return bsmService.findBSMByName(name);
-    }
-
-    @Override
-    @Transactional
-    public Object associateBSM(@NotNull UUID systemId,
-                               @NotNull List<BSMBase> bsm) {
-        Record record = getRecordOrThrow(systemId);
-        record.setReferenceBSMBase(bsm);
-        return record;
-    }
 
     /**
      * Internal helper method. Rather than having a find and try catch in
