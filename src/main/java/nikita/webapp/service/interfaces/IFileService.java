@@ -99,8 +99,6 @@ public interface IFileService {
 
     File getFileOrThrow(@NotNull UUID systemId);
 
-    FileHateoas getHateoas(File file);
-
     List<File> findByOwnedBy(String ownedBy);
 
     ResponseEntity<ClassHateoas>
