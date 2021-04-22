@@ -176,6 +176,63 @@ public class DocumentObjectService
         return documentObjectHateoas;
     }
 
+
+    @Override
+    @Transactional
+    public DocumentObjectHateoas
+    handleIncomingFile(String systemID, HttpServletRequest request)
+            throws IOException {
+
+        DocumentObject documentObject = getDocumentObjectOrThrow(systemID);
+        // Following will be needed for uploading file in chunks
+        // String headerContentRange = request.getHeader("content-range");
+        // Content-Range:bytes 737280-819199/845769
+
+        // Check that content-length is set, > 0 and in agreement with the
+        // value set in documentObject
+        if (request.getHeader("content-length") == null) {
+            throw new StorageException("Attempt to upload a document without " +
+                    "content-length set. The document was attempted to be " +
+                    "associated with " + documentObject);
+        }
+        long contentLength = request.getIntHeader("content-length");
+        if (contentLength < 1) {
+            throw new StorageException("Attempt to upload a document with 0 " +
+                    "or negative content-length set. Actual value was (" +
+                    contentLength + "). The document was attempted to be " +
+                    "associated with " + documentObject);
+        }
+
+
+        // Check that if the content-type is set it should be in agreement
+        // with mimeType value in documentObject
+            /*
+            String headerContentType = request.getHeader("content-type");
+            if (documentObject.getMimeType() != null && !headerContentType.equals(documentObject.getMimeType())) {
+                throw new StorageException("Attempt to upload a document with a content-type set in the header ("
+                        + contentLength + ") that is not the same as the mimeType in documentObject (" +
+                        documentObject.getMimeType() + ").  The document was attempted to be associated with "
+                        + documentObject);
+            }
+*/
+        String originalFilename = request.getHeader("X-File-Name");
+
+        if (null != originalFilename) {
+            documentObject.setOriginalFilename(originalFilename);
+        }
+
+        storeAndCalculateChecksum(request.getInputStream(), documentObject);
+
+        // We need to update the documentObject in the database as checksum
+        // and checksum algorithm are set after the document has been uploaded
+        documentObjectRepository.save(documentObject);
+        DocumentObjectHateoas documentObjectHateoas = new
+                DocumentObjectHateoas(documentObject);
+        documentObjectHateoasHandler.addLinks(documentObjectHateoas,
+                new Authorisation());
+        return documentObjectHateoas;
+    }
+
     // All READ operations
 
     @Override
@@ -688,62 +745,6 @@ public class DocumentObjectService
             logger.warn(msg);
             throw new StorageException(msg);
         }
-    }
-
-    @Override
-    @Transactional
-    public DocumentObjectHateoas
-    handleIncomingFile(String systemID, HttpServletRequest request)
-            throws IOException {
-
-        DocumentObject documentObject = getDocumentObjectOrThrow(systemID);
-        // Following will be needed for uploading file in chunks
-        // String headerContentRange = request.getHeader("content-range");
-        // Content-Range:bytes 737280-819199/845769
-
-        // Check that content-length is set, > 0 and in agreement with the
-        // value set in documentObject
-        if (request.getHeader("content-length") == null) {
-            throw new StorageException("Attempt to upload a document without " +
-                    "content-length set. The document was attempted to be " +
-                    "associated with " + documentObject);
-        }
-        long contentLength = request.getIntHeader("content-length");
-        if (contentLength < 1) {
-            throw new StorageException("Attempt to upload a document with 0 " +
-                    "or negative content-length set. Actual value was (" +
-                    contentLength + "). The document was attempted to be " +
-                    "associated with " + documentObject);
-        }
-
-
-        // Check that if the content-type is set it should be in agreement
-        // with mimeType value in documentObject
-            /*
-            String headerContentType = request.getHeader("content-type");
-            if (documentObject.getMimeType() != null && !headerContentType.equals(documentObject.getMimeType())) {
-                throw new StorageException("Attempt to upload a document with a content-type set in the header ("
-                        + contentLength + ") that is not the same as the mimeType in documentObject (" +
-                        documentObject.getMimeType() + ").  The document was attempted to be associated with "
-                        + documentObject);
-            }
-*/
-        String originalFilename = request.getHeader("X-File-Name");
-
-        if (null != originalFilename) {
-            documentObject.setOriginalFilename(originalFilename);
-        }
-
-        storeAndCalculateChecksum(request.getInputStream(), documentObject);
-
-        // We need to update the documentObject in the database as checksum
-        // and checksum algorithm are set after the document has been uploaded
-        documentObjectRepository.save(documentObject);
-        DocumentObjectHateoas documentObjectHateoas = new
-                DocumentObjectHateoas(documentObject);
-        documentObjectHateoasHandler.addLinks(documentObjectHateoas,
-                new Authorisation());
-        return documentObjectHateoas;
     }
 
     // All HELPER operations
