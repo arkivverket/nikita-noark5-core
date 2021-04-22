@@ -198,6 +198,7 @@ public class RecordService
      * @return The list of record packed as a ResponseEntity
      */
     @Override
+    @SuppressWarnings("unchecked")
     public ResponseEntity<RecordHateoas>
     findByReferenceDocumentDescription(@NotNull final String systemId) {
         RecordHateoas recordHateoas = new RecordHateoas(
@@ -214,6 +215,7 @@ public class RecordService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public AuthorHateoas findAllAuthorWithRecordBySystemId(String systemId) {
         Record record = getRecordOrThrow(systemId);
         AuthorHateoas authorHateoas =
@@ -309,6 +311,7 @@ public class RecordService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public CorrespondencePartHateoas
     getCorrespondencePartAssociatedWithRecord(
             final String systemID) {
@@ -331,6 +334,7 @@ public class RecordService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public NationalIdentifierHateoas getNationalIdentifierAssociatedWithRecord(
             @NotNull final String systemID) {
         NationalIdentifierHateoas niHateoas = new NationalIdentifierHateoas(
