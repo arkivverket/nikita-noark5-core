@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.UUID;
 
 public interface IDocumentObjectService {
@@ -56,9 +55,6 @@ public interface IDocumentObjectService {
 
     // -- File handling operations
 
-    void storeAndCalculateChecksum(InputStream inputStream,
-                                   DocumentObject documentObject)
-            throws IOException;
     /**
      * Given an systemId for a documentObject, find the documentObject and
      * create a new documentObject with an archive version of the the

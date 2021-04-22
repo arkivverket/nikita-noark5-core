@@ -156,95 +156,30 @@ public class DocumentObjectService
         return conversionHateoas;
     }
 
-    /**
-     * Store an incoming file associated with a DocumentObject. When writing the
-     * Incoming filestream, calculate the checksum at the same time and
-     * update the DocumentObject with referenceToFile, size (bytes), checksum
-     * and checksum algorithm
-     * <p>
-     * inputStream.read calculates the checksum while reading the input file
-     * as it is a DigestInputStream
-     * <p>
-     * The document is first stored in rootLocation/incoming. Once additional
-     * processing e.g. checksum generation is finished, the file is moved to
-     * its proper location.
-     * <p>
-     * Note: You can't overwrite an existing documentObject. If you are updating
-     * the document, you need to create a new version attached to the
-     * documentDescription.
-     */
     @Override
-    public void storeAndCalculateChecksum(InputStream inputStream,
-                                          DocumentObject documentObject) {
-
-        if (null != documentObject.getReferenceDocumentFile()) {
-            throw new StorageException(
-                    "There is already a file associated with " +
-                            documentObject);
-        }
-        try {
-
-            Path incoming = createIncomingFile(documentObject);
-            copyDocumentContentsToIncomingAndSetValues(inputStream, incoming,
-                    documentObject);
-
-            setGeneratedDocumentFilename(documentObject);
-
-            String mimeType = getMimeType(incoming);
-            if (!mimeType.equals(documentObject.getMimeType())) {
-                logger.warn("Overriding mime-type for documentObject [" +
-                        documentObject.toString() + "]. Original was [" +
-                        documentObject.getMimeType() + "]. Setting to [" +
-                        mimeType + "].");
-            }
-            documentObject.setMimeType(mimeType);
-
-            // TODO find way to detect PRONOM code for a uploaded file.
-            Format format = documentObject.getFormat();
-            if (null == format) {
-                logger.warn("Setting format for documentObject [" +
-                            documentObject.toString() +
-                            "] to UNKNOWN after upload.");
-                documentObject.setFormat(new Format("UNKNOWN"));
-                validateFormat(documentObject);
-            }
-
-            documentObject.setFileSize(Files.size(incoming));
-            moveIncomingToStorage(incoming, documentObject);
-
-            // Try to convert the file upon upload. Silently ignore
-            // if there is a problem
-            if (supportForDocumentConversion(documentObject)) {
-                convertDocumentToPDF(documentObject);
-            }
-            documentObjectRepository.save(documentObject);
-        } catch (IOException e) {
-            String msg = "When associating an uploaded file with " +
-                    documentObject + " the following Exception occurred " +
-                    e.toString();
-            logger.error(msg);
-            throw new StorageException(msg);
-        }
-    }
-
-    @Override
-    public DocumentObjectHateoas generateDefaultDocumentObject() {
-        DocumentObject defaultDocumentObject = new DocumentObject();
-        // TODO This is just temporary code as this will have to be
-        // replaced if this ever goes into production
-        defaultDocumentObject
-            .setVariantFormat(new VariantFormat(PRODUCTION_VERSION_CODE));
-        validateVariantFormat(defaultDocumentObject);
-        defaultDocumentObject.setVersionNumber(1);
+    @Transactional
+    // TODO: How do we handle if the document has already been converted?
+    // Related metadata is a one:one. So we either overwrite that the
+    // original conversion happened or throw an Exception
+    // Probably need administrator rights to reconvert document.
+    public DocumentObjectHateoas convertDocumentToPDF(
+            String documentObjectSystemId) {
+        DocumentObject originalDocumentObject =
+                getDocumentObjectOrThrow(documentObjectSystemId);
 
         DocumentObjectHateoas documentObjectHateoas =
-	    new DocumentObjectHateoas(defaultDocumentObject);
-        documentObjectHateoasHandler.addLinksOnTemplate(documentObjectHateoas,
+                new DocumentObjectHateoas
+                        (convertDocumentToPDF(originalDocumentObject));
+        documentObjectHateoasHandler.addLinks(documentObjectHateoas,
                 new Authorisation());
-	return documentObjectHateoas;
+
+        return documentObjectHateoas;
     }
 
+    // All READ operations
+
     @Override
+    @SuppressWarnings("unchecked")
     public DocumentObjectHateoas findDocumentObjectByOwner() {
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -263,27 +198,8 @@ public class DocumentObjectService
         return documentObjectHateoas;
     }
 
-
     @Override
-    public ConversionHateoas
-    generateDefaultConversion(String systemId) {
-        DocumentObject documentObject =
-                getDocumentObjectOrThrow(systemId);
-        Conversion defaultConversion = new Conversion();
-
-	/* Propose conversion done now by logged in user */
-	defaultConversion.setConvertedDate(OffsetDateTime.now());
-	defaultConversion.setConvertedBy(getUser());
-	defaultConversion.setConvertedToFormat(documentObject.getFormat());
-
-        ConversionHateoas conversionHateoas =
-	    new ConversionHateoas(defaultConversion);
-        conversionHateoasHandler.addLinksOnTemplate(conversionHateoas,
-                new Authorisation());
-        return conversionHateoas;
-    }
-
-    @Override
+    @SuppressWarnings("unchecked")
     public ConversionHateoas
     findAllConversionAssociatedWithDocumentObject(String systemId) {
         ConversionHateoas conversionHateoas =
@@ -302,11 +218,11 @@ public class DocumentObjectService
         Conversion conversion = getConversionOrThrow(subSystemId);
         if (null == conversion.getReferenceDocumentObject()
             || conversion.getReferenceDocumentObject() != documentObject) {
-            String info = INFO_CANNOT_FIND_OBJECT +
-                " Conversion " + subSystemId +
-                " below DocumentObject " + systemId + ".";
-            logger.info(info);
-            throw new NoarkEntityNotFoundException(info);
+            String error = INFO_CANNOT_FIND_OBJECT +
+                    " Conversion " + subSystemId +
+                    " below DocumentObject " + systemId + ".";
+            logger.error(error);
+            throw new NoarkEntityNotFoundException(error);
         }
         ConversionHateoas conversionHateoas = new ConversionHateoas(conversion);
         conversionHateoasHandler
@@ -316,164 +232,90 @@ public class DocumentObjectService
     }
 
     @Override
-    @Transactional
-    public ConversionHateoas handleUpdateConversionBySystemId
-        (String systemId, String subSystemId, Conversion incomingConversion) {
-        DocumentObject documentObject = getDocumentObjectOrThrow(systemId);
-        Conversion existingConversion = getConversionOrThrow(subSystemId);
-        if (null == existingConversion.getReferenceDocumentObject()
-            || existingConversion.getReferenceDocumentObject() != documentObject) {
-            String info = INFO_CANNOT_FIND_OBJECT +
-                " Conversion " + subSystemId +
-                " below DocumentObject " + systemId + ".";
-            logger.info(info);
-            throw new NoarkEntityNotFoundException(info);
-        }
-        existingConversion
-            .setConvertedDate(incomingConversion.getConvertedDate());
-        existingConversion
-            .setConvertedBy(incomingConversion.getConvertedBy());
-        existingConversion
-            .setConvertedFromFormat(incomingConversion.getConvertedFromFormat());
-        existingConversion
-            .setConvertedToFormat(incomingConversion.getConvertedToFormat());
-        existingConversion
-            .setConversionTool(incomingConversion.getConversionTool());
-        existingConversion
-            .setConversionComment(incomingConversion.getConversionComment());
+    public DocumentObjectHateoas findBySystemId(
+            String systemId) {
+        DocumentObjectHateoas documentObjectHateoas = new
+                DocumentObjectHateoas(getDocumentObjectOrThrow(systemId));
 
-        ConversionHateoas conversionHateoas =
-            new ConversionHateoas(conversionRepository
-                                  .save(existingConversion));
-        conversionHateoasHandler.addLinks(conversionHateoas,
+        documentObjectHateoasHandler.addLinks(documentObjectHateoas,
                 new Authorisation());
-        setOutgoingRequestHeader(conversionHateoas);
-        return conversionHateoas;
+        return documentObjectHateoas;
     }
 
-    private void setGeneratedDocumentFilename(DocumentObject documentObject) {
-        String extension = FilenameUtils.getExtension(
-                documentObject.getOriginalFilename());
-        String documentFilename = documentObject.getSystemIdAsString();
-        if (extension != null) {
-            documentFilename += "." + extension;
-        }
-        documentObject.setReferenceDocumentFile(documentFilename);
-    }
+    @Override
+    public Resource loadAsResource(String systemId, HttpServletRequest request,
+                                   HttpServletResponse response) {
+        DocumentObject documentObject =
+                getDocumentObjectOrThrow(systemId);
 
-    protected Path convertFileFromStorage(
-            DocumentObject productionDocumentObject,
-            DocumentObject archiveDocumentObject
-    )
-            throws IOException, InterruptedException {
-
-        Path productionVersion = getToFile(productionDocumentObject);
-
-        // set the filename to the same as the original filename minus
-        // the extension. This needs to be a bit more advanced, an own
-        // method. Consider the scenario where a file called .htaccess
-        // is uploaded, or a file with no file extension
-
-        archiveDocumentObject.setFormat(new Format(FILE_EXTENSION_PDF_CODE));
-        validateFormat(archiveDocumentObject);
-
-        archiveDocumentObject.setMimeType(MIME_TYPE_PDF);
-        archiveDocumentObject.setFormatDetails("fmt/95");
-
-        archiveDocumentObject
-                .setVariantFormat(new VariantFormat(ARCHIVE_VERSION_CODE));
-        validateVariantFormat(archiveDocumentObject);
-
-        setFilenameAndExtensionForArchiveDocument(
-                productionDocumentObject, archiveDocumentObject);
-
-        // Setting a UUID here as the filename on disk will use this UUID value
-        archiveDocumentObject.setSystemId(randomUUID());
-        Path archiveVersion = createIncomingFile(archiveDocumentObject);
-        String command = "unoconv ";
-        String toFormat = " -f pdf ";
-        String fromFileLocation = productionVersion.
-                toAbsolutePath().toString();
-        String toFileLocation = " -o " +
-                archiveVersion.toAbsolutePath().toString();
-        String convertCommand = command + toFormat + toFileLocation + " " +
-                fromFileLocation;
+        // First make sure the file exist
         try {
-            Process p = Runtime.getRuntime().exec(convertCommand);
-            p.waitFor();
-        } catch (RuntimeException e) {
-            logger.error("Error converting document in " +
-                    productionDocumentObject + " to archive format");
-            logger.error(e.toString());
+            Path file = getToFile(documentObject);
+            Resource resource = new UrlResource(file.toUri());
+            if (!resource.exists() && !resource.isReadable()) {
+                throw new StorageFileNotFoundException(
+                        "Could not read file: " +
+                                documentObject.getReferenceDocumentFile());
+            }
+            // When file exist, figure out how to return it.  Note
+            // both format, file name, file size and mime type can be
+            // unset until after a file is uploaded.
+            String acceptType = request.getHeader(ACCEPT);
+            String mimeType = documentObject.getMimeType();
+            if (acceptType != null && mimeType != null
+                    && !mimeTypeAccepted(mimeType, acceptType)) {
+                throw new NoarkNotAcceptableException(
+                        "The request [" +
+                                request.getRequestURI() + "] is not acceptable. "
+                                + "You have issued an Accept: " + acceptType +
+                                ", while the mimeType you are trying to retrieve "
+                                + "is [" + mimeType + "].");
+            }
+            if (null == mimeType) {
+                mimeType = "application/octet-stream";
+                logger.warn("Overriding unset mime-type during download for " +
+                        "documentObject [" + documentObject.toString() + "]. " +
+                        "Setting to [" + mimeType + "].");
+            }
+            response.setContentType(mimeType);
+            response.addHeader("Content-Type", mimeType);
+            response.setContentLength(documentObject.getFileSize().intValue());
+            if (null != documentObject.getOriginalFilename()) {
+                response.addHeader("Content-disposition", "inline; " +
+                        "filename=" + documentObject.getOriginalFilename());
+            }
+            // Once file is uploaded, POST and PUT are no longer allowed
+            response.addHeader("Allow", "GET");
+            return resource;
+        } catch (MalformedURLException e) {
+            throw new StorageFileNotFoundException(
+                    "Could not read file: " +
+                            documentObject.getReferenceDocumentFile());
         }
-
-        // Even though this was set earlier, we set it to the actual
-        // detected mime-type
-        archiveDocumentObject.setMimeType(getMimeType(archiveVersion));
-
-        archiveDocumentObject.setFileSize(Files.size(archiveVersion));
-        setGeneratedDocumentFilename(archiveDocumentObject);
-        archiveDocumentObject.setOwnedBy(productionDocumentObject.getOwnedBy());
-
-        return archiveVersion;
     }
 
-    private void setFilenameAndExtensionForArchiveDocument(
-            DocumentObject productionDocumentObject,
-            DocumentObject archiveDocumentObject) {
-
-        String originalFilename = FilenameUtils.
-                removeExtension(productionDocumentObject.
-                        getOriginalFilename());
-
-        if (originalFilename == null) {
-            originalFilename = archiveDocumentObject.getSystemIdAsString() + "." +
-                    getArchiveFileExtension(archiveDocumentObject);
-        } else {
-            originalFilename += "." +
-                    getArchiveFileExtension(archiveDocumentObject);
-        }
-
-        archiveDocumentObject.setOriginalFilename(originalFilename);
-    }
-
-    /**
-     * @param documentObject the documentObject you want a archive version
-     *                       mimeType for.
-     * @return the documents mimeType
-     */
-
-    private String getArchiveFileExtension(DocumentObject documentObject) {
-        return CommonUtils.FileUtils.getArchiveFileExtension(
-                documentObject.getMimeType());
-    }
-
+    @Transactional
     public DocumentObject convertDocumentToPDF(DocumentObject
                                                        originalDocumentObject) {
         DocumentObject archiveDocumentObject = new DocumentObject();
 
         try {
-
             Path archiveFile = convertFileFromStorage(originalDocumentObject,
                     archiveDocumentObject);
-
             // Parent document description
             DocumentDescription documentDescription = originalDocumentObject
                     .getReferenceDocumentDescription();
-
             // If it's null, throw an exception. You can't create a
             // related documentObject unless it has a document description
             if (documentDescription == null) {
                 throw new NoarkEntityNotFoundException(
                         MISSING_DOCUMENT_DESCRIPTION_ERROR);
             }
-
             // TODO: Double check this. Standard says it's only applicable to
             // archive version, but we increment every time a new document is
             // uploaded to a document description
             archiveDocumentObject.setVersionNumber(
                     originalDocumentObject.getVersionNumber());
-
 
             // Set creation details. Logged in user is responsible
             String username = getUser();
@@ -520,23 +362,7 @@ public class DocumentObjectService
         return archiveDocumentObject;
     }
 
-    /**
-     * For a given HTTP Content-Type mime type value, check with the
-     * type is compatible with the given HTTP Accept value.
-     */
-    private Boolean mimeTypeAccepted(String mimeType, String accept) {
-        org.springframework.util.MimeType mime =
-            org.springframework.http.MediaType.parseMediaType(mimeType);
-        List<org.springframework.http.MediaType> acceptTypes =
-                org.springframework.http.MediaType.parseMediaTypes(accept);
-        boolean match = false;
-        for (org.springframework.http.MediaType acceptType : acceptTypes) {
-            if (acceptType.isCompatibleWith(mime)) {
-                match = true;
-            }
-        }
-        return match;
-    }
+    // All DELETE operations
 
     /**
      * Delete a conversion object associated with the documentObject.
@@ -553,69 +379,24 @@ public class DocumentObjectService
     }
 
     @Override
-    public Resource loadAsResource(String systemId, HttpServletRequest request,
-                                   HttpServletResponse response) {
-        DocumentObject documentObject =
-                getDocumentObjectOrThrow(systemId);
-
-        // First make sure the file exist
-        try {
-            Path file = getToFile(documentObject);
-            Resource resource = new UrlResource(file.toUri());
-            if (!resource.exists() && !resource.isReadable()) {
-                throw new StorageFileNotFoundException(
-                        "Could not read file: " +
-                                documentObject.getReferenceDocumentFile());
-            }
-            // When file exist, figure out how to return it.  Note
-            // both format, file name, file size and mime type can be
-            // unset until after a file is uploaded.
-            String acceptType = request.getHeader(ACCEPT);
-            String mimeType = documentObject.getMimeType();
-            if (acceptType != null && mimeType != null
-                && ! mimeTypeAccepted(mimeType, acceptType)) {
-                throw new NoarkNotAcceptableException(
-                        "The request [" +
-                        request.getRequestURI() + "] is not acceptable. "
-                        + "You have issued an Accept: " + acceptType +
-                        ", while the mimeType you are trying to retrieve "
-                        + "is [" + mimeType + "].");
-            }
-            if (null == mimeType) {
-                mimeType = "application/octet-stream";
-                logger.warn("Overriding unset mime-type during download for " +
-                            "documentObject [" + documentObject.toString() + "]. " +
-                            "Setting to [" + mimeType + "].");
-            }
-            response.setContentType(mimeType);
-            response.addHeader("Content-Type", mimeType);
-            response.setContentLength(documentObject.getFileSize().intValue());
-            if (null != documentObject.getOriginalFilename()) {
-                response.addHeader("Content-disposition", "inline; "+
-                                   "filename=" + documentObject.getOriginalFilename());
-            }
-            // Once file is uploaded, POST and PUT are no longer allowed
-            response.addHeader("Allow", "GET");
-            return resource;
-        } catch (MalformedURLException e) {
-            throw new StorageFileNotFoundException(
-                    "Could not read file: " +
-                            documentObject.getReferenceDocumentFile());
-        }
+    @Transactional
+    public void deleteEntity(@NotNull String systemId) {
+        deleteEntity(getDocumentObjectOrThrow(systemId));
     }
 
+    /**
+     * Delete all objects belonging to the user identified by ownedBy
+     *
+     * @return the number of objects deleted
+     */
     @Override
-    public DocumentObjectHateoas findBySystemId(
-            String systemId) {
-        DocumentObjectHateoas documentObjectHateoas = new
-                DocumentObjectHateoas(getDocumentObjectOrThrow(systemId));
-
-        documentObjectHateoasHandler.addLinks(documentObjectHateoas,
-                new Authorisation());
-        return documentObjectHateoas;
+    @Transactional
+    public long deleteAll() {
+        return documentObjectRepository.deleteByOwnedBy(getUser());
     }
 
     // All UPDATE operations
+
     /**
      * Updates a DocumentDescription object in the database. First we try to
      * locate the DocumentDescription object. If the DocumentDescription object
@@ -670,52 +451,87 @@ public class DocumentObjectService
         existingDocumentObject.setVersion(version);
         documentObjectRepository.save(existingDocumentObject);
         DocumentObjectHateoas documentObjectHateoas =
-	    new DocumentObjectHateoas(existingDocumentObject);
+                new DocumentObjectHateoas(existingDocumentObject);
         documentObjectHateoasHandler
-	    .addLinks(documentObjectHateoas, new Authorisation());
+                .addLinks(documentObjectHateoas, new Authorisation());
         applicationEventPublisher.publishEvent
-	    (new AfterNoarkEntityUpdatedEvent(this, existingDocumentObject));
+                (new AfterNoarkEntityUpdatedEvent(this, existingDocumentObject));
         return documentObjectHateoas;
     }
 
-    // All DELETE operations
     @Override
     @Transactional
-    public void deleteEntity(@NotNull String systemId) {
-        deleteEntity(getDocumentObjectOrThrow(systemId));
+    public ConversionHateoas handleUpdateConversionBySystemId
+            (String systemId, String subSystemId, Conversion incomingConversion) {
+        DocumentObject documentObject = getDocumentObjectOrThrow(systemId);
+        Conversion existingConversion = getConversionOrThrow(subSystemId);
+        if (null == existingConversion.getReferenceDocumentObject()
+                || existingConversion.getReferenceDocumentObject() != documentObject) {
+            String info = INFO_CANNOT_FIND_OBJECT +
+                    " Conversion " + subSystemId +
+                    " below DocumentObject " + systemId + ".";
+            logger.info(info);
+            throw new NoarkEntityNotFoundException(info);
+        }
+        existingConversion
+                .setConvertedDate(incomingConversion.getConvertedDate());
+        existingConversion
+                .setConvertedBy(incomingConversion.getConvertedBy());
+        existingConversion
+                .setConvertedFromFormat(incomingConversion.getConvertedFromFormat());
+        existingConversion
+                .setConvertedToFormat(incomingConversion.getConvertedToFormat());
+        existingConversion
+                .setConversionTool(incomingConversion.getConversionTool());
+        existingConversion
+                .setConversionComment(incomingConversion.getConversionComment());
+
+        ConversionHateoas conversionHateoas =
+                new ConversionHateoas(conversionRepository
+                        .save(existingConversion));
+        conversionHateoasHandler.addLinks(conversionHateoas,
+                new Authorisation());
+        setOutgoingRequestHeader(conversionHateoas);
+        return conversionHateoas;
     }
 
-    /**
-     * Delete all objects belonging to the user identified by ownedBy
-     *
-     * @return the number of objects deleted
-     */
+    // All template operations
+
     @Override
-    @Transactional
-    public long deleteAll() {
-        return documentObjectRepository.deleteByOwnedBy(getUser());
+    public ConversionHateoas
+    generateDefaultConversion(String systemId) {
+        DocumentObject documentObject =
+                getDocumentObjectOrThrow(systemId);
+        Conversion defaultConversion = new Conversion();
+
+        /* Propose conversion done now by logged in user */
+        defaultConversion.setConvertedDate(OffsetDateTime.now());
+        defaultConversion.setConvertedBy(getUser());
+        defaultConversion.setConvertedToFormat(documentObject.getFormat());
+
+        ConversionHateoas conversionHateoas =
+                new ConversionHateoas(defaultConversion);
+        conversionHateoasHandler.addLinksOnTemplate(conversionHateoas,
+                new Authorisation());
+        return conversionHateoas;
     }
 
     @Override
-    //TODO: How do we handle if the document has already been converted?
-    // Related metadata is a one:one. So we either overwrite that the
-    // original conversion happened or throw an Exception
-    // Probably need administrator rights to reconvert document.
-    public DocumentObjectHateoas
-    convertDocumentToPDF(String documentObjectSystemId) {
-        DocumentObject originalDocumentObject =
-                getDocumentObjectOrThrow(documentObjectSystemId);
+    public DocumentObjectHateoas generateDefaultDocumentObject() {
+        DocumentObject defaultDocumentObject = new DocumentObject();
+        // TODO This is just temporary code as this will have to be
+        // replaced if this ever goes into production
+        defaultDocumentObject
+                .setVariantFormat(new VariantFormat(PRODUCTION_VERSION_CODE));
+        validateVariantFormat(defaultDocumentObject);
+        defaultDocumentObject.setVersionNumber(1);
 
         DocumentObjectHateoas documentObjectHateoas =
-            new DocumentObjectHateoas
-                (convertDocumentToPDF(originalDocumentObject));
-        documentObjectHateoasHandler.addLinks(documentObjectHateoas,
+                new DocumentObjectHateoas(defaultDocumentObject);
+        documentObjectHateoasHandler.addLinksOnTemplate(documentObjectHateoas,
                 new Authorisation());
-
         return documentObjectHateoas;
     }
-
-    // All HELPER operations
 
     /**
      * Retrieve mime-type of a file
@@ -930,6 +746,8 @@ public class DocumentObjectService
         return documentObjectHateoas;
     }
 
+    // All HELPER operations
+
     /**
      * Internal helper method. Rather than having a find and try catch in
      * multiple methods, we have it here once. If you call this, be aware
@@ -955,7 +773,7 @@ public class DocumentObjectService
     }
 
     protected Conversion getConversionOrThrow
-        (@NotNull String conversionSystemId) {
+            (@NotNull String conversionSystemId) {
         Conversion conversion =
                 conversionRepository.
                         findBySystemId(UUID.fromString(conversionSystemId));
@@ -967,6 +785,94 @@ public class DocumentObjectService
             throw new NoarkEntityNotFoundException(info);
         }
         return conversion;
+    }
+
+    private void validateFormat(DocumentObject documentObject) {
+        if (null != documentObject.getFormat()) {
+            Format format = (Format) metadataService.findValidMetadata(
+                    documentObject.getFormat());
+            documentObject.setFormat(format);
+        }
+    }
+
+    private void validateVariantFormat(DocumentObject documentObject) {
+        // Assume value already set, as the deserialiser will enforce it.
+        VariantFormat variantFormat =
+                (VariantFormat) metadataService.findValidMetadata(
+                        documentObject.getVariantFormat());
+        documentObject.setVariantFormat(variantFormat);
+    }
+
+    // Methods related to processing of Documents
+
+    /**
+     * Store an incoming file associated with a DocumentObject. When writing the
+     * Incoming filestream, calculate the checksum at the same time and
+     * update the DocumentObject with referenceToFile, size (bytes), checksum
+     * and checksum algorithm
+     * <p>
+     * inputStream.read calculates the checksum while reading the input file
+     * as it is a DigestInputStream
+     * <p>
+     * The document is first stored in rootLocation/incoming. Once additional
+     * processing e.g. checksum generation is finished, the file is moved to
+     * its proper location.
+     * <p>
+     * Note: You can't overwrite an existing documentObject. If you are updating
+     * the document, you need to create a new version attached to the
+     * documentDescription.
+     */
+    private void storeAndCalculateChecksum(InputStream inputStream,
+                                           DocumentObject documentObject) {
+
+        if (null != documentObject.getReferenceDocumentFile()) {
+            throw new StorageException(
+                    "There is already a file associated with " +
+                            documentObject);
+        }
+        try {
+
+            Path incoming = createIncomingFile(documentObject);
+            copyDocumentContentsToIncomingAndSetValues(inputStream, incoming,
+                    documentObject);
+
+            setGeneratedDocumentFilename(documentObject);
+
+            String mimeType = getMimeType(incoming);
+            if (!mimeType.equals(documentObject.getMimeType())) {
+                logger.warn("Overriding mime-type for documentObject [" +
+                        documentObject.toString() + "]. Original was [" +
+                        documentObject.getMimeType() + "]. Setting to [" +
+                        mimeType + "].");
+            }
+            documentObject.setMimeType(mimeType);
+
+            // TODO find way to detect PRONOM code for a uploaded file.
+            Format format = documentObject.getFormat();
+            if (null == format) {
+                logger.warn("Setting format for documentObject [" +
+                        documentObject.toString() +
+                        "] to UNKNOWN after upload.");
+                documentObject.setFormat(new Format("UNKNOWN"));
+                validateFormat(documentObject);
+            }
+
+            documentObject.setFileSize(Files.size(incoming));
+            moveIncomingToStorage(incoming, documentObject);
+
+            // Try to convert the file upon upload. Silently ignore
+            // if there is a problem
+            if (supportForDocumentConversion(documentObject)) {
+                convertDocumentToPDF(documentObject);
+            }
+            documentObjectRepository.save(documentObject);
+        } catch (IOException e) {
+            String msg = "When associating an uploaded file with " +
+                    documentObject + " the following Exception occurred " +
+                    e.toString();
+            logger.error(msg);
+            throw new StorageException(msg);
+        }
     }
 
     /**
@@ -1048,6 +954,92 @@ public class DocumentObjectService
         Files.move(incoming, toFile);
     }
 
+    private void setGeneratedDocumentFilename(DocumentObject documentObject) {
+        String extension = FilenameUtils.getExtension(
+                documentObject.getOriginalFilename());
+        String documentFilename = documentObject.getSystemIdAsString();
+        if (extension != null) {
+            documentFilename += "." + extension;
+        }
+        documentObject.setReferenceDocumentFile(documentFilename);
+    }
+
+    protected Path convertFileFromStorage(
+            DocumentObject productionDocumentObject,
+            DocumentObject archiveDocumentObject
+    )
+            throws IOException, InterruptedException {
+
+        Path productionVersion = getToFile(productionDocumentObject);
+
+        // set the filename to the same as the original filename minus
+        // the extension. This needs to be a bit more advanced, an own
+        // method. Consider the scenario where a file called .htaccess
+        // is uploaded, or a file with no file extension
+
+        archiveDocumentObject.setFormat(new Format(FILE_EXTENSION_PDF_CODE));
+        validateFormat(archiveDocumentObject);
+
+        archiveDocumentObject.setMimeType(MIME_TYPE_PDF);
+        archiveDocumentObject.setFormatDetails("fmt/95");
+
+        archiveDocumentObject
+                .setVariantFormat(new VariantFormat(ARCHIVE_VERSION_CODE));
+        validateVariantFormat(archiveDocumentObject);
+
+        setFilenameAndExtensionForArchiveDocument(
+                productionDocumentObject, archiveDocumentObject);
+
+        // Setting a UUID here as the filename on disk will use this UUID value
+        archiveDocumentObject.setSystemId(randomUUID());
+        Path archiveVersion = createIncomingFile(archiveDocumentObject);
+        String command = "unoconv ";
+        String toFormat = " -f pdf ";
+        String fromFileLocation = productionVersion.
+                toAbsolutePath().toString();
+        String toFileLocation = " -o " +
+                archiveVersion.toAbsolutePath().toString();
+        String convertCommand = command + toFormat + toFileLocation + " " +
+                fromFileLocation;
+        try {
+            Process p = Runtime.getRuntime().exec(convertCommand);
+            p.waitFor();
+        } catch (RuntimeException e) {
+            logger.error("Error converting document in " +
+                    productionDocumentObject + " to archive format");
+            logger.error(e.toString());
+        }
+
+        // Even though this was set earlier, we set it to the actual
+        // detected mime-type
+        archiveDocumentObject.setMimeType(getMimeType(archiveVersion));
+
+        archiveDocumentObject.setFileSize(Files.size(archiveVersion));
+        setGeneratedDocumentFilename(archiveDocumentObject);
+        archiveDocumentObject.setOwnedBy(productionDocumentObject.getOwnedBy());
+
+        return archiveVersion;
+    }
+
+    private void setFilenameAndExtensionForArchiveDocument(
+            DocumentObject productionDocumentObject,
+            DocumentObject archiveDocumentObject) {
+
+        String originalFilename = FilenameUtils.
+                removeExtension(productionDocumentObject.
+                        getOriginalFilename());
+
+        if (originalFilename == null) {
+            originalFilename = archiveDocumentObject.getSystemIdAsString() + "." +
+                    getArchiveFileExtension(archiveDocumentObject);
+        } else {
+            originalFilename += "." +
+                    getArchiveFileExtension(archiveDocumentObject);
+        }
+
+        archiveDocumentObject.setOriginalFilename(originalFilename);
+    }
+
     /**
      * Is this mimetype a format we can automatically convert to archive
      * format. If the mimeType is null, false should be returned. This method
@@ -1062,19 +1054,31 @@ public class DocumentObjectService
         return mimeTypeIsConvertible(documentObject.getMimeType());
     }
 
-    private void validateFormat(DocumentObject documentObject) {
-        if (null != documentObject.getFormat()) {
-            Format format = (Format) metadataService.findValidMetadata(
-                    documentObject.getFormat());
-            documentObject.setFormat(format);
+    /**
+     * For a given HTTP Content-Type mime type value, check with the
+     * type is compatible with the given HTTP Accept value.
+     */
+    private Boolean mimeTypeAccepted(String mimeType, String accept) {
+        org.springframework.util.MimeType mime =
+                org.springframework.http.MediaType.parseMediaType(mimeType);
+        List<org.springframework.http.MediaType> acceptTypes =
+                org.springframework.http.MediaType.parseMediaTypes(accept);
+        boolean match = false;
+        for (org.springframework.http.MediaType acceptType : acceptTypes) {
+            if (acceptType.isCompatibleWith(mime)) {
+                match = true;
+            }
         }
+        return match;
     }
 
-    private void validateVariantFormat(DocumentObject documentObject) {
-        // Assume value already set, as the deserialiser will enforce it.
-        VariantFormat variantFormat =
-                (VariantFormat) metadataService.findValidMetadata(
-                        documentObject.getVariantFormat());
-        documentObject.setVariantFormat(variantFormat);
+    /**
+     * @param documentObject the documentObject you want a archive version
+     *                       mimeType for.
+     * @return the documents mimeType
+     */
+    private String getArchiveFileExtension(DocumentObject documentObject) {
+        return CommonUtils.FileUtils.getArchiveFileExtension(
+                documentObject.getMimeType());
     }
 }
