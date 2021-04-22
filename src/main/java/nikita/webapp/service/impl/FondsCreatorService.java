@@ -40,10 +40,11 @@ public class FondsCreatorService
 
     private static final Logger logger = LoggerFactory.
             getLogger(FondsCreatorService.class);
-    private IFondsCreatorRepository fondsCreatorRepository;
-    private IFondsRepository fondsRepository;
-    private IMetadataService metadataService;
-    private IFondsHateoasHandler fondsHateoasHandler;
+
+    private final IFondsCreatorRepository fondsCreatorRepository;
+    private final IFondsRepository fondsRepository;
+    private final IMetadataService metadataService;
+    private final IFondsHateoasHandler fondsHateoasHandler;
 
     public FondsCreatorService(
             EntityManager entityManager,
