@@ -123,6 +123,7 @@ public class DocumentObjectService
 
     // All CREATE operations
 
+    @Override
     @Transactional
     public DocumentObject save(DocumentObject documentObject) {
         Long version =
@@ -137,6 +138,22 @@ public class DocumentObjectService
         validateVariantFormat(documentObject);
         checkChecksumAlgorithmSetIfNull(documentObject);
         return documentObjectRepository.save(documentObject);
+    }
+
+    @Override
+    @Transactional
+    public ConversionHateoas
+    createConversionAssociatedWithDocumentObject(String systemId,
+                                                 Conversion conversion) {
+        DocumentObject documentObject =
+                getDocumentObjectOrThrow(systemId);
+        conversion.setReferenceDocumentObject(documentObject);
+        documentObject.addReferenceConversion(conversion);
+        ConversionHateoas conversionHateoas =
+                new ConversionHateoas(conversionRepository.save(conversion));
+        conversionHateoasHandler.addLinks(conversionHateoas,
+                new Authorisation());
+        return conversionHateoas;
     }
 
     /**
@@ -262,21 +279,6 @@ public class DocumentObjectService
         ConversionHateoas conversionHateoas =
 	    new ConversionHateoas(defaultConversion);
         conversionHateoasHandler.addLinksOnTemplate(conversionHateoas,
-                new Authorisation());
-        return conversionHateoas;
-    }
-
-    @Transactional
-    public ConversionHateoas
-    createConversionAssociatedWithDocumentObject(String systemId,
-                                                 Conversion conversion) {
-        DocumentObject documentObject =
-                getDocumentObjectOrThrow(systemId);
-        conversion.setReferenceDocumentObject(documentObject);
-        documentObject.addReferenceConversion(conversion);
-        ConversionHateoas conversionHateoas =
-                new ConversionHateoas(conversionRepository.save(conversion));
-        conversionHateoasHandler.addLinks(conversionHateoas,
                 new Authorisation());
         return conversionHateoas;
     }
@@ -689,6 +691,7 @@ public class DocumentObjectService
      * @return the number of objects deleted
      */
     @Override
+    @Transactional
     public long deleteAll() {
         return documentObjectRepository.deleteByOwnedBy(getUser());
     }
