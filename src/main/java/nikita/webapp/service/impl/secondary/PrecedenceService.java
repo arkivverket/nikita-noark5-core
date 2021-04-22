@@ -30,7 +30,6 @@ import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.N5ResourceMappings.PRECEDENCE_APPROVED_BY;
 
 @Service
-@Transactional
 public class PrecedenceService
     extends NoarkService
     implements IPrecedenceService {
@@ -57,6 +56,7 @@ public class PrecedenceService
     }
 
     @Override
+    @Transactional
     public PrecedenceHateoas updatePrecedenceBySystemId
         (String systemId, Long version, Precedence incoming) {
         Precedence existing = getPrecedenceOrThrow(systemId);
@@ -110,6 +110,7 @@ public class PrecedenceService
     }
 
     @Override
+    @Transactional
     public PrecedenceHateoas createNewPrecedence(Precedence entity) {
         validatePrecedenceStatus(entity);
         User approvedBy = userService.validateUserReference
@@ -140,6 +141,7 @@ public class PrecedenceService
     }
 
     @Override
+    @Transactional
     public void deletePrecedenceBySystemId(String systemID) {
         deleteEntity(getPrecedenceOrThrow(systemID));
     }
