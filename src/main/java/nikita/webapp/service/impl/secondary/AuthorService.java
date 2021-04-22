@@ -25,14 +25,14 @@ import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 
 @Service
 public class AuthorService
-    extends NoarkService
-    implements IAuthorService {
+        extends NoarkService
+        implements IAuthorService {
 
     private static final Logger logger =
             LoggerFactory.getLogger(AuthorService.class);
 
-    private IAuthorRepository authorRepository;
-    private IAuthorHateoasHandler authorHateoasHandler;
+    private final IAuthorRepository authorRepository;
+    private final IAuthorHateoasHandler authorHateoasHandler;
 
     public AuthorService(
             EntityManager entityManager,
