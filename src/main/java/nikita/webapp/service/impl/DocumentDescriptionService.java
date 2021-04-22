@@ -452,11 +452,11 @@ public class DocumentDescriptionService
                 documentDescriptionRepository.findBySystemId(
                         UUID.fromString(documentDescriptionSystemId));
         if (documentDescription == null) {
-            String info = INFO_CANNOT_FIND_OBJECT +
+            String error = INFO_CANNOT_FIND_OBJECT +
                     " DocumentDescription, using systemId " +
                     documentDescriptionSystemId;
-            logger.info(info);
-            throw new NoarkEntityNotFoundException(info);
+            logger.info(error);
+            throw new NoarkEntityNotFoundException(error);
         }
         return documentDescription;
     }
