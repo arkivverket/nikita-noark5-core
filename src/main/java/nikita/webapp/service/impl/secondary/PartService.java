@@ -46,7 +46,6 @@ import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThro
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
-@Transactional
 public class PartService
         extends NoarkService
         implements IPartService {
@@ -92,6 +91,7 @@ public class PartService
      * @return the updated PartPerson
      */
     @Override
+    @Transactional
     public PartPerson
     updatePartPerson(
             @NotNull UUID systemId, @NotNull Long version,
@@ -127,6 +127,7 @@ public class PartService
     }
 
     @Override
+    @Transactional
     public PartUnit updatePartUnit(
             @NotNull UUID systemId, @NotNull Long version,
             @NotNull PartUnit incomingPart) {
@@ -164,6 +165,7 @@ public class PartService
     }
 
     @Override
+    @Transactional
     public ResponseEntity<PartHateoas>
     handleUpdate(UUID systemID, PatchObjects patchObjects) {
         Part part = (Part) handlePatch(systemID, patchObjects);
@@ -183,6 +185,7 @@ public class PartService
     }
 
     @Override
+    @Transactional
     public Object associateBSM(@NotNull UUID systemId,
                                @NotNull List<BSMBase> bsm) {
         Part part = getPartOrThrow(systemId);
@@ -191,6 +194,7 @@ public class PartService
     }
 
     @Override
+    @Transactional
     public PartPersonHateoas createNewPartPerson(
             @NotNull PartPerson part, @NotNull Record record) {
         validatePartRole(part);
@@ -205,6 +209,7 @@ public class PartService
     }
 
     @Override
+    @Transactional
     public PartPersonHateoas createNewPartPerson(
             @NotNull PartPerson part, @NotNull File file) {
         validatePartRole(part);
@@ -219,6 +224,7 @@ public class PartService
     }
 
     @Override
+    @Transactional
     public PartUnitHateoas createNewPartUnit(PartUnit part, Record record) {
         validatePartRole(part);
         createUnit(part);
@@ -232,6 +238,7 @@ public class PartService
     }
 
     @Override
+    @Transactional
     public PartUnitHateoas createNewPartUnit(
             @NotNull PartUnit part, @NotNull File file) {
         validatePartRole(part);
@@ -246,6 +253,7 @@ public class PartService
     }
 
     @Override
+    @Transactional
     public PartUnitHateoas createNewPartUnit(
             @NotNull PartUnit partUnit,
             @NotNull DocumentDescription documentDescription) {
@@ -261,6 +269,7 @@ public class PartService
     }
 
     @Override
+    @Transactional
     public PartPersonHateoas createNewPartPerson(
             @NotNull PartPerson partPerson,
             @NotNull DocumentDescription documentDescription) {
@@ -276,6 +285,7 @@ public class PartService
     }
 
     @Override
+    @Transactional
     public void deletePartPerson(@NotNull UUID systemId) {
         PartPerson partPerson = (PartPerson) getPartOrThrow(systemId);
         for (Record record : partPerson.getReferenceRecord()) {
@@ -292,6 +302,7 @@ public class PartService
     }
 
     @Override
+    @Transactional
     public void deletePartUnit(@NotNull UUID systemId) {
         PartUnit partUnit = (PartUnit) getPartOrThrow(systemId);
         for (Record record : partUnit.getReferenceRecord()) {
@@ -357,8 +368,7 @@ public class PartService
      * that you will only ever get a valid Part back. If there
      * is no valid Part, an exception is thrown
      *
-     * @param partSystemId systemId of part to
-     *                     retrieve
+     * @param partSystemId systemId of part to retrieve
      * @return the retrieved Part
      */
     private Part getPartOrThrow(@NotNull UUID partSystemId) {
