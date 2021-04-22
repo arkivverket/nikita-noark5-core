@@ -1,7 +1,9 @@
 package nikita.common.model.noark5.v5.secondary;
 
-import nikita.common.model.noark5.v5.*;
 import nikita.common.model.noark5.v5.Class;
+import nikita.common.model.noark5.v5.File;
+import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.ICrossReferenceEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -139,7 +141,7 @@ public class CrossReference
 
     @Override
     public String toString() {
-        return "CrossReference{" +
+        return "CrossReference{" + super.toString() + '\'' +
                 "fromSystemId='" + fromSystemId + '\'' +
                 ", toSystemId='" + toSystemId + '\'' +
                 '}';

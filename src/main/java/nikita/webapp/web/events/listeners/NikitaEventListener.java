@@ -156,15 +156,18 @@ public class NikitaEventListener {
                 body.put(REGISTRY_ENTRY_DATE, ((RegistryEntry) entity).
                         getDocumentDate());
             } else if (entityType.equals(DOCUMENT_DESCRIPTION)) {
-                body.put(ASSOCIATED_WITH_RECORD_AS,
-                        ((DocumentDescription) entity).
-                                getAssociatedWithRecordAs().getCodeName());
-                body.put(DOCUMENT_TYPE,
-                        ((DocumentDescription) entity).
-                                getDocumentType().getCodeName());
-                body.put(DOCUMENT_DESCRIPTION_DOCUMENT_NUMBER,
-                        ((DocumentDescription) entity).
-                                getDocumentNumber());
+                if (null != ((DocumentDescription) entity).
+                        getAssociatedWithRecordAs()) {
+                    body.put(ASSOCIATED_WITH_RECORD_AS,
+                            ((DocumentDescription) entity).
+                                    getAssociatedWithRecordAs().getCodeName());
+                    body.put(DOCUMENT_TYPE,
+                            ((DocumentDescription) entity).
+                                    getDocumentType().getCodeName());
+                    body.put(DOCUMENT_DESCRIPTION_DOCUMENT_NUMBER,
+                            ((DocumentDescription) entity).
+                                    getDocumentNumber());
+                }
             } else if (entityType.equals(DOCUMENT_OBJECT)) {
                 DocumentObject documentObject = (DocumentObject) entity;
                 body.put(DOCUMENT_OBJECT_CHECKSUM,

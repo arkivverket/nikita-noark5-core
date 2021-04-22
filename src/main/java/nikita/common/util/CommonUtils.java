@@ -513,8 +513,14 @@ public final class CommonUtils {
                             .parseDefaulting(MINUTE_OF_HOUR, 0)
                             .toFormatter();
                 }
-                return ZonedDateTime.parse(date, dateFormatter)
-                        .toOffsetDateTime();
+
+                ZonedDateTime zonedDateTime =
+                        ZonedDateTime.parse(date, dateFormatter);
+                if (null == zonedDateTime) {
+                    String error = "Could not deserialise " + date;
+                    throw new NikitaMalformedInputDataException(error);
+                }
+                return zonedDateTime.toOffsetDateTime();
             }
 
             public static OffsetDateTime deserializeDate(String fieldname,
@@ -667,19 +673,17 @@ public final class CommonUtils {
                 caseFile.setCaseStatus(caseStatus);
             }
 
-            public static void deserialiseKeyword(IKeyword keywordEntity, ObjectNode objectNode, StringBuilder errors) {
+            public static void deserialiseKeyword(IKeyword keywordEntity,
+                                                  ObjectNode objectNode, StringBuilder errors) {
                 // Deserialize keyword
                 JsonNode currentNode = objectNode.get(KEYWORD);
-
                 if (null != currentNode) {
-                    ArrayList<Keyword> keywords = new ArrayList<>();
                     if (currentNode.isArray()) {
                         currentNode.iterator();
                         for (JsonNode node : currentNode) {
                             String keywordText = node.textValue();
                             Keyword keyword = new Keyword();
                             keyword.setKeyword(keywordText);
-                            keywords.add(keyword);
                             keywordEntity.addKeyword(keyword);
                         }
                     }
@@ -730,8 +734,6 @@ public final class CommonUtils {
                 JsonNode currentNode = objectNode.get(STORAGE_LOCATION);
 
                 if (null != currentNode) {
-                    ArrayList<StorageLocation> storageLocations =
-                            new ArrayList<>();
                     if (currentNode.isArray()) {
                         currentNode.iterator();
                         for (JsonNode node : currentNode) {
@@ -739,7 +741,6 @@ public final class CommonUtils {
                             StorageLocation storageLocation =
                                     new StorageLocation();
                             storageLocation.setStorageLocation(location);
-                            storageLocations.add(storageLocation);
                             storageLocationEntity.addStorageLocation(
                                     storageLocation);
                         }

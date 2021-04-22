@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
  */
 public class HQLStatementBuilder {
 
-    private final String PARAMETER = "parameter_";
+    private final static String PARAMETER = "parameter_";
     private final Map<String, Object> parameters = new HashMap<>();
     protected final Map<String, String> typeMappings = new HashMap<>();
     protected final List<Pair> inheritanceList = new ArrayList<>();

@@ -33,6 +33,7 @@ import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserializeDate
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserializeDateTime;
 import static nikita.common.util.CommonUtils.Hateoas.Serialize.formatDate;
 import static nikita.common.util.CommonUtils.Hateoas.Serialize.formatDateTime;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class TestParsing {
 
@@ -319,8 +320,10 @@ public class TestParsing {
         assert(null != screening);
         assert(60 == screening.getScreeningDuration().intValue());
         AccessRestriction accessRestriction = screening.getAccessRestriction();
+        assertNotNull(accessRestriction);
         assert("P".equals(accessRestriction.getCode()));
         ScreeningDocument screeningDocument = screening.getScreeningDocument();
+        assertNotNull(screeningDocument);
         assert("H".equals(screeningDocument.getCode()));
         assert("Skjerming av hele dokumentet"
                .equals(screeningDocument.getCodeName()));
@@ -1432,6 +1435,7 @@ public class TestParsing {
                         jsonParser, null /* DeserializationContext */);
         assert (null != conversion);
         assert (systemID.equals(conversion.getSystemIdAsString()));
+        assert (null != conversion.getConvertedFromFormat());
         assert (fromFormatCode.equals(conversion.getConvertedFromFormat().getCode()));
         assert (toFormatCode.equals(conversion.getConvertedToFormat().getCode()));
     }
@@ -1572,6 +1576,7 @@ public class TestParsing {
         assert (null != precedence);
         assert (systemID.equals(precedence.getSystemIdAsString()));
         PrecedenceStatus m = precedence.getPrecedenceStatus();
+        assertNotNull(m);
         assert ("G".equals(m.getCode()));
         assert ("Gjeldende".equals(m.getCodeName()));
     }
@@ -1632,6 +1637,7 @@ public class TestParsing {
         assert (systemID.equals(eventLog.getSystemIdAsString()));
         assert (uuid.equals(eventLog.getReferenceChangedBy()));
         EventType m = eventLog.getEventType();
+        assertNotNull(m);
         assert ("C".equals(m.getCode()));
         assert ("Opprett".equals(m.getCodeName()));
     }

@@ -4,11 +4,7 @@ import nikita.common.model.noark5.v5.ChangeLog;
 import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
-import nikita.common.model.noark5.v5.interfaces.entities.IChangeLogEntity;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
-import nikita.webapp.hateoas.HateoasHandler;
-import nikita.webapp.hateoas.SystemIdHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IChangeLogHateoasHandler;
 import org.springframework.stereotype.Component;
 
@@ -47,7 +43,6 @@ public class ChangeLogHateoasHandler
     @Override
     public void addEntityLinksOnTemplate
         (ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
-        ChangeLog changeLog = (ChangeLog) entity;
     }
 
     protected void addReferenceArchiveUnitLink

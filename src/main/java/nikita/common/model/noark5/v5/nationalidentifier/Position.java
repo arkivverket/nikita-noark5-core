@@ -140,7 +140,7 @@ public class Position
 
     @Override
     public String toString() {
-        return "Position{" +
+        return "Position{" + super.toString() + '\'' +
                 "coordinateSystemCode='" + coordinateSystemCode + '\'' +
                 "coordinateSystemCodeName='" + coordinateSystemCodeName + '\'' +
                 ", x=" + x +

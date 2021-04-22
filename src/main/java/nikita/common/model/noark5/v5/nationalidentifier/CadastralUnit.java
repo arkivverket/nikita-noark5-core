@@ -139,7 +139,7 @@ public class CadastralUnit
 
     @Override
     public String toString() {
-        return "CadastralUnit{" +
+        return "CadastralUnit{" + super.toString() + '\'' +
                 "municipalityNumber='" + municipalityNumber + '\'' +
                 ", holdingNumber=" + holdingNumber +
                 ", subHoldingNumber=" + subHoldingNumber +

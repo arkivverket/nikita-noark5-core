@@ -353,10 +353,11 @@ public class GeneralTest {
         Resource resource = resolver.getResource(
                 "classpath:test_document.odt");
 
-        InputStream inputStream =
-                new BufferedInputStream(new FileInputStream
-                        (String.valueOf(resource.getFile().toPath())));
-        byte[] content = inputStream.readAllBytes();
+        byte[] content;
+        try (InputStream inputStream = new BufferedInputStream(new FileInputStream
+                (String.valueOf(resource.getFile().toPath())))) {
+            content = inputStream.readAllBytes();
+        }
         resultActions = mockMvc.perform(MockMvcRequestBuilders
                 .post(url)
                 .contextPath("/noark5v5")

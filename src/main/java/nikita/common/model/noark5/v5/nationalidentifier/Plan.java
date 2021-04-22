@@ -140,7 +140,7 @@ public class Plan
 
     @Override
     public String toString() {
-        return "Plan{" +
+        return "Plan{" + super.toString() + '\'' +
                 "municipalityNumber='" + municipalityNumber + '\'' +
                 ", countyNumber='" + countyNumber + '\'' +
                 ", countryCode=" + countryCode +

@@ -14,13 +14,13 @@ import nikita.webapp.hateoas.metadata.MetadataHateoasHandler;
 import nikita.webapp.util.annotation.HateoasObject;
 import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
-import java.util.Objects;
 
 import static nikita.common.config.Constants.NOARK_METADATA_PATH;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -136,7 +136,12 @@ public class Metadata
 
     @Override
     public int hashCode() {
-        return Objects.hash(code, codeName, inactive);
+        return new HashCodeBuilder()
+                .appendSuper(super.hashCode())
+                .append(code)
+                .append(codeName)
+                .append(inactive)
+                .toHashCode();
     }
 
     @Override

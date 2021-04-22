@@ -7,12 +7,11 @@ import java.util.StringJoiner;
 public class Comparison {
 
     Object left;
-    List<String> leftMethods = new ArrayList();
+    List<String> leftMethods = new ArrayList<>();
     StringJoiner concatValues = new StringJoiner(",", "concat(", ")");
-    String method = "";
     String comparator = "";
     Object right;
-    List<String> rightMethods = new ArrayList();
+    List<String> rightMethods = new ArrayList<>();
     Boolean processConcat = false;
 
     public Object getLeft() {
@@ -27,7 +26,7 @@ public class Comparison {
         }
     }
 
-    public List getLeftMethods() {
+    public List<String> getLeftMethods() {
         return leftMethods;
     }
 
@@ -43,11 +42,6 @@ public class Comparison {
         this.comparator = comparator;
     }
 
-    public void setComparator(String comparator, String method) {
-        this.method = method;
-        this.comparator = comparator;
-    }
-
     public Object getRight() {
         return right;
     }
@@ -58,7 +52,7 @@ public class Comparison {
         }
     }
 
-    public List getRightMethods() {
+    public List<String> getRightMethods() {
         return rightMethods;
     }
 
