@@ -329,6 +329,58 @@ public class PartService
         partRepository.delete(partUnit);
     }
 
+    // Internal template methods
+
+    /**
+     * Generate a Default PartUnit object that can be
+     * associated with the identified Record.
+     * <p>
+     * Note. Ideally this method would be configurable based on the logged in
+     * user and the business area they are working with. A generic Noark core
+     * like this does not have scope for that kind of functionality.
+     *
+     * @param recordSystemId The systemId of the record object
+     *                       you wish to create a templated object for
+     * @return the PartUnit object wrapped as a
+     * PartUnitHateoas object
+     */
+    @Override
+    public PartUnitHateoas generateDefaultPartUnit(
+            final String recordSystemId) {
+        PartUnit suggestedPart = new PartUnit();
+
+        setDefaultPartRole(suggestedPart);
+
+        PartUnitHateoas partHateoas = new PartUnitHateoas(suggestedPart);
+        partHateoasHandler.addLinksOnTemplate(partHateoas, new Authorisation());
+        return partHateoas;
+    }
+
+    /**
+     * Generate a Default PartPerson object that can be
+     * associated with the identified Record.
+     * <p>
+     * Note. Ideally this method would be configurable based on the logged in
+     * user and the business area they are working with. A generic Noark core
+     * like this does not have scope for that kind of functionality.
+     *
+     * @param recordSystemId The systemId of the record object
+     *                       you wish to create a templated object for
+     * @return the PartPerson object wrapped as a
+     * PartPersonHateoas object
+     */
+    @Override
+    public PartPersonHateoas generateDefaultPartPerson(
+            final String recordSystemId) {
+        PartPerson suggestedPart = new PartPerson();
+
+        setDefaultPartRole(suggestedPart);
+
+        PartPersonHateoas partHateoas = new PartPersonHateoas(suggestedPart);
+        partHateoasHandler.addLinksOnTemplate(partHateoas, new Authorisation());
+        return partHateoas;
+    }
+
     // Internal helper methods
 
     private void createPerson(PartPerson part) {
@@ -396,7 +448,7 @@ public class PartService
      * @param existingPart The existing Part
      * @param incomingPart The incoming Part
      */
-    public void updatePartUnitBusinessAddressCreateIfNull(
+    private void updatePartUnitBusinessAddressCreateIfNull(
             IBusinessAddress existingPart,
             IBusinessAddress incomingPart) {
         if (null == incomingPart.getBusinessAddress()) {
@@ -429,7 +481,7 @@ public class PartService
      * @param existingPart The existing Part
      * @param incomingPart The incoming Part
      */
-    public void updatePartResidingAddressCreateIfNull(
+    private void updatePartResidingAddressCreateIfNull(
             IResidingAddress existingPart,
             IResidingAddress incomingPart) {
         if (null == incomingPart.getResidingAddress()) {
@@ -463,7 +515,7 @@ public class PartService
      * @param existingPart The existing Part
      * @param incomingPart The incoming Part
      */
-    public void updatePartPostalAddressCreateIfNull(
+    private void updatePartPostalAddressCreateIfNull(
             IPostalAddress existingPart,
             IPostalAddress incomingPart) {
         if (null == incomingPart.getPostalAddress()) {
@@ -498,7 +550,7 @@ public class PartService
      * @param existingPart The existing Part
      * @param incomingPart The incoming Part
      */
-    public void updatePartContactInformationCreateIfNull(
+    private void updatePartContactInformationCreateIfNull(
             IContactInformation existingPart,
             IContactInformation incomingPart) {
         if (null == incomingPart.getContactInformation()) {
@@ -520,56 +572,6 @@ public class PartService
     }
 
     /**
-     * Generate a Default PartUnit object that can be
-     * associated with the identified Record.
-     * <p>
-     * Note. Ideally this method would be configurable based on the logged in
-     * user and the business area they are working with. A generic Noark core
-     * like this does not have scope for that kind of functionality.
-     *
-     * @param recordSystemId The systemId of the record object
-     *                       you wish to create a templated object for
-     * @return the PartUnit object wrapped as a
-     * PartUnitHateoas object
-     */
-    @Override
-    public PartUnitHateoas generateDefaultPartUnit(
-            final String recordSystemId) {
-        PartUnit suggestedPart = new PartUnit();
-
-        setDefaultPartRole(suggestedPart);
-
-        PartUnitHateoas partHateoas = new PartUnitHateoas(suggestedPart);
-        partHateoasHandler.addLinksOnTemplate(partHateoas, new Authorisation());
-        return partHateoas;
-    }
-
-    /**
-     * Generate a Default PartPerson object that can be
-     * associated with the identified Record.
-     * <p>
-     * Note. Ideally this method would be configurable based on the logged in
-     * user and the business area they are working with. A generic Noark core
-     * like this does not have scope for that kind of functionality.
-     *
-     * @param recordSystemId The systemId of the record object
-     *                       you wish to create a templated object for
-     * @return the PartPerson object wrapped as a
-     * PartPersonHateoas object
-     */
-    @Override
-    public PartPersonHateoas generateDefaultPartPerson(
-            final String recordSystemId) {
-        PartPerson suggestedPart = new PartPerson();
-
-        setDefaultPartRole(suggestedPart);
-
-        PartPersonHateoas partHateoas = new PartPersonHateoas(suggestedPart);
-        partHateoasHandler.addLinksOnTemplate(partHateoas, new Authorisation());
-        return partHateoas;
-    }
-
-    /**
      * Copy the values you are allowed to copy from the incoming
      * contactInformation object to the existing contactInformation object
      * retrieved from the database.
@@ -579,7 +581,7 @@ public class PartService
      * @param incomingContactInformation Incoming contactInformation object
      * @return The existing ContactInformation object updated with values
      */
-    public ContactInformation updateContactInformation(
+    private ContactInformation updateContactInformation(
             IContactInformationEntity existingContactInformation,
             IContactInformationEntity incomingContactInformation) {
 
