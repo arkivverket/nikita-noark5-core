@@ -153,6 +153,19 @@ public class DocumentDescriptionService
                         getDocumentDescriptionOrThrow(systemID));
     }
 
+    @Override
+    @Transactional
+    public DocumentDescription save(DocumentDescription documentDescription) {
+        validateDocumentMedium(metadataService, documentDescription);
+        validateDocumentStatus(documentDescription);
+        validateDocumentType(documentDescription);
+        validateDeletion(documentDescription.getReferenceDeletion());
+        bsmService.validateBSMList(documentDescription.getReferenceBSMBase());
+        documentDescription.setAssociationDate(OffsetDateTime.now());
+        documentDescription.setAssociatedBy(getUser());
+        return documentDescriptionRepository.save(documentDescription);
+    }
+
     /**
      * Persist and associate the incoming author object with the
      * documentDescription identified by systemId
@@ -225,25 +238,6 @@ public class DocumentDescriptionService
     @Override
     public AuthorHateoas generateDefaultAuthor(String systemID) {
         return authorService.generateDefaultAuthor();
-    }
-
-    /*
-     * Note:
-     * <p>
-     * Assumes documentDescription.addRecord() has already been called.
-     *
-     */
-    @Override
-    @Transactional
-    public DocumentDescription save(DocumentDescription documentDescription) {
-        validateDocumentMedium(metadataService, documentDescription);
-        validateDocumentStatus(documentDescription);
-        validateDocumentType(documentDescription);
-        validateDeletion(documentDescription.getReferenceDeletion());
-        bsmService.validateBSMList(documentDescription.getReferenceBSMBase());
-        documentDescription.setAssociationDate(OffsetDateTime.now());
-        documentDescription.setAssociatedBy(getUser());
-        return documentDescriptionRepository.save(documentDescription);
     }
 
     @Override
@@ -390,6 +384,7 @@ public class DocumentDescriptionService
     }
 
     // All DELETE operations
+
     @Override
     @Transactional
     public void deleteEntity(@NotNull String documentDescriptionSystemId) {
