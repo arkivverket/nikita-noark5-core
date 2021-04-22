@@ -52,16 +52,7 @@ public class CommentService
         this.commentHateoasHandler = commentHateoasHandler;
     }
 
-    @Override
-    public CommentHateoas generateDefaultComment() {
-        Comment defaultComment = new Comment();
-        defaultComment.setCommentDate(OffsetDateTime.now());
-        defaultComment.setCommentRegisteredBy(getUser());
-        CommentHateoas commentHateoas = new CommentHateoas(defaultComment);
-        commentHateoasHandler.addLinksOnTemplate(commentHateoas,
-                new Authorisation());
-        return commentHateoas;
-    }
+    // All CREATE methods
 
     @Override
     @Transactional
@@ -103,6 +94,8 @@ public class CommentService
         return commentHateoas;
     }
 
+    // All READ methods
+
     @Override
     public CommentHateoas findSingleComment(UUID commentSystemId) {
         Comment existingComment = getCommentOrThrow(commentSystemId);
@@ -112,6 +105,8 @@ public class CommentService
         commentHateoasHandler.addLinks(commentHateoas, new Authorisation());
         return commentHateoas;
     }
+
+    // All UPDATE methods
 
     @Override
     @Transactional
@@ -142,6 +137,8 @@ public class CommentService
         return commentHateoas;
     }
 
+    // All DELETE methods
+
     @Override
     @Transactional
     public void deleteComment(UUID systemID) {
@@ -158,6 +155,21 @@ public class CommentService
         }
         commentRepository.delete(comment);
     }
+
+    // All template methods
+
+    @Override
+    public CommentHateoas generateDefaultComment() {
+        Comment defaultComment = new Comment();
+        defaultComment.setCommentDate(OffsetDateTime.now());
+        defaultComment.setCommentRegisteredBy(getUser());
+        CommentHateoas commentHateoas = new CommentHateoas(defaultComment);
+        commentHateoasHandler.addLinksOnTemplate(commentHateoas,
+                new Authorisation());
+        return commentHateoas;
+    }
+
+    // All helper methods
 
     protected Comment getCommentOrThrow(@NotNull UUID commentSystemId) {
         Comment comment = commentRepository.findBySystemId(commentSystemId);
