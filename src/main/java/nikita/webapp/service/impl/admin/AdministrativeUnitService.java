@@ -33,8 +33,9 @@ public class AdministrativeUnitService
 
     private static final Logger logger =
             LoggerFactory.getLogger(AdministrativeUnitService.class);
-    private IAdministrativeUnitRepository administrativeUnitRepository;
-    private ISequenceNumberGeneratorService numberGeneratorService;
+
+    private final IAdministrativeUnitRepository administrativeUnitRepository;
+    private final ISequenceNumberGeneratorService numberGeneratorService;
 
     public AdministrativeUnitService(
             EntityManager entityManager,
