@@ -72,10 +72,112 @@ public class PartService
         this.bsmService = bsmService;
     }
 
+    // All CREATE methods
+
+    @Override
+    @Transactional
+    public PartPersonHateoas createNewPartPerson(
+            @NotNull PartPerson part, @NotNull Record record) {
+        validatePartRole(part);
+        createPerson(part);
+        record.addPart(part);
+        part = partRepository.save(part);
+        PartPersonHateoas partPersonHateoas = new PartPersonHateoas(part);
+        partHateoasHandler.addLinks(partPersonHateoas, new Authorisation());
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityCreatedEvent(this, part));
+        return partPersonHateoas;
+    }
+
+    @Override
+    @Transactional
+    public PartPersonHateoas createNewPartPerson(
+            @NotNull PartPerson part, @NotNull File file) {
+        validatePartRole(part);
+        createPerson(part);
+        file.addPart(part);
+        part = partRepository.save(part);
+        PartPersonHateoas partPersonHateoas = new PartPersonHateoas(part);
+        partHateoasHandler.addLinks(partPersonHateoas, new Authorisation());
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityCreatedEvent(this, part));
+        return partPersonHateoas;
+    }
+
+    @Override
+    @Transactional
+    public PartUnitHateoas createNewPartUnit(PartUnit part, Record record) {
+        validatePartRole(part);
+        createUnit(part);
+        record.addPart(part);
+        part = partRepository.save(part);
+        PartUnitHateoas partUnitHateoas = new PartUnitHateoas(part);
+        partHateoasHandler.addLinks(partUnitHateoas, new Authorisation());
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityCreatedEvent(this, part));
+        return partUnitHateoas;
+    }
+
+    @Override
+    @Transactional
+    public PartUnitHateoas createNewPartUnit(
+            @NotNull PartUnit part, @NotNull File file) {
+        validatePartRole(part);
+        createUnit(part);
+        file.addPart(part);
+        part = partRepository.save(part);
+        PartUnitHateoas partUnitHateoas = new PartUnitHateoas(part);
+        partHateoasHandler.addLinks(partUnitHateoas, new Authorisation());
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityCreatedEvent(this, part));
+        return partUnitHateoas;
+    }
+
+    @Override
+    @Transactional
+    public PartUnitHateoas createNewPartUnit(
+            @NotNull PartUnit partUnit,
+            @NotNull DocumentDescription documentDescription) {
+        validatePartRole(partUnit);
+        createUnit(partUnit);
+        documentDescription.addPart(partUnit);
+        partUnit = partRepository.save(partUnit);
+        PartUnitHateoas partUnitHateoas = new PartUnitHateoas(partUnit);
+        partHateoasHandler.addLinks(partUnitHateoas, new Authorisation());
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityCreatedEvent(this, partUnit));
+        return partUnitHateoas;
+    }
+
+    @Override
+    @Transactional
+    public PartPersonHateoas createNewPartPerson(
+            @NotNull PartPerson partPerson,
+            @NotNull DocumentDescription documentDescription) {
+        validatePartRole(partPerson);
+        createPerson(partPerson);
+        partPerson.addDocumentDescription(documentDescription);
+        partPerson = partRepository.save(partPerson);
+        PartPersonHateoas partPersonHateoas = new PartPersonHateoas(partPerson);
+        partHateoasHandler.addLinks(partPersonHateoas, new Authorisation());
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityCreatedEvent(this, partPerson));
+        return partPersonHateoas;
+    }
+
+    // All READ methods
+
     @Override
     public Part findBySystemId(@NotNull UUID systemId) {
         return getPartOrThrow(systemId);
     }
+
+    @Override
+    protected Optional<BSMMetadata> findBSMByName(String name) {
+        return bsmService.findBSMByName(name);
+    }
+
+    // All UPDATE methods
 
     /**
      * Update the PartPerson identified by systemId. Retrieve a
@@ -180,11 +282,6 @@ public class PartService
     }
 
     @Override
-    protected Optional<BSMMetadata> findBSMByName(String name) {
-        return bsmService.findBSMByName(name);
-    }
-
-    @Override
     @Transactional
     public Object associateBSM(@NotNull UUID systemId,
                                @NotNull List<BSMBase> bsm) {
@@ -193,97 +290,7 @@ public class PartService
         return part;
     }
 
-    @Override
-    @Transactional
-    public PartPersonHateoas createNewPartPerson(
-            @NotNull PartPerson part, @NotNull Record record) {
-        validatePartRole(part);
-        createPerson(part);
-        record.addPart(part);
-        part = partRepository.save(part);
-        PartPersonHateoas partPersonHateoas = new PartPersonHateoas(part);
-        partHateoasHandler.addLinks(partPersonHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityCreatedEvent(this, part));
-        return partPersonHateoas;
-    }
-
-    @Override
-    @Transactional
-    public PartPersonHateoas createNewPartPerson(
-            @NotNull PartPerson part, @NotNull File file) {
-        validatePartRole(part);
-        createPerson(part);
-        file.addPart(part);
-        part = partRepository.save(part);
-        PartPersonHateoas partPersonHateoas = new PartPersonHateoas(part);
-        partHateoasHandler.addLinks(partPersonHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityCreatedEvent(this, part));
-        return partPersonHateoas;
-    }
-
-    @Override
-    @Transactional
-    public PartUnitHateoas createNewPartUnit(PartUnit part, Record record) {
-        validatePartRole(part);
-        createUnit(part);
-        record.addPart(part);
-        part = partRepository.save(part);
-        PartUnitHateoas partUnitHateoas = new PartUnitHateoas(part);
-        partHateoasHandler.addLinks(partUnitHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityCreatedEvent(this, part));
-        return partUnitHateoas;
-    }
-
-    @Override
-    @Transactional
-    public PartUnitHateoas createNewPartUnit(
-            @NotNull PartUnit part, @NotNull File file) {
-        validatePartRole(part);
-        createUnit(part);
-        file.addPart(part);
-        part = partRepository.save(part);
-        PartUnitHateoas partUnitHateoas = new PartUnitHateoas(part);
-        partHateoasHandler.addLinks(partUnitHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityCreatedEvent(this, part));
-        return partUnitHateoas;
-    }
-
-    @Override
-    @Transactional
-    public PartUnitHateoas createNewPartUnit(
-            @NotNull PartUnit partUnit,
-            @NotNull DocumentDescription documentDescription) {
-        validatePartRole(partUnit);
-        createUnit(partUnit);
-        documentDescription.addPart(partUnit);
-        partUnit = partRepository.save(partUnit);
-        PartUnitHateoas partUnitHateoas = new PartUnitHateoas(partUnit);
-        partHateoasHandler.addLinks(partUnitHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityCreatedEvent(this, partUnit));
-        return partUnitHateoas;
-    }
-
-    @Override
-    @Transactional
-    public PartPersonHateoas createNewPartPerson(
-            @NotNull PartPerson partPerson,
-            @NotNull DocumentDescription documentDescription) {
-        validatePartRole(partPerson);
-        createPerson(partPerson);
-        partPerson.addDocumentDescription(documentDescription);
-        partPerson = partRepository.save(partPerson);
-        PartPersonHateoas partPersonHateoas = new PartPersonHateoas(partPerson);
-        partHateoasHandler.addLinks(partPersonHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityCreatedEvent(this, partPerson));
-        return partPersonHateoas;
-    }
-
+    // All DELETE methods
     @Override
     @Transactional
     public void deletePartPerson(@NotNull UUID systemId) {
