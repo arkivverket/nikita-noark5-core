@@ -513,8 +513,14 @@ public final class CommonUtils {
                             .parseDefaulting(MINUTE_OF_HOUR, 0)
                             .toFormatter();
                 }
-                return ZonedDateTime.parse(date, dateFormatter)
-                        .toOffsetDateTime();
+
+                ZonedDateTime zonedDateTime =
+                        ZonedDateTime.parse(date, dateFormatter);
+                if (null == zonedDateTime) {
+                    String error = "Could not deserialise " + date;
+                    throw new NikitaMalformedInputDataException(error);
+                }
+                return zonedDateTime.toOffsetDateTime();
             }
 
             public static OffsetDateTime deserializeDate(String fieldname,
