@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.Constants.SYSTEM;
 
 
@@ -264,7 +265,8 @@ public class UserService
         Optional<User> userOptional =
                 userRepository.findBySystemId(UUID.fromString(systemId));
         if (userOptional.isEmpty()) {
-            String error = systemId + " User, using systemId " + systemId;
+            String error = INFO_CANNOT_FIND_OBJECT + " User, using systemId " +
+                    systemId;
             logger.error(error);
             throw new NoarkEntityNotFoundException(error);
         }
