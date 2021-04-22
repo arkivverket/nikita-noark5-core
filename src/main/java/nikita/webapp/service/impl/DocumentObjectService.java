@@ -83,7 +83,6 @@ import static org.springframework.http.HttpHeaders.ACCEPT;
  */
 
 @Service
-@Transactional
 @EnableConfigurationProperties(WebappProperties.class)
 public class DocumentObjectService
         extends NoarkService
@@ -124,6 +123,7 @@ public class DocumentObjectService
 
     // All CREATE operations
 
+    @Transactional
     public DocumentObject save(DocumentObject documentObject) {
         Long version =
                 documentObjectRepository.
@@ -266,6 +266,7 @@ public class DocumentObjectService
         return conversionHateoas;
     }
 
+    @Transactional
     public ConversionHateoas
     createConversionAssociatedWithDocumentObject(String systemId,
                                                  Conversion conversion) {
@@ -274,7 +275,7 @@ public class DocumentObjectService
         conversion.setReferenceDocumentObject(documentObject);
         documentObject.addReferenceConversion(conversion);
         ConversionHateoas conversionHateoas =
-            new ConversionHateoas(conversionRepository.save(conversion));
+                new ConversionHateoas(conversionRepository.save(conversion));
         conversionHateoasHandler.addLinks(conversionHateoas,
                 new Authorisation());
         return conversionHateoas;
@@ -313,6 +314,7 @@ public class DocumentObjectService
     }
 
     @Override
+    @Transactional
     public ConversionHateoas handleUpdateConversionBySystemId
         (String systemId, String subSystemId, Conversion incomingConversion) {
         DocumentObject documentObject = getDocumentObjectOrThrow(systemId);
@@ -348,7 +350,6 @@ public class DocumentObjectService
     }
 
     private void setGeneratedDocumentFilename(DocumentObject documentObject) {
-
         String extension = FilenameUtils.getExtension(
                 documentObject.getOriginalFilename());
         String documentFilename = documentObject.getSystemIdAsString();
@@ -414,7 +415,6 @@ public class DocumentObjectService
 
         return archiveVersion;
     }
-
 
     private void setFilenameAndExtensionForArchiveDocument(
             DocumentObject productionDocumentObject,
@@ -543,6 +543,7 @@ public class DocumentObjectService
      * @param conversionSystemID     UUID of the Conversion object
      */
     @Override
+    @Transactional
     public void deleteConversion(
             UUID documentObjectSystemID, UUID conversionSystemID) {
         conversionRepository.delete(getConversionOrThrow(
@@ -639,6 +640,7 @@ public class DocumentObjectService
      * @return the updated documentObject after it is persisted
      */
     @Override
+    @Transactional
     public DocumentObjectHateoas handleUpdate(
             @NotNull final String systemId, @NotNull final Long version,
             @NotNull final DocumentObject incomingDocumentObject) {
@@ -676,6 +678,7 @@ public class DocumentObjectService
 
     // All DELETE operations
     @Override
+    @Transactional
     public void deleteEntity(@NotNull String systemId) {
         deleteEntity(getDocumentObjectOrThrow(systemId));
     }
@@ -869,6 +872,7 @@ public class DocumentObjectService
     }
 
     @Override
+    @Transactional
     public DocumentObjectHateoas
     handleIncomingFile(String systemID, HttpServletRequest request)
             throws IOException {
