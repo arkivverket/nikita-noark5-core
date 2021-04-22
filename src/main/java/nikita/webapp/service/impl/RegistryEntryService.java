@@ -375,10 +375,10 @@ public class RegistryEntryService
         RegistryEntry registryEntry = getRegistryEntryOrThrow(systemId);
         SignOff signOff = getSignOffOrThrow(subSystemId);
         if (null == signOff.getReferenceRecord()
-            || !signOff.getReferenceRecord().equals(registryEntry)) {
+                || !signOff.getReferenceRecord().contains(registryEntry)) {
             String info = INFO_CANNOT_FIND_OBJECT +
-                " SignOff " + subSystemId +
-                " below RegistryEntry " + systemId + ".";
+                    " SignOff " + subSystemId +
+                    " below RegistryEntry " + systemId + ".";
             logger.info(info);
             throw new NoarkEntityNotFoundException(info);
         }
@@ -494,10 +494,10 @@ public class RegistryEntryService
         RegistryEntry registryEntry = getRegistryEntryOrThrow(systemID);
         SignOff existingSignOff = getSignOffOrThrow(signOffSystemID);
         if (null == existingSignOff.getReferenceRecord()
-            || ! existingSignOff.getReferenceRecord().equals(registryEntry)) {
+                || !existingSignOff.getReferenceRecord().contains(registryEntry)) {
             String info = INFO_CANNOT_FIND_OBJECT +
-                " SignOff " + signOffSystemID +
-                " below RegistryEntry " + systemID + ".";
+                    " SignOff " + signOffSystemID +
+                    " below RegistryEntry " + systemID + ".";
             logger.info(info);
             throw new NoarkEntityNotFoundException(info);
         }
@@ -558,10 +558,10 @@ public class RegistryEntryService
         RegistryEntry registryEntry = getRegistryEntryOrThrow(systemID);
         SignOff signOff = getSignOffOrThrow(signOffSystemID);
         if (null == signOff.getReferenceRecord()
-            || ! signOff.getReferenceRecord().equals(registryEntry)) {
+                || !signOff.getReferenceRecord().contains(registryEntry)) {
             String info = INFO_CANNOT_FIND_OBJECT +
-                " Conversion " + signOffSystemID +
-                " below DocumentObject " + systemID + ".";
+                    " Conversion " + signOffSystemID +
+                    " below DocumentObject " + systemID + ".";
             logger.info(info);
             throw new NoarkEntityNotFoundException(info);
         }
