@@ -648,11 +648,6 @@ public class RecordService
 
     // All UPDATE operations
 
-    private Record update(Record record) {
-        bsmService.validateBSMList(record.getReferenceBSMBase());
-        return recordRepository.save(record);
-    }
-
     /**
      * Updates a Record object in the database. First we try to locate the
      * Record object. If the Record object does not exist a
