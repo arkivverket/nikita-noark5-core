@@ -57,15 +57,15 @@ public class ClassService
 
     private static final Logger logger =
             LoggerFactory.getLogger(ClassService.class);
-    private IClassRepository classRepository;
-    private IFileService fileService;
-    private ICaseFileService caseFileService;
-    private IRecordService recordService;
-    private IClassHateoasHandler classHateoasHandler;
-    private IClassificationSystemHateoasHandler
+    private final IClassRepository classRepository;
+    private final IFileService fileService;
+    private final ICaseFileService caseFileService;
+    private final IRecordService recordService;
+    private final IClassHateoasHandler classHateoasHandler;
+    private final IClassificationSystemHateoasHandler
             classificationSystemHateoasHandler;
-    private IFileHateoasHandler fileHateoasHandler;
-    private IRecordHateoasHandler recordHateoasHandler;
+    private final IFileHateoasHandler fileHateoasHandler;
+    private final IRecordHateoasHandler recordHateoasHandler;
 
     public ClassService(EntityManager entityManager,
                         ApplicationEventPublisher applicationEventPublisher,
@@ -310,6 +310,7 @@ public class ClassService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public ResponseEntity<FileHateoas>
     findAllFileAssociatedWithClass(@NotNull final String systemId) {
         Class existingClass = getClassOrThrow(systemId);
@@ -324,13 +325,13 @@ public class ClassService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public ResponseEntity<RecordHateoas>
     findAllRecordAssociatedWithClass(@NotNull final String systemId) {
         Class existingClass = getClassOrThrow(systemId);
         RecordHateoas recordHateoas =
-            new RecordHateoas(
-                (List<INoarkEntity>)(List) existingClass.getReferenceRecord()
-                              );
+                new RecordHateoas(
+                        (List<INoarkEntity>) (List) existingClass.getReferenceRecord());
         recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(getServletPath()))
@@ -425,10 +426,9 @@ public class ClassService
      * @return the newly found class object or null if it does not exist
      */
     protected Class getClassOrThrow(@NotNull String classSystemId) {
-        Optional<Class> klass =
-                classRepository.
-                        findBySystemId(UUID.fromString(classSystemId));
-        if (!klass.isPresent()) {
+        Optional<Class> klass = classRepository.findBySystemId(
+                UUID.fromString(classSystemId));
+        if (klass.isEmpty()) {
             String error = INFO_CANNOT_FIND_OBJECT + " Class, using systemId " +
                     classSystemId;
             logger.error(error);
