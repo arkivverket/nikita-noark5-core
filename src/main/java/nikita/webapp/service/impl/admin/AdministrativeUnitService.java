@@ -127,7 +127,6 @@ public class AdministrativeUnitService
      * @return list of all administrativeUnit
      */
     @Override
-    @Transactional(readOnly = true)
     public List<AdministrativeUnit> findAll() {
         return administrativeUnitRepository.findAll();
     }
@@ -141,7 +140,6 @@ public class AdministrativeUnitService
      * @return the administrativeUnit
      */
     @Override
-    @Transactional(readOnly = true)
     public AdministrativeUnit findBySystemId(UUID systemId) {
         return administrativeUnitRepository.findBySystemId(systemId);
     }
@@ -197,7 +195,6 @@ public class AdministrativeUnitService
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Optional<AdministrativeUnit> findFirst() {
         return administrativeUnitRepository.findFirstByOrderByCreatedDateAsc();
     }
@@ -211,7 +208,6 @@ public class AdministrativeUnitService
      *             administrativeUnit
      * @return the administrativeUnit
      */
-    @Transactional(readOnly = true)
     public AdministrativeUnit getAdministrativeUnitOrThrow(User user) {
         Set<User> users = new HashSet<>();
         users.add(user);
