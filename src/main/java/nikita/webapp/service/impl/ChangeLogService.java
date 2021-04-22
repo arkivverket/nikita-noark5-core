@@ -31,8 +31,8 @@ public class ChangeLogService
     private static final Logger logger =
             LoggerFactory.getLogger(ChangeLogService.class);
 
-    private IChangeLogRepository changeLogRepository;
-    private IChangeLogHateoasHandler changeLogHateoasHandler;
+    private final IChangeLogRepository changeLogRepository;
+    private final IChangeLogHateoasHandler changeLogHateoasHandler;
 
     public ChangeLogService(
             EntityManager entityManager,
@@ -70,6 +70,7 @@ public class ChangeLogService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public ChangeLogHateoas findChangeLogByOwner() {
         ChangeLogHateoas changeLogHateoas = new
                 ChangeLogHateoas((List<INoarkEntity>) (List)
