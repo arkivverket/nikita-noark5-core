@@ -36,13 +36,13 @@ import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentM
 import static org.springframework.http.HttpStatus.*;
 
 @Service
-@Transactional
 public class RecordNoteService
         extends NoarkService
         implements IRecordNoteService {
 
     private static final Logger logger =
             LoggerFactory.getLogger(RecordNoteService.class);
+
     private final IRecordNoteRepository recordNoteRepository;
     private final IDocumentFlowService documentFlowService;
     private final IMetadataService metadataService;
@@ -67,6 +67,7 @@ public class RecordNoteService
     }
 
     @Override
+    @Transactional
     public ResponseEntity<RecordNoteHateoas> save(
             @NotNull final RecordNote recordNote) {
         validateDocumentMedium(metadataService, recordNote);
@@ -80,7 +81,6 @@ public class RecordNoteService
                 .body(recordNoteHateoas);
     }
 
-    // systemId
     @Override
     public ResponseEntity<RecordNoteHateoas> findBySystemId(String systemId) {
         RecordNoteHateoas recordNoteHateoas = new
@@ -107,7 +107,6 @@ public class RecordNoteService
                 .allow(getMethodsForRequestOrThrow(getServletPath()))
                 .body(recordNoteHateoas);
     }
-
 
     @Override
     @SuppressWarnings("unchecked")
@@ -137,6 +136,7 @@ public class RecordNoteService
     }
 
     @Override
+    @Transactional
     public DocumentFlowHateoas associateDocumentFlowWithRecordNote(
             String systemId, DocumentFlow documentFlow) {
         return documentFlowService.associateDocumentFlowWithRecordNote
@@ -178,6 +178,7 @@ public class RecordNoteService
      * wrapped first as RecordNoteHateoas object and then as a ResponseEntity
      */
     @Override
+    @Transactional
     public ResponseEntity<RecordNoteHateoas> handleUpdate(
             @NotNull final String systemId,
             @NotNull final RecordNote incomingRecordNote) {
@@ -238,6 +239,7 @@ public class RecordNoteService
      *                           you wish to delete
      */
     @Override
+    @Transactional
     public ResponseEntity<String> deleteEntity(
             @NotNull final String recordNoteSystemId) {
         RecordNote recordNote = getRecordNoteOrThrow(recordNoteSystemId);
@@ -256,6 +258,7 @@ public class RecordNoteService
      * @return the number of objects deleted
      */
     @Override
+    @Transactional
     public ResponseEntity<String> deleteAllByOwnedBy() {
         String user = getUser();
         long count = recordNoteRepository.countByOwnedBy(user);
@@ -265,6 +268,8 @@ public class RecordNoteService
         return ResponseEntity.status(NO_CONTENT).
                 body(DELETE_RESPONSE);
     }
+
+    // All template methods
 
     @Override
     public ResponseEntity<RecordNoteHateoas> generateDefaultRecordNote(
