@@ -673,19 +673,16 @@ public final class CommonUtils {
                 caseFile.setCaseStatus(caseStatus);
             }
 
-            public static void deserialiseKeyword(IKeyword keywordEntity, ObjectNode objectNode, StringBuilder errors) {
+            public static void deserialiseKeyword(IKeyword keywordEntity,
+                                                  ObjectNode objectNode, StringBuilder errors) {
                 // Deserialize keyword
                 JsonNode currentNode = objectNode.get(KEYWORD);
-
                 if (null != currentNode) {
-                    ArrayList<Keyword> keywords = new ArrayList<>();
                     if (currentNode.isArray()) {
-                        currentNode.iterator();
                         for (JsonNode node : currentNode) {
                             String keywordText = node.textValue();
                             Keyword keyword = new Keyword();
                             keyword.setKeyword(keywordText);
-                            keywords.add(keyword);
                             keywordEntity.addKeyword(keyword);
                         }
                     }
