@@ -42,7 +42,6 @@ import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThro
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
-@Transactional
 public class CorrespondencePartService
         extends NoarkService
         implements ICorrespondencePartService {
@@ -89,6 +88,7 @@ public class CorrespondencePartService
      * @return the updated CorrespondencePartPerson
      */
     @Override
+    @Transactional
     public CorrespondencePartPerson
     updateCorrespondencePartPerson(
             @NotNull String systemId, @NotNull Long version,
@@ -139,6 +139,7 @@ public class CorrespondencePartService
     }
 
     @Override
+    @Transactional
     public CorrespondencePartInternal updateCorrespondencePartInternal(
             @NotNull String systemId, @NotNull Long version,
             @NotNull CorrespondencePartInternal incomingCorrespondencePart) {
@@ -166,6 +167,7 @@ public class CorrespondencePartService
     }
 
     @Override
+    @Transactional
     public CorrespondencePartUnit updateCorrespondencePartUnit(
             @NotNull String systemId, @NotNull Long version,
             @NotNull CorrespondencePartUnit incomingCorrespondencePart) {
@@ -203,6 +205,7 @@ public class CorrespondencePartService
     }
 
     @Override
+    @Transactional
     public ResponseEntity<CorrespondencePartHateoas>
     handleUpdate(UUID systemID, PatchObjects patchObjects) {
         CorrespondencePart correspondencePart = (CorrespondencePart)
@@ -221,6 +224,7 @@ public class CorrespondencePartService
     }
 
     @Override
+    @Transactional
     public CorrespondencePartPersonHateoas
     createNewCorrespondencePartPerson(
             CorrespondencePartPerson correspondencePart,
@@ -277,6 +281,7 @@ public class CorrespondencePartService
      * @return correspondencePart wraped as a correspondencePartUnitHateaos
      */
     @Override
+    @Transactional
     public CorrespondencePartUnitHateoas createNewCorrespondencePartUnit(
             CorrespondencePartUnit correspondencePart,
             Record record) {
@@ -307,6 +312,7 @@ public class CorrespondencePartService
     }
 
     @Override
+    @Transactional
     public CorrespondencePartInternalHateoas
     createNewCorrespondencePartInternal(
             CorrespondencePartInternal correspondencePart,
@@ -334,6 +340,7 @@ public class CorrespondencePartService
      *                 to delete
      */
     @Override
+    @Transactional
     public void deleteCorrespondencePartUnit(@NotNull String systemId) {
         CorrespondencePartUnit correspondencePartUnit = (CorrespondencePartUnit)
                 getCorrespondencePartOrThrow(systemId);
@@ -354,6 +361,7 @@ public class CorrespondencePartService
      *                 to delete
      */
     @Override
+    @Transactional
     public void deleteCorrespondencePartPerson(@NotNull String systemId) {
         CorrespondencePartPerson correspondencePartPerson = (CorrespondencePartPerson)
                 getCorrespondencePartOrThrow(systemId);
@@ -374,6 +382,7 @@ public class CorrespondencePartService
      *                 to delete
      */
     @Override
+    @Transactional
     public void deleteCorrespondencePartInternal(@NotNull String systemId) {
         correspondencePartRepository.delete(
                 getCorrespondencePartOrThrow(systemId));
@@ -385,6 +394,7 @@ public class CorrespondencePartService
      * @return the number of objects deleted
      */
     @Override
+    @Transactional
     public long deleteAllByOwnedBy() {
         return correspondencePartRepository.deleteByOwnedBy(getUser());
     }
@@ -398,7 +408,7 @@ public class CorrespondencePartService
      * @param existingCorrespondencePart The existing CorrespondencePart
      * @param incomingCorrespondencePart The incoming CorrespondencePart
      */
-    public void updateCorrespondencePartUnitBusinessAddressCreateIfNull(
+    private void updateCorrespondencePartUnitBusinessAddressCreateIfNull(
             IBusinessAddress existingCorrespondencePart,
             IBusinessAddress incomingCorrespondencePart) {
 
@@ -434,7 +444,7 @@ public class CorrespondencePartService
      * @param existingCorrespondencePart The existing CorrespondencePart
      * @param incomingCorrespondencePart The incoming CorrespondencePart
      */
-    public void updateCorrespondencePartResidingAddressCreateIfNull(
+    private void updateCorrespondencePartResidingAddressCreateIfNull(
             IResidingAddress existingCorrespondencePart,
             IResidingAddress incomingCorrespondencePart) {
 
@@ -470,7 +480,7 @@ public class CorrespondencePartService
      *                              CorrespondencePart
      * @param incomingPostalAddress The incoming CorrespondencePart
      */
-    public void updateCorrespondencePartPostalAddressCreateIfNull(
+    private void updateCorrespondencePartPostalAddressCreateIfNull(
             IPostalAddress existingPostalAddress,
             IPostalAddress incomingPostalAddress) {
 
@@ -506,7 +516,7 @@ public class CorrespondencePartService
      * @param existingCorrespondencePart The existing CorrespondencePart
      * @param incomingCorrespondencePart The incoming CorrespondencePart
      */
-    public void updateCorrespondencePartContactInformationCreateIfNull(
+    private void updateCorrespondencePartContactInformationCreateIfNull(
             IContactInformation existingCorrespondencePart,
             IContactInformation incomingCorrespondencePart) {
 
@@ -622,7 +632,7 @@ public class CorrespondencePartService
      * @param incomingContactInformation Incoming contactInformation object
      * @return The existing ContactInformation object updated with values
      */
-    public ContactInformation updateContactInformation(
+    private ContactInformation updateContactInformation(
             IContactInformationEntity existingContactInformation,
             IContactInformationEntity incomingContactInformation) {
 
@@ -671,6 +681,7 @@ public class CorrespondencePartService
     }
 
     @Override
+    @Transactional
     public Object associateBSM(@NotNull UUID systemId,
                                @NotNull List<BSMBase> bsm) {
         CorrespondencePart correspondencePart =
