@@ -49,7 +49,6 @@ import static org.springframework.http.HttpStatus.*;
  * stored in the variable repositoryMap and is populated when nikita starts up.
  */
 @Service
-@Transactional
 public class MetadataService
         extends NoarkService
         implements IMetadataService {
@@ -89,6 +88,7 @@ public class MetadataService
      * @return the updated metadata object
      */
     @Override
+    @Transactional
     public ResponseEntity<MetadataHateoas> updateMetadataEntity(
             @NotNull final String code,
             @NotNull final Metadata incomingMetadata) {
@@ -111,6 +111,7 @@ public class MetadataService
      * @return the updated metadata object
      */
     @Override
+    @Transactional
     public ResponseEntity<MetadataHateoas> createNewMetadataEntity(
             @NotNull final IMetadataEntity incomingMetadata)
             throws NoSuchMethodException, IllegalAccessException,
@@ -172,6 +173,7 @@ public class MetadataService
      * @return nothing, but set the status to 204 No Content
      */
     @Override
+    @Transactional
     public ResponseEntity<String> deleteMetadataEntity(
             @NotNull final String code) {
         String entityType = getEntityTypeFromRequest();
