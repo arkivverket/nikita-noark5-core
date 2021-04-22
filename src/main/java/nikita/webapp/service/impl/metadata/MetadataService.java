@@ -55,6 +55,7 @@ public class MetadataService
 
     private static final Logger logger =
             LoggerFactory.getLogger(MetadataService.class);
+
     private final IMetadataHateoasHandler metadataHateoasHandler;
     private final Map<String, IMetadataRepository> repositoryMap =
             new HashMap<>();
@@ -76,29 +77,7 @@ public class MetadataService
         buildMapping(webAppContext);
     }
 
-    /**
-     * Update the Metadata object belonging to the entity type that is derived
-     * from the request associated with the current thread.
-     * If the URL contains e.g. ../metadata/tilgangsrestriksjon/B/ then
-     * the Metadata corresponding to 'B' is retrieved. The object is
-     * automatically saved by hibernate if there is a change in state when the
-     * transaction is over.
-     *
-     * @param incomingMetadata incoming metadata object
-     * @return the updated metadata object
-     */
-    @Override
-    @Transactional
-    public ResponseEntity<MetadataHateoas> updateMetadataEntity(
-            @NotNull final String code,
-            @NotNull final Metadata incomingMetadata) {
-        IMetadataEntity existingMetadata =
-                findMetadataByCodeOrThrow(getEntityTypeFromRequest(), code);
-        existingMetadata.setCode(incomingMetadata.getCode());
-        existingMetadata.setCodeName(incomingMetadata.getCodeName());
-        existingMetadata.setInactive(incomingMetadata.getInactive());
-        return packSingleResult(existingMetadata, OK);
-    }
+    // All CREATE methods
 
     /**
      * Create an incoming Metadata object belonging to the entity type that is
@@ -147,48 +126,33 @@ public class MetadataService
                 metadataRepository.save(metadata), CREATED);
     }
 
-    /**
-     * The API spec says that it should be possible to generate a template of
-     * an object. It does not make sense to generate a template with default
-     * values for a metadata entity so we simply return {}. The code is left
-     * here as there may come a requirement in the future that says that the
-     * endpoint returns eg. {'kode': null}
-     *
-     * @return an empty JSON object
-     */
-    @Override
-    public ResponseEntity<String> generateTemplateMetadata() {
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .body("{}");
-    }
+    // All UPDATE methods
 
     /**
-     * Delete a given metadata entity identified by code. The entity type
-     * that is derived from the request associated with the current thread is
-     * used to get the correct repository. Throw 404 if it is not possible to
-     * find the metadata entity associated with the code.
+     * Update the Metadata object belonging to the entity type that is derived
+     * from the request associated with the current thread.
+     * If the URL contains e.g. ../metadata/tilgangsrestriksjon/B/ then
+     * the Metadata corresponding to 'B' is retrieved. The object is
+     * automatically saved by hibernate if there is a change in state when the
+     * transaction is over.
      *
-     * @param code The code of the metadata object to delete
-     * @return nothing, but set the status to 204 No Content
+     * @param incomingMetadata incoming metadata object
+     * @return the updated metadata object
      */
     @Override
     @Transactional
-    public ResponseEntity<String> deleteMetadataEntity(
-            @NotNull final String code) {
-        String entityType = getEntityTypeFromRequest();
-        IMetadataRepository metadataRepository =
-                getMetadataRepositoryByEntityTypeOrThrow(entityType);
-        Metadata metadata = (Metadata) metadataRepository.findByCode(code);
-        if (metadata != null) {
-            metadataRepository.delete(metadata);
-            return ResponseEntity.status(NO_CONTENT)
-                    .body(DELETE_RESPONSE);
-        }
-        String errorMessage = METADATA_ENTITY_MISSING + entityType;
-        logger.error(errorMessage);
-        throw new NoarkEntityNotFoundException(errorMessage);
+    public ResponseEntity<MetadataHateoas> updateMetadataEntity(
+            @NotNull final String code,
+            @NotNull final Metadata incomingMetadata) {
+        IMetadataEntity existingMetadata =
+                findMetadataByCodeOrThrow(getEntityTypeFromRequest(), code);
+        existingMetadata.setCode(incomingMetadata.getCode());
+        existingMetadata.setCodeName(incomingMetadata.getCodeName());
+        existingMetadata.setInactive(incomingMetadata.getInactive());
+        return packSingleResult(existingMetadata, OK);
     }
+
+    // All READ methods
 
     /**
      * Check that the (code, codename) pair are correct. Given a particular
@@ -315,6 +279,55 @@ public class MetadataService
         logger.error(errorMessage);
         throw new NoarkEntityNotFoundException(errorMessage);
     }
+
+    // All DELETE methods
+
+    /**
+     * Delete a given metadata entity identified by code. The entity type
+     * that is derived from the request associated with the current thread is
+     * used to get the correct repository. Throw 404 if it is not possible to
+     * find the metadata entity associated with the code.
+     *
+     * @param code The code of the metadata object to delete
+     * @return nothing, but set the status to 204 No Content
+     */
+    @Override
+    @Transactional
+    public ResponseEntity<String> deleteMetadataEntity(
+            @NotNull final String code) {
+        String entityType = getEntityTypeFromRequest();
+        IMetadataRepository metadataRepository =
+                getMetadataRepositoryByEntityTypeOrThrow(entityType);
+        Metadata metadata = (Metadata) metadataRepository.findByCode(code);
+        if (metadata != null) {
+            metadataRepository.delete(metadata);
+            return ResponseEntity.status(NO_CONTENT)
+                    .body(DELETE_RESPONSE);
+        }
+        String errorMessage = METADATA_ENTITY_MISSING + entityType;
+        logger.error(errorMessage);
+        throw new NoarkEntityNotFoundException(errorMessage);
+    }
+
+    // All template methods
+
+    /**
+     * The API spec says that it should be possible to generate a template of
+     * an object. It does not make sense to generate a template with default
+     * values for a metadata entity so we simply return {}. The code is left
+     * here as there may come a requirement in the future that says that the
+     * endpoint returns eg. {'kode': null}
+     *
+     * @return an empty JSON object
+     */
+    @Override
+    public ResponseEntity<String> generateTemplateMetadata() {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .body("{}");
+    }
+
+    // All helper methods
 
     /**
      * Internal helper method to pack any metadata object as a MetadataHateoas
