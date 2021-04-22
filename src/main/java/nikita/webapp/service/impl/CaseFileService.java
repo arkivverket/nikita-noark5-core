@@ -320,6 +320,7 @@ public class CaseFileService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public ResponseEntity<CaseFileHateoas> findAllCaseFileBySeries(Series series) {
         CaseFileHateoas caseFileHateoas = new CaseFileHateoas(
                 (List<INoarkEntity>)
@@ -561,7 +562,6 @@ public class CaseFileService
      * @param incomingCaseFile the incoming caseFile
      * @param existingCaseFile the existing caseFile
      */
-    @Transactional
     private void updateValues(@NotNull final CaseFile incomingCaseFile,
                               @NotNull final CaseFile existingCaseFile) {
         existingCaseFile.setRecordsManagementUnit(
@@ -629,13 +629,11 @@ public class CaseFileService
      */
     private boolean isOpen(@NotNull CaseFile caseFile) {
         CaseStatus caseStatus = caseFile.getCaseStatus();
-        if (null != caseStatus &&
-                caseStatus.getCode().equals(CASE_FILE_CLOSED_CODE_VALUE)) {
-            return false;
-        }
-        return true;
+        return null == caseStatus ||
+                !caseStatus.getCode().equals(CASE_FILE_CLOSED_CODE_VALUE);
     }
 
+    @SuppressWarnings("unchecked")
     private CaseStatus getCaseStatus(PatchMerge patchMerge) {
         Map<String, Object> caseStatus = (Map<String, Object>)
                 patchMerge.getValue(CASE_STATUS);
