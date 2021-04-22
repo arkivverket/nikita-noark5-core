@@ -195,10 +195,10 @@ public class PrecedenceService
         Precedence precedence = precedenceRepository.
                 findBySystemId(UUID.fromString(precedenceSystemId));
         if (precedence == null) {
-            String info = INFO_CANNOT_FIND_OBJECT +
+            String error = INFO_CANNOT_FIND_OBJECT +
                     " Precedence, using systemId " + precedenceSystemId;
-            logger.info(info);
-            throw new NoarkEntityNotFoundException(info);
+            logger.error(error);
+            throw new NoarkEntityNotFoundException(error);
         }
         return precedence;
     }
@@ -207,7 +207,8 @@ public class PrecedenceService
         if (null != incomingPrecedence.getPrecedenceStatus()) {
             PrecedenceStatus PrecedenceStatus =
                     (PrecedenceStatus) metadataService
-                            .findValidMetadata(incomingPrecedence.getPrecedenceStatus());
+                            .findValidMetadata(incomingPrecedence
+                                    .getPrecedenceStatus());
             incomingPrecedence.setPrecedenceStatus(PrecedenceStatus);
         }
     }
