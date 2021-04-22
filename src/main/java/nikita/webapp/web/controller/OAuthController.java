@@ -42,7 +42,6 @@ public class OAuthController {
             String tokenValue = authHeader.replace("Bearer", "").trim();
             OAuth2AccessToken accessToken = tokenStore.readAccessToken(tokenValue);
             tokenStore.removeAccessToken(accessToken);
-            logger.info("Removed the following token " + tokenValue);
             return status(OK).
                     body("{\"status\" : \"Success\"}");
         }
