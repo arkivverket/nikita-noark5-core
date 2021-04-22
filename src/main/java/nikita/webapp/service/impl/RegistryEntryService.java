@@ -65,8 +65,6 @@ import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentM
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
-@Transactional
-@SuppressWarnings("unchecked")
 public class RegistryEntryService
         extends NoarkService
         implements IRegistryEntryService {
@@ -112,7 +110,7 @@ public class RegistryEntryService
         this.registryEntryRepository = registryEntryRepository;
         this.registryEntryHateoasHandler = registryEntryHateoasHandler;
         this.documentFlowHateoasHandler = documentFlowHateoasHandler;
-        this.precedenceHateoasHandler =  precedenceHateoasHandler;
+        this.precedenceHateoasHandler = precedenceHateoasHandler;
         this.signOffHateoasHandler = signOffHateoasHandler;
         this.numberGeneratorService = numberGeneratorService;
         this.userRepository = userRepository;
@@ -120,13 +118,18 @@ public class RegistryEntryService
         this.administrativeUnitService = administrativeUnitService;
     }
 
+    // All CREATE operations
+
     @Override
+    @Transactional
     public RegistryEntry save(@NotNull RegistryEntry registryEntry) {
         processRegistryEntryBeforeSave(registryEntry);
         registryEntryRepository.save(registryEntry);
         return registryEntry;
     }
 
+    @Override
+    @Transactional
     public RegistryEntryHateoas expandRecordAsRegistryEntryFileHateoas(
             Record record) {
         RegistryEntry registryEntry = new RegistryEntry(record);
@@ -176,6 +179,8 @@ public class RegistryEntryService
                 new AfterNoarkEntityCreatedEvent(this, registryEntry));
         return packAsHateoas(registryEntry);
     }
+
+    // All template operations
 
     @Override
     public PrecedenceHateoas generateDefaultPrecedence(String systemID) {
@@ -227,6 +232,7 @@ public class RegistryEntryService
     }
 
     @Override
+    @Transactional
     public SignOffHateoas
     createSignOffAssociatedWithRegistryEntry(String systemId,
                                              SignOff signOff) {
@@ -256,6 +262,7 @@ public class RegistryEntryService
         return signOffHateoas;
     }
 
+    @Transactional
     private void updateSignOffReferences(SignOff signOff) {
         RegistryEntry referenceRegistryEntry = null;
         CorrespondencePart referenceCorrespondencePart = null;
@@ -265,8 +272,8 @@ public class RegistryEntryService
 
         if (null == registryEntryID && null != partID) {
             String info = INFO_CANNOT_FIND_OBJECT +
-                " CorrespondencePart " + partID.toString() +
-                " without providing RegistryEntry.";
+                    " CorrespondencePart " + partID.toString() +
+                    " without providing RegistryEntry.";
             logger.info(info);
             throw new NikitaMalformedInputDataException(info);
         }
@@ -282,12 +289,12 @@ public class RegistryEntryService
             // Will throw if correspondence part is unknown
             // TODO avoid UUID->String->UUID conversion
             referenceCorrespondencePart =
-                correspondencePartService.findBySystemId(partID.toString());
+                    correspondencePartService.findBySystemId(partID.toString());
         }
 
         if (null != referenceCorrespondencePart) {
             if (!referenceCorrespondencePart.getReferenceRecord()
-                .equals(referenceRegistryEntry)) {
+                    .equals(referenceRegistryEntry)) {
                 String info = INFO_CANNOT_FIND_OBJECT +
                         " CorrespondencePart " + partID.toString() +
                         " below RegistryEntry " +
@@ -296,7 +303,7 @@ public class RegistryEntryService
                 throw new NoarkEntityNotFoundException(info);
             }
             signOff.setReferenceSignedOffCorrespondencePart
-                (referenceCorrespondencePart);
+                    (referenceCorrespondencePart);
         } else {
             signOff.setReferenceSignedOffCorrespondencePart(null);
         }
@@ -396,6 +403,7 @@ public class RegistryEntryService
     }
 
     @Override
+    @Transactional
     public PrecedenceHateoas createPrecedenceAssociatedWithRecord(
             String registryEntrySystemID, Precedence precedence) {
         RegistryEntry registryEntry = getRegistryEntryOrThrow(
@@ -437,6 +445,7 @@ public class RegistryEntryService
      * @return the updated registryEntry after being persisted to the database
      */
     @Override
+    @Transactional
     public RegistryEntry handleUpdate(
             @NotNull final String systemId, @NotNull final Long version,
             @NotNull final RegistryEntry incomingRegistryEntry) {
@@ -486,6 +495,7 @@ public class RegistryEntryService
     }
 
     @Override
+    @Transactional
     public SignOffHateoas
     handleUpdateSignOff(@NotNull final String systemID,
                         @NotNull final String signOffSystemID,
@@ -534,6 +544,7 @@ public class RegistryEntryService
      *                              you wish to delete
      */
     @Override
+    @Transactional
     public void deleteEntity(@NotNull String registryEntrySystemId) {
         RegistryEntry registryEntry = getRegistryEntryOrThrow(
                 registryEntrySystemId);
@@ -548,11 +559,13 @@ public class RegistryEntryService
      * @return the number of objects deleted
      */
     @Override
+    @Transactional
     public long deleteAllByOwnedBy() {
         return registryEntryRepository.deleteByOwnedBy(getUser());
     }
 
     @Override
+    @Transactional
     public void deleteSignOff(@NotNull String systemID,
                               @NotNull String signOffSystemID) {
         RegistryEntry registryEntry = getRegistryEntryOrThrow(systemID);
