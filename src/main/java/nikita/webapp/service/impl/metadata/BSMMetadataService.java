@@ -40,7 +40,6 @@ import static org.springframework.http.HttpStatus.OK;
  * FileService to see how to add BSM metadata to a file.
  */
 @Service
-@Transactional
 public class BSMMetadataService
         extends NoarkService
         implements IBSMMetadataService {
@@ -75,6 +74,7 @@ public class BSMMetadataService
     }
 
     @Override
+    @Transactional
     public ResponseEntity<BSMMetadataHateoas> save(
             @NotNull BSMMetadata bsmMetadata) {
         BSMMetadataHateoas bsmMetadataHateoas =
@@ -89,6 +89,7 @@ public class BSMMetadataService
     }
 
     @Override
+    @Transactional
     public ResponseEntity<BSMMetadataHateoas> handleUpdate(
             @NotNull UUID systemID, @NotNull PatchObjects patchObjects) {
         BSMMetadata bsmMetadata =
@@ -105,6 +106,7 @@ public class BSMMetadataService
     }
 
     @Override
+    @Transactional
     public Object handleUpdateRfc7396(
             @NotNull UUID systemID, @NotNull PatchMerge patchMerge) {
         BSMMetadata bsmMetadata = getBSMMetadataOrThrow(systemID);
@@ -121,6 +123,7 @@ public class BSMMetadataService
     }
 
     @Override
+    @Transactional
     public void deleteEntity(@NotNull UUID systemId) {
         deleteEntity(getBSMMetadataOrThrow(systemId));
     }
