@@ -97,7 +97,6 @@ public class UserService
     }
 
     @Override
-    @Transactional(readOnly = true)
     public UserHateoas findBySystemID(String systemID) {
         User user = getUserOrThrow(systemID);
         UserHateoas userHateoas = new UserHateoas(user);
@@ -155,7 +154,6 @@ public class UserService
      * @return true if the username is registered, false otherwise
      */
     @Override
-    @Transactional(readOnly = true)
     public boolean userExists(String username) {
         return userRepository.findByUsername(username).isPresent();
     }
@@ -168,7 +166,6 @@ public class UserService
      * @return User if the username is registered, null otherwise
      */
     @Override
-    @Transactional(readOnly = true)
     public User userGetByUsername(String username) {
 	Optional<User> userOptional = userRepository.findByUsername(username);
 	if (userOptional.isPresent()) {
@@ -185,7 +182,6 @@ public class UserService
      * @return User if the UUID is registered, null otherwise
      */
     @Override
-    @Transactional(readOnly = true)
     public User userGetBySystemId(UUID systemId) {
 	Optional<User> userOptional = userRepository.findBySystemId(systemId);
 	if (userOptional.isPresent()) {
@@ -202,7 +198,6 @@ public class UserService
      * @return true if the authority exists, false otherwise
      */
     @Override
-    @Transactional(readOnly = true)
     public boolean authorityExists(AuthorityName authority) {
         return authorityRepository.findByAuthorityName(authority) != null;
     }
@@ -226,6 +221,7 @@ public class UserService
      * @return the number of objects deleted
      */
     @Override
+    @Transactional
     public long deleteAll() {
         return userRepository.deleteByUsername(getUser());
     }
@@ -242,7 +238,6 @@ public class UserService
     }
 
     @Override
-    @Transactional
     public User validateUserReference
         (String type, User user, String username, UUID systemID) {
         if (null == user && null != systemID) {
