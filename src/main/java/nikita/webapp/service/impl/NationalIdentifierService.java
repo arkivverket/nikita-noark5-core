@@ -56,10 +56,7 @@ public class NationalIdentifierService
         this.positionHateoasHandler = positionHateoasHandler;
     }
 
-    @Override
-    public NationalIdentifier findBySystemId(@NotNull String systemId) {
-        return getNationalIdentifierOrThrow(systemId);
-    }
+    // All CREATE methods
 
     @Override
     @Transactional
@@ -238,9 +235,18 @@ public class NationalIdentifierService
         nationalIdentifierRepository.save(unit);
         UnitHateoas unitHateoas = new UnitHateoas(unit);
         nationalIdentifierHateoasHandler
-            .addLinks(unitHateoas, new Authorisation());
+                .addLinks(unitHateoas, new Authorisation());
         return unitHateoas;
     }
+
+    // All READ methods
+
+    @Override
+    public NationalIdentifier findBySystemId(@NotNull String systemId) {
+        return getNationalIdentifierOrThrow(systemId);
+    }
+
+    // All UPDATE methods
 
     @Override
     @Transactional
@@ -248,7 +254,7 @@ public class NationalIdentifierService
             @NotNull String systemId, @NotNull Long version,
             @NotNull Building incomingBuilding) {
         Building existingBuilding =
-            (Building) getNationalIdentifierOrThrow(systemId);
+                (Building) getNationalIdentifierOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
         // First the values
@@ -408,6 +414,8 @@ public class NationalIdentifierService
         return existingUnit;
     }
 
+    // All DELETE methods
+
     @Override
     @Transactional
     public void deleteBuilding(@NotNull String systemId) {
@@ -450,28 +458,7 @@ public class NationalIdentifierService
         deleteEntity(getNationalIdentifierOrThrow(systemId));
     }
 
-    /**
-     * Internal helper method. Rather than having a find and try catch
-     * in multiple methods, we have it here once. If you call this, be
-     * aware that you will only ever get a valid NationalIdentifier
-     * back. If there is no valid NationalIdentifier, an exception is
-     * thrown.
-     *
-     * @param systemId systemId of identifier to retrieve
-     * @return the retrieved NationalIdentifier
-     */
-    private NationalIdentifier getNationalIdentifierOrThrow(
-            @NotNull String systemId) {
-        NationalIdentifier id = nationalIdentifierRepository.findBySystemId(
-                UUID.fromString(systemId));
-        if (id == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " NationalIdentifier, " +
-                    "using systemId " + systemId;
-            logger.info(info);
-            throw new NoarkEntityNotFoundException(info);
-        }
-        return id;
-    }
+    // All template methods
 
     /**
      * Generate a Default Building object.
@@ -579,5 +566,30 @@ public class NationalIdentifierService
         nationalIdentifierHateoasHandler
                 .addLinksOnTemplate(unitHateoas, new Authorisation());
         return unitHateoas;
+    }
+
+    // All helper methods
+
+    /**
+     * Internal helper method. Rather than having a find and try catch
+     * in multiple methods, we have it here once. If you call this, be
+     * aware that you will only ever get a valid NationalIdentifier
+     * back. If there is no valid NationalIdentifier, an exception is
+     * thrown.
+     *
+     * @param systemId systemId of identifier to retrieve
+     * @return the retrieved NationalIdentifier
+     */
+    private NationalIdentifier getNationalIdentifierOrThrow(
+            @NotNull String systemId) {
+        NationalIdentifier id = nationalIdentifierRepository.findBySystemId(
+                UUID.fromString(systemId));
+        if (id == null) {
+            String error = INFO_CANNOT_FIND_OBJECT + " NationalIdentifier, " +
+                    "using systemId " + systemId;
+            logger.error(error);
+            throw new NoarkEntityNotFoundException(error);
+        }
+        return id;
     }
 }
