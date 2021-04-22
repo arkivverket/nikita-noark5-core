@@ -68,12 +68,6 @@ public class SignOffHateoasHandler
     @Override
     public void addRegistryEntry(ISignOffEntity entity,
                                  IHateoasNoarkObject hateoasNoarkObject) {
-
-        String val = getOutgoingAddress() + HREF_BASE_CASE_HANDLING +
-                SLASH + REGISTRY_ENTRY + "?" + urlEncode(DOLLAR_FILTER) + "=" +
-                SIGN_OFF + SLASH + SYSTEM_ID +
-                urlEncode(" eq '" + entity.getSystemId() + "'");
-
         hateoasNoarkObject.addLink(entity,
                 new Link(getOutgoingAddress() + HREF_BASE_CASE_HANDLING +
                         SLASH + REGISTRY_ENTRY + "?" + urlEncode(DOLLAR_FILTER)
