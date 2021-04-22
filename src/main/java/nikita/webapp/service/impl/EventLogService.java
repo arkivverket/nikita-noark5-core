@@ -25,7 +25,6 @@ import java.util.UUID;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 
 @Service
-@Transactional
 public class EventLogService
         extends NoarkService
         implements IEventLogService {
@@ -61,6 +60,7 @@ public class EventLogService
     }
 
     @Override
+    @Transactional
     public EventLogHateoas createNewEventLog(EventLog eventLog,
                                              SystemIdEntity entity) {
         if (null == eventLog.getChangedDate())
@@ -92,6 +92,7 @@ public class EventLogService
     }
 
     @Override
+    @Transactional
     public EventLogHateoas handleUpdate(@NotNull String eventLogSystemId,
                                        @NotNull Long version,
                                        @NotNull EventLog incomingEventLog) {
@@ -114,6 +115,7 @@ public class EventLogService
         return eventLogHateoas;
     }
 
+    @Transactional
     public void deleteEntity(String systemID) {
         deleteEntity(getEventLogOrThrow(systemID));
     }
