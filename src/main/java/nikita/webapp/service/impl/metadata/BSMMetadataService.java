@@ -60,18 +60,7 @@ public class BSMMetadataService
         this.metadataRepository = metadataRepository;
     }
 
-    @Override
-    public ResponseEntity<BSMMetadataHateoas> find(UUID systemID) {
-        BSMMetadata bsmMetadata = getBSMMetadataOrThrow(systemID);
-        BSMMetadataHateoas bsmMetadataHateoas = new BSMMetadataHateoas(bsmMetadata);
-        hateoasHandler.addLinks(bsmMetadataHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityUpdatedEvent(this, bsmMetadata));
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(bsmMetadataHateoas.getEntityVersion().toString())
-                .body(bsmMetadataHateoas);
-    }
+    // All CREATE methods
 
     @Override
     @Transactional
@@ -87,6 +76,36 @@ public class BSMMetadataService
                 .eTag(bsmMetadataHateoas.getEntityVersion().toString())
                 .body(bsmMetadataHateoas);
     }
+
+    // All READ methods
+
+    @Override
+    public ResponseEntity<BSMMetadataHateoas> find(UUID systemID) {
+        BSMMetadata bsmMetadata = getBSMMetadataOrThrow(systemID);
+        BSMMetadataHateoas bsmMetadataHateoas = new BSMMetadataHateoas(bsmMetadata);
+        hateoasHandler.addLinks(bsmMetadataHateoas, new Authorisation());
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityUpdatedEvent(this, bsmMetadata));
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .eTag(bsmMetadataHateoas.getEntityVersion().toString())
+                .body(bsmMetadataHateoas);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public ResponseEntity<BSMMetadataHateoas> findAll() {
+        BSMMetadataHateoas bsmMetadataHateoas =
+                new BSMMetadataHateoas(
+                        (List<INoarkEntity>) (List)
+                                metadataRepository.findAll(), BSM_DEF);
+        hateoasHandler.addLinks(bsmMetadataHateoas, new Authorisation());
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .eTag(bsmMetadataHateoas.getEntityVersion().toString())
+                .body(bsmMetadataHateoas);
+    }
+    // All UPDATE methods
 
     @Override
     @Transactional
@@ -122,25 +141,15 @@ public class BSMMetadataService
                 .body(bsmMetadataHateoas);
     }
 
+    // All DELETE methods
+
     @Override
     @Transactional
     public void deleteEntity(@NotNull UUID systemId) {
         deleteEntity(getBSMMetadataOrThrow(systemId));
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public ResponseEntity<BSMMetadataHateoas> findAll() {
-        BSMMetadataHateoas bsmMetadataHateoas =
-                new BSMMetadataHateoas(
-                        (List<INoarkEntity>) (List)
-                                metadataRepository.findAll(), BSM_DEF);
-        hateoasHandler.addLinks(bsmMetadataHateoas, new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(bsmMetadataHateoas.getEntityVersion().toString())
-                .body(bsmMetadataHateoas);
-    }
+    // All helper methods
 
     /**
      * Internal helper method. Rather than having a find and try catch in
