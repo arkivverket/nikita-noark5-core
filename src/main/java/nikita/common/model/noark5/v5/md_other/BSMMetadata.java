@@ -13,6 +13,7 @@ import nikita.webapp.util.annotation.Updatable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.util.Objects;
 
 import static nikita.common.config.Constants.REL_METADATA_BSM;
 import static nikita.common.config.Constants.TABLE_BSM_METDATA;
@@ -104,5 +105,35 @@ public class BSMMetadata
     @Override
     public String getBaseRel() {
         return REL_METADATA_BSM;
+    }
+
+    @Override
+    public String toString() {
+        return "BSMMetadata{" +
+                "name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                ", outdated=" + outdated +
+                ", description='" + description + '\'' +
+                ", source='" + source + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        BSMMetadata that = (BSMMetadata) o;
+        return Objects.equals(name, that.name) &&
+                Objects.equals(type, that.type) &&
+                Objects.equals(outdated, that.outdated) &&
+                Objects.equals(description, that.description) &&
+                Objects.equals(source, that.source);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), name, type, outdated,
+                description, source);
     }
 }
