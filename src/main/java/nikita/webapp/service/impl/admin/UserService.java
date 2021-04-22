@@ -64,6 +64,8 @@ public class UserService
         this.administrativeUnitService = administrativeUnitService;
     }
 
+    // All CREATE operations
+
     @Override
     @Transactional
     public UserHateoas createNewUser(final User user)
@@ -96,6 +98,8 @@ public class UserService
         return userHateoas;
     }
 
+    // All READ operations
+
     @Override
     public UserHateoas findBySystemID(String systemID) {
         User user = getUserOrThrow(systemID);
@@ -114,6 +118,56 @@ public class UserService
                         (List) userRepository.findAll());
         userHateoasHandler.addLinks(userHateoas, new Authorisation());
         return userHateoas;
+    }
+
+    /**
+     * Check to see is a user with a given email address already exists
+     * in the system.
+     *
+     * @param username The username/emailaddress to check
+     * @return true if the username is registered, false otherwise
+     */
+    @Override
+    public boolean userExists(String username) {
+        return userRepository.findByUsername(username).isPresent();
+    }
+
+    /**
+     * Look up username and return the equivalent User instance if it
+     * exist, or null if not.
+     *
+     * @param username The username/emailaddress to check
+     * @return User if the username is registered, null otherwise
+     */
+    @Override
+    public User userGetByUsername(String username) {
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        return userOptional.isEmpty() ? null : userOptional.get();
+    }
+
+    /**
+     * Look up systemID/UUID and return the equivalent User instance
+     * if it exist, or null if not.
+     *
+     * @param systemId UUID for the username to check
+     * @return User if the UUID is registered, null otherwise
+     */
+    @Override
+    public User userGetBySystemId(UUID systemId) {
+        Optional<User> userOptional = userRepository.findBySystemId(systemId);
+        return userOptional.orElse(null);
+    }
+
+    /**
+     * Check to see is a particular authority already exists
+     * in the system.
+     *
+     * @param authority The authority to check
+     * @return true if the authority exists, false otherwise
+     */
+    @Override
+    public boolean authorityExists(AuthorityName authority) {
+        return authorityRepository.findByAuthorityName(authority) != null;
     }
 
     @Override
@@ -142,58 +196,6 @@ public class UserService
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityUpdatedEvent(this, existingUser));
         return userHateoas;
-    }
-
-    // Helper methods
-
-    /**
-     * Check to see is a user with a given email address already exists
-     * in the system.
-     *
-     * @param username The username/emailaddress to check
-     * @return true if the username is registered, false otherwise
-     */
-    @Override
-    public boolean userExists(String username) {
-        return userRepository.findByUsername(username).isPresent();
-    }
-
-    /**
-     * Look up username and return the equivalent User instance if it
-     * exist, or null if not.
-     *
-     * @param username The username/emailaddress to check
-     * @return User if the username is registered, null otherwise
-     */
-    @Override
-    public User userGetByUsername(String username) {
-	Optional<User> userOptional = userRepository.findByUsername(username);
-        return userOptional.isEmpty() ? null : userOptional.get();
-    }
-
-    /**
-     * Look up systemID/UUID and return the equivalent User instance
-     * if it exist, or null if not.
-     *
-     * @param systemId UUID for the username to check
-     * @return User if the UUID is registered, null otherwise
-     */
-    @Override
-    public User userGetBySystemId(UUID systemId) {
-	Optional<User> userOptional = userRepository.findBySystemId(systemId);
-        return userOptional.orElse(null);
-    }
-
-    /**
-     * Check to see is a particular authority already exists
-     * in the system.
-     *
-     * @param authority The authority to check
-     * @return true if the authority exists, false otherwise
-     */
-    @Override
-    public boolean authorityExists(AuthorityName authority) {
-        return authorityRepository.findByAuthorityName(authority) != null;
     }
 
     // All DELETE operations
@@ -231,9 +233,11 @@ public class UserService
         return userRepository.deleteByUsername(username);
     }
 
+    // All helper methods
+
     @Override
     public User validateUserReference
-        (String type, User user, String username, UUID systemID) {
+            (String type, User user, String username, UUID systemID) {
         if (null == user && null != systemID) {
             user = userGetBySystemId(systemID);
         }
