@@ -40,8 +40,6 @@ import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
-@Transactional
-@SuppressWarnings("unchecked")
 public class SeriesService
         extends NoarkService
         implements ISeriesService {
@@ -93,6 +91,7 @@ public class SeriesService
 
     // All CREATE operations
     @Override
+    @Transactional
     public CaseFile createCaseFileAssociatedWithSeries(String seriesSystemId,
                                                        CaseFile caseFile) {
         Series series = getSeriesOrThrow(seriesSystemId);
@@ -102,6 +101,7 @@ public class SeriesService
     }
 
     @Override
+    @Transactional
     public File createFileAssociatedWithSeries(String seriesSystemId,
                                                File file) {
         Series series = getSeriesOrThrow(seriesSystemId);
@@ -111,6 +111,7 @@ public class SeriesService
     }
 
     @Override
+    @Transactional
     public Series save(Series series) {
         validateDocumentMedium(metadataService, series);
         validateDeletion(series.getReferenceDeletion());
@@ -121,6 +122,7 @@ public class SeriesService
     }
 
     @Override
+    @Transactional
     public ClassificationSystemHateoas createClassificationSystem(
             String systemId, ClassificationSystem classificationSystem) {
         Series series = getSeriesOrThrow(systemId);
@@ -242,6 +244,7 @@ public class SeriesService
      * @return the updated series object after it is persisted
      */
     @Override
+    @Transactional
     public Series handleUpdate(@NotNull final String systemId,
                                @NotNull final Long version,
                                @NotNull final Series incomingSeries) {
@@ -269,6 +272,7 @@ public class SeriesService
     }
 
     @Override
+    @Transactional
     public void updateSeriesReferences(Series series) {
         if (null != series.getReferencePrecursorSystemID()) {
             Series referenceSeries = seriesRepository.
@@ -309,6 +313,7 @@ public class SeriesService
 
     // All DELETE operations
     @Override
+    @Transactional
     public void deleteEntity(@NotNull String seriesSystemId) {
         deleteEntity(getSeriesOrThrow(seriesSystemId));
     }
@@ -319,6 +324,7 @@ public class SeriesService
      * @return the number of objects deleted
      */
     @Override
+    @Transactional
     public long deleteAllByOwnedBy() {
         long count = seriesRepository.count();
         seriesRepository.deleteAll();
