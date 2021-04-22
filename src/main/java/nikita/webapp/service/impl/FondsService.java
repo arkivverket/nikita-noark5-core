@@ -53,13 +53,13 @@ public class FondsService
     private static final Logger logger =
             LoggerFactory.getLogger(FondsService.class);
 
-    private IFondsRepository fondsRepository;
-    private SeriesService seriesService;
-    private IMetadataService metadataService;
-    private IFondsCreatorService fondsCreatorService;
-    private IFondsHateoasHandler fondsHateoasHandler;
-    private ISeriesHateoasHandler seriesHateoasHandler;
-    private IFondsCreatorHateoasHandler fondsCreatorHateoasHandler;
+    private final IFondsRepository fondsRepository;
+    private final SeriesService seriesService;
+    private final IMetadataService metadataService;
+    private final IFondsCreatorService fondsCreatorService;
+    private final IFondsHateoasHandler fondsHateoasHandler;
+    private final ISeriesHateoasHandler seriesHateoasHandler;
+    private final IFondsCreatorHateoasHandler fondsCreatorHateoasHandler;
 
     public FondsService(EntityManager entityManager,
                         ApplicationEventPublisher applicationEventPublisher,
@@ -232,6 +232,7 @@ public class FondsService
      *
      */
     @Override
+    @SuppressWarnings("unchecked")
     public SeriesHateoas findSeriesAssociatedWithFonds(
             @NotNull String fondsSystemId) {
 
@@ -244,37 +245,6 @@ public class FondsService
                 new Authorisation());
         return seriesHateoas;
     }
-
-    /**
-     * Retrieve a list of StorageLocation objects associated with a given Fonds
-     * from the database. First we try to locate the Fonds object. If the
-     * Fonds object does not exist a NoarkEntityNotFoundException exception
-     * is thrown that the caller has to deal with.
-     *
-     * If any StorageLocation objects exist, they are wrapped in a
-     * StorageLocationHateoas object and returned to the caller.
-     *
-     * @param fondsSystemId The systemId of the Fonds object that you want to
-     *                      retrieve associated StorageLocation objects
-     *
-     * @return the newly persisted fondsCreator object wrapped as a
-     * StorageLocationHateoas object
-     *
-     */
-    /*@Override
-    TODO: Finish implementing this.
-    public StorageLocationHateoas findStorageLocationAssociatedWithFonds(
-            @NotNull String fondsSystemId) {
-
-        Fonds fonds = getFondsOrThrow(fondsSystemId);
-
-        StorageLocationHateoas stroageLocationHateoas = new
-                StorageLocationHateoas((List<INoarkEntity>)
-                (List) fonds.getReferenceStorageLocation());
-        fondsCreatorHateoasHandler.addLinks(stroageLocationHateoas,
-                new Authorisation());
-        return stroageLocationHateoas;
-    } */
 
     /**
      * Retrieve a single Fonds objects from the database.
@@ -298,6 +268,7 @@ public class FondsService
      * @return the list of Fonds object wrapped as a FondsHateoas object
      */
     @Override
+    @SuppressWarnings("unchecked")
     public FondsHateoas findAllFonds() {
         FondsHateoas fondsHateoas = new
                 FondsHateoas((List<INoarkEntity>)
