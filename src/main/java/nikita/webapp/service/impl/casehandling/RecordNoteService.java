@@ -306,15 +306,14 @@ public class RecordNoteService
      * @param systemId systemId of the recordNote to find.
      * @return the recordNote
      */
-    protected RecordNote getRecordNoteOrThrow(
-            @NotNull String systemId) {
+    protected RecordNote getRecordNoteOrThrow(@NotNull String systemId) {
         RecordNote recordNote =
                 recordNoteRepository.findBySystemId(UUID.fromString(systemId));
         if (recordNote == null) {
-            String info = INFO_CANNOT_FIND_OBJECT +
+            String error = INFO_CANNOT_FIND_OBJECT +
                     " RecordNote, using systemId " + systemId;
-            logger.info(info);
-            throw new NoarkEntityNotFoundException(info);
+            logger.error(error);
+            throw new NoarkEntityNotFoundException(error);
         }
         return recordNote;
     }
