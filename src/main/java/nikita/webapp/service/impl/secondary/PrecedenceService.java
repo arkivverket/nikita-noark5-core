@@ -36,10 +36,11 @@ public class PrecedenceService
 
     private static final Logger logger =
             LoggerFactory.getLogger(PrecedenceService.class);
-    private IMetadataService metadataService;
-    private IPrecedenceRepository precedenceRepository;
-    private IPrecedenceHateoasHandler precedenceHateoasHandler;
-    private IUserService userService;
+
+    private final IMetadataService metadataService;
+    private final IPrecedenceRepository precedenceRepository;
+    private final IPrecedenceHateoasHandler precedenceHateoasHandler;
+    private final IUserService userService;
 
     public PrecedenceService
             (EntityManager entityManager,
@@ -92,6 +93,7 @@ public class PrecedenceService
     // All READ methods
 
     @Override
+    @SuppressWarnings("unchecked")
     public PrecedenceHateoas findAllByOwner() {
         PrecedenceHateoas precedenceHateoas =
                 new PrecedenceHateoas((List<INoarkEntity>) (List)
