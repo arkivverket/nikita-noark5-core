@@ -69,10 +69,115 @@ public class CorrespondencePartService
         this.bsmService = bsmService;
     }
 
+    // All CREATE methods
+
+    @Override
+    @Transactional
+    public CorrespondencePartPersonHateoas
+    createNewCorrespondencePartPerson(
+            CorrespondencePartPerson correspondencePart,
+            Record record) {
+
+        validateCorrespondencePartType(correspondencePart);
+        ContactInformation contactInformation
+                = correspondencePart.getContactInformation();
+        if (contactInformation != null) {
+            contactInformation.setCorrespondencePartPerson(correspondencePart);
+        }
+        PostalAddress postalAddress = correspondencePart.getPostalAddress();
+        if (null != postalAddress) {
+            postalAddress.getSimpleAddress().setAddressType(POSTAL_ADDRESS);
+            postalAddress.setReferenceCorrespondencePartPerson(
+                    correspondencePart);
+        }
+        ResidingAddress residingAddress =
+                correspondencePart.getResidingAddress();
+        if (null != residingAddress) {
+            residingAddress.getSimpleAddress().setAddressType(RESIDING_ADDRESS);
+            residingAddress.setCorrespondencePartPerson(correspondencePart);
+        }
+
+        record.addCorrespondencePart(correspondencePart);
+        CorrespondencePartPersonHateoas correspondencePartPersonHateoas =
+                new CorrespondencePartPersonHateoas(
+                        correspondencePartRepository.save(correspondencePart));
+        correspondencePartHateoasHandler.addLinks(
+                correspondencePartPersonHateoas,
+                new Authorisation());
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityCreatedEvent(this,
+                        correspondencePart));
+        return correspondencePartPersonHateoas;
+    }
+
+    /**
+     * The correspondencePart.setPostalAddress(postalAddress); should not be
+     * necessary as the deserialiser will already have done this. Check this
+     * to see if we really need to do this.
+     *
+     * @param correspondencePart Incoming correspondencePartUni
+     * @param record             existing record retrieved from database
+     * @return correspondencePart wraped as a correspondencePartUnitHateaos
+     */
+    @Override
+    @Transactional
+    public CorrespondencePartUnitHateoas createNewCorrespondencePartUnit(
+            CorrespondencePartUnit correspondencePart,
+            Record record) {
+        validateCorrespondencePartType(correspondencePart);
+        // Set NikitaEntity values for ContactInformation, PostalAddress,
+        // BusinessAddress
+        PostalAddress postalAddress = correspondencePart.getPostalAddress();
+        if (null != postalAddress) {
+            postalAddress.getSimpleAddress().setAddressType(POSTAL_ADDRESS);
+            correspondencePart.setPostalAddress(postalAddress);
+        }
+        BusinessAddress businessAddress =
+                correspondencePart.getBusinessAddress();
+        if (null != businessAddress) {
+            businessAddress.getSimpleAddress().setAddressType(BUSINESS_ADDRESS);
+            correspondencePart.setBusinessAddress(businessAddress);
+        }
+        record.addCorrespondencePart(correspondencePart);
+        correspondencePartRepository.save(correspondencePart);
+        CorrespondencePartUnitHateoas correspondencePartUnitHateoas =
+                new CorrespondencePartUnitHateoas(correspondencePart);
+        correspondencePartHateoasHandler.addLinks(correspondencePartUnitHateoas,
+                new Authorisation());
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityCreatedEvent(this,
+                        correspondencePart));
+        return correspondencePartUnitHateoas;
+    }
+
+    @Override
+    @Transactional
+    public CorrespondencePartInternalHateoas
+    createNewCorrespondencePartInternal(
+            CorrespondencePartInternal correspondencePart,
+            Record record) {
+        validateCorrespondencePartType(correspondencePart);
+        record.addCorrespondencePart(correspondencePart);
+        correspondencePartRepository.save(correspondencePart);
+        CorrespondencePartInternalHateoas correspondencePartInternalHateoas =
+                new CorrespondencePartInternalHateoas(correspondencePart);
+        correspondencePartHateoasHandler.addLinks(
+                correspondencePartInternalHateoas,
+                new Authorisation());
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityCreatedEvent(this,
+                        correspondencePart));
+        return correspondencePartInternalHateoas;
+    }
+
+    // All READ methods
+
     @Override
     public CorrespondencePart findBySystemId(@NotNull String systemId) {
         return getCorrespondencePartOrThrow(systemId);
     }
+
+    // All UPDATE methods
 
     /**
      * Update the CorrespondencePartPerson identified by systemId. Retrieve a
@@ -223,44 +328,7 @@ public class CorrespondencePartService
                 .body(correspondencePartHateoas);
     }
 
-    @Override
-    @Transactional
-    public CorrespondencePartPersonHateoas
-    createNewCorrespondencePartPerson(
-            CorrespondencePartPerson correspondencePart,
-            Record record) {
-
-        validateCorrespondencePartType(correspondencePart);
-        ContactInformation contactInformation
-                = correspondencePart.getContactInformation();
-        if (contactInformation != null) {
-            contactInformation.setCorrespondencePartPerson(correspondencePart);
-        }
-        PostalAddress postalAddress = correspondencePart.getPostalAddress();
-        if (null != postalAddress) {
-            postalAddress.getSimpleAddress().setAddressType(POSTAL_ADDRESS);
-            postalAddress.setReferenceCorrespondencePartPerson(
-                    correspondencePart);
-        }
-        ResidingAddress residingAddress =
-                correspondencePart.getResidingAddress();
-        if (null != residingAddress) {
-            residingAddress.getSimpleAddress().setAddressType(RESIDING_ADDRESS);
-            residingAddress.setCorrespondencePartPerson(correspondencePart);
-        }
-
-        record.addCorrespondencePart(correspondencePart);
-        CorrespondencePartPersonHateoas correspondencePartPersonHateoas =
-                new CorrespondencePartPersonHateoas(
-                        correspondencePartRepository.save(correspondencePart));
-        correspondencePartHateoasHandler.addLinks(
-                correspondencePartPersonHateoas,
-                new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityCreatedEvent(this,
-                        correspondencePart));
-        return correspondencePartPersonHateoas;
-    }
+    // All template methods
 
     private void createTemplateCorrespondencePartType(
             CorrespondencePart correspondencePart) {
@@ -271,65 +339,7 @@ public class CorrespondencePartService
 
     }
 
-    /**
-     * The correspondencePart.setPostalAddress(postalAddress); should not be
-     * necessary as the deserialiser will already have done this. Check this
-     * to see if we really need to do this.
-     *
-     * @param correspondencePart Incoming correspondencePartUni
-     * @param record             existing record retrieved from database
-     * @return correspondencePart wraped as a correspondencePartUnitHateaos
-     */
-    @Override
-    @Transactional
-    public CorrespondencePartUnitHateoas createNewCorrespondencePartUnit(
-            CorrespondencePartUnit correspondencePart,
-            Record record) {
-        validateCorrespondencePartType(correspondencePart);
-        // Set NikitaEntity values for ContactInformation, PostalAddress,
-        // BusinessAddress
-        PostalAddress postalAddress = correspondencePart.getPostalAddress();
-        if (null != postalAddress) {
-            postalAddress.getSimpleAddress().setAddressType(POSTAL_ADDRESS);
-            correspondencePart.setPostalAddress(postalAddress);
-        }
-        BusinessAddress businessAddress =
-                correspondencePart.getBusinessAddress();
-        if (null != businessAddress) {
-            businessAddress.getSimpleAddress().setAddressType(BUSINESS_ADDRESS);
-            correspondencePart.setBusinessAddress(businessAddress);
-        }
-        record.addCorrespondencePart(correspondencePart);
-        correspondencePartRepository.save(correspondencePart);
-        CorrespondencePartUnitHateoas correspondencePartUnitHateoas =
-                new CorrespondencePartUnitHateoas(correspondencePart);
-        correspondencePartHateoasHandler.addLinks(correspondencePartUnitHateoas,
-                new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityCreatedEvent(this,
-                        correspondencePart));
-        return correspondencePartUnitHateoas;
-    }
-
-    @Override
-    @Transactional
-    public CorrespondencePartInternalHateoas
-    createNewCorrespondencePartInternal(
-            CorrespondencePartInternal correspondencePart,
-            Record record) {
-        validateCorrespondencePartType(correspondencePart);
-        record.addCorrespondencePart(correspondencePart);
-        correspondencePartRepository.save(correspondencePart);
-        CorrespondencePartInternalHateoas correspondencePartInternalHateoas =
-                new CorrespondencePartInternalHateoas(correspondencePart);
-        correspondencePartHateoasHandler.addLinks(
-                correspondencePartInternalHateoas,
-                new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityCreatedEvent(this,
-                        correspondencePart));
-        return correspondencePartInternalHateoas;
-    }
+    // All UPDATE methods
 
     /**
      * Delete a CorrespondencePartUnit identified by the given systemId
