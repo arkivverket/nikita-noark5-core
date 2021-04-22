@@ -24,7 +24,6 @@ import java.util.UUID;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 
 @Service
-@Transactional
 public class ChangeLogService
         extends NoarkService
         implements IChangeLogService {
@@ -60,6 +59,7 @@ public class ChangeLogService
     }
 
     @Override
+    @Transactional
     public ChangeLogHateoas createNewChangeLog(ChangeLog changeLog) {
         if (null == changeLog.getChangedDate())
             changeLog.setChangedDate(OffsetDateTime.now());
@@ -90,6 +90,7 @@ public class ChangeLogService
     }
 
     @Override
+    @Transactional
     public ChangeLogHateoas handleUpdate(@NotNull String changeLogSystemId,
                                        @NotNull Long version,
                                        @NotNull ChangeLog incomingChangeLog) {
@@ -112,6 +113,7 @@ public class ChangeLogService
         return changeLogHateoas;
     }
 
+    @Transactional
     public void deleteEntity(String systemID) {
         deleteEntity(getChangeLogOrThrow(systemID));
     }
