@@ -168,10 +168,7 @@ public class UserService
     @Override
     public User userGetByUsername(String username) {
 	Optional<User> userOptional = userRepository.findByUsername(username);
-	if (userOptional.isPresent()) {
-	    return userOptional.get();
-	}
-	return null;
+        return userOptional.isEmpty() ? null : userOptional.get();
     }
 
     /**
@@ -184,10 +181,7 @@ public class UserService
     @Override
     public User userGetBySystemId(UUID systemId) {
 	Optional<User> userOptional = userRepository.findBySystemId(systemId);
-	if (userOptional.isPresent()) {
-	    return userOptional.get();
-	}
-	return null;
+        return userOptional.orElse(null);
     }
 
     /**
@@ -264,12 +258,11 @@ public class UserService
      */
     private User getUserOrThrow(@NotNull String systemId) {
         Optional<User> userOptional =
-	    userRepository.findBySystemId(UUID.fromString(systemId));
-        if (!userOptional.isPresent()) {
-            String info = systemId + " User, using systemId " +
-                    systemId;
-            logger.info(info);
-            throw new NoarkEntityNotFoundException(info);
+                userRepository.findBySystemId(UUID.fromString(systemId));
+        if (userOptional.isEmpty()) {
+            String error = systemId + " User, using systemId " + systemId;
+            logger.error(error);
+            throw new NoarkEntityNotFoundException(error);
         }
         return userOptional.get();
     }
