@@ -41,9 +41,14 @@ spring:
     database: mysql
     show-sql: false
     properties:
-      hibernate.hbm2ddl.auto: create
-      discriminator.ignore_explicit_for_joined: true
-      org.hibernate.envers.audit_table_prefix: aud_
+      hibernate:
+        connection:
+          provider_disables_autocommit: true
+        hbm2ddl:
+          auto: create
+          hbm2ddl.import_files_sql_extractor: org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor
+        discriminator.ignore_explicit_for_joined: true
+        org.hibernate.envers.audit_table_prefix: aud_
 
 # Used to avoid filling the log file up with INFO messages
 # about time used when performing reflection for OData queries
