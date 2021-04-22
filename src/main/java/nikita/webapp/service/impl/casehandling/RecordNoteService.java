@@ -66,6 +66,8 @@ public class RecordNoteService
         this.documentFlowHateoasHandler = documentFlowHateoasHandler;
     }
 
+    // All CREATE methods
+
     @Override
     @Transactional
     public ResponseEntity<RecordNoteHateoas> save(
@@ -81,6 +83,8 @@ public class RecordNoteService
                 .body(recordNoteHateoas);
     }
 
+    // All READ methods
+
     @Override
     public ResponseEntity<RecordNoteHateoas> findBySystemId(String systemId) {
         RecordNoteHateoas recordNoteHateoas = new
@@ -91,7 +95,6 @@ public class RecordNoteService
                 .eTag(recordNoteHateoas.getEntityVersion().toString())
                 .body(recordNoteHateoas);
     }
-
 
     @Override
     @SuppressWarnings("unchecked")
@@ -130,20 +133,20 @@ public class RecordNoteService
                 new DocumentFlowHateoas((List<INoarkEntity>)
                         (List) recordNote.getReferenceDocumentFlow());
         documentFlowHateoasHandler.addLinks(documentFlowHateoas,
-                                            new Authorisation());
+                new Authorisation());
         setOutgoingRequestHeader(documentFlowHateoas);
         return documentFlowHateoas;
     }
+
+    // All UPDATE operations
 
     @Override
     @Transactional
     public DocumentFlowHateoas associateDocumentFlowWithRecordNote(
             String systemId, DocumentFlow documentFlow) {
         return documentFlowService.associateDocumentFlowWithRecordNote
-            (documentFlow, getRecordNoteOrThrow(systemId));
+                (documentFlow, getRecordNoteOrThrow(systemId));
     }
-
-    // All UPDATE operations
 
     /**
      * Updates a Record object in the database. First we try to locate the
