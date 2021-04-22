@@ -41,11 +41,11 @@ public class UserService
     private static final Logger logger =
             LoggerFactory.getLogger(UserService.class);
 
-    private IUserRepository userRepository;
-    private AuthorityRepository authorityRepository;
-    private IUserHateoasHandler userHateoasHandler;
-    private PasswordEncoder encoder;
-    private AdministrativeUnitService administrativeUnitService;
+    private final IUserRepository userRepository;
+    private final AuthorityRepository authorityRepository;
+    private final IUserHateoasHandler userHateoasHandler;
+    private final PasswordEncoder encoder;
+    private final AdministrativeUnitService administrativeUnitService;
 
     public UserService(EntityManager entityManager,
                        ApplicationEventPublisher applicationEventPublisher,
