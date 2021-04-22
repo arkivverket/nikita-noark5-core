@@ -65,6 +65,8 @@ import static nikita.common.config.FileConstants.FILE_EXTENSION_PDF_CODE;
 import static nikita.common.config.FileConstants.MIME_TYPE_PDF;
 import static nikita.common.config.N5ResourceMappings.ARCHIVE_VERSION_CODE;
 import static nikita.common.config.N5ResourceMappings.PRODUCTION_VERSION_CODE;
+import static nikita.common.config.ServerConstants.DOCUMENT_STORE_LOCATION;
+import static nikita.common.config.ServerConstants.INCOMING_DOCUMENT_STORE_LOCATION;
 import static nikita.common.util.CommonUtils.FileUtils.mimeTypeIsConvertible;
 import static org.springframework.http.HttpHeaders.ACCEPT;
 
@@ -97,9 +99,9 @@ public class DocumentObjectService
     private final IDocumentObjectHateoasHandler documentObjectHateoasHandler;
 
     @Value("${nikita.startup.directory-store-name}")
-    private final String directoryStoreName = "/data/nikita/storage";
+    private final String directoryStoreName = DOCUMENT_STORE_LOCATION;
     @Value("${nikita.startup.incoming-directory}")
-    private final String incomingDirectoryName = "/data2/nikita/storage/incoming";
+    private final String incomingDirectoryName = INCOMING_DOCUMENT_STORE_LOCATION;
     @Value("${nikita.application.checksum-algorithm}")
     private final String defaultChecksumAlgorithm = "SHA-256";
 
