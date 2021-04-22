@@ -679,6 +679,7 @@ public final class CommonUtils {
                 JsonNode currentNode = objectNode.get(KEYWORD);
                 if (null != currentNode) {
                     if (currentNode.isArray()) {
+                        currentNode.iterator();
                         for (JsonNode node : currentNode) {
                             String keywordText = node.textValue();
                             Keyword keyword = new Keyword();
@@ -733,8 +734,6 @@ public final class CommonUtils {
                 JsonNode currentNode = objectNode.get(STORAGE_LOCATION);
 
                 if (null != currentNode) {
-                    ArrayList<StorageLocation> storageLocations =
-                            new ArrayList<>();
                     if (currentNode.isArray()) {
                         currentNode.iterator();
                         for (JsonNode node : currentNode) {
@@ -742,7 +741,6 @@ public final class CommonUtils {
                             StorageLocation storageLocation =
                                     new StorageLocation();
                             storageLocation.setStorageLocation(location);
-                            storageLocations.add(storageLocation);
                             storageLocationEntity.addStorageLocation(
                                     storageLocation);
                         }
