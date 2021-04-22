@@ -252,6 +252,7 @@ public class DocumentDescriptionService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public AuthorHateoas findAllAuthorWithDocumentDescriptionBySystemId(
             String systemId) {
         DocumentDescription documentDescription =
@@ -271,6 +272,7 @@ public class DocumentDescriptionService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public DocumentDescriptionHateoas findAll() {
         DocumentDescriptionHateoas documentDescriptionHateoas = new
                 DocumentDescriptionHateoas((List<INoarkEntity>)
@@ -281,6 +283,7 @@ public class DocumentDescriptionService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public DocumentObjectHateoas
     findAllDocumentObjectWithDocumentDescriptionBySystemId(
             @NotNull String systemId) {
