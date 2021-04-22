@@ -180,57 +180,6 @@ public class RegistryEntryService
         return packAsHateoas(registryEntry);
     }
 
-    // All template operations
-
-    @Override
-    public PrecedenceHateoas generateDefaultPrecedence(String systemID) {
-        return precedenceService.generateDefaultPrecedence();
-    }
-
-    @Override
-    public DocumentFlowHateoas generateDefaultDocumentFlow(String systemID) {
-        return documentFlowService.generateDefaultDocumentFlow();
-    }
-
-    @Override
-    public ResponseEntity<RegistryEntryHateoas> generateDefaultRegistryEntry(
-            @NotNull final String caseFileSystemId) {
-        RegistryEntry defaultRegistryEntry = new RegistryEntry();
-        OffsetDateTime now = OffsetDateTime.now();
-        defaultRegistryEntry.setRecordDate(now);
-        defaultRegistryEntry.setDocumentDate(now);
-        RegistryEntryStatus registryEntryStatus = (RegistryEntryStatus)
-            metadataService.findValidMetadataByEntityTypeOrThrow
-                (REGISTRY_ENTRY_STATUS, TEST_REGISTRY_ENTRY_STATUS_CODE, null);
-        defaultRegistryEntry.setRegistryEntryStatus(registryEntryStatus);
-        RegistryEntryType registryEntryType = (RegistryEntryType)
-            metadataService.findValidMetadataByEntityTypeOrThrow
-                (REGISTRY_ENTRY_TYPE, TEST_REGISTRY_ENTRY_TYPE_CODE, null);
-        defaultRegistryEntry.setRegistryEntryType(registryEntryType);
-        defaultRegistryEntry.setRecordYear(now.getYear());
-        RegistryEntryHateoas registryEntryHateoas = new
-                RegistryEntryHateoas(defaultRegistryEntry);
-        registryEntryHateoasHandler.addLinksOnTemplate(registryEntryHateoas,
-                new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .body(registryEntryHateoas);
-    }
-
-
-    @Override
-    public SignOffHateoas generateDefaultSignOff
-       (@NotNull final String registryEntrySystemId) {
-        SignOff defaultSignOff = new SignOff();
-        OffsetDateTime now = OffsetDateTime.now();
-        defaultSignOff.setSignOffDate(now);
-        defaultSignOff.setSignOffBy(getUser());
-        SignOffHateoas signOffHateoas = new SignOffHateoas(defaultSignOff);
-        signOffHateoasHandler
-            .addLinksOnTemplate(signOffHateoas, new Authorisation());
-        return signOffHateoas;
-    }
-
     @Override
     @Transactional
     public SignOffHateoas
@@ -262,65 +211,23 @@ public class RegistryEntryService
         return signOffHateoas;
     }
 
+    @Override
     @Transactional
-    private void updateSignOffReferences(SignOff signOff) {
-        RegistryEntry referenceRegistryEntry = null;
-        CorrespondencePart referenceCorrespondencePart = null;
+    public PrecedenceHateoas createPrecedenceAssociatedWithRecord(
+            String registryEntrySystemID, Precedence precedence) {
+        RegistryEntry registryEntry = getRegistryEntryOrThrow(
+                registryEntrySystemID);
+        registryEntry.addPrecedence(precedence);
+        return precedenceService.createNewPrecedence(precedence);
 
-        UUID registryEntryID = signOff.getReferenceSignedOffRecordSystemID();
-        UUID partID = signOff.getReferenceSignedOffCorrespondencePartSystemID();
-
-        if (null == registryEntryID && null != partID) {
-            String info = INFO_CANNOT_FIND_OBJECT +
-                    " CorrespondencePart " + partID.toString() +
-                    " without providing RegistryEntry.";
-            logger.info(info);
-            throw new NikitaMalformedInputDataException(info);
-        }
-
-        // look up IDs before changing anything, to avoid changing
-        // instance if one of the IDs are unknown.
-        if (null != registryEntryID) {
-            // Will throw if registry entry is unknown
-            // TODO avoid UUID->String->UUID conversion
-            referenceRegistryEntry = findBySystemId(registryEntryID.toString());
-        }
-        if (null != partID) {
-            // Will throw if correspondence part is unknown
-            // TODO avoid UUID->String->UUID conversion
-            referenceCorrespondencePart =
-                    correspondencePartService.findBySystemId(partID.toString());
-        }
-
-        if (null != referenceCorrespondencePart) {
-            if (!referenceCorrespondencePart.getReferenceRecord()
-                    .equals(referenceRegistryEntry)) {
-                String info = INFO_CANNOT_FIND_OBJECT +
-                        " CorrespondencePart " + partID.toString() +
-                        " below RegistryEntry " +
-                        referenceRegistryEntry.getSystemIdAsString() + ".";
-                logger.info(info);
-                throw new NoarkEntityNotFoundException(info);
-            }
-            signOff.setReferenceSignedOffCorrespondencePart
-                    (referenceCorrespondencePart);
-        } else {
-            signOff.setReferenceSignedOffCorrespondencePart(null);
-        }
-
-        if (null != registryEntryID && null != referenceRegistryEntry) {
-            signOff.setReferenceSignedOffRecord(referenceRegistryEntry);
-        } else {
-            signOff.setReferenceSignedOffRecord(null);
-        }
     }
 
     // All READ operations
+
     public List<RegistryEntry> findAllRegistryEntry() {
         return registryEntryRepository.findByOwnedBy(getUser());
     }
 
-    // systemId
     public RegistryEntry findBySystemId(String systemId) {
         return getRegistryEntryOrThrow(systemId);
     }
@@ -341,6 +248,7 @@ public class RegistryEntryService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public DocumentFlowHateoas findAllDocumentFlowWithRegistryEntryBySystemId
         (String systemID) {
         RegistryEntry registryEntry = getRegistryEntryOrThrow(systemID);
@@ -393,24 +301,6 @@ public class RegistryEntryService
         signOffHateoasHandler.addLinks(signOffHateoas, new Authorisation());
         setOutgoingRequestHeader(signOffHateoas);
         return signOffHateoas;
-    }
-
-    @Override
-    public DocumentFlowHateoas associateDocumentFlowWithRegistryEntry(
-            String systemId, DocumentFlow documentFlow) {
-        return documentFlowService.associateDocumentFlowWithRegistryEntry
-            (documentFlow, getRegistryEntryOrThrow(systemId));
-    }
-
-    @Override
-    @Transactional
-    public PrecedenceHateoas createPrecedenceAssociatedWithRecord(
-            String registryEntrySystemID, Precedence precedence) {
-        RegistryEntry registryEntry = getRegistryEntryOrThrow(
-                registryEntrySystemID);
-        registryEntry.addPrecedence(precedence);
-        return precedenceService.createNewPrecedence(precedence);
-
     }
 
     // All UPDATE operations
@@ -525,12 +415,20 @@ public class RegistryEntryService
             (incomingSignOff.getReferenceSignedOffCorrespondencePart());
 
         SignOffHateoas signOffHateoas =
-            new SignOffHateoas(signOffRepository
-                                  .save(existingSignOff));
+                new SignOffHateoas(signOffRepository
+                        .save(existingSignOff));
         signOffHateoasHandler.addLinks(signOffHateoas,
                 new Authorisation());
         setOutgoingRequestHeader(signOffHateoas);
         return signOffHateoas;
+    }
+
+    @Override
+    @Transactional
+    public DocumentFlowHateoas associateDocumentFlowWithRegistryEntry(
+            String systemId, DocumentFlow documentFlow) {
+        return documentFlowService.associateDocumentFlowWithRegistryEntry
+                (documentFlow, getRegistryEntryOrThrow(systemId));
     }
 
     // All DELETE operations
@@ -579,6 +477,56 @@ public class RegistryEntryService
             throw new NoarkEntityNotFoundException(info);
         }
         deleteEntity(signOff);
+    }
+
+    // All template operations
+
+    @Override
+    public PrecedenceHateoas generateDefaultPrecedence(String systemID) {
+        return precedenceService.generateDefaultPrecedence();
+    }
+
+    @Override
+    public DocumentFlowHateoas generateDefaultDocumentFlow(String systemID) {
+        return documentFlowService.generateDefaultDocumentFlow();
+    }
+
+    @Override
+    public ResponseEntity<RegistryEntryHateoas> generateDefaultRegistryEntry(
+            @NotNull final String caseFileSystemId) {
+        RegistryEntry defaultRegistryEntry = new RegistryEntry();
+        OffsetDateTime now = OffsetDateTime.now();
+        defaultRegistryEntry.setRecordDate(now);
+        defaultRegistryEntry.setDocumentDate(now);
+        RegistryEntryStatus registryEntryStatus = (RegistryEntryStatus)
+                metadataService.findValidMetadataByEntityTypeOrThrow
+                        (REGISTRY_ENTRY_STATUS, TEST_REGISTRY_ENTRY_STATUS_CODE, null);
+        defaultRegistryEntry.setRegistryEntryStatus(registryEntryStatus);
+        RegistryEntryType registryEntryType = (RegistryEntryType)
+                metadataService.findValidMetadataByEntityTypeOrThrow
+                        (REGISTRY_ENTRY_TYPE, TEST_REGISTRY_ENTRY_TYPE_CODE, null);
+        defaultRegistryEntry.setRegistryEntryType(registryEntryType);
+        defaultRegistryEntry.setRecordYear(now.getYear());
+        RegistryEntryHateoas registryEntryHateoas = new
+                RegistryEntryHateoas(defaultRegistryEntry);
+        registryEntryHateoasHandler.addLinksOnTemplate(registryEntryHateoas,
+                new Authorisation());
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .body(registryEntryHateoas);
+    }
+
+    @Override
+    public SignOffHateoas generateDefaultSignOff(
+            @NotNull final String registryEntrySystemId) {
+        SignOff defaultSignOff = new SignOff();
+        OffsetDateTime now = OffsetDateTime.now();
+        defaultSignOff.setSignOffDate(now);
+        defaultSignOff.setSignOffBy(getUser());
+        SignOffHateoas signOffHateoas = new SignOffHateoas(defaultSignOff);
+        signOffHateoasHandler
+                .addLinksOnTemplate(signOffHateoas, new Authorisation());
+        return signOffHateoas;
     }
 
     // All helper methods
@@ -674,6 +622,42 @@ public class RegistryEntryService
     }
 
     /**
+     * Internal helper method. Rather than having a find and try catch in
+     * multiple methods, we have it here once. If you call this, be aware
+     * that you will only ever get a valid RegistryEntry back. If there is no
+     * valid RegistryEntry, an exception is thrown
+     *
+     * @param registryEntrySystemId systemId of the registryEntry to find.
+     * @return the registryEntry
+     */
+    protected RegistryEntry getRegistryEntryOrThrow(
+            @NotNull String registryEntrySystemId) {
+        RegistryEntry registryEntry =
+                registryEntryRepository.
+                        findBySystemId(UUID.fromString(registryEntrySystemId));
+        if (registryEntry == null) {
+            String info = INFO_CANNOT_FIND_OBJECT +
+                    " RegistryEntry, using systemId " + registryEntrySystemId;
+            logger.info(info);
+            throw new NoarkEntityNotFoundException(info);
+        }
+        return registryEntry;
+    }
+
+    protected SignOff getSignOffOrThrow(@NotNull String signOffSystemId) {
+        SignOff signOff = signOffRepository
+            .findBySystemId(UUID.fromString(signOffSystemId));
+        if (signOff == null) {
+            String info = INFO_CANNOT_FIND_OBJECT +
+                    " SignOff, using systemId " +
+                    signOffSystemId;
+            logger.info(info);
+            throw new NoarkEntityNotFoundException(info);
+        }
+        return signOff;
+    }
+
+    /**
      * Internal helper method. Find the administrativeUnit identified for the
      * given user or throw a NoarkEntityNotFoundException. Note this method
      * will return a non-null administrativeUnit. An exception is thrown
@@ -715,41 +699,56 @@ public class RegistryEntryService
         }
     }
 
+    private void updateSignOffReferences(SignOff signOff) {
+        RegistryEntry referenceRegistryEntry = null;
+        CorrespondencePart referenceCorrespondencePart = null;
 
-    /**
-     * Internal helper method. Rather than having a find and try catch in
-     * multiple methods, we have it here once. If you call this, be aware
-     * that you will only ever get a valid RegistryEntry back. If there is no
-     * valid RegistryEntry, an exception is thrown
-     *
-     * @param registryEntrySystemId systemId of the registryEntry to find.
-     * @return the registryEntry
-     */
-    protected RegistryEntry getRegistryEntryOrThrow(
-            @NotNull String registryEntrySystemId) {
-        RegistryEntry registryEntry =
-                registryEntryRepository.
-                        findBySystemId(UUID.fromString(registryEntrySystemId));
-        if (registryEntry == null) {
-            String info = INFO_CANNOT_FIND_OBJECT +
-                    " RegistryEntry, using systemId " + registryEntrySystemId;
-            logger.info(info);
-            throw new NoarkEntityNotFoundException(info);
-        }
-        return registryEntry;
-    }
+        UUID registryEntryID = signOff.getReferenceSignedOffRecordSystemID();
+        UUID partID = signOff.getReferenceSignedOffCorrespondencePartSystemID();
 
-    protected SignOff getSignOffOrThrow(@NotNull String signOffSystemId) {
-        SignOff signOff = signOffRepository
-            .findBySystemId(UUID.fromString(signOffSystemId));
-        if (signOff == null) {
-            String info = INFO_CANNOT_FIND_OBJECT +
-                    " SignOff, using systemId " +
-                    signOffSystemId;
-            logger.info(info);
-            throw new NoarkEntityNotFoundException(info);
+        if (null == registryEntryID && null != partID) {
+            String error = INFO_CANNOT_FIND_OBJECT +
+                    " Part " + partID.toString() +
+                    " without providing RegistryEntry.";
+            logger.error(error);
+            throw new NikitaMalformedInputDataException(error);
         }
-        return signOff;
+
+        // look up IDs before changing anything, to avoid changing
+        // instance if one of the IDs are unknown.
+        if (null != registryEntryID) {
+            // Will throw if registry entry is unknown
+            // TODO avoid UUID->String->UUID conversion
+            referenceRegistryEntry = findBySystemId(registryEntryID.toString());
+        }
+        if (null != partID) {
+            // Will throw if correspondence part is unknown
+            // TODO avoid UUID->String->UUID conversion
+            referenceCorrespondencePart =
+                    correspondencePartService.findBySystemId(partID.toString());
+        }
+
+        if (null != referenceCorrespondencePart) {
+            if (!referenceCorrespondencePart.getReferenceRecord()
+                    .equals(referenceRegistryEntry)) {
+                String info = INFO_CANNOT_FIND_OBJECT +
+                        " CorrespondencePart " + partID.toString() +
+                        " below RegistryEntry " +
+                        referenceRegistryEntry.getSystemIdAsString() + ".";
+                logger.info(info);
+                throw new NoarkEntityNotFoundException(info);
+            }
+            signOff.setReferenceSignedOffCorrespondencePart
+                    (referenceCorrespondencePart);
+        } else {
+            signOff.setReferenceSignedOffCorrespondencePart(null);
+        }
+
+        if (null != registryEntryID && null != referenceRegistryEntry) {
+            signOff.setReferenceSignedOffRecord(referenceRegistryEntry);
+        } else {
+            signOff.setReferenceSignedOffRecord(null);
+        }
     }
 
     private void validateRegistryEntryStatus(RegistryEntry registryEntry) {
