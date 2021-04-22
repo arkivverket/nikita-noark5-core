@@ -32,8 +32,8 @@ public class EventLogService
     private static final Logger logger =
             LoggerFactory.getLogger(EventLogService.class);
 
-    private IEventLogRepository eventLogRepository;
-    private IEventLogHateoasHandler eventLogHateoasHandler;
+    private final IEventLogRepository eventLogRepository;
+    private final IEventLogHateoasHandler eventLogHateoasHandler;
 
     public EventLogService(
             EntityManager entityManager,
@@ -72,6 +72,7 @@ public class EventLogService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public EventLogHateoas findEventLogByOwner() {
         EventLogHateoas eventLogHateoas = new
                 EventLogHateoas((List<INoarkEntity>) (List)
