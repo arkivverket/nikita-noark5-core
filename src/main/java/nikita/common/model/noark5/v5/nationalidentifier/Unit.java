@@ -67,7 +67,7 @@ public class Unit
 
     @Override
     public String toString() {
-        return "Unit{" +
+        return "Unit{" + super.toString() + '\'' +
                 "organisationNumber='" + organisationNumber + '\'' +
                 '}';
     }
