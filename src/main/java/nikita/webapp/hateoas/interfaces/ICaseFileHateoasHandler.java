@@ -43,4 +43,7 @@ public interface ICaseFileHateoasHandler
 
     void addNewSubCaseFile(ISystemId entity,
                            IHateoasNoarkObject hateoasNoarkObject);
+
+    void addMetadataCaseStatus(ISystemId entity,
+                               IHateoasNoarkObject hateoasNoarkObject);
 }
