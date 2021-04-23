@@ -27,7 +27,6 @@ import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.N5ResourceMappings.COORDINATE_SYSTEM;
 
 @Service
-@Transactional
 public class NationalIdentifierService
         extends NoarkService
         implements INationalIdentifierService {
@@ -57,12 +56,10 @@ public class NationalIdentifierService
         this.positionHateoasHandler = positionHateoasHandler;
     }
 
-    @Override
-    public NationalIdentifier findBySystemId(@NotNull String systemId) {
-        return getNationalIdentifierOrThrow(systemId);
-    }
+    // All CREATE methods
 
     @Override
+    @Transactional
     public BuildingHateoas createNewBuilding
             (@NotNull Building building, @NotNull Record record) {
         record.addNationalIdentifier(building);
@@ -75,6 +72,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public BuildingHateoas createNewBuilding
             (@NotNull Building building, @NotNull File file) {
         file.addNationalIdentifier(building);
@@ -88,6 +86,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public CadastralUnitHateoas createNewCadastralUnit
             (@NotNull CadastralUnit cadastralUnit, @NotNull Record record) {
         record.addNationalIdentifier(cadastralUnit);
@@ -101,6 +100,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public CadastralUnitHateoas createNewCadastralUnit
             (@NotNull CadastralUnit cadastralUnit, @NotNull File file) {
         file.addNationalIdentifier(cadastralUnit);
@@ -114,6 +114,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public DNumberHateoas createNewDNumber
             (@NotNull DNumber dNumber, @NotNull Record record) {
         record.addNationalIdentifier(dNumber);
@@ -126,6 +127,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public DNumberHateoas createNewDNumber
             (@NotNull DNumber dNumber, @NotNull File file) {
         file.addNationalIdentifier(dNumber);
@@ -138,6 +140,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public PlanHateoas createNewPlan
             (@NotNull Plan plan, @NotNull Record record) {
         record.addNationalIdentifier(plan);
@@ -150,6 +153,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public PlanHateoas createNewPlan
             (@NotNull Plan plan, @NotNull File file) {
         file.addNationalIdentifier(plan);
@@ -162,6 +166,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public PositionHateoas createNewPosition
             (@NotNull Position position, @NotNull Record record) {
         record.addNationalIdentifier(position);
@@ -172,6 +177,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public PositionHateoas createNewPosition
             (@NotNull Position position, @NotNull File file) {
         file.addNationalIdentifier(position);
@@ -182,6 +188,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public SocialSecurityNumberHateoas createNewSocialSecurityNumber
             (@NotNull SocialSecurityNumber socialSecurityNumber, @NotNull Record record) {
         record.addNationalIdentifier(socialSecurityNumber);
@@ -195,6 +202,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public SocialSecurityNumberHateoas createNewSocialSecurityNumber
             (@NotNull SocialSecurityNumber socialSecurityNumber, @NotNull File file) {
         file.addNationalIdentifier(socialSecurityNumber);
@@ -208,6 +216,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public UnitHateoas createNewUnit
             (@NotNull Unit unit, @NotNull Record record) {
         record.addNationalIdentifier(unit);
@@ -219,22 +228,33 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public UnitHateoas createNewUnit
             (@NotNull Unit unit, @NotNull File file) {
         file.addNationalIdentifier(unit);
         nationalIdentifierRepository.save(unit);
         UnitHateoas unitHateoas = new UnitHateoas(unit);
         nationalIdentifierHateoasHandler
-            .addLinks(unitHateoas, new Authorisation());
+                .addLinks(unitHateoas, new Authorisation());
         return unitHateoas;
     }
 
+    // All READ methods
+
     @Override
+    public NationalIdentifier findBySystemId(@NotNull String systemId) {
+        return getNationalIdentifierOrThrow(systemId);
+    }
+
+    // All UPDATE methods
+
+    @Override
+    @Transactional
     public Building updateBuilding(
             @NotNull String systemId, @NotNull Long version,
             @NotNull Building incomingBuilding) {
         Building existingBuilding =
-            (Building) getNationalIdentifierOrThrow(systemId);
+                (Building) getNationalIdentifierOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
         // First the values
@@ -252,6 +272,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public CadastralUnit updateCadastralUnit(
             @NotNull String systemId, @NotNull Long version,
             @NotNull CadastralUnit incomingCadastralUnit) {
@@ -280,6 +301,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public DNumber updateDNumber(
             @NotNull String systemId, @NotNull Long version,
             @NotNull DNumber incomingDNumber) {
@@ -300,6 +322,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public Plan updatePlan(
             @NotNull String systemId, @NotNull Long version,
             @NotNull Plan incomingPlan) {
@@ -326,6 +349,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public Position updatePosition(
             @NotNull String systemId, @NotNull Long version,
             @NotNull Position incomingPosition) {
@@ -349,6 +373,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public SocialSecurityNumber updateSocialSecurityNumber(
             @NotNull String systemId, @NotNull Long version,
             @NotNull SocialSecurityNumber incomingSocialSecurityNumber) {
@@ -369,6 +394,7 @@ public class NationalIdentifierService
     }
 
     @Override
+    @Transactional
     public Unit updateUnit(
             @NotNull String systemId, @NotNull Long version,
             @NotNull Unit incomingUnit) {
@@ -388,63 +414,51 @@ public class NationalIdentifierService
         return existingUnit;
     }
 
+    // All DELETE methods
+
     @Override
+    @Transactional
     public void deleteBuilding(@NotNull String systemId) {
         deleteEntity(getNationalIdentifierOrThrow(systemId));
     }
 
     @Override
+    @Transactional
     public void deleteCadastralUnit(@NotNull String systemId) {
         deleteEntity(getNationalIdentifierOrThrow(systemId));
     }
 
     @Override
+    @Transactional
     public void deleteDNumber(@NotNull String systemId) {
         deleteEntity(getNationalIdentifierOrThrow(systemId));
     }
 
     @Override
+    @Transactional
     public void deletePlan(@NotNull String systemId) {
         deleteEntity(getNationalIdentifierOrThrow(systemId));
     }
 
     @Override
+    @Transactional
     public void deletePosition(@NotNull String systemId) {
         deleteEntity(getNationalIdentifierOrThrow(systemId));
     }
 
     @Override
+    @Transactional
     public void deleteSocialSecurityNumber(@NotNull String systemId) {
         deleteEntity(getNationalIdentifierOrThrow(systemId));
     }
 
     @Override
+    @Transactional
     public void deleteUnit(@NotNull String systemId) {
         deleteEntity(getNationalIdentifierOrThrow(systemId));
     }
 
-    /**
-     * Internal helper method. Rather than having a find and try catch
-     * in multiple methods, we have it here once. If you call this, be
-     * aware that you will only ever get a valid NationalIdentifier
-     * back. If there is no valid NationalIdentifier, an exception is
-     * thrown.
-     *
-     * @param systemId systemId of identifier to retrieve
-     * @return the retrieved NationalIdentifier
-     */
-    private NationalIdentifier getNationalIdentifierOrThrow(
-            @NotNull String systemId) {
-        NationalIdentifier id = nationalIdentifierRepository.findBySystemId(
-                UUID.fromString(systemId));
-        if (id == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " NationalIdentifier, " +
-                    "using systemId " + systemId;
-            logger.info(info);
-            throw new NoarkEntityNotFoundException(info);
-        }
-        return id;
-    }
+    // All template methods
 
     /**
      * Generate a Default Building object.
@@ -552,5 +566,30 @@ public class NationalIdentifierService
         nationalIdentifierHateoasHandler
                 .addLinksOnTemplate(unitHateoas, new Authorisation());
         return unitHateoas;
+    }
+
+    // All helper methods
+
+    /**
+     * Internal helper method. Rather than having a find and try catch
+     * in multiple methods, we have it here once. If you call this, be
+     * aware that you will only ever get a valid NationalIdentifier
+     * back. If there is no valid NationalIdentifier, an exception is
+     * thrown.
+     *
+     * @param systemId systemId of identifier to retrieve
+     * @return the retrieved NationalIdentifier
+     */
+    private NationalIdentifier getNationalIdentifierOrThrow(
+            @NotNull String systemId) {
+        NationalIdentifier id = nationalIdentifierRepository.findBySystemId(
+                UUID.fromString(systemId));
+        if (id == null) {
+            String error = INFO_CANNOT_FIND_OBJECT + " NationalIdentifier, " +
+                    "using systemId " + systemId;
+            logger.error(error);
+            throw new NoarkEntityNotFoundException(error);
+        }
+        return id;
     }
 }

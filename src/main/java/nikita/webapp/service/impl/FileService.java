@@ -58,7 +58,6 @@ import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentM
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
-@Transactional
 public class FileService
         extends NoarkService
         implements IFileService {
@@ -115,6 +114,10 @@ public class FileService
         this.partHateoasHandler = partHateoasHandler;
     }
 
+    // All CREATE operations
+
+    @Override
+    @Transactional
     public FileHateoas save(File file) {
         validateDocumentMedium(metadataService, file);
         setFinaliseEntityValues(file);
@@ -127,6 +130,7 @@ public class FileService
     }
 
     @Override
+    @Transactional
     public File createFile(File file) {
         validateDocumentMedium(metadataService, file);
         setFinaliseEntityValues(file);
@@ -146,6 +150,7 @@ public class FileService
      * @return the newly persisted file object wrapped as a fileHateaos object
      */
     @Override
+    @Transactional
     public FileHateoas createFileAssociatedWithFile(
             String systemId, File file) {
         file.setReferenceParentFile(getFileOrThrow(systemId));
@@ -153,6 +158,7 @@ public class FileService
     }
 
     @Override
+    @Transactional
     public CommentHateoas createCommentAssociatedWithFile
             (String systemID, Comment comment) {
         return commentService.createNewComment(comment,
@@ -160,6 +166,7 @@ public class FileService
     }
 
     @Override
+    @Transactional
     public ResponseEntity<RecordHateoas> createRecordAssociatedWithFile(
             String fileSystemId, Record record) {
         record.setReferenceFile(getFileOrThrow(fileSystemId));
@@ -167,6 +174,7 @@ public class FileService
     }
 
     @Override
+    @Transactional
     public PartPersonHateoas
     createPartPersonAssociatedWithFile(
             @NotNull String systemID, @NotNull PartPerson partPerson) {
@@ -175,6 +183,7 @@ public class FileService
     }
 
     @Override
+    @Transactional
     public PartUnitHateoas
     createPartUnitAssociatedWithFile(
             @NotNull String systemID, @NotNull PartUnit partUnit) {
@@ -183,6 +192,7 @@ public class FileService
     }
 
     @Override
+    @Transactional
     public BuildingHateoas
     createBuildingAssociatedWithFile(
             @NotNull String systemID, @NotNull Building building) {
@@ -191,6 +201,7 @@ public class FileService
     }
 
     @Override
+    @Transactional
     public CadastralUnitHateoas
     createCadastralUnitAssociatedWithFile(
             @NotNull String systemID, @NotNull CadastralUnit cadastralUnit) {
@@ -199,6 +210,7 @@ public class FileService
     }
 
     @Override
+    @Transactional
     public DNumberHateoas
     createDNumberAssociatedWithFile(
             @NotNull String systemID, @NotNull DNumber dNumber) {
@@ -207,6 +219,7 @@ public class FileService
     }
 
     @Override
+    @Transactional
     public PlanHateoas
     createPlanAssociatedWithFile(
             @NotNull String systemID, @NotNull Plan plan) {
@@ -215,6 +228,7 @@ public class FileService
     }
 
     @Override
+    @Transactional
     public PositionHateoas
     createPositionAssociatedWithFile(
             @NotNull String systemID, @NotNull Position position) {
@@ -223,6 +237,7 @@ public class FileService
     }
 
     @Override
+    @Transactional
     public SocialSecurityNumberHateoas
     createSocialSecurityNumberAssociatedWithFile
             (@NotNull String systemID,
@@ -233,6 +248,7 @@ public class FileService
     }
 
     @Override
+    @Transactional
     public UnitHateoas
     createUnitAssociatedWithFile(
             @NotNull String systemID, @NotNull Unit unit) {
@@ -240,7 +256,16 @@ public class FileService
                 createNewUnit(unit, getFileOrThrow(systemID));
     }
 
-    // All READ operations
+    @Override
+    @Transactional
+    public CaseFileHateoas expandToCaseFile(
+            @NotNull UUID systemId, @NotNull PatchMerge patchMerge) {
+        return caseFileService.expandFileAsCaseFileHateoas(
+                getFileOrThrow(systemId), patchMerge);
+    }
+
+    // All READ operations.
+
     public List<File> findAll() {
         return fileRepository.findAll();
     }
@@ -262,13 +287,6 @@ public class FileService
     }
 
     @Override
-    public CaseFileHateoas expandToCaseFile(
-            @NotNull UUID systemId, @NotNull PatchMerge patchMerge) {
-        return caseFileService.expandFileAsCaseFileHateoas(
-                getFileOrThrow(systemId), patchMerge);
-    }
-
-    @Override
     public PartPersonHateoas generateDefaultPartPerson(String systemID) {
         return partService.generateDefaultPartPerson(systemID);
     }
@@ -284,7 +302,6 @@ public class FileService
         return caseFileService.generateDefaultExpandedCaseFile();
     }
 
-    // ownedBy
     public List<File> findByOwnedBy(String ownedBy) {
         ownedBy = (ownedBy == null) ? getUser() : ownedBy;
         return fileRepository.findByOwnedBy(ownedBy);
@@ -319,40 +336,6 @@ public class FileService
         return niHateoas;
     }
 
-    // All UPDATE operations
-    public FileHateoas update(File file) {
-        FileHateoas fileHateoas = new FileHateoas(fileRepository.save(file));
-        bsmService.validateBSMList(file.getReferenceBSMBase());
-        fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityUpdatedEvent(this, file));
-        return fileHateoas;
-    }
-
-    @Override
-    public ResponseEntity<FileHateoas> handleUpdate(
-            UUID systemID, PatchObjects patchObjects) {
-        File file = (File) handlePatch(systemID, patchObjects);
-        FileHateoas fileHateoas = new FileHateoas(file);
-        fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityUpdatedEvent(this, file));
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(fileHateoas.getEntityVersion().toString())
-                .body(fileHateoas);
-    }
-
-    // Wrap an existing file object as a FileHateoas object
-    public FileHateoas getHateoas(File file) {
-        FileHateoas fileHateoas = new FileHateoas(file);
-        fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityUpdatedEvent(this, file));
-        return fileHateoas;
-    }
-
-    // systemId
     @Override
     public File findBySystemId(String systemId) {
         return getFileOrThrow(systemId);
@@ -427,6 +410,7 @@ public class FileService
      * @return the updated File object after it is persisted
      */
     @Override
+    @Transactional
     public File handleUpdate(@NotNull String systemId, @NotNull Long version,
                              @NotNull File incomingFile) {
         File existingFile = getFileOrThrow(systemId);
@@ -443,8 +427,44 @@ public class FileService
         return existingFile;
     }
 
-    // All DELETE operations
+    @Transactional
+    public FileHateoas update(File file) {
+        FileHateoas fileHateoas = new FileHateoas(fileRepository.save(file));
+        bsmService.validateBSMList(file.getReferenceBSMBase());
+        fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityUpdatedEvent(this, file));
+        return fileHateoas;
+    }
+
     @Override
+    @Transactional
+    public ResponseEntity<FileHateoas> handleUpdate(
+            UUID systemID, PatchObjects patchObjects) {
+        File file = (File) handlePatch(systemID, patchObjects);
+        FileHateoas fileHateoas = new FileHateoas(file);
+        fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityUpdatedEvent(this, file));
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .eTag(fileHateoas.getEntityVersion().toString())
+                .body(fileHateoas);
+    }
+
+    @Override
+    @Transactional
+    public Object associateBSM(@NotNull UUID systemId,
+                               @NotNull List<BSMBase> bsm) {
+        File file = getFileOrThrow(systemId);
+        file.setReferenceBSMBase(bsm);
+        return file;
+    }
+
+    // All DELETE operations
+
+    @Override
+    @Transactional
     public void deleteEntity(@NotNull String fileSystemId) {
         deleteEntity(getFileOrThrow(fileSystemId));
     }
@@ -455,10 +475,12 @@ public class FileService
      * @return the number of objects deleted
      */
     @Override
+    @Transactional
     public long deleteAllByOwnedBy() {
         return fileRepository.deleteByOwnedBy(getUser());
     }
 
+    // All template operations
     /**
      * Generate a Default File object
      * <br>
@@ -504,14 +526,6 @@ public class FileService
     @Override
     public PositionHateoas generateDefaultPosition() {
         return nationalIdentifierService.generateDefaultPosition();
-    }
-
-    @Override
-    public Object associateBSM(@NotNull UUID systemId,
-                               @NotNull List<BSMBase> bsm) {
-        File file = getFileOrThrow(systemId);
-        file.setReferenceBSMBase(bsm);
-        return file;
     }
 
     @Override

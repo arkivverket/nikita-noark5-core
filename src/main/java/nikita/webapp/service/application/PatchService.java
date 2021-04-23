@@ -19,7 +19,6 @@ import static java.util.UUID.fromString;
 import static nikita.common.util.CommonUtils.WebUtils.getEnglishNameObject;
 
 @Service
-@Transactional
 public class PatchService
         implements IPatchService {
 
@@ -32,6 +31,7 @@ public class PatchService
         this.systemIdEntityRepository = systemIdEntityRepository;
     }
 
+    @Transactional
     public Object handlePatch(UUID originalObjectId,
                               PatchObject patchObject) {
         SystemIdEntity what = findSystemIdEntity(originalObjectId);
@@ -116,7 +116,7 @@ public class PatchService
             return systemIdEntity.get();
         } else {
             String error = "Could not find Noark object with systemID " +
-                    originalObjectId.toString();
+                    originalObjectId;
             logger.error(error);
             throw new NoarkEntityNotFoundException(error);
         }

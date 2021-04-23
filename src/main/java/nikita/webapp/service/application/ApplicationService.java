@@ -4,7 +4,6 @@ import nikita.webapp.application.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -17,7 +16,6 @@ import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.NEW_USER;
 
 @Service
-@Transactional
 public class ApplicationService {
 
     @Value("${nikita.server.hateoas.publicAddress}")

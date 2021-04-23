@@ -30,17 +30,18 @@ import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.N5ResourceMappings.PRECEDENCE_APPROVED_BY;
 
 @Service
-@Transactional
 public class PrecedenceService
-    extends NoarkService
-    implements IPrecedenceService {
+        extends NoarkService
+        implements IPrecedenceService {
 
     private static final Logger logger =
             LoggerFactory.getLogger(PrecedenceService.class);
-    private IMetadataService metadataService;
-    private IPrecedenceRepository precedenceRepository;
-    private IPrecedenceHateoasHandler precedenceHateoasHandler;
-    private IUserService userService;
+
+    private final IMetadataService metadataService;
+    private final IPrecedenceRepository precedenceRepository;
+    private final IPrecedenceHateoasHandler precedenceHateoasHandler;
+    private final IUserService userService;
+
     public PrecedenceService
             (EntityManager entityManager,
              ApplicationEventPublisher applicationEventPublisher,
@@ -51,20 +52,80 @@ public class PrecedenceService
              IUserService userService) {
         super(entityManager, applicationEventPublisher, patchService);
         this.precedenceRepository = precedenceRepository;
-        this.precedenceHateoasHandler =  precedenceHateoasHandler;
+        this.precedenceHateoasHandler = precedenceHateoasHandler;
         this.userService = userService;
         this.metadataService = metadataService;
     }
 
+    // All CREATE methods
+
     @Override
+    @Transactional
+    public PrecedenceHateoas createNewPrecedence(Precedence entity) {
+        validatePrecedenceStatus(entity);
+        User approvedBy = userService.validateUserReference
+                (PRECEDENCE_APPROVED_BY, entity.getReferencePrecedenceApprovedBy(),
+                        entity.getPrecedenceApprovedBy(),
+                        entity.getReferencePrecedenceApprovedBySystemID());
+
+        if (null != approvedBy) {
+            entity.setPrecedenceApprovedBy(approvedBy.getUsername());
+            entity.setReferencePrecedenceApprovedBySystemID(approvedBy.getSystemId());
+            entity.setReferencePrecedenceApprovedBy(approvedBy);
+        } // otherwise, accept value
+
+        /* TODO check finalisedBy when ReferencePrecedenceFinalisedBy
+        // is available.
+        User finalisedBy = userService.validateUserReference
+            (FINALISED_BY, entity.getReferencePrecedenceFinalisedBy(),
+             entity.getPrecedenceFinalisedBy(),
+             entity.getReferencePrecedenceFinalisedBySystemID());
+        */
+
+        PrecedenceHateoas precedenceHateoas =
+                new PrecedenceHateoas(precedenceRepository.save(entity));
+        precedenceHateoasHandler
+                .addLinks(precedenceHateoas, new Authorisation());
+        setOutgoingRequestHeader(precedenceHateoas);
+        return precedenceHateoas;
+    }
+
+    // All READ methods
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public PrecedenceHateoas findAllByOwner() {
+        PrecedenceHateoas precedenceHateoas =
+                new PrecedenceHateoas((List<INoarkEntity>) (List)
+                        precedenceRepository.findByOwnedBy(getUser()));
+        precedenceHateoasHandler.addLinks(precedenceHateoas,
+                new Authorisation());
+        setOutgoingRequestHeader(precedenceHateoas);
+        return precedenceHateoas;
+    }
+
+    @Override
+    public PrecedenceHateoas findBySystemId(String precedenceSystemId) {
+        PrecedenceHateoas precedenceHateoas =
+                new PrecedenceHateoas(getPrecedenceOrThrow(precedenceSystemId));
+        precedenceHateoasHandler.addLinks(precedenceHateoas,
+                new Authorisation());
+        setOutgoingRequestHeader(precedenceHateoas);
+        return precedenceHateoas;
+    }
+
+    // All UPDATE methods
+
+    @Override
+    @Transactional
     public PrecedenceHateoas updatePrecedenceBySystemId
-        (String systemId, Long version, Precedence incoming) {
+            (String systemId, Long version, Precedence incoming) {
         Precedence existing = getPrecedenceOrThrow(systemId);
         validatePrecedenceStatus(incoming);
         User approvedBy = userService.validateUserReference
-            (PRECEDENCE_APPROVED_BY, incoming.getReferencePrecedenceApprovedBy(),
-             incoming.getPrecedenceApprovedBy(),
-             incoming.getReferencePrecedenceApprovedBySystemID());
+                (PRECEDENCE_APPROVED_BY, incoming.getReferencePrecedenceApprovedBy(),
+                        incoming.getPrecedenceApprovedBy(),
+                        incoming.getReferencePrecedenceApprovedBySystemID());
         /* TODO use when getReferencePrecedenceFinalisedBy and friends
          * is available
 
@@ -84,9 +145,9 @@ public class PrecedenceService
             existing.setReferencePrecedenceApprovedBy(approvedBy);
         } else {
             existing.setPrecedenceApprovedBy
-                (incoming.getPrecedenceApprovedBy());
+                    (incoming.getPrecedenceApprovedBy());
             existing.setReferencePrecedenceApprovedBySystemID
-                (incoming.getReferencePrecedenceApprovedBySystemID());
+                    (incoming.getReferencePrecedenceApprovedBySystemID());
             existing.setReferencePrecedenceApprovedBy(null);
         }
         existing.setPrecedenceAuthority(incoming.getPrecedenceAuthority());
@@ -102,81 +163,34 @@ public class PrecedenceService
         existing.setVersion(version);
 
         PrecedenceHateoas precedenceHateoas =
-            new PrecedenceHateoas(precedenceRepository.save(existing));
-        precedenceHateoasHandler.addLinks(precedenceHateoas,
-                                            new Authorisation());
-        setOutgoingRequestHeader(precedenceHateoas);
-        return precedenceHateoas;
-    }
-
-    @Override
-    public PrecedenceHateoas createNewPrecedence(Precedence entity) {
-        validatePrecedenceStatus(entity);
-        User approvedBy = userService.validateUserReference
-            (PRECEDENCE_APPROVED_BY, entity.getReferencePrecedenceApprovedBy(),
-             entity.getPrecedenceApprovedBy(),
-             entity.getReferencePrecedenceApprovedBySystemID());
-
-        if (null != approvedBy) {
-            entity.setPrecedenceApprovedBy(approvedBy.getUsername());
-            entity.setReferencePrecedenceApprovedBySystemID(approvedBy.getSystemId());
-            entity.setReferencePrecedenceApprovedBy(approvedBy);
-        } // otherwise, accept value
-
-        /* TODO check finalisedBy when ReferencePrecedenceFinalisedBy
-        // is available.
-        User finalisedBy = userService.validateUserReference
-            (FINALISED_BY, entity.getReferencePrecedenceFinalisedBy(),
-             entity.getPrecedenceFinalisedBy(),
-             entity.getReferencePrecedenceFinalisedBySystemID());
-        */
-
-        PrecedenceHateoas precedenceHateoas =
-            new PrecedenceHateoas(precedenceRepository.save(entity));
-        precedenceHateoasHandler
-            .addLinks(precedenceHateoas, new Authorisation());
-        setOutgoingRequestHeader(precedenceHateoas);
-        return precedenceHateoas;
-    }
-
-    @Override
-    public void deletePrecedenceBySystemId(String systemID) {
-        deleteEntity(getPrecedenceOrThrow(systemID));
-    }
-
-    @Override
-    public PrecedenceHateoas findAllByOwner() {
-        PrecedenceHateoas precedenceHateoas =
-            new PrecedenceHateoas((List<INoarkEntity>) (List)
-                precedenceRepository.findByOwnedBy(getUser()));
+                new PrecedenceHateoas(precedenceRepository.save(existing));
         precedenceHateoasHandler.addLinks(precedenceHateoas,
                 new Authorisation());
         setOutgoingRequestHeader(precedenceHateoas);
         return precedenceHateoas;
     }
 
+    // All DELETE methods
+
     @Override
-    public PrecedenceHateoas findBySystemId(String precedenceSystemId) {
-        PrecedenceHateoas precedenceHateoas =
-            new PrecedenceHateoas(getPrecedenceOrThrow(precedenceSystemId));
-        precedenceHateoasHandler.addLinks(precedenceHateoas,
-                                            new Authorisation());
-        setOutgoingRequestHeader(precedenceHateoas);
-        return precedenceHateoas;
+    @Transactional
+    public void deletePrecedenceBySystemId(String systemID) {
+        deleteEntity(getPrecedenceOrThrow(systemID));
     }
 
+    // All template methods
 
     public PrecedenceHateoas generateDefaultPrecedence() {
         Precedence template = new Precedence();
-
         template.setPrecedenceDate(OffsetDateTime.now());
-
         PrecedenceHateoas precedenceHateoas =
-            new PrecedenceHateoas(template);
+                new PrecedenceHateoas(template);
         precedenceHateoasHandler
-            .addLinksOnTemplate(precedenceHateoas, new Authorisation());
+                .addLinksOnTemplate(precedenceHateoas, new Authorisation());
         return precedenceHateoas;
     }
+
+    // All helper methods
 
     /**
      * Internal helper method. Rather than having a find and try catch in
@@ -192,20 +206,21 @@ public class PrecedenceService
         Precedence precedence = precedenceRepository.
                 findBySystemId(UUID.fromString(precedenceSystemId));
         if (precedence == null) {
-            String info = INFO_CANNOT_FIND_OBJECT +
+            String error = INFO_CANNOT_FIND_OBJECT +
                     " Precedence, using systemId " + precedenceSystemId;
-            logger.info(info);
-            throw new NoarkEntityNotFoundException(info);
+            logger.error(error);
+            throw new NoarkEntityNotFoundException(error);
         }
         return precedence;
     }
 
     private void validatePrecedenceStatus(Precedence incomingPrecedence) {
-	if (null != incomingPrecedence.getPrecedenceStatus()) {
+        if (null != incomingPrecedence.getPrecedenceStatus()) {
             PrecedenceStatus PrecedenceStatus =
                     (PrecedenceStatus) metadataService
-                            .findValidMetadata(incomingPrecedence.getPrecedenceStatus());
+                            .findValidMetadata(incomingPrecedence
+                                    .getPrecedenceStatus());
             incomingPrecedence.setPrecedenceStatus(PrecedenceStatus);
-	}
+        }
     }
 }

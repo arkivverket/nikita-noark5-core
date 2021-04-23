@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.Constants.SYSTEM;
 
 
@@ -41,11 +42,11 @@ public class UserService
     private static final Logger logger =
             LoggerFactory.getLogger(UserService.class);
 
-    private IUserRepository userRepository;
-    private AuthorityRepository authorityRepository;
-    private IUserHateoasHandler userHateoasHandler;
-    private PasswordEncoder encoder;
-    private AdministrativeUnitService administrativeUnitService;
+    private final IUserRepository userRepository;
+    private final AuthorityRepository authorityRepository;
+    private final IUserHateoasHandler userHateoasHandler;
+    private final PasswordEncoder encoder;
+    private final AdministrativeUnitService administrativeUnitService;
 
     public UserService(EntityManager entityManager,
                        ApplicationEventPublisher applicationEventPublisher,
@@ -63,6 +64,8 @@ public class UserService
         this.encoder = encoder;
         this.administrativeUnitService = administrativeUnitService;
     }
+
+    // All CREATE operations
 
     @Override
     @Transactional
@@ -96,8 +99,9 @@ public class UserService
         return userHateoas;
     }
 
+    // All READ operations
+
     @Override
-    @Transactional(readOnly = true)
     public UserHateoas findBySystemID(String systemID) {
         User user = getUserOrThrow(systemID);
         UserHateoas userHateoas = new UserHateoas(user);
@@ -115,6 +119,56 @@ public class UserService
                         (List) userRepository.findAll());
         userHateoasHandler.addLinks(userHateoas, new Authorisation());
         return userHateoas;
+    }
+
+    /**
+     * Check to see is a user with a given email address already exists
+     * in the system.
+     *
+     * @param username The username/emailaddress to check
+     * @return true if the username is registered, false otherwise
+     */
+    @Override
+    public boolean userExists(String username) {
+        return userRepository.findByUsername(username).isPresent();
+    }
+
+    /**
+     * Look up username and return the equivalent User instance if it
+     * exist, or null if not.
+     *
+     * @param username The username/emailaddress to check
+     * @return User if the username is registered, null otherwise
+     */
+    @Override
+    public User userGetByUsername(String username) {
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        return userOptional.isEmpty() ? null : userOptional.get();
+    }
+
+    /**
+     * Look up systemID/UUID and return the equivalent User instance
+     * if it exist, or null if not.
+     *
+     * @param systemId UUID for the username to check
+     * @return User if the UUID is registered, null otherwise
+     */
+    @Override
+    public User userGetBySystemId(UUID systemId) {
+        Optional<User> userOptional = userRepository.findBySystemId(systemId);
+        return userOptional.orElse(null);
+    }
+
+    /**
+     * Check to see is a particular authority already exists
+     * in the system.
+     *
+     * @param authority The authority to check
+     * @return true if the authority exists, false otherwise
+     */
+    @Override
+    public boolean authorityExists(AuthorityName authority) {
+        return authorityRepository.findByAuthorityName(authority) != null;
     }
 
     @Override
@@ -145,68 +199,6 @@ public class UserService
         return userHateoas;
     }
 
-    // Helper methods
-
-    /**
-     * Check to see is a user with a given email address already exists
-     * in the system.
-     *
-     * @param username The username/emailaddress to check
-     * @return true if the username is registered, false otherwise
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public boolean userExists(String username) {
-        return userRepository.findByUsername(username).isPresent();
-    }
-
-    /**
-     * Look up username and return the equivalent User instance if it
-     * exist, or null if not.
-     *
-     * @param username The username/emailaddress to check
-     * @return User if the username is registered, null otherwise
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public User userGetByUsername(String username) {
-	Optional<User> userOptional = userRepository.findByUsername(username);
-	if (userOptional.isPresent()) {
-	    return userOptional.get();
-	}
-	return null;
-    }
-
-    /**
-     * Look up systemID/UUID and return the equivalent User instance
-     * if it exist, or null if not.
-     *
-     * @param systemId UUID for the username to check
-     * @return User if the UUID is registered, null otherwise
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public User userGetBySystemId(UUID systemId) {
-	Optional<User> userOptional = userRepository.findBySystemId(systemId);
-	if (userOptional.isPresent()) {
-	    return userOptional.get();
-	}
-	return null;
-    }
-
-    /**
-     * Check to see is a particular authority already exists
-     * in the system.
-     *
-     * @param authority The authority to check
-     * @return true if the authority exists, false otherwise
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public boolean authorityExists(AuthorityName authority) {
-        return authorityRepository.findByAuthorityName(authority) != null;
-    }
-
     // All DELETE operations
 
     /**
@@ -226,6 +218,7 @@ public class UserService
      * @return the number of objects deleted
      */
     @Override
+    @Transactional
     public long deleteAll() {
         return userRepository.deleteByUsername(getUser());
     }
@@ -241,10 +234,11 @@ public class UserService
         return userRepository.deleteByUsername(username);
     }
 
+    // All helper methods
+
     @Override
-    @Transactional
     public User validateUserReference
-        (String type, User user, String username, UUID systemID) {
+            (String type, User user, String username, UUID systemID) {
         if (null == user && null != systemID) {
             user = userGetBySystemId(systemID);
         }
@@ -269,12 +263,12 @@ public class UserService
      */
     private User getUserOrThrow(@NotNull String systemId) {
         Optional<User> userOptional =
-	    userRepository.findBySystemId(UUID.fromString(systemId));
-        if (!userOptional.isPresent()) {
-            String info = systemId + " User, using systemId " +
+                userRepository.findBySystemId(UUID.fromString(systemId));
+        if (userOptional.isEmpty()) {
+            String error = INFO_CANNOT_FIND_OBJECT + " User, using systemId " +
                     systemId;
-            logger.info(info);
-            throw new NoarkEntityNotFoundException(info);
+            logger.error(error);
+            throw new NoarkEntityNotFoundException(error);
         }
         return userOptional.get();
     }

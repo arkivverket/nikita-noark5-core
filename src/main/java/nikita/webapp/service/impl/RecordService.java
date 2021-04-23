@@ -64,7 +64,6 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
-@Transactional
 public class RecordService
         extends NoarkService
         implements IRecordService {
@@ -145,7 +144,9 @@ public class RecordService
     }
 
     // All CREATE operations
+
     @Override
+    @Transactional
     public ResponseEntity<RecordHateoas> save(Record record) {
         validateDocumentMedium(metadataService, record);
         bsmService.validateBSMList(record.getReferenceBSMBase());
@@ -158,6 +159,8 @@ public class RecordService
                 .body(recordHateoas);
     }
 
+    @Override
+    @Transactional
     public DocumentDescriptionHateoas
     createDocumentDescriptionAssociatedWithRecord(
             String systemID, DocumentDescription documentDescription) {
@@ -182,7 +185,160 @@ public class RecordService
         return documentDescriptionHateoas;
     }
 
+    /**
+     * Create a CorrespondencePartPerson object and associate it with the
+     * identified record
+     *
+     * @param systemID           The systemId of the record object you want to
+     *                           create an associated correspondencePartPerson for
+     * @param correspondencePart The incoming correspondencePartPerson
+     * @return The persisted CorrespondencePartPerson object wrapped as a
+     * CorrespondencePartPersonHateoas object
+     */
+    @Override
+    @Transactional
+    public CorrespondencePartPersonHateoas
+    createCorrespondencePartPersonAssociatedWithRecord(
+            @NotNull final String systemID,
+            @NotNull final CorrespondencePartPerson correspondencePart) {
+        return correspondencePartService.
+                createNewCorrespondencePartPerson(correspondencePart,
+                        getRecordOrThrow(systemID));
+    }
+
+    @Override
+    @Transactional
+    public PartPersonHateoas
+    createPartPersonAssociatedWithRecord(
+            @NotNull String systemID, @NotNull PartPerson partPerson) {
+        return partService.
+                createNewPartPerson(partPerson,
+                        getRecordOrThrow(systemID));
+    }
+
+    @Override
+    @Transactional
+    public PartUnitHateoas
+    createPartUnitAssociatedWithRecord(
+            @NotNull String systemID, @NotNull PartUnit partUnit) {
+        return partService.
+                createNewPartUnit(partUnit, getRecordOrThrow(systemID));
+    }
+
+    /**
+     * Create a CorrespondencePartInternal object and associate it with the
+     * identified record
+     *
+     * @param systemID           The systemId of the record object you want to
+     *                           create an associated correspondencePartInternal for
+     * @param correspondencePart The incoming correspondencePartInternal
+     * @return The persisted CorrespondencePartInternal object wrapped as a
+     * CorrespondencePartInternalHateoas object
+     */
+    @Override
+    @Transactional
+    public CorrespondencePartInternalHateoas
+    createCorrespondencePartInternalAssociatedWithRecord(
+            String systemID, CorrespondencePartInternal correspondencePart) {
+        return correspondencePartService.
+                createNewCorrespondencePartInternal(correspondencePart,
+                        getRecordOrThrow(systemID));
+    }
+
+    /**
+     * Create a CorrespondencePartUnit object and associate it with the
+     * identified record
+     *
+     * @param systemID           The systemId of the record object you want to
+     *                           create an associated correspondencePartUnit for
+     * @param correspondencePart The incoming correspondencePartUnit
+     * @return The persisted CorrespondencePartUnit object wrapped as a
+     * CorrespondencePartUnitHateoas object
+     */
+    @Override
+    @Transactional
+    public CorrespondencePartUnitHateoas
+    createCorrespondencePartUnitAssociatedWithRecord(
+            String systemID, CorrespondencePartUnit correspondencePart) {
+        return correspondencePartService.
+                createNewCorrespondencePartUnit(correspondencePart,
+                        getRecordOrThrow(systemID));
+    }
+
+    @Override
+    @Transactional
+    public BuildingHateoas
+    createBuildingAssociatedWithRecord(
+            @NotNull String systemID, @NotNull Building building) {
+        return nationalIdentifierService.
+                createNewBuilding(building, getRecordOrThrow(systemID));
+    }
+
+    @Override
+    @Transactional
+    public CadastralUnitHateoas
+    createCadastralUnitAssociatedWithRecord(
+            @NotNull String systemID, @NotNull CadastralUnit cadastralUnit) {
+        return nationalIdentifierService.
+                createNewCadastralUnit(cadastralUnit, getRecordOrThrow(systemID));
+    }
+
+    @Override
+    @Transactional
+    public DNumberHateoas
+    createDNumberAssociatedWithRecord(
+            @NotNull String systemID, @NotNull DNumber dNumber) {
+        return nationalIdentifierService.
+                createNewDNumber(dNumber, getRecordOrThrow(systemID));
+    }
+
+    @Override
+    @Transactional
+    public PlanHateoas
+    createPlanAssociatedWithRecord(
+            @NotNull String systemID, @NotNull Plan plan) {
+        return nationalIdentifierService.
+                createNewPlan(plan, getRecordOrThrow(systemID));
+    }
+
+    @Override
+    public PositionHateoas
+    createPositionAssociatedWithRecord(
+            @NotNull String systemID, @NotNull Position position) {
+        return nationalIdentifierService.
+                createNewPosition(position, getRecordOrThrow(systemID));
+    }
+
+    @Override
+    @Transactional
+    public SocialSecurityNumberHateoas
+    createSocialSecurityNumberAssociatedWithRecord(
+            @NotNull String systemID,
+            @NotNull SocialSecurityNumber socialSecurityNumber) {
+        return nationalIdentifierService
+                .createNewSocialSecurityNumber(socialSecurityNumber,
+                        getRecordOrThrow(systemID));
+    }
+
+    @Override
+    @Transactional
+    public UnitHateoas
+    createUnitAssociatedWithRecord(
+            @NotNull String systemID, @NotNull Unit unit) {
+        return nationalIdentifierService.
+                createNewUnit(unit, getRecordOrThrow(systemID));
+    }
+
+    @Override
+    @Transactional
+    public CommentHateoas createCommentAssociatedWithRecord
+            (String systemID, Comment comment) {
+        return commentService.createNewComment
+                (comment, getRecordOrThrow(systemID));
+    }
+
     // All READ operations
+
     public List<Record> findAll() {
         return recordRepository.findAll();
     }
@@ -195,6 +351,7 @@ public class RecordService
      * @return The list of record packed as a ResponseEntity
      */
     @Override
+    @SuppressWarnings("unchecked")
     public ResponseEntity<RecordHateoas>
     findByReferenceDocumentDescription(@NotNull final String systemId) {
         RecordHateoas recordHateoas = new RecordHateoas(
@@ -211,6 +368,7 @@ public class RecordService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public AuthorHateoas findAllAuthorWithRecordBySystemId(String systemId) {
         Record record = getRecordOrThrow(systemId);
         AuthorHateoas authorHateoas =
@@ -284,12 +442,10 @@ public class RecordService
                 .body(seriesHateoas);
     }
 
-    // systemId
     public Record findBySystemId(String systemId) {
         return getRecordOrThrow(systemId);
     }
 
-    // ownedBy
     @Override
     public List<Record> findByOwnedBy() {
         return recordRepository.findByOwnedBy(getUser());
@@ -306,6 +462,7 @@ public class RecordService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public CorrespondencePartHateoas
     getCorrespondencePartAssociatedWithRecord(
             final String systemID) {
@@ -328,6 +485,7 @@ public class RecordService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public NationalIdentifierHateoas getNationalIdentifierAssociatedWithRecord(
             @NotNull final String systemID) {
         NationalIdentifierHateoas niHateoas = new NationalIdentifierHateoas(
@@ -339,144 +497,129 @@ public class RecordService
     }
 
     /**
-     * Create a CorrespondencePartPerson object and associate it with the
-     * identified record
+     * Used to retrieve a BSMBase object so parent can can check that the
+     * BSMMetadata object exists and is not outdated.
+     * Done to simplify coding.
      *
-     * @param systemID           The systemId of the record object you want to
-     *                           create an associated correspondencePartPerson for
-     * @param correspondencePart The incoming correspondencePartPerson
-     * @return The persisted CorrespondencePartPerson object wrapped as a
-     * CorrespondencePartPersonHateoas object
+     * @param name Name of the BSM parameter to check
+     * @return BSMMetadata object corresponding to the name
      */
     @Override
-    public CorrespondencePartPersonHateoas
-    createCorrespondencePartPersonAssociatedWithRecord(
-            @NotNull final String systemID,
-            @NotNull final CorrespondencePartPerson correspondencePart) {
-        return correspondencePartService.
-                createNewCorrespondencePartPerson(correspondencePart,
-                        getRecordOrThrow(systemID));
+    protected Optional<BSMMetadata> findBSMByName(String name) {
+        return bsmService.findBSMByName(name);
+    }
+
+    // All UPDATE operations
+
+    /**
+     * Updates a Record object in the database. First we try to locate the
+     * Record object. If the Record object does not exist a
+     * NoarkEntityNotFoundException exception is thrown that the caller has
+     * to deal with.
+     * <p>
+     * After this the values you are allowed to update are copied from the
+     * incomingRecord object to the existingRecord object and the existingRecord
+     * object will be persisted to the database when the transaction boundary
+     * is over.
+     * <p>
+     * Note, the version corresponds to the version number, when the object
+     * was initially retrieved from the database. If this number is not the
+     * same as the version number when re-retrieving the Record object from
+     * the database a NoarkConcurrencyException is thrown. Note. This happens
+     * when the call to Record.setVersion() occurs.
+     * <p>
+     * It's a little unclear if it's possible to update this as it has no
+     * fields that are updatable. It's also unclear how to set the archivedBy
+     * value.
+     *
+     * @param recordSystemId The systemId of the record object to retrieve
+     * @param version        The last known version number (derived from an ETAG)
+     * @param incomingRecord The incoming record object
+     * @return The updatedRecord after it is persisted
+     */
+    @Override
+    @Transactional
+    public Record handleUpdate(@NotNull final String recordSystemId,
+                               @NotNull final Long version,
+                               @NotNull final Record incomingRecord) {
+        bsmService.validateBSMList(incomingRecord.getReferenceBSMBase());
+        Record existingRecord = getRecordOrThrow(recordSystemId);
+        // Here copy all the values you are allowed to copy ....
+        updateTitleAndDescription(incomingRecord, existingRecord);
+        if (null != incomingRecord.getDocumentMedium()) {
+            existingRecord.setDocumentMedium(
+                    incomingRecord.getDocumentMedium());
+        }
+        // Note setVersion can potentially result in a NoarkConcurrencyException
+        // exception as it checks the ETAG value
+        existingRecord.setVersion(version);
+        recordRepository.save(existingRecord);
+        return existingRecord;
     }
 
     @Override
-    public PartPersonHateoas
-    createPartPersonAssociatedWithRecord(
-            @NotNull String systemID, @NotNull PartPerson partPerson) {
-        return partService.
-                createNewPartPerson(partPerson,
-                        getRecordOrThrow(systemID));
-    }
-
-    @Override
-    public PartUnitHateoas
-    createPartUnitAssociatedWithRecord(
-            @NotNull String systemID, @NotNull PartUnit partUnit) {
-        return partService.
-                createNewPartUnit(partUnit, getRecordOrThrow(systemID));
+    @Transactional
+    public ResponseEntity<RecordHateoas> handleUpdate(
+            UUID systemID, PatchObjects patchObjects) {
+        Record record = (Record) handlePatch(systemID, patchObjects);
+        RecordHateoas recordHateoas = new RecordHateoas(record);
+        recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityUpdatedEvent(this, record));
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .eTag(recordHateoas.getEntityVersion().toString())
+                .body(recordHateoas);
     }
 
     /**
-     * Create a CorrespondencePartInternal object and associate it with the
-     * identified record
+     * Persist and associate the incoming author object with the record
+     * identified by systemId
      *
-     * @param systemID           The systemId of the record object you want to
-     *                           create an associated correspondencePartInternal for
-     * @param correspondencePart The incoming correspondencePartInternal
-     * @return The persisted CorrespondencePartInternal object wrapped as a
-     * CorrespondencePartInternalHateoas object
+     * @param systemId The sytsemId of the record to associate with
+     * @param author   The incoming author object
+     * @return author object wrapped as a AuthorHateaos
      */
     @Override
-    public CorrespondencePartInternalHateoas
-    createCorrespondencePartInternalAssociatedWithRecord(
-            String systemID, CorrespondencePartInternal correspondencePart) {
-        return correspondencePartService.
-                createNewCorrespondencePartInternal(correspondencePart,
-                        getRecordOrThrow(systemID));
+    @Transactional
+    public AuthorHateoas associateAuthorWithRecord(
+            String systemId, Author author) {
+        return authorService.associateAuthorWithRecord
+                (author, getRecordOrThrow(systemId));
+    }
+
+    @Override
+    @Transactional
+    public Object associateBSM(@NotNull UUID systemId,
+                               @NotNull List<BSMBase> bsm) {
+        Record record = getRecordOrThrow(systemId);
+        record.setReferenceBSMBase(bsm);
+        return record;
+    }
+
+    // All DELETE operations
+
+    @Override
+    @Transactional
+    public void deleteRecord(@NotNull UUID systemID) {
+        Record record = getRecordOrThrow(systemID);
+        recordRepository.delete(record);
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityDeletedEvent(this, record));
     }
 
     /**
-     * Create a CorrespondencePartUnit object and associate it with the
-     * identified record
+     * Delete all objects belonging to the user identified by ownedBy
      *
-     * @param systemID           The systemId of the record object you want to
-     *                           create an associated correspondencePartUnit for
-     * @param correspondencePart The incoming correspondencePartUnit
-     * @return The persisted CorrespondencePartUnit object wrapped as a
-     * CorrespondencePartUnitHateoas object
+     * @return the number of objects deleted
      */
     @Override
-    public CorrespondencePartUnitHateoas
-    createCorrespondencePartUnitAssociatedWithRecord(
-            String systemID, CorrespondencePartUnit correspondencePart) {
-        return correspondencePartService.
-                createNewCorrespondencePartUnit(correspondencePart,
-                        getRecordOrThrow(systemID));
+    @Transactional
+    public long deleteAllByOwnedBy() {
+        return recordRepository.deleteByOwnedBy(getUser());
     }
 
-    @Override
-    public BuildingHateoas
-    createBuildingAssociatedWithRecord(
-            @NotNull String systemID, @NotNull Building building) {
-        return nationalIdentifierService.
-                createNewBuilding(building, getRecordOrThrow(systemID));
-    }
-
-    @Override
-    public CadastralUnitHateoas
-    createCadastralUnitAssociatedWithRecord(
-            @NotNull String systemID, @NotNull CadastralUnit cadastralUnit) {
-        return nationalIdentifierService.
-                createNewCadastralUnit(cadastralUnit, getRecordOrThrow(systemID));
-    }
-
-    @Override
-    public DNumberHateoas
-    createDNumberAssociatedWithRecord(
-            @NotNull String systemID, @NotNull DNumber dNumber) {
-        return nationalIdentifierService.
-                createNewDNumber(dNumber, getRecordOrThrow(systemID));
-    }
-
-    @Override
-    public PlanHateoas
-    createPlanAssociatedWithRecord(
-            @NotNull String systemID, @NotNull Plan plan) {
-        return nationalIdentifierService.
-                createNewPlan(plan, getRecordOrThrow(systemID));
-    }
-
-    @Override
-    public PositionHateoas
-    createPositionAssociatedWithRecord(
-            @NotNull String systemID, @NotNull Position position) {
-        return nationalIdentifierService.
-                createNewPosition(position, getRecordOrThrow(systemID));
-    }
-
-    @Override
-    public SocialSecurityNumberHateoas
-    createSocialSecurityNumberAssociatedWithRecord(
-            @NotNull String systemID,
-            @NotNull SocialSecurityNumber socialSecurityNumber) {
-        return nationalIdentifierService
-            .createNewSocialSecurityNumber(socialSecurityNumber,
-                                           getRecordOrThrow(systemID));
-    }
-
-    @Override
-    public UnitHateoas
-    createUnitAssociatedWithRecord(
-            @NotNull String systemID, @NotNull Unit unit) {
-        return nationalIdentifierService.
-                createNewUnit(unit, getRecordOrThrow(systemID));
-    }
-
-    @Override
-    public CommentHateoas createCommentAssociatedWithRecord
-        (String systemID, Comment comment) {
-        return commentService.createNewComment
-            (comment, getRecordOrThrow(systemID));
-    }
+    // All template methods
 
     /**
      * Generate a Default CorrespondencePartUnit object that can be
@@ -615,105 +758,6 @@ public class RecordService
         return authorService.generateDefaultAuthor();
     }
 
-    /**
-     * Persist and associate the incoming author object with the record
-     * identified by systemId
-     *
-     * @param systemId The sytsemId of the record to associate with
-     * @param author   The incoming author object
-     * @return author object wrapped as a AuthorHateaos
-     */
-    @Override
-    public AuthorHateoas associateAuthorWithRecord(
-            String systemId, Author author) {
-        return authorService.associateAuthorWithRecord
-            (author, getRecordOrThrow(systemId));
-    }
-
-    // All UPDATE operations
-    public Record update(Record record) {
-        bsmService.validateBSMList(record.getReferenceBSMBase());
-        return recordRepository.save(record);
-    }
-
-    /**
-     * Updates a Record object in the database. First we try to locate the
-     * Record object. If the Record object does not exist a
-     * NoarkEntityNotFoundException exception is thrown that the caller has
-     * to deal with.
-     * <p>
-     * After this the values you are allowed to update are copied from the
-     * incomingRecord object to the existingRecord object and the existingRecord
-     * object will be persisted to the database when the transaction boundary
-     * is over.
-     * <p>
-     * Note, the version corresponds to the version number, when the object
-     * was initially retrieved from the database. If this number is not the
-     * same as the version number when re-retrieving the Record object from
-     * the database a NoarkConcurrencyException is thrown. Note. This happens
-     * when the call to Record.setVersion() occurs.
-     * <p>
-     * It's a little unclear if it's possible to update this as it has no
-     * fields that are updatable. It's also unclear how to set the archivedBy
-     * value.
-     *
-     * @param recordSystemId The systemId of the record object to retrieve
-     * @param version        The last known version number (derived from an ETAG)
-     * @param incomingRecord The incoming record object
-     * @return The updatedRecord after it is persisted
-     */
-    @Override
-    public Record handleUpdate(@NotNull final String recordSystemId,
-                               @NotNull final Long version,
-                               @NotNull final Record incomingRecord) {
-        bsmService.validateBSMList(incomingRecord.getReferenceBSMBase());
-        Record existingRecord = getRecordOrThrow(recordSystemId);
-        // Here copy all the values you are allowed to copy ....
-        updateTitleAndDescription(incomingRecord, existingRecord);
-        if (null != incomingRecord.getDocumentMedium()) {
-            existingRecord.setDocumentMedium(
-                    incomingRecord.getDocumentMedium());
-        }
-        // Note setVersion can potentially result in a NoarkConcurrencyException
-        // exception as it checks the ETAG value
-        existingRecord.setVersion(version);
-        recordRepository.save(existingRecord);
-        return existingRecord;
-    }
-
-    @Override
-    public ResponseEntity<RecordHateoas> handleUpdate(
-            UUID systemID, PatchObjects patchObjects) {
-        Record record = (Record) handlePatch(systemID, patchObjects);
-        RecordHateoas recordHateoas = new RecordHateoas(record);
-        recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityUpdatedEvent(this, record));
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(recordHateoas.getEntityVersion().toString())
-                .body(recordHateoas);
-    }
-
-    // All DELETE operations
-    @Override
-    public void deleteRecord(@NotNull UUID systemID) {
-        Record record = getRecordOrThrow(systemID);
-        recordRepository.delete(record);
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityDeletedEvent(this, record));
-    }
-
-    /**
-     * Delete all objects belonging to the user identified by ownedBy
-     *
-     * @return the number of objects deleted
-     */
-    @Override
-    public long deleteAllByOwnedBy() {
-        return recordRepository.deleteByOwnedBy(getUser());
-    }
-
     @Override
     public BuildingHateoas generateDefaultBuilding() {
         return nationalIdentifierService.generateDefaultBuilding();
@@ -750,27 +794,6 @@ public class RecordService
     }
 
     // All HELPER operations
-
-    /**
-     * Used to retrieve a BSMBase object so parent can can check that the
-     * BSMMetadata object exists and is not outdated.
-     * Done to simplify coding.
-     *
-     * @param name Name of the BSM parameter to check
-     * @return BSMMetadata object corresponding to the name
-     */
-    @Override
-    protected Optional<BSMMetadata> findBSMByName(String name) {
-        return bsmService.findBSMByName(name);
-    }
-
-    @Override
-    public Object associateBSM(@NotNull UUID systemId,
-                               @NotNull List<BSMBase> bsm) {
-        Record record = getRecordOrThrow(systemId);
-        record.setReferenceBSMBase(bsm);
-        return record;
-    }
 
     /**
      * Internal helper method. Rather than having a find and try catch in

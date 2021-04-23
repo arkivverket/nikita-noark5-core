@@ -58,7 +58,6 @@ import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentM
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
-@Transactional
 public class CaseFileService
         extends NoarkService
         implements ICaseFileService {
@@ -105,6 +104,7 @@ public class CaseFileService
     }
 
     @Override
+    @Transactional
     public CaseFile save(CaseFile caseFile) {
         processCaseFileBeforeSave(caseFile);
         return caseFileRepository.save(caseFile);
@@ -127,6 +127,7 @@ public class CaseFileService
      * CaseFile
      */
     @Override
+    @Transactional
     public CaseFileHateoas expandFileAsCaseFileHateoas(
             File file, PatchMerge patchMerge) {
         CaseFile caseFile = new CaseFile(file);
@@ -176,6 +177,7 @@ public class CaseFileService
     }
 
     @Override
+    @Transactional
     public CaseFileHateoas saveHateoas(CaseFile caseFile) {
         CaseFile caseFileNew = save(caseFile);
         applicationEventPublisher.publishEvent(
@@ -183,7 +185,6 @@ public class CaseFileService
         return packAsHateoas(caseFile);
     }
 
-    // systemId
     public CaseFile findBySystemId(String systemId) {
         return getCaseFileOrThrow(systemId);
     }
@@ -215,6 +216,7 @@ public class CaseFileService
     }
 
     @Override
+    @Transactional
     public PrecedenceHateoas createPrecedenceAssociatedWithFile(
             String caseFileSystemID, Precedence precedence) {
         CaseFile caseFile = getCaseFileOrThrow(caseFileSystemID);
@@ -235,6 +237,7 @@ public class CaseFileService
      * wrapped as a ResponseEntity
      */
     @Override
+    @Transactional
     public RegistryEntry createRegistryEntryAssociatedWithCaseFile(
             @NotNull String fileSystemId,
             @NotNull RegistryEntry registryEntry) {
@@ -257,6 +260,7 @@ public class CaseFileService
      * wrapped as a ResponseEntity
      */
     @Override
+    @Transactional
     public ResponseEntity<RecordNoteHateoas> createRecordNoteToCaseFile(
             @NotNull String fileSystemId,
             @NotNull RecordNote recordNote) {
@@ -316,6 +320,7 @@ public class CaseFileService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public ResponseEntity<CaseFileHateoas> findAllCaseFileBySeries(Series series) {
         CaseFileHateoas caseFileHateoas = new CaseFileHateoas(
                 (List<INoarkEntity>)
@@ -351,6 +356,7 @@ public class CaseFileService
      * @return the updated caseFile object after it is persisted
      */
     @Override
+    @Transactional
     public CaseFile handleUpdate(@NotNull final String systemId,
                                  @NotNull final Long version,
                                  @NotNull final CaseFile incomingCaseFile) {
@@ -366,6 +372,7 @@ public class CaseFileService
 
     // All DELETE operations
     @Override
+    @Transactional
     public void deleteEntity(@NotNull String caseFileSystemId) {
         CaseFile caseFile = getCaseFileOrThrow(caseFileSystemId);
         applicationEventPublisher.publishEvent(
@@ -379,6 +386,7 @@ public class CaseFileService
      * @return the number of objects deleted
      */
     @Override
+    @Transactional
     public long deleteAllByOwnedBy() {
         return caseFileRepository.deleteByOwnedBy(getUser());
     }
@@ -412,6 +420,7 @@ public class CaseFileService
      * @param administrativeUnit The administrativeUnit
      * @return the sequence number
      */
+    @Transactional
     protected Integer getNextSequenceNumber(AdministrativeUnit
                                                     administrativeUnit) {
         return numberGeneratorService.getNextCaseFileSequenceNumber(administrativeUnit);
@@ -620,13 +629,11 @@ public class CaseFileService
      */
     private boolean isOpen(@NotNull CaseFile caseFile) {
         CaseStatus caseStatus = caseFile.getCaseStatus();
-        if (null != caseStatus &&
-                caseStatus.getCode().equals(CASE_FILE_CLOSED_CODE_VALUE)) {
-            return false;
-        }
-        return true;
+        return null == caseStatus ||
+                !caseStatus.getCode().equals(CASE_FILE_CLOSED_CODE_VALUE);
     }
 
+    @SuppressWarnings("unchecked")
     private CaseStatus getCaseStatus(PatchMerge patchMerge) {
         Map<String, Object> caseStatus = (Map<String, Object>)
                 patchMerge.getValue(CASE_STATUS);

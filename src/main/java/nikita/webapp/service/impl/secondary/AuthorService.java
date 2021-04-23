@@ -24,15 +24,16 @@ import java.util.UUID;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 
 @Service
-@Transactional
 public class AuthorService
-    extends NoarkService
-    implements IAuthorService {
+        extends NoarkService
+        implements IAuthorService {
 
     private static final Logger logger =
             LoggerFactory.getLogger(AuthorService.class);
-    private IAuthorRepository authorRepository;
-    private IAuthorHateoasHandler authorHateoasHandler;
+
+    private final IAuthorRepository authorRepository;
+    private final IAuthorHateoasHandler authorHateoasHandler;
+
     public AuthorService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
@@ -44,9 +45,12 @@ public class AuthorService
         this.authorHateoasHandler = authorHateoasHandler;
     }
 
+    // All CREATE methods
+
     @Override
+    @Transactional
     public AuthorHateoas associateAuthorWithDocumentDescription
-        (Author author, DocumentDescription documentDescription) {
+            (Author author, DocumentDescription documentDescription) {
         author.setReferenceDocumentDescription(documentDescription);
         author = authorRepository.save(author);
         documentDescription.addAuthor(author);
@@ -57,8 +61,9 @@ public class AuthorService
     }
 
     @Override
+    @Transactional
     public AuthorHateoas associateAuthorWithRecord
-        (Author author, Record record) {
+            (Author author, Record record) {
         author.setReferenceRecord(record);
         author = authorRepository.save(author);
         record.addAuthor(author);
@@ -67,32 +72,43 @@ public class AuthorService
         setOutgoingRequestHeader(authorHateoas);
         return authorHateoas;
     }
+
+    // All READ methods
+
     @Override
+    public AuthorHateoas findBySystemId(String authorSystemId) {
+        AuthorHateoas authorHateoas =
+                new AuthorHateoas(getAuthorOrThrow(authorSystemId));
+        authorHateoasHandler.addLinks(authorHateoas, new Authorisation());
+        setOutgoingRequestHeader(authorHateoas);
+        return authorHateoas;
+    }
+
+    // All UPDATE methods
+
+    @Override
+    @Transactional
     public AuthorHateoas updateAuthorBySystemId(String systemId, Long version,
                                                 Author incomingAuthor) {
         Author existingAuthor = getAuthorOrThrow(systemId);
         existingAuthor.setAuthor(incomingAuthor.getAuthor());
         existingAuthor.setVersion(version);
         AuthorHateoas authorHateoas =
-            new AuthorHateoas(authorRepository.save(existingAuthor));
+                new AuthorHateoas(authorRepository.save(existingAuthor));
         authorHateoasHandler.addLinks(authorHateoas, new Authorisation());
         setOutgoingRequestHeader(authorHateoas);
         return authorHateoas;
     }
 
+    // All DELETE methods
+
     @Override
+    @Transactional
     public void deleteAuthorBySystemId(String systemID) {
         deleteEntity(getAuthorOrThrow(systemID));
     }
 
-    @Override
-    public AuthorHateoas findBySystemId(String authorSystemId) {
-        AuthorHateoas authorHateoas =
-            new AuthorHateoas(getAuthorOrThrow(authorSystemId));
-        authorHateoasHandler.addLinks(authorHateoas, new Authorisation());
-        setOutgoingRequestHeader(authorHateoas);
-        return authorHateoas;
-    }
+    // All template methods
 
     public AuthorHateoas generateDefaultAuthor() {
         Author suggestedPart = new Author();
@@ -100,6 +116,9 @@ public class AuthorService
         authorHateoasHandler.addLinksOnTemplate(partHateoas, new Authorisation());
         return partHateoas;
     }
+
+    // All helper methods
+
     /**
      * Internal helper method. Rather than having a find and try catch in
      * multiple methods, we have it here once. Note. If you call this, you

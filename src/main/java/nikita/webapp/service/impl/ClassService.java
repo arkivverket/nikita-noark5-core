@@ -51,22 +51,21 @@ import static org.springframework.http.HttpStatus.OK;
  * All public methods return Hateoas objects
  */
 @Service
-@Transactional
 public class ClassService
         extends NoarkService
         implements IClassService {
 
     private static final Logger logger =
             LoggerFactory.getLogger(ClassService.class);
-    private IClassRepository classRepository;
-    private IFileService fileService;
-    private ICaseFileService caseFileService;
-    private IRecordService recordService;
-    private IClassHateoasHandler classHateoasHandler;
-    private IClassificationSystemHateoasHandler
+    private final IClassRepository classRepository;
+    private final IFileService fileService;
+    private final ICaseFileService caseFileService;
+    private final IRecordService recordService;
+    private final IClassHateoasHandler classHateoasHandler;
+    private final IClassificationSystemHateoasHandler
             classificationSystemHateoasHandler;
-    private IFileHateoasHandler fileHateoasHandler;
-    private IRecordHateoasHandler recordHateoasHandler;
+    private final IFileHateoasHandler fileHateoasHandler;
+    private final IRecordHateoasHandler recordHateoasHandler;
 
     public ClassService(EntityManager entityManager,
                         ApplicationEventPublisher applicationEventPublisher,
@@ -103,6 +102,7 @@ public class ClassService
      * @return the newly persisted class object wrapped as a classHateaos object
      */
     @Override
+    @Transactional
     public ClassHateoas save(Class klass) {
         setFinaliseEntityValues(klass);
         ClassHateoas classHateoas = new
@@ -126,6 +126,7 @@ public class ClassService
      * @return the newly persisted class object wrapped as a classHateaos object
      */
     @Override
+    @Transactional
     public ClassHateoas createClassAssociatedWithClass(
             String parentClassSystemId, Class klass) {
         klass.setReferenceParentClass(getClassOrThrow(parentClassSystemId));
@@ -144,6 +145,7 @@ public class ClassService
      * @return the newly persisted File object wrapped as a FileHateaos object
      */
     @Override
+    @Transactional
     public FileHateoas createFileAssociatedWithClass(
             String classSystemId, File file) {
         file.setReferenceClass(getClassOrThrow(classSystemId));
@@ -163,6 +165,7 @@ public class ClassService
      * object
      */
     @Override
+    @Transactional
     public CaseFileHateoas createCaseFileAssociatedWithClass(
             String classSystemId, CaseFile caseFile) {
         caseFile.setReferenceClass(getClassOrThrow(classSystemId));
@@ -204,6 +207,7 @@ public class ClassService
      * object
      */
     @Override
+    @Transactional
     public ResponseEntity<RecordHateoas> createRecordAssociatedWithClass(
             String classSystemId, Record record) {
         record.setReferenceClass(getClassOrThrow(classSystemId));
@@ -306,6 +310,7 @@ public class ClassService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public ResponseEntity<FileHateoas>
     findAllFileAssociatedWithClass(@NotNull final String systemId) {
         Class existingClass = getClassOrThrow(systemId);
@@ -320,13 +325,13 @@ public class ClassService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public ResponseEntity<RecordHateoas>
     findAllRecordAssociatedWithClass(@NotNull final String systemId) {
         Class existingClass = getClassOrThrow(systemId);
         RecordHateoas recordHateoas =
-            new RecordHateoas(
-                (List<INoarkEntity>)(List) existingClass.getReferenceRecord()
-                              );
+                new RecordHateoas(
+                        (List<INoarkEntity>) (List) existingClass.getReferenceRecord());
         recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(getServletPath()))
@@ -359,6 +364,7 @@ public class ClassService
      * @return the updated Class object as a ClassHateoas object
      */
     @Override
+    @Transactional
     public ClassHateoas handleUpdate(
             @NotNull final String systemId, @NotNull final Long version,
             @NotNull final Class incomingClass) {
@@ -392,6 +398,7 @@ public class ClassService
      * @param classSystemId systemId of the Class object to delete
      */
     @Override
+    @Transactional
     public void deleteEntity(@NotNull String classSystemId) {
         deleteEntity(getClassOrThrow(classSystemId));
     }
@@ -402,6 +409,7 @@ public class ClassService
      * @return the number of objects deleted
      */
     @Override
+    @Transactional
     public long deleteAllByOwnedBy() {
         return classRepository.deleteByOwnedBy(getUser());
     }
@@ -418,14 +426,13 @@ public class ClassService
      * @return the newly found class object or null if it does not exist
      */
     protected Class getClassOrThrow(@NotNull String classSystemId) {
-        Optional<Class> klass =
-                classRepository.
-                        findBySystemId(UUID.fromString(classSystemId));
-        if (!klass.isPresent()) {
-            String info = INFO_CANNOT_FIND_OBJECT + " Class, using systemId " +
+        Optional<Class> klass = classRepository.findBySystemId(
+                UUID.fromString(classSystemId));
+        if (klass.isEmpty()) {
+            String error = INFO_CANNOT_FIND_OBJECT + " Class, using systemId " +
                     classSystemId;
-            logger.info(info);
-            throw new NoarkEntityNotFoundException(info);
+            logger.error(error);
+            throw new NoarkEntityNotFoundException(error);
         }
         return klass.get();
     }

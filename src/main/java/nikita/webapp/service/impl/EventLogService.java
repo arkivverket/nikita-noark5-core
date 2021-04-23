@@ -25,7 +25,6 @@ import java.util.UUID;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 
 @Service
-@Transactional
 public class EventLogService
         extends NoarkService
         implements IEventLogService {
@@ -33,8 +32,8 @@ public class EventLogService
     private static final Logger logger =
             LoggerFactory.getLogger(EventLogService.class);
 
-    private IEventLogRepository eventLogRepository;
-    private IEventLogHateoasHandler eventLogHateoasHandler;
+    private final IEventLogRepository eventLogRepository;
+    private final IEventLogHateoasHandler eventLogHateoasHandler;
 
     public EventLogService(
             EntityManager entityManager,
@@ -47,20 +46,10 @@ public class EventLogService
         this.eventLogHateoasHandler = eventLogHateoasHandler;
     }
 
-    @Override
-    public EventLogHateoas generateDefaultEventLog(SystemIdEntity entity) {
-        EventLog defaultEventLog = new EventLog();
-
-        defaultEventLog.setChangedDate(OffsetDateTime.now());
-        defaultEventLog.setChangedBy(getUser());
-        EventLogHateoas eventLogHateoas =
-            new EventLogHateoas(defaultEventLog);
-        eventLogHateoasHandler
-            .addLinksOnTemplate(eventLogHateoas, new Authorisation());
-        return eventLogHateoas;
-    }
+    // All CREATE operations
 
     @Override
+    @Transactional
     public EventLogHateoas createNewEventLog(EventLog eventLog,
                                              SystemIdEntity entity) {
         if (null == eventLog.getChangedDate())
@@ -71,13 +60,16 @@ public class EventLogService
         return eventLogHateoas;
     }
 
+    // All READ operations
+
     @Override
+    @SuppressWarnings("unchecked")
     public EventLogHateoas findEventLogByOwner() {
         EventLogHateoas eventLogHateoas = new
                 EventLogHateoas((List<INoarkEntity>) (List)
                 eventLogRepository.findByOwnedBy(getUser()));
         eventLogHateoasHandler
-            .addLinksOnRead(eventLogHateoas, new Authorisation());
+                .addLinksOnRead(eventLogHateoas, new Authorisation());
         return eventLogHateoas;
     }
 
@@ -86,15 +78,18 @@ public class EventLogService
         EventLog existingEventLog = getEventLogOrThrow(eventLogSystemId);
 
         EventLogHateoas eventLogHateoas =
-            new EventLogHateoas(eventLogRepository.save(existingEventLog));
+                new EventLogHateoas(eventLogRepository.save(existingEventLog));
         eventLogHateoasHandler.addLinks(eventLogHateoas, new Authorisation());
         return eventLogHateoas;
     }
 
+    // All UPDATE operations
+
     @Override
+    @Transactional
     public EventLogHateoas handleUpdate(@NotNull String eventLogSystemId,
-                                       @NotNull Long version,
-                                       @NotNull EventLog incomingEventLog) {
+                                        @NotNull Long version,
+                                        @NotNull EventLog incomingEventLog) {
         EventLog existingEventLog = getEventLogOrThrow(eventLogSystemId);
         /*
         // Copy all the values you are allowed to copy ....
@@ -109,14 +104,34 @@ public class EventLogService
         existingEventLog.setVersion(version);
 
         EventLogHateoas eventLogHateoas =
-            new EventLogHateoas(eventLogRepository.save(existingEventLog));
+                new EventLogHateoas(eventLogRepository.save(existingEventLog));
         eventLogHateoasHandler.addLinks(eventLogHateoas, new Authorisation());
         return eventLogHateoas;
     }
 
+    // All DELETE operations
+
+    @Transactional
     public void deleteEntity(String systemID) {
         deleteEntity(getEventLogOrThrow(systemID));
     }
+
+    // All template operations
+
+    @Override
+    public EventLogHateoas generateDefaultEventLog(SystemIdEntity entity) {
+        EventLog defaultEventLog = new EventLog();
+
+        defaultEventLog.setChangedDate(OffsetDateTime.now());
+        defaultEventLog.setChangedBy(getUser());
+        EventLogHateoas eventLogHateoas =
+                new EventLogHateoas(defaultEventLog);
+        eventLogHateoasHandler
+                .addLinksOnTemplate(eventLogHateoas, new Authorisation());
+        return eventLogHateoas;
+    }
+
+    // All helper operations
 
     protected EventLog getEventLogOrThrow(@NotNull String eventLogSystemId) {
         EventLog eventLog = eventLogRepository.

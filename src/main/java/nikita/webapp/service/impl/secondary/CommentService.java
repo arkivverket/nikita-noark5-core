@@ -28,7 +28,6 @@ import java.util.UUID;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 
 @Service
-@Transactional
 public class CommentService
         extends NoarkService
         implements ICommentService {
@@ -53,18 +52,10 @@ public class CommentService
         this.commentHateoasHandler = commentHateoasHandler;
     }
 
-    @Override
-    public CommentHateoas generateDefaultComment() {
-        Comment defaultComment = new Comment();
-        defaultComment.setCommentDate(OffsetDateTime.now());
-        defaultComment.setCommentRegisteredBy(getUser());
-        CommentHateoas commentHateoas = new CommentHateoas(defaultComment);
-        commentHateoasHandler.addLinksOnTemplate(commentHateoas,
-                new Authorisation());
-        return commentHateoas;
-    }
+    // All CREATE methods
 
     @Override
+    @Transactional
     public CommentHateoas createNewComment(Comment comment, File file) {
         checkCommentType(comment);
         if (null == comment.getCommentDate())
@@ -77,6 +68,7 @@ public class CommentService
     }
 
     @Override
+    @Transactional
     public CommentHateoas createNewComment(Comment comment, Record record) {
         checkCommentType(comment);
         if (null == comment.getCommentDate())
@@ -89,6 +81,7 @@ public class CommentService
     }
 
     @Override
+    @Transactional
     public CommentHateoas createNewComment
             (Comment comment, DocumentDescription documentDescription) {
         checkCommentType(comment);
@@ -101,6 +94,8 @@ public class CommentService
         return commentHateoas;
     }
 
+    // All READ methods
+
     @Override
     public CommentHateoas findSingleComment(UUID commentSystemId) {
         Comment existingComment = getCommentOrThrow(commentSystemId);
@@ -111,7 +106,10 @@ public class CommentService
         return commentHateoas;
     }
 
+    // All UPDATE methods
+
     @Override
+    @Transactional
     public CommentHateoas handleUpdate(@NotNull UUID commentSystemId,
                                        @NotNull Long version,
                                        @NotNull Comment incomingComment) {
@@ -139,7 +137,10 @@ public class CommentService
         return commentHateoas;
     }
 
+    // All DELETE methods
+
     @Override
+    @Transactional
     public void deleteComment(UUID systemID) {
         Comment comment = getCommentOrThrow(systemID);
         for (DocumentDescription documentDescription :
@@ -154,6 +155,21 @@ public class CommentService
         }
         commentRepository.delete(comment);
     }
+
+    // All template methods
+
+    @Override
+    public CommentHateoas generateDefaultComment() {
+        Comment defaultComment = new Comment();
+        defaultComment.setCommentDate(OffsetDateTime.now());
+        defaultComment.setCommentRegisteredBy(getUser());
+        CommentHateoas commentHateoas = new CommentHateoas(defaultComment);
+        commentHateoasHandler.addLinksOnTemplate(commentHateoas,
+                new Authorisation());
+        return commentHateoas;
+    }
+
+    // All helper methods
 
     protected Comment getCommentOrThrow(@NotNull UUID commentSystemId) {
         Comment comment = commentRepository.findBySystemId(commentSystemId);

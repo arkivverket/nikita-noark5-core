@@ -46,9 +46,7 @@ import static org.springframework.http.HttpStatus.OK;
  * <p>
  * All public methods return Hateoas objects
  */
-
 @Service
-@Transactional
 public class ClassificationSystemService
         extends NoarkService
         implements IClassificationSystemService {
@@ -99,6 +97,7 @@ public class ClassificationSystemService
      * classificationSystemHateaos object
      */
     @Override
+    @Transactional
     public ClassificationSystemHateoas save(
             final ClassificationSystem classificationSystem) {
         validateClassificationType(classificationSystem);
@@ -132,6 +131,7 @@ public class ClassificationSystemService
      * object
      */
     @Override
+    @Transactional
     public ClassHateoas createClassAssociatedWithClassificationSystem(
             @NotNull final UUID classificationSystemSystemId,
             @NotNull final Class klass) {
@@ -259,6 +259,7 @@ public class ClassificationSystemService
      * ClassificationSystemHateoas object
      */
     @Override
+    @Transactional
     public ClassificationSystemHateoas
     handleUpdate(@NotNull final UUID systemId, @NotNull final Long version,
                  @NotNull final ClassificationSystem
@@ -287,6 +288,7 @@ public class ClassificationSystemService
 
     // All DELETE operations
     @Override
+    @Transactional
     public void deleteClassificationSystem(@NotNull final UUID systemId) {
         ClassificationSystem classificationSystem =
                 getClassificationSystemOrThrow(systemId);
@@ -301,6 +303,7 @@ public class ClassificationSystemService
      * @return the number of objects deleted
      */
     @Override
+    @Transactional
     public long deleteAllByOwnedBy() {
         return classificationSystemRepository.deleteByOwnedBy(getUser());
     }

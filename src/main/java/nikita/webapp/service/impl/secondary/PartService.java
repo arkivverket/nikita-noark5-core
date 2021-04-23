@@ -46,7 +46,6 @@ import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThro
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
-@Transactional
 public class PartService
         extends NoarkService
         implements IPartService {
@@ -73,10 +72,112 @@ public class PartService
         this.bsmService = bsmService;
     }
 
+    // All CREATE methods
+
+    @Override
+    @Transactional
+    public PartPersonHateoas createNewPartPerson(
+            @NotNull PartPerson part, @NotNull Record record) {
+        validatePartRole(part);
+        createPerson(part);
+        record.addPart(part);
+        part = partRepository.save(part);
+        PartPersonHateoas partPersonHateoas = new PartPersonHateoas(part);
+        partHateoasHandler.addLinks(partPersonHateoas, new Authorisation());
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityCreatedEvent(this, part));
+        return partPersonHateoas;
+    }
+
+    @Override
+    @Transactional
+    public PartPersonHateoas createNewPartPerson(
+            @NotNull PartPerson part, @NotNull File file) {
+        validatePartRole(part);
+        createPerson(part);
+        file.addPart(part);
+        part = partRepository.save(part);
+        PartPersonHateoas partPersonHateoas = new PartPersonHateoas(part);
+        partHateoasHandler.addLinks(partPersonHateoas, new Authorisation());
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityCreatedEvent(this, part));
+        return partPersonHateoas;
+    }
+
+    @Override
+    @Transactional
+    public PartUnitHateoas createNewPartUnit(PartUnit part, Record record) {
+        validatePartRole(part);
+        createUnit(part);
+        record.addPart(part);
+        part = partRepository.save(part);
+        PartUnitHateoas partUnitHateoas = new PartUnitHateoas(part);
+        partHateoasHandler.addLinks(partUnitHateoas, new Authorisation());
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityCreatedEvent(this, part));
+        return partUnitHateoas;
+    }
+
+    @Override
+    @Transactional
+    public PartUnitHateoas createNewPartUnit(
+            @NotNull PartUnit part, @NotNull File file) {
+        validatePartRole(part);
+        createUnit(part);
+        file.addPart(part);
+        part = partRepository.save(part);
+        PartUnitHateoas partUnitHateoas = new PartUnitHateoas(part);
+        partHateoasHandler.addLinks(partUnitHateoas, new Authorisation());
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityCreatedEvent(this, part));
+        return partUnitHateoas;
+    }
+
+    @Override
+    @Transactional
+    public PartUnitHateoas createNewPartUnit(
+            @NotNull PartUnit partUnit,
+            @NotNull DocumentDescription documentDescription) {
+        validatePartRole(partUnit);
+        createUnit(partUnit);
+        documentDescription.addPart(partUnit);
+        partUnit = partRepository.save(partUnit);
+        PartUnitHateoas partUnitHateoas = new PartUnitHateoas(partUnit);
+        partHateoasHandler.addLinks(partUnitHateoas, new Authorisation());
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityCreatedEvent(this, partUnit));
+        return partUnitHateoas;
+    }
+
+    @Override
+    @Transactional
+    public PartPersonHateoas createNewPartPerson(
+            @NotNull PartPerson partPerson,
+            @NotNull DocumentDescription documentDescription) {
+        validatePartRole(partPerson);
+        createPerson(partPerson);
+        partPerson.addDocumentDescription(documentDescription);
+        partPerson = partRepository.save(partPerson);
+        PartPersonHateoas partPersonHateoas = new PartPersonHateoas(partPerson);
+        partHateoasHandler.addLinks(partPersonHateoas, new Authorisation());
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityCreatedEvent(this, partPerson));
+        return partPersonHateoas;
+    }
+
+    // All READ methods
+
     @Override
     public Part findBySystemId(@NotNull UUID systemId) {
         return getPartOrThrow(systemId);
     }
+
+    @Override
+    protected Optional<BSMMetadata> findBSMByName(String name) {
+        return bsmService.findBSMByName(name);
+    }
+
+    // All UPDATE methods
 
     /**
      * Update the PartPerson identified by systemId. Retrieve a
@@ -92,6 +193,7 @@ public class PartService
      * @return the updated PartPerson
      */
     @Override
+    @Transactional
     public PartPerson
     updatePartPerson(
             @NotNull UUID systemId, @NotNull Long version,
@@ -127,6 +229,7 @@ public class PartService
     }
 
     @Override
+    @Transactional
     public PartUnit updatePartUnit(
             @NotNull UUID systemId, @NotNull Long version,
             @NotNull PartUnit incomingPart) {
@@ -164,6 +267,7 @@ public class PartService
     }
 
     @Override
+    @Transactional
     public ResponseEntity<PartHateoas>
     handleUpdate(UUID systemID, PatchObjects patchObjects) {
         Part part = (Part) handlePatch(systemID, patchObjects);
@@ -178,11 +282,7 @@ public class PartService
     }
 
     @Override
-    protected Optional<BSMMetadata> findBSMByName(String name) {
-        return bsmService.findBSMByName(name);
-    }
-
-    @Override
+    @Transactional
     public Object associateBSM(@NotNull UUID systemId,
                                @NotNull List<BSMBase> bsm) {
         Part part = getPartOrThrow(systemId);
@@ -190,92 +290,9 @@ public class PartService
         return part;
     }
 
+    // All DELETE methods
     @Override
-    public PartPersonHateoas createNewPartPerson(
-            @NotNull PartPerson part, @NotNull Record record) {
-        validatePartRole(part);
-        createPerson(part);
-        record.addPart(part);
-        part = partRepository.save(part);
-        PartPersonHateoas partPersonHateoas = new PartPersonHateoas(part);
-        partHateoasHandler.addLinks(partPersonHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityCreatedEvent(this, part));
-        return partPersonHateoas;
-    }
-
-    @Override
-    public PartPersonHateoas createNewPartPerson(
-            @NotNull PartPerson part, @NotNull File file) {
-        validatePartRole(part);
-        createPerson(part);
-        file.addPart(part);
-        part = partRepository.save(part);
-        PartPersonHateoas partPersonHateoas = new PartPersonHateoas(part);
-        partHateoasHandler.addLinks(partPersonHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityCreatedEvent(this, part));
-        return partPersonHateoas;
-    }
-
-    @Override
-    public PartUnitHateoas createNewPartUnit(PartUnit part, Record record) {
-        validatePartRole(part);
-        createUnit(part);
-        record.addPart(part);
-        part = partRepository.save(part);
-        PartUnitHateoas partUnitHateoas = new PartUnitHateoas(part);
-        partHateoasHandler.addLinks(partUnitHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityCreatedEvent(this, part));
-        return partUnitHateoas;
-    }
-
-    @Override
-    public PartUnitHateoas createNewPartUnit(
-            @NotNull PartUnit part, @NotNull File file) {
-        validatePartRole(part);
-        createUnit(part);
-        file.addPart(part);
-        part = partRepository.save(part);
-        PartUnitHateoas partUnitHateoas = new PartUnitHateoas(part);
-        partHateoasHandler.addLinks(partUnitHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityCreatedEvent(this, part));
-        return partUnitHateoas;
-    }
-
-    @Override
-    public PartUnitHateoas createNewPartUnit(
-            @NotNull PartUnit partUnit,
-            @NotNull DocumentDescription documentDescription) {
-        validatePartRole(partUnit);
-        createUnit(partUnit);
-        documentDescription.addPart(partUnit);
-        partUnit = partRepository.save(partUnit);
-        PartUnitHateoas partUnitHateoas = new PartUnitHateoas(partUnit);
-        partHateoasHandler.addLinks(partUnitHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityCreatedEvent(this, partUnit));
-        return partUnitHateoas;
-    }
-
-    @Override
-    public PartPersonHateoas createNewPartPerson(
-            @NotNull PartPerson partPerson,
-            @NotNull DocumentDescription documentDescription) {
-        validatePartRole(partPerson);
-        createPerson(partPerson);
-        partPerson.addDocumentDescription(documentDescription);
-        partPerson = partRepository.save(partPerson);
-        PartPersonHateoas partPersonHateoas = new PartPersonHateoas(partPerson);
-        partHateoasHandler.addLinks(partPersonHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityCreatedEvent(this, partPerson));
-        return partPersonHateoas;
-    }
-
-    @Override
+    @Transactional
     public void deletePartPerson(@NotNull UUID systemId) {
         PartPerson partPerson = (PartPerson) getPartOrThrow(systemId);
         for (Record record : partPerson.getReferenceRecord()) {
@@ -292,6 +309,7 @@ public class PartService
     }
 
     @Override
+    @Transactional
     public void deletePartUnit(@NotNull UUID systemId) {
         PartUnit partUnit = (PartUnit) getPartOrThrow(systemId);
         for (Record record : partUnit.getReferenceRecord()) {
@@ -311,196 +329,7 @@ public class PartService
         partRepository.delete(partUnit);
     }
 
-    // Internal helper methods
-
-    private void createPerson(PartPerson part) {
-        ContactInformation contactInformation
-                = part.getContactInformation();
-
-        if (contactInformation != null) {
-            contactInformation.setPartPerson(part);
-        }
-        PostalAddress postalAddress = part.getPostalAddress();
-        if (null != postalAddress) {
-            postalAddress.getSimpleAddress().setAddressType(POSTAL_ADDRESS);
-            postalAddress.setPartPerson(part);
-        }
-        ResidingAddress residingAddress = part.getResidingAddress();
-        if (null != residingAddress) {
-            residingAddress.getSimpleAddress().setAddressType(RESIDING_ADDRESS);
-            residingAddress.setPartPerson(part);
-        }
-    }
-
-    private void createUnit(PartUnit part) {
-        ContactInformation contactInformation
-                = part.getContactInformation();
-        part.setContactInformation(contactInformation);
-
-        // Set NikitaEntity values for ContactInformation, PostalAddress,
-        // BusinessAddress
-        PostalAddress postalAddress = part.getPostalAddress();
-        if (null != postalAddress) {
-            postalAddress.getSimpleAddress().setAddressType(POSTAL_ADDRESS);
-            postalAddress.setPartUnit(part);
-        }
-        BusinessAddress businessAddress = part.getBusinessAddress();
-        if (null != businessAddress) {
-            businessAddress.getSimpleAddress().setAddressType(BUSINESS_ADDRESS);
-            businessAddress.setPartUnit(part);
-        }
-    }
-
-    /**
-     * Internal helper method. Rather than having a find and try catch in
-     * multiple methods, we have it here once. If you call this, be aware
-     * that you will only ever get a valid Part back. If there
-     * is no valid Part, an exception is thrown
-     *
-     * @param partSystemId systemId of part to
-     *                     retrieve
-     * @return the retrieved Part
-     */
-    private Part getPartOrThrow(@NotNull UUID partSystemId) {
-        Part part = partRepository.findBySystemId(partSystemId);
-        if (part == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " Part, " +
-                    "using systemId " + partSystemId;
-            logger.info(info);
-            throw new NoarkEntityNotFoundException(info);
-        }
-        return part;
-    }
-
-    /**
-     * Update BusinessAddress if it exists. If none exists, create a
-     * new BusinessAddress and set the values.
-     *
-     * @param existingPart The existing Part
-     * @param incomingPart The incoming Part
-     */
-    public void updatePartUnitBusinessAddressCreateIfNull(
-            IBusinessAddress existingPart,
-            IBusinessAddress incomingPart) {
-        if (null == incomingPart.getBusinessAddress()) {
-            existingPart.setBusinessAddress(null);
-            return;
-        }
-        if (null != existingPart.getBusinessAddress()
-                && null != incomingPart.getBusinessAddress()) {
-            updateAddress
-                    (existingPart.getBusinessAddress().getSimpleAddress(),
-                            incomingPart.getBusinessAddress().getSimpleAddress());
-        }
-        // Create a new BusinessAddress object based on the incoming one
-        else {
-            BusinessAddress businessAddress = new BusinessAddress();
-            businessAddress.setSimpleAddress(new SimpleAddress());
-            updateAddress
-                    (businessAddress.getSimpleAddress(),
-                            incomingPart.getBusinessAddress().getSimpleAddress());
-            existingPart.setBusinessAddress(businessAddress);
-        }
-        existingPart.getBusinessAddress().getSimpleAddress().
-                setAddressType(BUSINESS_ADDRESS);
-    }
-
-    /**
-     * Update ResidingAddress if it exists. If none exists, create a
-     * new ResidingAddress and set the values.
-     *
-     * @param existingPart The existing Part
-     * @param incomingPart The incoming Part
-     */
-    public void updatePartResidingAddressCreateIfNull(
-            IResidingAddress existingPart,
-            IResidingAddress incomingPart) {
-        if (null == incomingPart.getResidingAddress()) {
-            existingPart.setResidingAddress(null);
-            return;
-        }
-        if (null != existingPart.getResidingAddress()
-                && null != incomingPart.getResidingAddress()) {
-            updateAddress
-                    (existingPart.getResidingAddress().getSimpleAddress(),
-                            incomingPart.getResidingAddress().getSimpleAddress());
-        }
-        // Create a new ResidingAddress object based on the incoming one
-        else {
-            ResidingAddress residingAddress = new ResidingAddress();
-            residingAddress.setSimpleAddress(new SimpleAddress());
-            updateAddress
-                    (residingAddress.getSimpleAddress(),
-                            incomingPart.getResidingAddress().getSimpleAddress());
-            existingPart.setResidingAddress(residingAddress);
-        }
-        // Make sure the addressType field is set
-        existingPart.getResidingAddress().
-                getSimpleAddress().setAddressType(RESIDING_ADDRESS);
-    }
-
-    /**
-     * Update PostalAddress if it exists. If none exists, create a
-     * new PostalAddress and set the values.
-     *
-     * @param existingPart The existing Part
-     * @param incomingPart The incoming Part
-     */
-    public void updatePartPostalAddressCreateIfNull(
-            IPostalAddress existingPart,
-            IPostalAddress incomingPart) {
-        if (null == incomingPart.getPostalAddress()) {
-            existingPart.setPostalAddress(null);
-            return;
-        }
-
-        if (null != existingPart.getPostalAddress()
-                && null != incomingPart.getPostalAddress()) {
-            updateAddress
-                    (existingPart.getPostalAddress().getSimpleAddress(),
-                            incomingPart.getPostalAddress().getSimpleAddress());
-        }
-        // Create a new PostalAddress object based on the incoming one
-        else {
-            PostalAddress postalAddress = new PostalAddress();
-            postalAddress.setSimpleAddress(new SimpleAddress());
-            updateAddress
-                    (postalAddress.getSimpleAddress(),
-                            incomingPart.getPostalAddress().getSimpleAddress());
-            existingPart.setPostalAddress(postalAddress);
-        }
-        // Make sure the addressType field is set
-        existingPart.getPostalAddress().getSimpleAddress().
-                setAddressType(POSTAL_ADDRESS);
-    }
-
-    /**
-     * Update ContactInformation if it exists. If none exists, create a
-     * new ContactInformation and set the values.
-     *
-     * @param existingPart The existing Part
-     * @param incomingPart The incoming Part
-     */
-    public void updatePartContactInformationCreateIfNull(
-            IContactInformation existingPart,
-            IContactInformation incomingPart) {
-        if (null == incomingPart.getContactInformation()) {
-            existingPart.setContactInformation(null);
-            return;
-        }
-        if (existingPart.getContactInformation() != null &&
-                incomingPart.getContactInformation() != null) {
-            updateContactInformation
-                    (existingPart.getContactInformation(),
-                            incomingPart.getContactInformation());
-        }
-        // Create a new ContactInformation object based on the incoming one
-        else if (incomingPart.getContactInformation() != null) {
-            existingPart.setContactInformation(updateContactInformation
-                    (new ContactInformation(),
-                            incomingPart.getContactInformation()));
-        }
-    }
+    // Internal template methods
 
     /**
      * Generate a Default PartUnit object that can be
@@ -552,6 +381,196 @@ public class PartService
         return partHateoas;
     }
 
+    // Internal helper methods
+
+    private void createPerson(PartPerson part) {
+        ContactInformation contactInformation
+                = part.getContactInformation();
+
+        if (contactInformation != null) {
+            contactInformation.setPartPerson(part);
+        }
+        PostalAddress postalAddress = part.getPostalAddress();
+        if (null != postalAddress) {
+            postalAddress.getSimpleAddress().setAddressType(POSTAL_ADDRESS);
+            postalAddress.setPartPerson(part);
+        }
+        ResidingAddress residingAddress = part.getResidingAddress();
+        if (null != residingAddress) {
+            residingAddress.getSimpleAddress().setAddressType(RESIDING_ADDRESS);
+            residingAddress.setPartPerson(part);
+        }
+    }
+
+    private void createUnit(PartUnit part) {
+        ContactInformation contactInformation
+                = part.getContactInformation();
+        part.setContactInformation(contactInformation);
+
+        // Set NikitaEntity values for ContactInformation, PostalAddress,
+        // BusinessAddress
+        PostalAddress postalAddress = part.getPostalAddress();
+        if (null != postalAddress) {
+            postalAddress.getSimpleAddress().setAddressType(POSTAL_ADDRESS);
+            postalAddress.setPartUnit(part);
+        }
+        BusinessAddress businessAddress = part.getBusinessAddress();
+        if (null != businessAddress) {
+            businessAddress.getSimpleAddress().setAddressType(BUSINESS_ADDRESS);
+            businessAddress.setPartUnit(part);
+        }
+    }
+
+    /**
+     * Internal helper method. Rather than having a find and try catch in
+     * multiple methods, we have it here once. If you call this, be aware
+     * that you will only ever get a valid Part back. If there
+     * is no valid Part, an exception is thrown
+     *
+     * @param partSystemId systemId of part to retrieve
+     * @return the retrieved Part
+     */
+    private Part getPartOrThrow(@NotNull UUID partSystemId) {
+        Part part = partRepository.findBySystemId(partSystemId);
+        if (part == null) {
+            String info = INFO_CANNOT_FIND_OBJECT + " Part, " +
+                    "using systemId " + partSystemId;
+            logger.info(info);
+            throw new NoarkEntityNotFoundException(info);
+        }
+        return part;
+    }
+
+    /**
+     * Update BusinessAddress if it exists. If none exists, create a
+     * new BusinessAddress and set the values.
+     *
+     * @param existingPart The existing Part
+     * @param incomingPart The incoming Part
+     */
+    private void updatePartUnitBusinessAddressCreateIfNull(
+            IBusinessAddress existingPart,
+            IBusinessAddress incomingPart) {
+        if (null == incomingPart.getBusinessAddress()) {
+            existingPart.setBusinessAddress(null);
+            return;
+        }
+        if (null != existingPart.getBusinessAddress()
+                && null != incomingPart.getBusinessAddress()) {
+            updateAddress
+                    (existingPart.getBusinessAddress().getSimpleAddress(),
+                            incomingPart.getBusinessAddress().getSimpleAddress());
+        }
+        // Create a new BusinessAddress object based on the incoming one
+        else {
+            BusinessAddress businessAddress = new BusinessAddress();
+            businessAddress.setSimpleAddress(new SimpleAddress());
+            updateAddress
+                    (businessAddress.getSimpleAddress(),
+                            incomingPart.getBusinessAddress().getSimpleAddress());
+            existingPart.setBusinessAddress(businessAddress);
+        }
+        existingPart.getBusinessAddress().getSimpleAddress().
+                setAddressType(BUSINESS_ADDRESS);
+    }
+
+    /**
+     * Update ResidingAddress if it exists. If none exists, create a
+     * new ResidingAddress and set the values.
+     *
+     * @param existingPart The existing Part
+     * @param incomingPart The incoming Part
+     */
+    private void updatePartResidingAddressCreateIfNull(
+            IResidingAddress existingPart,
+            IResidingAddress incomingPart) {
+        if (null == incomingPart.getResidingAddress()) {
+            existingPart.setResidingAddress(null);
+            return;
+        }
+        if (null != existingPart.getResidingAddress()
+                && null != incomingPart.getResidingAddress()) {
+            updateAddress
+                    (existingPart.getResidingAddress().getSimpleAddress(),
+                            incomingPart.getResidingAddress().getSimpleAddress());
+        }
+        // Create a new ResidingAddress object based on the incoming one
+        else {
+            ResidingAddress residingAddress = new ResidingAddress();
+            residingAddress.setSimpleAddress(new SimpleAddress());
+            updateAddress
+                    (residingAddress.getSimpleAddress(),
+                            incomingPart.getResidingAddress().getSimpleAddress());
+            existingPart.setResidingAddress(residingAddress);
+        }
+        // Make sure the addressType field is set
+        existingPart.getResidingAddress().
+                getSimpleAddress().setAddressType(RESIDING_ADDRESS);
+    }
+
+    /**
+     * Update PostalAddress if it exists. If none exists, create a
+     * new PostalAddress and set the values.
+     *
+     * @param existingPart The existing Part
+     * @param incomingPart The incoming Part
+     */
+    private void updatePartPostalAddressCreateIfNull(
+            IPostalAddress existingPart,
+            IPostalAddress incomingPart) {
+        if (null == incomingPart.getPostalAddress()) {
+            existingPart.setPostalAddress(null);
+            return;
+        }
+
+        if (null != existingPart.getPostalAddress()
+                && null != incomingPart.getPostalAddress()) {
+            updateAddress
+                    (existingPart.getPostalAddress().getSimpleAddress(),
+                            incomingPart.getPostalAddress().getSimpleAddress());
+        }
+        // Create a new PostalAddress object based on the incoming one
+        else {
+            PostalAddress postalAddress = new PostalAddress();
+            postalAddress.setSimpleAddress(new SimpleAddress());
+            updateAddress
+                    (postalAddress.getSimpleAddress(),
+                            incomingPart.getPostalAddress().getSimpleAddress());
+            existingPart.setPostalAddress(postalAddress);
+        }
+        // Make sure the addressType field is set
+        existingPart.getPostalAddress().getSimpleAddress().
+                setAddressType(POSTAL_ADDRESS);
+    }
+
+    /**
+     * Update ContactInformation if it exists. If none exists, create a
+     * new ContactInformation and set the values.
+     *
+     * @param existingPart The existing Part
+     * @param incomingPart The incoming Part
+     */
+    private void updatePartContactInformationCreateIfNull(
+            IContactInformation existingPart,
+            IContactInformation incomingPart) {
+        if (null == incomingPart.getContactInformation()) {
+            existingPart.setContactInformation(null);
+            return;
+        }
+        if (existingPart.getContactInformation() != null &&
+                incomingPart.getContactInformation() != null) {
+            updateContactInformation
+                    (existingPart.getContactInformation(),
+                            incomingPart.getContactInformation());
+        }
+        // Create a new ContactInformation object based on the incoming one
+        else if (incomingPart.getContactInformation() != null) {
+            existingPart.setContactInformation(updateContactInformation
+                    (new ContactInformation(),
+                            incomingPart.getContactInformation()));
+        }
+    }
+
     /**
      * Copy the values you are allowed to copy from the incoming
      * contactInformation object to the existing contactInformation object
@@ -562,7 +581,7 @@ public class PartService
      * @param incomingContactInformation Incoming contactInformation object
      * @return The existing ContactInformation object updated with values
      */
-    public ContactInformation updateContactInformation(
+    private ContactInformation updateContactInformation(
             IContactInformationEntity existingContactInformation,
             IContactInformationEntity incomingContactInformation) {
 

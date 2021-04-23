@@ -40,7 +40,6 @@ import static org.springframework.http.HttpStatus.OK;
  * FileService to see how to add BSM metadata to a file.
  */
 @Service
-@Transactional
 public class BSMMetadataService
         extends NoarkService
         implements IBSMMetadataService {
@@ -61,6 +60,25 @@ public class BSMMetadataService
         this.metadataRepository = metadataRepository;
     }
 
+    // All CREATE methods
+
+    @Override
+    @Transactional
+    public ResponseEntity<BSMMetadataHateoas> save(
+            @NotNull BSMMetadata bsmMetadata) {
+        BSMMetadataHateoas bsmMetadataHateoas =
+                new BSMMetadataHateoas(metadataRepository.save(bsmMetadata));
+        hateoasHandler.addLinks(bsmMetadataHateoas, new Authorisation());
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityCreatedEvent(this, bsmMetadata));
+        return ResponseEntity.status(CREATED)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .eTag(bsmMetadataHateoas.getEntityVersion().toString())
+                .body(bsmMetadataHateoas);
+    }
+
+    // All READ methods
+
     @Override
     public ResponseEntity<BSMMetadataHateoas> find(UUID systemID) {
         BSMMetadata bsmMetadata = getBSMMetadataOrThrow(systemID);
@@ -75,20 +93,22 @@ public class BSMMetadataService
     }
 
     @Override
-    public ResponseEntity<BSMMetadataHateoas> save(
-            @NotNull BSMMetadata bsmMetadata) {
+    @SuppressWarnings("unchecked")
+    public ResponseEntity<BSMMetadataHateoas> findAll() {
         BSMMetadataHateoas bsmMetadataHateoas =
-                new BSMMetadataHateoas(metadataRepository.save(bsmMetadata));
+                new BSMMetadataHateoas(
+                        (List<INoarkEntity>) (List)
+                                metadataRepository.findAll(), BSM_DEF);
         hateoasHandler.addLinks(bsmMetadataHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityCreatedEvent(this, bsmMetadata));
-        return ResponseEntity.status(CREATED)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(getServletPath()))
                 .eTag(bsmMetadataHateoas.getEntityVersion().toString())
                 .body(bsmMetadataHateoas);
     }
+    // All UPDATE methods
 
     @Override
+    @Transactional
     public ResponseEntity<BSMMetadataHateoas> handleUpdate(
             @NotNull UUID systemID, @NotNull PatchObjects patchObjects) {
         BSMMetadata bsmMetadata =
@@ -105,6 +125,7 @@ public class BSMMetadataService
     }
 
     @Override
+    @Transactional
     public Object handleUpdateRfc7396(
             @NotNull UUID systemID, @NotNull PatchMerge patchMerge) {
         BSMMetadata bsmMetadata = getBSMMetadataOrThrow(systemID);
@@ -120,24 +141,15 @@ public class BSMMetadataService
                 .body(bsmMetadataHateoas);
     }
 
+    // All DELETE methods
+
     @Override
+    @Transactional
     public void deleteEntity(@NotNull UUID systemId) {
         deleteEntity(getBSMMetadataOrThrow(systemId));
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public ResponseEntity<BSMMetadataHateoas> findAll() {
-        BSMMetadataHateoas bsmMetadataHateoas =
-                new BSMMetadataHateoas(
-                        (List<INoarkEntity>) (List)
-                                metadataRepository.findAll(), BSM_DEF);
-        hateoasHandler.addLinks(bsmMetadataHateoas, new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(bsmMetadataHateoas.getEntityVersion().toString())
-                .body(bsmMetadataHateoas);
-    }
+    // All helper methods
 
     /**
      * Internal helper method. Rather than having a find and try catch in

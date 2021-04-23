@@ -34,17 +34,17 @@ import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentM
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
-@Transactional
 public class FondsCreatorService
         extends NoarkService
         implements IFondsCreatorService {
 
     private static final Logger logger = LoggerFactory.
             getLogger(FondsCreatorService.class);
-    private IFondsCreatorRepository fondsCreatorRepository;
-    private IFondsRepository fondsRepository;
-    private IMetadataService metadataService;
-    private IFondsHateoasHandler fondsHateoasHandler;
+
+    private final IFondsCreatorRepository fondsCreatorRepository;
+    private final IFondsRepository fondsRepository;
+    private final IMetadataService metadataService;
+    private final IFondsHateoasHandler fondsHateoasHandler;
 
     public FondsCreatorService(
             EntityManager entityManager,
@@ -72,11 +72,13 @@ public class FondsCreatorService
      * @return the newly persisted fondsCreator object
      */
     @Override
+    @Transactional
     public FondsCreator createNewFondsCreator(FondsCreator fondsCreator) {
         return fondsCreatorRepository.save(fondsCreator);
     }
 
     @Override
+    @Transactional
     public Fonds createFondsAssociatedWithFondsCreator(
             String fondsCreatorSystemId, Fonds fonds) {
         FondsCreator fondsCreator =
@@ -157,6 +159,7 @@ public class FondsCreatorService
      * @return the updated fondsCreator object after it is persisted
      */
     @Override
+    @Transactional
     public FondsCreator handleUpdate(@NotNull final String systemId,
                                      @NotNull final Long version,
                                      @NotNull final FondsCreator
@@ -182,6 +185,7 @@ public class FondsCreatorService
 
     // All DELETE operations
     @Override
+    @Transactional
     public void deleteEntity(@NotNull String fondsCreatorSystemId) {
         FondsCreator fondsCreator =
                 getFondsCreatorOrThrow(fondsCreatorSystemId);
@@ -196,6 +200,7 @@ public class FondsCreatorService
      * @return the number of objects deleted
      */
     @Override
+    @Transactional
     public long deleteAllByOwnedBy() {
         return fondsCreatorRepository.deleteByOwnedBy(getUser());
     }

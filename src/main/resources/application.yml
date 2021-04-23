@@ -7,6 +7,8 @@
 #    org:
 #      springframework:
 #        web: DEBUG
+#      hibernate:
+#        SQL: DEBUG
 
 server:
   servlet:
@@ -28,12 +30,16 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     database: h2
-    show-sql: false
+    show-sql: true
     properties:
-      hibernate.hbm2ddl.auto: create-drop
-      hibernate.discriminator.ignore_explicit_for_joined: true
-      hibernate.hbm2ddl.import_files_sql_extractor: org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor
-      org.hibernate.envers.audit_table_prefix: aud_
+      hibernate:
+        connection:
+          provider_disables_autocommit: true
+        hbm2ddl:
+          auto: create-drop
+          hbm2ddl.import_files_sql_extractor: org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor
+        discriminator.ignore_explicit_for_joined: true
+        org.hibernate.envers.audit_table_prefix: aud_
 
 logging:
   level:

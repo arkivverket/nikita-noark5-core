@@ -40,8 +40,6 @@ import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
-@Transactional
-@SuppressWarnings("unchecked")
 public class SeriesService
         extends NoarkService
         implements ISeriesService {
@@ -49,16 +47,16 @@ public class SeriesService
     private static final Logger logger =
             LoggerFactory.getLogger(SeriesService.class);
 
-    private IMetadataService metadataService;
-    private IFileService fileService;
-    private ICaseFileService caseFileService;
-    private IClassificationSystemService classificationSystemService;
-    private ISeriesRepository seriesRepository;
-    private ISeriesHateoasHandler seriesHateoasHandler;
-    private IRecordHateoasHandler recordHateoasHandler;
-    private IFileHateoasHandler fileHateoasHandler;
-    private IFondsHateoasHandler fondsHateoasHandler;
-    private IClassificationSystemHateoasHandler
+    private final IMetadataService metadataService;
+    private final IFileService fileService;
+    private final ICaseFileService caseFileService;
+    private final IClassificationSystemService classificationSystemService;
+    private final ISeriesRepository seriesRepository;
+    private final ISeriesHateoasHandler seriesHateoasHandler;
+    private final IRecordHateoasHandler recordHateoasHandler;
+    private final IFileHateoasHandler fileHateoasHandler;
+    private final IFondsHateoasHandler fondsHateoasHandler;
+    private final IClassificationSystemHateoasHandler
             classificationSystemHateoasHandler;
 
     public SeriesService(
@@ -80,7 +78,6 @@ public class SeriesService
         this.metadataService = metadataService;
         this.fileService = fileService;
         this.caseFileService = caseFileService;
-        this.metadataService = metadataService;
         this.seriesRepository = seriesRepository;
         this.classificationSystemService = classificationSystemService;
         this.seriesHateoasHandler = seriesHateoasHandler;
@@ -93,6 +90,7 @@ public class SeriesService
 
     // All CREATE operations
     @Override
+    @Transactional
     public CaseFile createCaseFileAssociatedWithSeries(String seriesSystemId,
                                                        CaseFile caseFile) {
         Series series = getSeriesOrThrow(seriesSystemId);
@@ -102,6 +100,7 @@ public class SeriesService
     }
 
     @Override
+    @Transactional
     public File createFileAssociatedWithSeries(String seriesSystemId,
                                                File file) {
         Series series = getSeriesOrThrow(seriesSystemId);
@@ -111,6 +110,7 @@ public class SeriesService
     }
 
     @Override
+    @Transactional
     public Series save(Series series) {
         validateDocumentMedium(metadataService, series);
         validateDeletion(series.getReferenceDeletion());
@@ -121,6 +121,7 @@ public class SeriesService
     }
 
     @Override
+    @Transactional
     public ClassificationSystemHateoas createClassificationSystem(
             String systemId, ClassificationSystem classificationSystem) {
         Series series = getSeriesOrThrow(systemId);
@@ -130,6 +131,7 @@ public class SeriesService
 
     // All READ operations
     @Override
+    @SuppressWarnings("unchecked")
     public ResponseEntity<SeriesHateoas> findAll() {
         SeriesHateoas seriesHateoas = new
                 SeriesHateoas((List<INoarkEntity>) (List)
@@ -148,6 +150,7 @@ public class SeriesService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public ResponseEntity<RecordHateoas> findAllRecordAssociatedWithSeries(
             String systemId) {
         RecordHateoas recordHateoas = new RecordHateoas(
@@ -160,6 +163,7 @@ public class SeriesService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public ResponseEntity<FileHateoas> findAllFileAssociatedWithSeries(
             String systemId) {
         FileHateoas fileHateoas = new FileHateoas(
@@ -242,6 +246,7 @@ public class SeriesService
      * @return the updated series object after it is persisted
      */
     @Override
+    @Transactional
     public Series handleUpdate(@NotNull final String systemId,
                                @NotNull final Long version,
                                @NotNull final Series incomingSeries) {
@@ -269,6 +274,7 @@ public class SeriesService
     }
 
     @Override
+    @Transactional
     public void updateSeriesReferences(Series series) {
         if (null != series.getReferencePrecursorSystemID()) {
             Series referenceSeries = seriesRepository.
@@ -309,6 +315,7 @@ public class SeriesService
 
     // All DELETE operations
     @Override
+    @Transactional
     public void deleteEntity(@NotNull String seriesSystemId) {
         deleteEntity(getSeriesOrThrow(seriesSystemId));
     }
@@ -319,6 +326,7 @@ public class SeriesService
      * @return the number of objects deleted
      */
     @Override
+    @Transactional
     public long deleteAllByOwnedBy() {
         long count = seriesRepository.count();
         seriesRepository.deleteAll();

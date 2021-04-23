@@ -16,7 +16,6 @@ import static nikita.common.config.Constants.SYSTEM;
 import static nikita.common.config.DatabaseConstants.METADATA_ENTITY_PACKAGE;
 
 @Service
-@Transactional
 public class MetadataInsertTransaction {
 
     private final Repositories repositories;
@@ -25,6 +24,7 @@ public class MetadataInsertTransaction {
         repositories = new Repositories(appContext);
     }
 
+    @Transactional
     public void populateMetadataEntities(String code, String codename,
                                          String fieldName)
             throws ClassNotFoundException, NoSuchMethodException,

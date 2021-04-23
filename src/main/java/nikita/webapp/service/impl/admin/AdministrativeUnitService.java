@@ -33,8 +33,9 @@ public class AdministrativeUnitService
 
     private static final Logger logger =
             LoggerFactory.getLogger(AdministrativeUnitService.class);
-    private IAdministrativeUnitRepository administrativeUnitRepository;
-    private ISequenceNumberGeneratorService numberGeneratorService;
+
+    private final IAdministrativeUnitRepository administrativeUnitRepository;
+    private final ISequenceNumberGeneratorService numberGeneratorService;
 
     public AdministrativeUnitService(
             EntityManager entityManager,
@@ -127,7 +128,6 @@ public class AdministrativeUnitService
      * @return list of all administrativeUnit
      */
     @Override
-    @Transactional(readOnly = true)
     public List<AdministrativeUnit> findAll() {
         return administrativeUnitRepository.findAll();
     }
@@ -141,7 +141,6 @@ public class AdministrativeUnitService
      * @return the administrativeUnit
      */
     @Override
-    @Transactional(readOnly = true)
     public AdministrativeUnit findBySystemId(UUID systemId) {
         return administrativeUnitRepository.findBySystemId(systemId);
     }
@@ -197,7 +196,6 @@ public class AdministrativeUnitService
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Optional<AdministrativeUnit> findFirst() {
         return administrativeUnitRepository.findFirstByOrderByCreatedDateAsc();
     }
@@ -211,7 +209,6 @@ public class AdministrativeUnitService
      *             administrativeUnit
      * @return the administrativeUnit
      */
-    @Transactional(readOnly = true)
     public AdministrativeUnit getAdministrativeUnitOrThrow(User user) {
         Set<User> users = new HashSet<>();
         users.add(user);

@@ -42,7 +42,6 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
-@Transactional
 public class ODataService
         extends NoarkService
         implements IODataService {
@@ -62,6 +61,7 @@ public class ODataService
     }
 
     @Override
+    @Transactional
     public ResponseEntity<String> processODataQueryDelete
             (HttpServletRequest request) {
         Query query = convertODataToHQL(request, "delete");

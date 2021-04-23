@@ -46,8 +46,6 @@ import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentM
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
-@Transactional
-@SuppressWarnings("unchecked")
 public class FondsService
         extends NoarkService
         implements IFondsService {
@@ -55,13 +53,13 @@ public class FondsService
     private static final Logger logger =
             LoggerFactory.getLogger(FondsService.class);
 
-    private IFondsRepository fondsRepository;
-    private SeriesService seriesService;
-    private IMetadataService metadataService;
-    private IFondsCreatorService fondsCreatorService;
-    private IFondsHateoasHandler fondsHateoasHandler;
-    private ISeriesHateoasHandler seriesHateoasHandler;
-    private IFondsCreatorHateoasHandler fondsCreatorHateoasHandler;
+    private final IFondsRepository fondsRepository;
+    private final SeriesService seriesService;
+    private final IMetadataService metadataService;
+    private final IFondsCreatorService fondsCreatorService;
+    private final IFondsHateoasHandler fondsHateoasHandler;
+    private final ISeriesHateoasHandler seriesHateoasHandler;
+    private final IFondsCreatorHateoasHandler fondsCreatorHateoasHandler;
 
     public FondsService(EntityManager entityManager,
                         ApplicationEventPublisher applicationEventPublisher,
@@ -96,6 +94,7 @@ public class FondsService
      * @return the newly persisted fonds object wrapped as a fondsHateaos object
      */
     @Override
+    @Transactional
     public FondsHateoas createNewFonds(@NotNull Fonds fonds) {
         validateDocumentMedium(metadataService, fonds);
         if (null == fonds.getFondsStatus()) {
@@ -127,6 +126,7 @@ public class FondsService
      * @return the newly persisted fonds object
      */
     @Override
+    @Transactional
     public FondsHateoas createFondsAssociatedWithFonds(
             @NotNull String parentFondsSystemId,
             @NotNull Fonds childFonds) {
@@ -155,6 +155,7 @@ public class FondsService
      * object
      */
     @Override
+    @Transactional
     public SeriesHateoas createSeriesAssociatedWithFonds(
             @NotNull String fondsSystemId,
             @NotNull Series series) {
@@ -191,6 +192,7 @@ public class FondsService
      * FondsCreatorHateoas object
      */
     @Override
+    @Transactional
     public FondsCreatorHateoas createFondsCreatorAssociatedWithFonds(
             @NotNull String fondsSystemId,
             @NotNull FondsCreator fondsCreator) {
@@ -230,6 +232,7 @@ public class FondsService
      *
      */
     @Override
+    @SuppressWarnings("unchecked")
     public SeriesHateoas findSeriesAssociatedWithFonds(
             @NotNull String fondsSystemId) {
 
@@ -242,37 +245,6 @@ public class FondsService
                 new Authorisation());
         return seriesHateoas;
     }
-
-    /**
-     * Retrieve a list of StorageLocation objects associated with a given Fonds
-     * from the database. First we try to locate the Fonds object. If the
-     * Fonds object does not exist a NoarkEntityNotFoundException exception
-     * is thrown that the caller has to deal with.
-     *
-     * If any StorageLocation objects exist, they are wrapped in a
-     * StorageLocationHateoas object and returned to the caller.
-     *
-     * @param fondsSystemId The systemId of the Fonds object that you want to
-     *                      retrieve associated StorageLocation objects
-     *
-     * @return the newly persisted fondsCreator object wrapped as a
-     * StorageLocationHateoas object
-     *
-     */
-    /*@Override
-    TODO: Finish implementing this.
-    public StorageLocationHateoas findStorageLocationAssociatedWithFonds(
-            @NotNull String fondsSystemId) {
-
-        Fonds fonds = getFondsOrThrow(fondsSystemId);
-
-        StorageLocationHateoas stroageLocationHateoas = new
-                StorageLocationHateoas((List<INoarkEntity>)
-                (List) fonds.getReferenceStorageLocation());
-        fondsCreatorHateoasHandler.addLinks(stroageLocationHateoas,
-                new Authorisation());
-        return stroageLocationHateoas;
-    } */
 
     /**
      * Retrieve a single Fonds objects from the database.
@@ -296,6 +268,7 @@ public class FondsService
      * @return the list of Fonds object wrapped as a FondsHateoas object
      */
     @Override
+    @SuppressWarnings("unchecked")
     public FondsHateoas findAllFonds() {
         FondsHateoas fondsHateoas = new
                 FondsHateoas((List<INoarkEntity>)
@@ -426,6 +399,7 @@ public class FondsService
      * @param incomingFonds The incoming fonds object
      */
     @Override
+    @Transactional
     public FondsHateoas handleUpdate(@NotNull String fondsSystemId,
                                      @NotNull Long version,
                                      @NotNull Fonds incomingFonds) {
@@ -473,6 +447,7 @@ public class FondsService
      * @param fondsSystemId The systemId of the fonds object to retrieve
      */
     @Override
+    @Transactional
     public void deleteEntity(@NotNull String fondsSystemId) {
         Fonds fonds = getFondsOrThrow(fondsSystemId);
         // Disassociate any links between Fonds and FondsCreator
@@ -488,6 +463,7 @@ public class FondsService
      * @return the number of objects deleted
      */
     @Override
+    @Transactional
     public long deleteAllByOwnedBy() {
         return fondsRepository.deleteByOwnedBy(getUser());
     }

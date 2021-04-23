@@ -48,7 +48,6 @@ import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
 
 @Service
-@Transactional
 public class DocumentDescriptionService
         extends NoarkService
         implements IDocumentDescriptionService {
@@ -107,6 +106,7 @@ public class DocumentDescriptionService
 
     // All CREATE operations
     @Override
+    @Transactional
     public DocumentObjectHateoas
     createDocumentObjectAssociatedWithDocumentDescription(
             String documentDescriptionSystemId, DocumentObject documentObject) {
@@ -125,8 +125,8 @@ public class DocumentDescriptionService
         return documentObjectHateoas;
     }
 
-
     @Override
+    @Transactional
     public CommentHateoas createCommentAssociatedWithDocumentDescription
         (String systemID, Comment comment) {
         return commentService.createNewComment
@@ -134,6 +134,7 @@ public class DocumentDescriptionService
     }
 
     @Override
+    @Transactional
     public PartPersonHateoas
     createPartPersonAssociatedWithDocumentDescription(
             String systemID, PartPerson partPerson) {
@@ -143,6 +144,7 @@ public class DocumentDescriptionService
     }
 
     @Override
+    @Transactional
     public PartUnitHateoas
     createPartUnitAssociatedWithDocumentDescription(
             String systemID, PartUnit partUnit) {
@@ -151,6 +153,18 @@ public class DocumentDescriptionService
                         getDocumentDescriptionOrThrow(systemID));
     }
 
+    @Override
+    @Transactional
+    public DocumentDescription save(DocumentDescription documentDescription) {
+        validateDocumentMedium(metadataService, documentDescription);
+        validateDocumentStatus(documentDescription);
+        validateDocumentType(documentDescription);
+        validateDeletion(documentDescription.getReferenceDeletion());
+        bsmService.validateBSMList(documentDescription.getReferenceBSMBase());
+        documentDescription.setAssociationDate(OffsetDateTime.now());
+        documentDescription.setAssociatedBy(getUser());
+        return documentDescriptionRepository.save(documentDescription);
+    }
 
     /**
      * Persist and associate the incoming author object with the
@@ -162,6 +176,7 @@ public class DocumentDescriptionService
      * @return author object wrapped as a AuthorHateaos
      */
     @Override
+    @Transactional
     public AuthorHateoas associateAuthorWithDocumentDescription(
             String systemId, Author author) {
         return authorService.associateAuthorWithDocumentDescription
@@ -225,24 +240,6 @@ public class DocumentDescriptionService
         return authorService.generateDefaultAuthor();
     }
 
-    /*
-     * Note:
-     * <p>
-     * Assumes documentDescription.addRecord() has already been called.
-     *
-     */
-    @Override
-    public DocumentDescription save(DocumentDescription documentDescription) {
-        validateDocumentMedium(metadataService, documentDescription);
-        validateDocumentStatus(documentDescription);
-        validateDocumentType(documentDescription);
-        validateDeletion(documentDescription.getReferenceDeletion());
-        bsmService.validateBSMList(documentDescription.getReferenceBSMBase());
-        documentDescription.setAssociationDate(OffsetDateTime.now());
-        documentDescription.setAssociatedBy(getUser());
-        return documentDescriptionRepository.save(documentDescription);
-    }
-
     @Override
     public DocumentDescriptionHateoas
     findBySystemId(String systemId) {
@@ -255,6 +252,7 @@ public class DocumentDescriptionService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public AuthorHateoas findAllAuthorWithDocumentDescriptionBySystemId(
             String systemId) {
         DocumentDescription documentDescription =
@@ -274,6 +272,7 @@ public class DocumentDescriptionService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public DocumentDescriptionHateoas findAll() {
         DocumentDescriptionHateoas documentDescriptionHateoas = new
                 DocumentDescriptionHateoas((List<INoarkEntity>)
@@ -284,6 +283,7 @@ public class DocumentDescriptionService
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public DocumentObjectHateoas
     findAllDocumentObjectWithDocumentDescriptionBySystemId(
             @NotNull String systemId) {
@@ -327,8 +327,6 @@ public class DocumentDescriptionService
         return partHateoas;
     }
 
-
-
     // -- All UPDATE operations
 
     /**
@@ -354,6 +352,7 @@ public class DocumentDescriptionService
      * @return the updated documentDescription after it is persisted
      */
     @Override
+    @Transactional
     public DocumentDescriptionHateoas handleUpdate(
             @NotNull String systemId, @NotNull Long version,
             @NotNull DocumentDescription incomingDocumentDescription) {
@@ -388,7 +387,9 @@ public class DocumentDescriptionService
     }
 
     // All DELETE operations
+
     @Override
+    @Transactional
     public void deleteEntity(@NotNull String documentDescriptionSystemId) {
         DocumentDescription documentDescription =
                 getDocumentDescriptionOrThrow(documentDescriptionSystemId);
@@ -404,6 +405,7 @@ public class DocumentDescriptionService
      * @return the number of objects deleted
      */
     @Override
+    @Transactional
     public long deleteAllByOwnedBy() {
         return documentDescriptionRepository.deleteByOwnedBy(getUser());
     }
@@ -448,14 +450,15 @@ public class DocumentDescriptionService
                 documentDescriptionRepository.findBySystemId(
                         UUID.fromString(documentDescriptionSystemId));
         if (documentDescription == null) {
-            String info = INFO_CANNOT_FIND_OBJECT +
+            String error = INFO_CANNOT_FIND_OBJECT +
                     " DocumentDescription, using systemId " +
                     documentDescriptionSystemId;
-            logger.info(info);
-            throw new NoarkEntityNotFoundException(info);
+            logger.info(error);
+            throw new NoarkEntityNotFoundException(error);
         }
         return documentDescription;
     }
+
     private void validateDocumentStatus(DocumentDescription documentDescription) {
         // Assume value already set, as the deserialiser will enforce it.
         DocumentStatus documentStatus = (DocumentStatus)
@@ -463,6 +466,7 @@ public class DocumentDescriptionService
                         documentDescription.getDocumentStatus());
         documentDescription.setDocumentStatus(documentStatus);
     }
+
     private void validateDocumentType(DocumentDescription documentDescription) {
         // Assume value already set, as the deserialiser will enforce it.
         DocumentType documentType = (DocumentType)

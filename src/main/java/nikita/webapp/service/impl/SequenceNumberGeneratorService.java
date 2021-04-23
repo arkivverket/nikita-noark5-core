@@ -23,14 +23,13 @@ import java.util.Optional;
  * year changes.
  */
 @Service
-@Transactional
 public class SequenceNumberGeneratorService
         implements ISequenceNumberGeneratorService {
 
     private static final Logger logger =
             LoggerFactory.getLogger(SequenceNumberGenerator.class);
 
-    private ISequenceNumberGeneratorRepository numberGeneratorRepository;
+    private final ISequenceNumberGeneratorRepository numberGeneratorRepository;
 
     public SequenceNumberGeneratorService(
             ISequenceNumberGeneratorRepository numberGeneratorRepository) {
@@ -47,6 +46,7 @@ public class SequenceNumberGeneratorService
      *                           number for
      * @return the next sequence number
      */
+    @Transactional
     public Integer getNextCaseFileSequenceNumber(
             AdministrativeUnit administrativeUnit) {
         Integer currentYear = OffsetDateTime.now().getYear();
@@ -73,6 +73,7 @@ public class SequenceNumberGeneratorService
      *                           number for
      * @return the next sequence number
      */
+    @Transactional
     public Integer getNextRecordSequenceNumber(
             AdministrativeUnit administrativeUnit) {
         Integer currentYear = OffsetDateTime.now().getYear();
@@ -96,6 +97,7 @@ public class SequenceNumberGeneratorService
      * @return the newly persisted SequenceNumberGenerator
      */
     @Override
+    @Transactional
     public SequenceNumberGenerator createSequenceNumberGenerator(
             @NotNull AdministrativeUnit administrativeUnit) {
 

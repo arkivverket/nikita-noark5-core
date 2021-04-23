@@ -26,7 +26,6 @@ import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThro
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
-@Transactional
 public class SignOffService
         extends NoarkService
         implements ISignOffService {
@@ -60,6 +59,7 @@ public class SignOffService
     }
 
     @Override
+    @Transactional
     public ResponseEntity<SignOffHateoas> updateSignOff(
             @NotNull UUID signOffSystemId, @NotNull SignOff incomingSignOff) {
         // TODO: Revisit the logic behind this. Very unsure about the actual
@@ -81,6 +81,7 @@ public class SignOffService
      * @param systemId The systemId of the SignOff object you wish to delete
      */
     @Override
+    @Transactional
     public void deleteSignOff(@NotNull UUID systemId) {
         SignOff signOff = getSignOffOrThrow(systemId);
         for (RegistryEntry registryEntry : signOff.getReferenceRecord()) {

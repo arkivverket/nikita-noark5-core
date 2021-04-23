@@ -25,7 +25,6 @@ import static nikita.common.model.noark5.v5.admin.AuthorityName.*;
  * way metadata is imported
  */
 @Component
-@Transactional
 public class UserStartupImport {
 
     private final UserService userService;
@@ -44,6 +43,7 @@ public class UserStartupImport {
         this.administrativeUnitService = administrativeUnitService;
     }
 
+    @Transactional
     public void addAdminUnit() {
         // Create an administrative unit
         AdministrativeUnit administrativeUnit = new AdministrativeUnit();
@@ -55,6 +55,7 @@ public class UserStartupImport {
                         administrativeUnit);
     }
 
+    @Transactional
     public void addAuthorities() {
         addAuthority(RECORDS_MANAGER);
         addAuthority(RECORDS_KEEPER);
@@ -63,6 +64,7 @@ public class UserStartupImport {
         addAuthority(GUEST);
     }
 
+    @Transactional
     public void addUserAdmin() {
         AdministrativeUnit administrativeUnit = getAdministrativeUnitOrThrow();
         User admin = new User();
@@ -81,6 +83,7 @@ public class UserStartupImport {
         }
     }
 
+    @Transactional
     public void addUserRecordKeeper() {
         AdministrativeUnit administrativeUnit = getAdministrativeUnitOrThrow();
         User recordKeeper = new User();
@@ -97,6 +100,7 @@ public class UserStartupImport {
         }
     }
 
+    @Transactional
     public void addUserCaseHandler() {
         AdministrativeUnit administrativeUnit = getAdministrativeUnitOrThrow();
         User caseHandler = new User();
@@ -113,6 +117,7 @@ public class UserStartupImport {
         }
     }
 
+    @Transactional
     public void addUserLeader() {
         AdministrativeUnit administrativeUnit = getAdministrativeUnitOrThrow();
         User leader = new User();
@@ -129,6 +134,7 @@ public class UserStartupImport {
         }
     }
 
+    @Transactional
     public void addUserGuest() {
         AdministrativeUnit administrativeUnit = getAdministrativeUnitOrThrow();
         User guest = new User();
