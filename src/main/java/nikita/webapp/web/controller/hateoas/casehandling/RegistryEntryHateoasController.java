@@ -525,7 +525,7 @@ public class RegistryEntryHateoasController
                     required = true)
             @PathVariable(SYSTEM_ID) final String systemID) {
         registryEntryService.deleteEntity(systemID);
-        return ResponseEntity.status(OK)
+        return ResponseEntity.status(NO_CONTENT)
                 .body(DELETE_RESPONSE);
     }
 
