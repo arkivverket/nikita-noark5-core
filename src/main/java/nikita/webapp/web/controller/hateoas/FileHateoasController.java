@@ -14,6 +14,7 @@ import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
 import nikita.common.model.noark5.v5.hateoas.FileHateoas;
 import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
 import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileExpansionHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
 import nikita.common.model.noark5.v5.hateoas.secondary.CommentHateoas;
@@ -1220,7 +1221,7 @@ public class FileHateoasController
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
             FILE_EXPAND_TO_CASE_FILE,
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
-    public ResponseEntity<String> getExpandFileToCaseFileTemplate(
+    public ResponseEntity<CaseFileExpansionHateoas> getExpandFileToCaseFileTemplate(
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of file to expand",
                     required = true)

@@ -9,6 +9,7 @@ import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
 import nikita.common.model.noark5.v5.hateoas.FileHateoas;
 import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
 import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileExpansionHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
 import nikita.common.model.noark5.v5.hateoas.secondary.CommentHateoas;
@@ -297,7 +298,7 @@ public class FileService
     }
 
     @Override
-    public String generateDefaultValuesToExpandToCaseFile(
+    public CaseFileExpansionHateoas generateDefaultValuesToExpandToCaseFile(
             @NotNull final UUID systemId) {
         return caseFileService.generateDefaultExpandedCaseFile();
     }

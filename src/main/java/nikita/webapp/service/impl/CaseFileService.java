@@ -1,7 +1,5 @@
 package nikita.webapp.service.impl;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
 import nikita.common.model.nikita.PatchMerge;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Record;
@@ -9,8 +7,10 @@ import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.admin.User;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
+import nikita.common.model.noark5.v5.casehandling.CaseFileExpansion;
 import nikita.common.model.noark5.v5.casehandling.RecordNote;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileExpansionHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RecordNoteHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
@@ -20,7 +20,6 @@ import nikita.common.model.noark5.v5.metadata.CaseStatus;
 import nikita.common.model.noark5.v5.secondary.Precedence;
 import nikita.common.repository.n5v5.ICaseFileRepository;
 import nikita.common.repository.nikita.IUserRepository;
-import nikita.common.util.exceptions.NikitaMisconfigurationException;
 import nikita.common.util.exceptions.NoarkAdministrativeUnitMemberException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.ICaseFileHateoasHandler;
@@ -45,14 +44,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
-import java.io.StringWriter;
 import java.time.OffsetDateTime;
 import java.util.*;
 
 import static java.time.OffsetDateTime.now;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.Hateoas.Serialize.formatDateTime;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
 import static org.springframework.http.HttpStatus.OK;
@@ -442,29 +439,27 @@ public class CaseFileService
         return caseFileHateoas;
     }
 
+    /**
+     * Create a CaseFileExpansionHateoas that can be used when expanding a
+     * File to a CaseFile. None of the File attributes should be present in
+     * the returned payload. So we have a special approach that can be used to
+     * achieve this.
+     *
+     * @return CaseFileExpansionHateoas
+     */
     @Override
-    public String generateDefaultExpandedCaseFile() {
-        try {
-            JsonFactory factory = new JsonFactory();
-            StringWriter jsonPatchWriter = new StringWriter();
-            JsonGenerator jsonPatch = factory.createGenerator(jsonPatchWriter);
-            jsonPatch.writeStartObject();
-            jsonPatch.writeObjectFieldStart(CASE_STATUS);
-            jsonPatch.writeStringField(CODE, "R");
-            jsonPatch.writeStringField(CODE_NAME, "Opprettet av saksbehandler");
-            jsonPatch.writeEndObject();
-            jsonPatch.writeStringField(CASE_RESPONSIBLE, getUser());
-            jsonPatch.writeStringField(CASE_DATE,
-                    formatDateTime(now()));
-            jsonPatch.writeEndObject();
-            jsonPatch.close();
-            return jsonPatchWriter.toString();
-        } catch (Exception e) {
-            String error = "Error creating default JSON for default " +
-                    "utvid-til-saksmappe";
-            logger.error(error);
-            throw new NikitaMisconfigurationException(error);
-        }
+    public CaseFileExpansionHateoas generateDefaultExpandedCaseFile() {
+        CaseFileExpansion caseFileExpansion = new CaseFileExpansion();
+        CaseStatus caseStatus = new CaseStatus(TEMPLATE_CASE_STATUS_CODE,
+                TEMPLATE_CASE_STATUS_NAME);
+        caseFileExpansion.setCaseStatus(caseStatus);
+        caseFileExpansion.setCaseResponsible(getUser());
+        caseFileExpansion.setCaseDate(now());
+        CaseFileExpansionHateoas caseFileExpansionHateoas =
+                new CaseFileExpansionHateoas(caseFileExpansion);
+        caseFileHateoasHandler.addLinksOnTemplate(caseFileExpansionHateoas,
+                new Authorisation());
+        return caseFileExpansionHateoas;
     }
 
     /**
