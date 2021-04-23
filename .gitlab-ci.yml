@@ -19,7 +19,7 @@ noark5tester-runtest:
   allow_failure: false
   before_script:
     - apt update
-    - apt install -y git maven curl python3 unoconv pytz
+    - apt install -y git maven curl python3 unoconv python3-tz
     - git clone https://github.com/petterreinholdtsen/noark5-tester
   script:
     - atexit() { if [ "$serverpid" ]; then echo "stopping nikita"; kill $serverpid; sleep 1; if ! $nikitastarted ; then tail -100 nikita-run.log ; fi; fi }
