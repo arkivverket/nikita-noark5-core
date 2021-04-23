@@ -468,8 +468,21 @@ public class GeneralTest {
                 .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
                 .content(jsonFileWriter.toString()));
 
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$." + CASE_STATUS + "." + CODE)
+                        .value(TEMPLATE_CASE_STATUS_CODE))
+                .andExpect(jsonPath("$." + CASE_STATUS + "." + CODE_NAME)
+                        .value(TEMPLATE_CASE_STATUS_NAME))
+                .andExpect(jsonPath(
+                        "$._links.['" + REL_METADATA_CASE_STATUS
+                                + "']['" + HREF + "']",
+                        endsWith(NOARK_METADATA_PATH + SLASH +
+                                CASE_STATUS + SLASH)));
+
         response = resultActions.andReturn().getResponse();
         System.out.println(response.getContentAsString());
+
         String caseStatusCode = JsonPath.read(response.getContentAsString(),
                 "$." + CASE_STATUS + "." + CODE);
         String caseStatusCodeName = JsonPath.read(response.getContentAsString(),
@@ -478,6 +491,7 @@ public class GeneralTest {
                 "$." + CASE_RESPONSIBLE);
         String caseDate = JsonPath.read(response.getContentAsString(),
                 "$." + CASE_DATE);
+
 
         // Then create a PATCH MERGE object
         StringWriter jsonPatchWriter = new StringWriter();
@@ -512,7 +526,12 @@ public class GeneralTest {
                         "$._links.['" + SELF + "']").exists())
                 .andExpect(jsonPath(
                         "$._links.['" + REL_CASE_HANDLING_CASE_FILE + "']")
-                        .exists());
+                        .exists())
+                .andExpect(jsonPath(
+                        "$._links.['" + REL_METADATA_CASE_STATUS
+                                + "']['" + HREF + "']",
+                        endsWith(NOARK_METADATA_PATH + SLASH +
+                                CASE_STATUS + SLASH)));
     }
 
     /**
