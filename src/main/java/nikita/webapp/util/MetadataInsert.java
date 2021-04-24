@@ -1,35 +1,40 @@
 package nikita.webapp.util;
 
 import nikita.common.model.noark5.v5.metadata.Metadata;
+import nikita.common.repository.n5v5.metadata.IMetadataRepository;
 import nikita.common.util.exceptions.NikitaMisconfigurationException;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.data.repository.support.Repositories;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.time.OffsetDateTime;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Optional;
 
+import static nikita.common.config.Constants.SYSTEM;
 import static nikita.common.config.DatabaseConstants.METADATA_ENTITY_PACKAGE;
 import static nikita.common.config.FileConstants.RESOURCE_METADATA;
 
-/**
- * Created by tsodring
- * <p>
- */
 @Service
+@Transactional
 public class MetadataInsert {
 
-    private MetadataInsertTransaction insertTransaction;
+    private final Repositories repositories;
 
-    public MetadataInsert(MetadataInsertTransaction insertTransaction) {
-        this.insertTransaction = insertTransaction;
+    public MetadataInsert(WebApplicationContext appContext) {
+        repositories = new Repositories(appContext);
     }
+
 
     public void populateMetadataEntities() {
 
@@ -64,14 +69,47 @@ public class MetadataInsert {
                                     .getTextValue();
                             String codename = metadataObject.get("codename")
                                     .getTextValue();
-                            insertTransaction.populateMetadataEntities(
-                                    code, codename, fieldName);
+                            populateMetadataEntities(code, codename, fieldName);
                         }
                     }
                 }
             }
         } catch (Exception e) {
             throw new NikitaMisconfigurationException(e.toString());
+        }
+    }
+
+    public void populateMetadataEntities(String code, String codename,
+                                         String fieldName)
+            throws ClassNotFoundException, NoSuchMethodException,
+            InvocationTargetException, InstantiationException,
+            IllegalAccessException {
+
+        Metadata metadataEntity =
+                getEntityInstance(fieldName);
+
+        metadataEntity.setCode(code);
+        metadataEntity.setCodeName(codename);
+        metadataEntity.setCreatedBy(SYSTEM);
+        metadataEntity.setCreatedDate(OffsetDateTime.now());
+        metadataEntity.setLastModifiedBy(SYSTEM);
+        metadataEntity.setLastModifiedDate(
+                OffsetDateTime.now());
+        metadataEntity.setOwnedBy(SYSTEM);
+
+        Optional<Object> repositoryOpt =
+                repositories.getRepositoryFor(
+                        metadataEntity.getClass());
+
+        if (repositoryOpt.isPresent()) {
+            IMetadataRepository metadataRepository =
+                    ((IMetadataRepository)
+                            repositoryOpt.get());
+            // If the code does not exist from before
+            if (null == metadataRepository
+                    .findByCode(metadataEntity.getCode())) {
+                metadataRepository.save(metadataEntity);
+            }
         }
     }
 
@@ -85,5 +123,4 @@ public class MetadataInsert {
                 metadata.getConstructor();
         return (Metadata) constructor.newInstance();
     }
-
 }
