@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpMethod;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
@@ -25,38 +25,43 @@ import java.util.TreeSet;
 
 import static nikita.common.config.Constants.SLASH;
 import static nikita.common.config.FileConstants.*;
+import static nikita.common.config.ServerConstants.DOCUMENT_STORE_LOCATION;
+import static nikita.common.config.ServerConstants.INCOMING_DOCUMENT_STORE_LOCATION;
 import static nikita.common.util.CommonUtils.FileUtils.addProductionToArchiveVersion;
 import static nikita.common.util.CommonUtils.FileUtils.setDefaultMimeTypesAsConvertible;
 import static nikita.common.util.CommonUtils.WebUtils.addRequestToMethodMap;
 import static org.springframework.http.HttpMethod.*;
 
 /**
- * Create som basic data if application is in demo mode
+ * Create some basic required data for application.
+ * <p>
+ * This will import user, content of all metadata classes, the Norwegian to
+ * English mapping of attribute / class names
  */
-@Component
+@Service
 public class AfterApplicationStartup {
 
     private static final Logger logger =
             LoggerFactory.getLogger(AfterApplicationStartup.class);
+
     private final RequestMappingHandlerMapping handlerMapping;
-
-    private ApplicationContext applicationContext;
-    private InternalNameTranslator internalNameTranslator;
-    private UserStartupImport userStartupImport;
-    private MetadataInsert metadataInsert;
-
+    private final ApplicationContext applicationContext;
+    private final InternalNameTranslator internalNameTranslator;
+    private final UserStartupImport userStartupImport;
+    private final MetadataInsert metadataInsert;
 
     @Value("${nikita.startup.create-demo-users}")
-    private Boolean createUsers = false;
+    private final Boolean createUsers = false;
 
     @Value("${nikita.startup.create-directory-store}")
-    private Boolean createDirectoryStore = false;
+    private final Boolean createDirectoryStore = false;
 
     @Value("${nikita.startup.directory-store-name}")
-    private String directoryStoreName = "/data/nikita/storage";
+    private final String directoryStoreName = DOCUMENT_STORE_LOCATION;
 
     @Value("${nikita.startup.incoming-directory}")
-    private String incomingDirectoryName = "/data2/nikita/storage/incoming";
+    private final String incomingDirectoryName =
+            INCOMING_DOCUMENT_STORE_LOCATION;
 
     public AfterApplicationStartup(@Qualifier("requestMappingHandlerMapping")
                                            RequestMappingHandlerMapping handlerMapping,
