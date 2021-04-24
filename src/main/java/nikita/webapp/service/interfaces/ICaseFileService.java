@@ -73,4 +73,7 @@ public interface ICaseFileService {
     void deleteEntity(@NotNull String systemId);
 
     long deleteAllByOwnedBy();
+
+    ResponseEntity<CaseFileHateoas> createCaseFileToCaseFile(
+            String systemID, CaseFile caseFile);
 }

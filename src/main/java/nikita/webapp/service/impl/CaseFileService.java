@@ -52,6 +52,7 @@ import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
@@ -242,6 +243,32 @@ public class CaseFileService
         registryEntry.setReferenceFile(caseFile);
         caseFile.getReferenceRecord().add(registryEntry);
         return registryEntryService.save(registryEntry);
+    }
+
+    /**
+     * Create a (child) CaseFile associated with a (parent) ClassFile.
+     * <p>
+     * First find the parent caseFile to associate with, add all required
+     * values to the child case file and set the references between them.
+     *
+     * @param parentSystemId systemID of the parent caseFile
+     * @param caseFile       the incoming CaseFile object
+     * @return the caseFile object wrapped as a Hateoas object, further
+     * wrapped as a ResponseEntity
+     */
+    @Override
+    @Transactional
+    public ResponseEntity<CaseFileHateoas> createCaseFileToCaseFile(
+            @NotNull String parentSystemId,
+            @NotNull CaseFile caseFile) {
+        CaseFile parentCaseFile = getCaseFileOrThrow(parentSystemId);
+        processCaseFileBeforeSave(caseFile);
+        parentCaseFile.addFile(caseFile);
+        CaseFileHateoas caseFileHateoas = new CaseFileHateoas(caseFile);
+        caseFileHateoasHandler.addLinks(caseFileHateoas, new Authorisation());
+        return ResponseEntity.status(CREATED)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .body(caseFileHateoas);
     }
 
     /**
