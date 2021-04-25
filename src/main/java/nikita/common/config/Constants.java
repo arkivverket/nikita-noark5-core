@@ -226,7 +226,6 @@ public final class Constants {
     public static final String NOARK_ZONED_DATE_TIME_FORMAT_PATTERN = "yyyy-MM-dd'T'HH:mm:ssZ";
 
     public static final String REFERENCE_FILE = "referanseFil";
-    public static final String CONVERT_FILE = "konverterFil";
 
     // namespace definition
     public static final String NOARK_VERSION = "noark5/v5";
@@ -586,8 +585,6 @@ public final class Constants {
     // File
     public static final String REL_FONDS_STRUCTURE_DOCUMENT_FILE =
             REL_FONDS_STRUCTURE + DOCUMENT_FILE + SLASH;
-    public static final String REL_FONDS_STRUCTURE_CONVERT_FILE =
-            NIKITA_CONFORMANCE_REL + CONVERT_FILE + SLASH;
 
     // national identifiers
 
