@@ -27,19 +27,23 @@ spring:
     url: jdbc:h2:mem:n5DemoDb
     username: sa
     password:
+    hikari:
+      auto-commit: false
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     database: h2
+    hikari:
+      auto-commit=false:
     show-sql: true
     properties:
       hibernate:
         connection:
           provider_disables_autocommit: true
-        hbm2ddl:
-          auto: create-drop
-          hbm2ddl.import_files_sql_extractor: org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor
-        discriminator.ignore_explicit_for_joined: true
-        org.hibernate.envers.audit_table_prefix: aud_
+      hbm2ddl:
+        auto: create-drop
+        hbm2ddl.import_files_sql_extractor: org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor
+      discriminator.ignore_explicit_for_joined: true
+      org.hibernate.envers.audit_table_prefix: aud_
 
 logging:
   level:
