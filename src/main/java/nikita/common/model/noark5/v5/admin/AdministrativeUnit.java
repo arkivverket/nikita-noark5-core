@@ -254,6 +254,7 @@ public class AdministrativeUnit
 
     public void addUser(User user) {
         this.users.add(user);
+        user.getAdministrativeUnits().add(this);
     }
 
     public AdministrativeUnit getReferenceParentAdministrativeUnit() {

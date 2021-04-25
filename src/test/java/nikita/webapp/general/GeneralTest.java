@@ -6,7 +6,9 @@ import com.jayway.jsonpath.JsonPath;
 import nikita.N5CoreApp;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.File;
+import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.metadata.AssociatedWithRecordAs;
+import nikita.common.model.noark5.v5.metadata.CaseStatus;
 import nikita.common.model.noark5.v5.metadata.DocumentStatus;
 import nikita.common.model.noark5.v5.metadata.DocumentType;
 import nikita.webapp.spring.TestSecurityConfiguration;
@@ -40,6 +42,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.StringWriter;
 
+import static java.time.OffsetDateTime.now;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.HREF;
 import static nikita.common.config.HATEOASConstants.SELF;
@@ -468,8 +471,21 @@ public class GeneralTest {
                 .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
                 .content(jsonFileWriter.toString()));
 
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$." + CASE_STATUS + "." + CODE)
+                        .value(TEMPLATE_CASE_STATUS_CODE))
+                .andExpect(jsonPath("$." + CASE_STATUS + "." + CODE_NAME)
+                        .value(TEMPLATE_CASE_STATUS_NAME))
+                .andExpect(jsonPath(
+                        "$._links.['" + REL_METADATA_CASE_STATUS
+                                + "']['" + HREF + "']",
+                        endsWith(NOARK_METADATA_PATH + SLASH +
+                                CASE_STATUS + SLASH)));
+
         response = resultActions.andReturn().getResponse();
         System.out.println(response.getContentAsString());
+
         String caseStatusCode = JsonPath.read(response.getContentAsString(),
                 "$." + CASE_STATUS + "." + CODE);
         String caseStatusCodeName = JsonPath.read(response.getContentAsString(),
@@ -478,6 +494,7 @@ public class GeneralTest {
                 "$." + CASE_RESPONSIBLE);
         String caseDate = JsonPath.read(response.getContentAsString(),
                 "$." + CASE_DATE);
+
 
         // Then create a PATCH MERGE object
         StringWriter jsonPatchWriter = new StringWriter();
@@ -512,7 +529,95 @@ public class GeneralTest {
                         "$._links.['" + SELF + "']").exists())
                 .andExpect(jsonPath(
                         "$._links.['" + REL_CASE_HANDLING_CASE_FILE + "']")
-                        .exists());
+                        .exists())
+                .andExpect(jsonPath(
+                        "$._links.['" + REL_METADATA_CASE_STATUS
+                                + "']['" + HREF + "']",
+                        endsWith(NOARK_METADATA_PATH + SLASH +
+                                CASE_STATUS + SLASH)));
+    }
+
+    /**
+     * Test that it is possible to create sub CaseFile in a CaseFile
+     *
+     * @throws Exception Serialising or validation exception
+     */
+    @Test
+    @Sql("/db-tests/basic_structure.sql")
+    @WithMockCustomUser
+    public void checkPossibleToMakeCaseFileSubCaseFile() throws Exception {
+        // First create / POST file
+        CaseFile subCaseFile = new CaseFile();
+        subCaseFile.setTitle("Title of sub casefile");
+        CaseStatus caseStatus = new CaseStatus(TEMPLATE_CASE_STATUS_CODE,
+                TEMPLATE_CASE_STATUS_NAME);
+        subCaseFile.setCaseStatus(caseStatus);
+        subCaseFile.setCaseResponsible("admin@example.com");
+        subCaseFile.setCaseDate(now());
+        String url = "/noark5v5/api/sakarkiv/saksmappe" +
+                "/fed888c6-83e1-4ed0-922a-bd5770af3fad/ny-saksmappe";
+
+        JsonFactory factory = new JsonFactory();
+        StringWriter jsonFileWriter = new StringWriter();
+        JsonGenerator jsonFile = factory.createGenerator(jsonFileWriter);
+        jsonFile.writeStartObject();
+        printFileEntity(jsonFile, subCaseFile);
+        printCaseFileEntity(jsonFile, subCaseFile);
+        jsonFile.writeEndObject();
+        jsonFile.close();
+
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .post(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON)
+                .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
+                .content(jsonFileWriter.toString()));
+
+        MockHttpServletResponse response =
+                resultActions.andReturn().getResponse();
+        System.out.println(response.getContentAsString());
+        resultActions
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$." + CASE_STATUS + "." + CODE)
+                        .value(TEMPLATE_CASE_STATUS_CODE))
+                .andExpect(jsonPath("$." + CASE_STATUS + "." + CODE_NAME)
+                        .value(TEMPLATE_CASE_STATUS_NAME))
+                .andExpect(jsonPath("$." + SYSTEM_ID)
+                        .exists())
+                .andExpect(jsonPath("$." + CREATED_DATE)
+                        .exists())
+                .andExpect(jsonPath("$." + CREATED_BY)
+                        .exists())
+                .andExpect(jsonPath("$." + TITLE)
+                        .value("Title of sub casefile"))
+                .andExpect(jsonPath(
+                        "$._links.['" + REL_METADATA_CASE_STATUS
+                                + "']['" + HREF + "']",
+                        endsWith(NOARK_METADATA_PATH + SLASH +
+                                CASE_STATUS + SLASH)));
+
+        resultActions.andDo(document("home",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint())));
+
+        // Next see if we can get this File
+        response =
+                resultActions.andReturn().getResponse();
+        url = "/noark5v5/api/arkivstruktur/mappe/" +
+                JsonPath.read(response.getContentAsString(), "$." + SYSTEM_ID);
+
+        resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON));
+
+        // Next see if we can expand this File to a CaseFile
+        response = resultActions.andReturn().getResponse();
+        System.out.println(response.getContentAsString());
+        url = "/noark5v5/api/arkivstruktur/mappe/" +
+                JsonPath.read(response.getContentAsString(), "$." + SYSTEM_ID) +
+                "/" + FILE_EXPAND_TO_CASE_FILE;
+
     }
 
     /**

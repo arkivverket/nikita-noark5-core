@@ -8,7 +8,6 @@ import nikita.common.repository.nikita.AuthorityRepository;
 import nikita.common.util.exceptions.NikitaMisconfigurationException;
 import nikita.webapp.service.impl.admin.AdministrativeUnitService;
 import nikita.webapp.service.impl.admin.UserService;
-import nikita.webapp.util.exceptions.UsernameExistsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -66,6 +65,11 @@ public class UserStartupImport {
 
     @Transactional
     public void addUserAdmin() {
+        if (userService.userExists("admin@example.com")) {
+            logger.info("During startup, user admin@example.com is already " +
+                    "registered in the database");
+            return;
+        }
         AdministrativeUnit administrativeUnit = getAdministrativeUnitOrThrow();
         User admin = new User();
         admin.setPassword("password");
@@ -74,81 +78,27 @@ public class UserStartupImport {
         admin.setUsername("admin@example.com");
         admin.addAuthority(authorityRepository
                 .findByAuthorityName(RECORDS_MANAGER));
-        admin.addAdministrativeUnit(administrativeUnit);
-        try {
-            userService.createNewUser(admin);
-        } catch (UsernameExistsException e) {
-            logger.info("During startup, user " + admin.getUsername() +
-                    "is already registered in the database");
-        }
+        administrativeUnit.addUser(admin);
+        userService.createNewUser(admin);
     }
 
     @Transactional
     public void addUserRecordKeeper() {
+        if (userService.userExists("recordkeeper@example.com")) {
+            logger.info("During startup, user recordkeeper@example.com is " +
+                    "already registered in the database");
+            return;
+        }
         AdministrativeUnit administrativeUnit = getAdministrativeUnitOrThrow();
         User recordKeeper = new User();
-        if (!userService.userExists("recordkeeper@example.com")) {
-            recordKeeper.setPassword("password");
-            recordKeeper.setFirstname("Moe");
-            recordKeeper.setLastname("Szyslak");
-            recordKeeper.setUsername("recordkeeper@example.com");
-            recordKeeper.addAuthority(authorityRepository.
-                    findByAuthorityName(RECORDS_KEEPER));
-            administrativeUnit.addUser(recordKeeper);
-            recordKeeper.addAdministrativeUnit(administrativeUnit);
-            userService.createNewUser(recordKeeper);
-        }
-    }
-
-    @Transactional
-    public void addUserCaseHandler() {
-        AdministrativeUnit administrativeUnit = getAdministrativeUnitOrThrow();
-        User caseHandler = new User();
-        if (!userService.userExists("casehandler@example.com")) {
-            caseHandler.setPassword("password");
-            caseHandler.setFirstname("Rainier");
-            caseHandler.setLastname("Wolfcastle");
-            caseHandler.setUsername("casehandler@example.com");
-            caseHandler.addAuthority(authorityRepository.
-                    findByAuthorityName(CASE_HANDLER));
-            administrativeUnit.addUser(caseHandler);
-            caseHandler.addAdministrativeUnit(administrativeUnit);
-            userService.createNewUser(caseHandler);
-        }
-    }
-
-    @Transactional
-    public void addUserLeader() {
-        AdministrativeUnit administrativeUnit = getAdministrativeUnitOrThrow();
-        User leader = new User();
-        if (!userService.userExists("leader@example.com")) {
-            leader.setPassword("password");
-            leader.setFirstname("Johnny");
-            leader.setLastname("Tightlips");
-            leader.setUsername("leader@example.com");
-            leader.addAuthority(authorityRepository.
-                    findByAuthorityName(LEADER));
-            administrativeUnit.addUser(leader);
-            leader.addAdministrativeUnit(administrativeUnit);
-            userService.createNewUser(leader);
-        }
-    }
-
-    @Transactional
-    public void addUserGuest() {
-        AdministrativeUnit administrativeUnit = getAdministrativeUnitOrThrow();
-        User guest = new User();
-        if (!userService.userExists("cletus@example.com")) {
-            guest.setPassword("password");
-            guest.setFirstname("Cletus");
-            guest.setLastname("'Spuckler'");
-            guest.setUsername("cletus@example.com");
-            guest.addAuthority(authorityRepository.
-                    findByAuthorityName(GUEST));
-            administrativeUnit.addUser(guest);
-            guest.addAdministrativeUnit(administrativeUnit);
-            userService.createNewUser(guest);
-        }
+        recordKeeper.setPassword("password");
+        recordKeeper.setFirstname("Moe");
+        recordKeeper.setLastname("Szyslak");
+        recordKeeper.setUsername("recordkeeper@example.com");
+        recordKeeper.addAuthority(authorityRepository
+                .findByAuthorityName(RECORDS_KEEPER));
+        administrativeUnit.addUser(recordKeeper);
+        userService.createNewUser(recordKeeper);
     }
 
     private AdministrativeUnit getAdministrativeUnitOrThrow() {
@@ -162,12 +112,11 @@ public class UserStartupImport {
         }
     }
 
-    private Authority addAuthority(AuthorityName authorityName) {
+    private void addAuthority(AuthorityName authorityName) {
         Authority authority = new Authority();
         if (!userService.authorityExists(authorityName)) {
             authority.setAuthorityName(authorityName);
             authorityRepository.save(authority);
         }
-        return authority;
     }
 }

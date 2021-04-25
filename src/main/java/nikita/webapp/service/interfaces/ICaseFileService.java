@@ -6,6 +6,7 @@ import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.casehandling.RecordNote;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileExpansionHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RecordNoteHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
@@ -65,11 +66,14 @@ public interface ICaseFileService {
 
     PrecedenceHateoas generateDefaultPrecedence(String systemID);
 
-    String generateDefaultExpandedCaseFile();
+    CaseFileExpansionHateoas generateDefaultExpandedCaseFile();
 
     // All DELETE operations
 
     void deleteEntity(@NotNull String systemId);
 
     long deleteAllByOwnedBy();
+
+    ResponseEntity<CaseFileHateoas> createCaseFileToCaseFile(
+            String systemID, CaseFile caseFile);
 }

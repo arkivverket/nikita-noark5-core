@@ -3,7 +3,6 @@ package nikita.webapp.hateoas.casehandling;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
-import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.webapp.hateoas.FileHateoasHandler;
 import nikita.webapp.hateoas.interfaces.ICaseFileHateoasHandler;
 import org.springframework.stereotype.Component;
@@ -12,8 +11,6 @@ import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 
 /**
- * Created by tsodring on 2/6/17.
- * <p>
  * Used to add CaseFileHateoas links with CaseFile specific information
  */
 
@@ -41,15 +38,13 @@ public class CaseFileHateoasHandler
         addRecordNote(entity, hateoasNoarkObject);
         //addSecondaryClassification(entity, hateoasNoarkObject);
         addNewSubCaseFile(entity, hateoasNoarkObject);
+        addMetadataCaseStatus(entity, hateoasNoarkObject);
     }
 
     @Override
     public void addEntityLinksOnTemplate(
             ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
-        // Get a list of case status values
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_METADATA + SLASH + CASE_STATUS + SLASH,
-                REL_METADATA_CASE_STATUS));
+        addMetadataCaseStatus(entity, hateoasNoarkObject);
     }
 
     @Override
@@ -149,5 +144,22 @@ public class CaseFileHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_CASE_FILE + SLASH + entity.getSystemId() + SLASH + NEW_CASE_FILE,
                 REL_CASE_HANDLING_NEW_CASE_FILE, false));
+    }
+
+    /**
+     * Create a REL/HREF pair for the CaseStatus metadata endpoint
+     * <p>
+     * "../api/metadata/saksstatus/"
+     * https://rel.arkivverket.no/noark5/v5/api/metadata/saksstatus/
+     *
+     * @param entity             caseFile
+     * @param hateoasNoarkObject hateoasCaseFile
+     */
+    @Override
+    public void addMetadataCaseStatus(ISystemId entity,
+                                      IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_METADATA + SLASH + CASE_STATUS + SLASH,
+                REL_METADATA_CASE_STATUS));
     }
 }

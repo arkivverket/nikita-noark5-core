@@ -61,9 +61,49 @@ public class CaseFileHateoasController
     // API - All POST Requests (CRUD - CREATE)
 
     // Create a RecordNote entity
-    // POST [contextPath][api]/sakarkiv/{systemId}/ny-arkivnotat
+    // POST [contextPath][api]/sakarkiv/saksmappe/{systemId}/ny-saksmappe
+    @Operation(summary = "Persists a CaseFile object associated with the " +
+            "given CaseFile systemId",
+            description = "Returns the newly created casefile object after it" +
+                    " was associated with a CaseFile object and persisted to " +
+                    "the database")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "CaseFile " +
+                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = CONFLICT_VAL,
+                    description = API_MESSAGE_CONFLICT),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CASE_FILE,
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<CaseFileHateoas>
+    createCaseFileAssociatedWithCaseFile(
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of CaseFile to associate the " +
+                            "CaseFile with",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final String systemID,
+            @Parameter(name = "CaseFile",
+                    description = "Incoming caseFile object",
+                    required = true)
+            @RequestBody CaseFile caseFile) {
+        return caseFileService.createCaseFileToCaseFile(systemID, caseFile);
+    }
+
+    // Create a CaseFile entity
+    // POST [contextPath][api]/sakarkiv/saksmappe/{systemId}/ny-arkivnotat
     @Operation(summary = "Persists a RecordNote object associated with the " +
-            "given Series systemId",
+            "given CaseFile systemId",
             description = "Returns the newly created record object after it " +
                     "was associated with a File object and persisted to the " +
                     "database")

@@ -21,8 +21,6 @@ import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-import static javax.persistence.CascadeType.MERGE;
-import static javax.persistence.CascadeType.PERSIST;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
@@ -90,7 +88,7 @@ public class User
     @DateTimeFormat(iso = DATE_TIME)
     private OffsetDateTime lastPasswordResetDate;
 
-    @ManyToMany(cascade = {PERSIST, MERGE})
+    @ManyToMany
     @JoinTable(name = TABLE_USER_AUTHORITY,
             joinColumns = {@JoinColumn(name = FOREIGN_KEY_USER_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID)},
@@ -205,7 +203,6 @@ public class User
 
     public void addAdministrativeUnit(AdministrativeUnit administrativeUnit) {
         this.administrativeUnits.add(administrativeUnit);
-        administrativeUnit.getUsers().add(this);
     }
 
     public void removeAdministrativeUnit(
