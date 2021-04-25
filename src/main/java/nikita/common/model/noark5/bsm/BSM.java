@@ -13,7 +13,7 @@ import java.util.List;
 public class BSM
         implements IBSM {
 
-    private List<BSMBase> bsm = new ArrayList<>();
+    private final List<BSMBase> bsm = new ArrayList<>();
 
     @Override
     public List<BSMBase> getReferenceBSMBase() {
@@ -21,8 +21,8 @@ public class BSM
     }
 
     @Override
-    public void setReferenceBSMBase(List<BSMBase> bSMBases) {
-        this.bsm = bSMBases;
+    public void addReferenceBSMBase(List<BSMBase> bSMBases) {
+        this.bsm.addAll(bSMBases);
     }
 
     @Override

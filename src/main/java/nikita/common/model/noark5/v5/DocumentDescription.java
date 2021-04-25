@@ -45,7 +45,7 @@ public class DocumentDescription
         implements ICreate, ITitleDescription,
         IDocumentMedium, ISingleStorageLocation, IDeletion, IScreening,
         IDisposal, IClassified, IDisposalUndertaken, IComment,
-        IElectronicSignature, IAuthor {
+        IElectronicSignature, IAuthor, IBSM {
 
     private static final long serialVersionUID = 1L;
 
@@ -523,16 +523,27 @@ public class DocumentDescription
         part.getReferenceDocumentDescription().remove(this);
     }
 
-
-    public List<BSMBase> getReferenceBSMBase() {
-        return referenceBSMBase;
+    @Override
+    public void addBSMBase(BSMBase bsmBase) {
+        this.referenceBSMBase.add(bsmBase);
+        bsmBase.setReferenceDocumentDescription(this);
     }
 
+    @Override
     public void addReferenceBSMBase(List<BSMBase> referenceBSMBase) {
         this.referenceBSMBase.addAll(referenceBSMBase);
         for (BSMBase bsm : referenceBSMBase) {
             bsm.setReferenceDocumentDescription(this);
         }
+    }
+
+    @Override
+    public void removeBSMBase(BSMBase bSMBase) {
+
+    }
+
+    public List<BSMBase> getReferenceBSMBase() {
+        return referenceBSMBase;
     }
 
     @Override

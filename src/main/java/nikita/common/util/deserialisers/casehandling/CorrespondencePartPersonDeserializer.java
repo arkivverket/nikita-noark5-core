@@ -56,7 +56,7 @@ public class CorrespondencePartPersonDeserializer
         currentNode = objectNode.get(BSM_DEF);
         if (null != currentNode) {
             BSM base = mapper.readValue(currentNode.traverse(), BSM.class);
-            correspondencePart.setReferenceBSMBase(base.getReferenceBSMBase());
+            correspondencePart.addReferenceBSMBase(base.getReferenceBSMBase());
             objectNode.remove(BSM_DEF);
         }
 

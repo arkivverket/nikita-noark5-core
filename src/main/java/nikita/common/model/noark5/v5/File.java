@@ -421,14 +421,8 @@ public class File
         return referenceBSMBase;
     }
 
-    public void setReferenceBSMBase(List<BSMBase> referenceBSMBase) {
-        this.referenceBSMBase = referenceBSMBase;
-        for (BSMBase bsm : referenceBSMBase) {
-            bsm.setReferenceFile(this);
-        }
-    }
-
-    public void addBSMBaseList(List<BSMBase> referenceBSMBase) {
+    @Override
+    public void addReferenceBSMBase(List<BSMBase> referenceBSMBase) {
         this.referenceBSMBase.addAll(referenceBSMBase);
         for (BSMBase bsm : referenceBSMBase) {
             bsm.setReferenceFile(this);

@@ -286,7 +286,7 @@ public class PartService
     public Object associateBSM(@NotNull UUID systemId,
                                @NotNull List<BSMBase> bsm) {
         Part part = getPartOrThrow(systemId);
-        part.setReferenceBSMBase(bsm);
+        part.addReferenceBSMBase(bsm);
         return part;
     }
 

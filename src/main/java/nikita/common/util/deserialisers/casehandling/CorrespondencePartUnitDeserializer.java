@@ -57,7 +57,7 @@ public class CorrespondencePartUnitDeserializer
         JsonNode currentNode = objectNode.get(BSM_DEF);
         if (null != currentNode) {
             BSM base = mapper.readValue(currentNode.traverse(), BSM.class);
-            correspondencePartUnit.setReferenceBSMBase(
+            correspondencePartUnit.addReferenceBSMBase(
                     base.getReferenceBSMBase());
             objectNode.remove(BSM_DEF);
         }

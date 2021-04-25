@@ -696,7 +696,7 @@ public class CorrespondencePartService
                                @NotNull List<BSMBase> bsm) {
         CorrespondencePart correspondencePart =
                 getCorrespondencePartOrThrow(systemId);
-        correspondencePart.setReferenceBSMBase(bsm);
+        correspondencePart.addReferenceBSMBase(bsm);
         return correspondencePart;
     }
 

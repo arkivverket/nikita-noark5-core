@@ -271,10 +271,6 @@ public class AdministrativeUnit
         return referenceBSMBase;
     }
 
-    public void setReferenceBSMBase(List<BSMBase> referenceBSMBase) {
-        this.referenceBSMBase = referenceBSMBase;
-    }
-
     public void addBSMBase(BSMBase bsmBase) {
         this.referenceBSMBase.add(bsmBase);
         bsmBase.setReferenceAdministrativeUnit(this);

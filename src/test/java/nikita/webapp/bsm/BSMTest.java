@@ -6,9 +6,13 @@ import com.jayway.jsonpath.JsonPath;
 import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.bsm.BSM;
 import nikita.common.model.noark5.bsm.BSMBase;
+import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
+import nikita.common.model.noark5.v5.metadata.AssociatedWithRecordAs;
+import nikita.common.model.noark5.v5.metadata.DocumentStatus;
+import nikita.common.model.noark5.v5.metadata.DocumentType;
 import nikita.common.model.noark5.v5.metadata.PartRole;
 import nikita.common.model.noark5.v5.secondary.PartPerson;
 import nikita.webapp.spring.SpringSecurityWebAuxTestConfig;
@@ -76,7 +80,7 @@ import static utils.TestConstants.*;
  * addBSMToAdministrativeUnitUpdate (BSM added after administrativeUnit created - PATCH)
  * addBSMToAdministrativeUnitCreate (BSM added when administrativeUnit created - POST)
  * <p>
- * is setReferenceBSMBase being called multiple times
+ * is addReferenceBSMBase being called multiple times
  */
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @SpringBootTest(classes = {SpringSecurityWebAuxTestConfig.class},
@@ -303,7 +307,7 @@ public class BSMTest {
         BSMBase bsmBoolean = new BSMBase("non-existent:attribute", true);
         ArrayList<BSMBase> badBSM = new ArrayList<>();
         badBSM.add(bsmBoolean);
-        bsm.setReferenceBSMBase(badBSM);
+        bsm.addReferenceBSMBase(badBSM);
         JsonFactory factory = new JsonFactory();
         StringWriter jsonPatchWriter = new StringWriter();
         JsonGenerator jsonPatch = factory.createGenerator(jsonPatchWriter);
@@ -359,7 +363,7 @@ public class BSMTest {
         BSMBase bsmBoolean = new BSMBase("non-existent:attribute", true);
         ArrayList<BSMBase> badBSM = new ArrayList<>();
         badBSM.add(bsmBoolean);
-        bsm.setReferenceBSMBase(badBSM);
+        bsm.addReferenceBSMBase(badBSM);
         JsonFactory factory = new JsonFactory();
         StringWriter jsonPatchWriter = new StringWriter();
         JsonGenerator jsonPatch = factory.createGenerator(jsonPatchWriter);
@@ -417,7 +421,7 @@ public class BSMTest {
         String selfHref = "http://localhost:8092" + url;
 
         BSM bsm = new BSM();
-        bsm.setReferenceBSMBase(bsmObjects);
+        bsm.addReferenceBSMBase(bsmObjects);
         JsonFactory factory = new JsonFactory();
         StringWriter jsonPatchWriter = new StringWriter();
         JsonGenerator jsonPatch = factory.createGenerator(jsonPatchWriter);
@@ -470,7 +474,7 @@ public class BSMTest {
     @WithMockCustomUser
     public void addBSMWithNewRecord() throws Exception {
         Record record = new Record();
-        record.setReferenceBSMBase(bsmObjects);
+        record.addReferenceBSMBase(bsmObjects);
         record.setTitle("Title of record");
         String url = "/noark5v5/api/arkivstruktur/mappe" +
                 "/f1677c47-99e1-42a7-bda2-b0bbc64841b7/ny-registrering";
@@ -551,7 +555,7 @@ public class BSMTest {
         String selfHref = "http://localhost:8092" + url;
 
         BSM bsm = new BSM();
-        bsm.setReferenceBSMBase(bsmObjects);
+        bsm.addReferenceBSMBase(bsmObjects);
         JsonFactory factory = new JsonFactory();
         StringWriter jsonPatchWriter = new StringWriter();
         JsonGenerator jsonPatch = factory.createGenerator(jsonPatchWriter);
@@ -604,7 +608,7 @@ public class BSMTest {
     @WithMockCustomUser
     public void addBSMWithNewFile() throws Exception {
         File file = new File();
-        file.setReferenceBSMBase(bsmObjects);
+        file.addReferenceBSMBase(bsmObjects);
         file.setTitle("Title of file");
         String url = "/noark5v5/api/arkivstruktur/arkivdel" +
                 "/f1102ae8-6c4c-4d93-aaa5-7c6220e50c4d/ny-mappe";
@@ -656,6 +660,114 @@ public class BSMTest {
     }
 
     /**
+     * add BSM when creating a new DocumentDescription
+     * {
+     * "virksomhetsspesifikkeMetadata": {
+     * "ppt-v1:sakferdig": true,
+     * "ppt-v1:datohenvist": "2020-06-30+02:00",
+     * "ppt-v1:datotidvedtakferdig": "2020-06-30T15:35:43.128158+02:00",
+     * "ppt-v1:skolekontakt": "Harald Harfarge",
+     * "ppt-v1:refSkole": "https://skole.eksempel.com",
+     * "ppt-v1:snittKarakter": 1.2,
+     * "ppt-v1:antallDagerVurdert": 1
+     * }
+     * }
+     *
+     * @throws Exception Serialising or validation exception
+     */
+    @Test
+    @Sql({"/db-tests/basic_structure.sql",
+            "/db-tests/bsm/registered_bsm_values.sql"})
+    @WithMockCustomUser
+    public void addBSMWithNewDocumentDecription() throws Exception {
+        DocumentDescription documentDescription = new DocumentDescription();
+        documentDescription.addReferenceBSMBase(bsmObjects);
+        documentDescription.setTitle("Title of documentDescription");
+
+        AssociatedWithRecordAs associatedWithRecordAs =
+                new AssociatedWithRecordAs();
+        associatedWithRecordAs.setCode("H");
+        associatedWithRecordAs.setCodeName("Hoveddokument");
+        documentDescription.setAssociatedWithRecordAs(associatedWithRecordAs);
+
+        DocumentStatus documentStatus = new DocumentStatus();
+        documentStatus.setCode("B");
+        documentStatus.setCodeName("Dokumentet er under redigering");
+        documentDescription.setDocumentStatus(documentStatus);
+
+        DocumentType documentType = new DocumentType();
+        documentType.setCode("B");
+        documentType.setCodeName("Brev");
+        documentDescription.setDocumentType(documentType);
+
+        String url = "/noark5v5/api/arkivstruktur/registrering" +
+                "/dc600862-3298-4ec0-8541-3e51fb900054/ny-dokumentbeskrivelse";
+
+        JsonFactory factory = new JsonFactory();
+        StringWriter jsonDocumentDescriptionWriter = new StringWriter();
+        JsonGenerator jgen = factory.createGenerator(
+                jsonDocumentDescriptionWriter);
+
+        jgen.writeStartObject();
+        printSystemIdEntity(jgen, documentDescription);
+        printTitleAndDescription(jgen, documentDescription);
+        printNullableMetadata(jgen,
+                DOCUMENT_DESCRIPTION_DOCUMENT_TYPE,
+                documentDescription.getDocumentType());
+        printNullableMetadata(jgen,
+                DOCUMENT_DESCRIPTION_STATUS,
+                documentDescription.getDocumentStatus());
+        printNullable(jgen, DOCUMENT_DESCRIPTION_DOCUMENT_NUMBER,
+                documentDescription.getDocumentNumber());
+        printNullableMetadata(jgen,
+                DOCUMENT_DESCRIPTION_ASSOCIATED_WITH_RECORD_AS,
+                documentDescription.getAssociatedWithRecordAs());
+        printBSM(jgen, documentDescription);
+        jgen.writeEndObject();
+        jgen.close();
+
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .post(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON)
+                .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
+                .content(jsonDocumentDescriptionWriter.toString()));
+
+        resultActions
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$." + SYSTEM_ID)
+                        .exists())
+                .andExpect(jsonPath("$." + TITLE)
+                        .value("Title of documentDescription"));
+
+
+        MockHttpServletResponse response = resultActions.andReturn()
+                .getResponse();
+        System.out.println(response.getContentAsString());
+        validateBSM(resultActions);
+        resultActions.andDo(document("home",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint())));
+
+        // We checked it was possible to create, now check that what we
+        // created is possible to retrieve
+        response = resultActions.andReturn().getResponse();
+        url = "/noark5v5/api/arkivstruktur/dokumentbeskrivelse/" +
+                JsonPath.read(response.getContentAsString(), "$." + SYSTEM_ID);
+
+        resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON));
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$." + SYSTEM_ID)
+                        .exists());
+        validateBSM(resultActions);
+    }
+
+    /**
      * add illegal BSM when creating a new file
      * {
      * "virksomhetsspesifikkeMetadata": {
@@ -681,7 +793,7 @@ public class BSMTest {
         final List<BSMBase> bsmObjectsLocal = new ArrayList<>(bsmObjects);
         BSMBase bsmBase = new BSMBase("non-existent:attribute", true);
         bsmObjectsLocal.add(bsmBase);
-        file.setReferenceBSMBase(bsmObjectsLocal);
+        file.addReferenceBSMBase(bsmObjectsLocal);
         file.setTitle("Title of file");
         String url = "/noark5v5/api/arkivstruktur/arkivdel" +
                 "/f1102ae8-6c4c-4d93-aaa5-7c6220e50c4d/ny-mappe";
@@ -740,7 +852,7 @@ public class BSMTest {
         String selfHref = "http://localhost:8092" + url;
 
         BSM bsm = new BSM();
-        bsm.setReferenceBSMBase(bsmObjects);
+        bsm.addReferenceBSMBase(bsmObjects);
         JsonFactory factory = new JsonFactory();
         StringWriter jsonPatchWriter = new StringWriter();
         JsonGenerator jsonPatch = factory.createGenerator(jsonPatchWriter);
@@ -808,7 +920,7 @@ public class BSMTest {
     public void addBSMWithNewCorrespondencePart() throws Exception {
         CorrespondencePartPerson correspondencePart =
                 createCorrespondencePartPerson();
-        correspondencePart.setReferenceBSMBase(bsmObjects);
+        correspondencePart.addReferenceBSMBase(bsmObjects);
 
         String url = "/noark5v5/api/arkivstruktur/registrering" +
                 "/dc600862-3298-4ec0-8541-3e51fb900054/ny-korrespondansepartperson";
@@ -899,7 +1011,7 @@ public class BSMTest {
         String selfHref = "http://localhost:8092" + url;
 
         BSM bsm = new BSM();
-        bsm.setReferenceBSMBase(bsmObjects);
+        bsm.addReferenceBSMBase(bsmObjects);
         JsonFactory factory = new JsonFactory();
         StringWriter jsonPatchWriter = new StringWriter();
         JsonGenerator jsonPatch = factory.createGenerator(jsonPatchWriter);
@@ -1449,7 +1561,7 @@ public class BSMTest {
         part.setPostalAddress(createPostalAddress());
         part.setResidingAddress(createResidingAddress());
         part.setContactInformation(createContactInformation());
-        part.setReferenceBSMBase(bsmObjects);
+        part.addReferenceBSMBase(bsmObjects);
         return part;
     }
 
