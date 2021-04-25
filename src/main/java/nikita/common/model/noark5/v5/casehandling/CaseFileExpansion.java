@@ -191,11 +191,6 @@ public class CaseFileExpansion
     }
 
     @Override
-    public void setReferenceBSMBase(List<BSMBase> bSMBases) {
-
-    }
-
-    @Override
     public void addBSMBase(BSMBase bSMBase) {
 
     }
@@ -473,6 +468,10 @@ public class CaseFileExpansion
     @Override
     public void setDescription(String description) {
 
+    }
+
+    @Override
+    public void addReferenceBSMBase(List<BSMBase> bSMBase) {
     }
 
     @Override

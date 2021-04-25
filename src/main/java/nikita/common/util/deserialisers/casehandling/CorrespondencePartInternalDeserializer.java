@@ -59,7 +59,7 @@ public class CorrespondencePartInternalDeserializer
         JsonNode currentNode = objectNode.get(BSM_DEF);
         if (null != currentNode) {
             BSM base = mapper.readValue(currentNode.traverse(), BSM.class);
-            correspondencePartInternal.setReferenceBSMBase(
+            correspondencePartInternal.addReferenceBSMBase(
                     base.getReferenceBSMBase());
             objectNode.remove(BSM_DEF);
         }

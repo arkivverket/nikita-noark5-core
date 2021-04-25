@@ -47,7 +47,7 @@ public class PartPersonDeserializer
         JsonNode currentNode = objectNode.get(BSM_DEF);
         if (null != currentNode) {
             BSM base = mapper.readValue(currentNode.traverse(), BSM.class);
-            part.setReferenceBSMBase(base.getReferenceBSMBase());
+            part.addReferenceBSMBase(base.getReferenceBSMBase());
             objectNode.remove(BSM_DEF);
         }
 

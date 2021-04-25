@@ -66,7 +66,7 @@ public class BSMDeserialiser
                 }
             }
         }
-        bsm.setReferenceBSMBase(bsmList);
+        bsm.addReferenceBSMBase(bsmList);
         return bsm;
     }
 }

@@ -111,7 +111,7 @@ public class RecordDeserializer
         currentNode = objectNode.get(BSM_DEF);
         if (null != currentNode) {
             BSM base = mapper.readValue(currentNode.traverse(), BSM.class);
-            record.setReferenceBSMBase(base.getReferenceBSMBase());
+            record.addReferenceBSMBase(base.getReferenceBSMBase());
             objectNode.remove(BSM_DEF);
         }
 

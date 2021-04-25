@@ -9,7 +9,6 @@ import nikita.common.util.serializers.noark5v5.hateoas.interfaces.IHateoasSerial
 import java.io.IOException;
 
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.Hateoas.Serialize;
 import static nikita.common.util.CommonUtils.Hateoas.Serialize.*;
 
 /**
@@ -74,6 +73,7 @@ public class DocumentDescriptionHateoasSerializer
         printNullable(jgen, DOCUMENT_DESCRIPTION_EXTERNAL_REFERENCE,
                       documentDescription.getExternalReference());
         printElectronicSignature(jgen, documentDescription);
+        printBSM(jgen, documentDescription);
         printHateoasLinks(jgen,
                 documentDescriptionHateoas.getLinks(documentDescription));
         jgen.writeEndObject();

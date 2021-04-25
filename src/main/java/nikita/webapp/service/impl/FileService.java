@@ -458,7 +458,7 @@ public class FileService
     public Object associateBSM(@NotNull UUID systemId,
                                @NotNull List<BSMBase> bsm) {
         File file = getFileOrThrow(systemId);
-        file.setReferenceBSMBase(bsm);
+        file.addReferenceBSMBase(bsm);
         return file;
     }
 

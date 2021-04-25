@@ -100,7 +100,7 @@ public class FileDeserializer
         if (null != currentNode) {
             nikita.common.model.noark5.bsm.BSM base =
                     mapper.readValue(currentNode.traverse(), BSM.class);
-            file.setReferenceBSMBase(base.getReferenceBSMBase());
+            file.addReferenceBSMBase(base.getReferenceBSMBase());
             objectNode.remove(BSM_DEF);
         }
 

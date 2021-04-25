@@ -495,18 +495,13 @@ public class Record
         nationalIdentifier.setReferenceRecord(null);
     }
 
+    @Override
     public List<BSMBase> getReferenceBSMBase() {
         return referenceBSMBase;
     }
 
-    public void setReferenceBSMBase(List<BSMBase> referenceBSMBase) {
-        this.referenceBSMBase = referenceBSMBase;
-        for (BSMBase bsmBase : referenceBSMBase) {
-            bsmBase.setReferenceRecord(this);
-        }
-    }
-
-    public void addBSMBaseList(List<BSMBase> referenceBSMBase) {
+    @Override
+    public void addReferenceBSMBase(List<BSMBase> referenceBSMBase) {
         this.referenceBSMBase.addAll(referenceBSMBase);
         for (BSMBase bsm : referenceBSMBase) {
             bsm.setReferenceRecord(this);

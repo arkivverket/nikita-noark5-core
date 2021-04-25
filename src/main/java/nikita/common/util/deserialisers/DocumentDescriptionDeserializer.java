@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import nikita.common.model.noark5.bsm.BSM;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.metadata.AssociatedWithRecordAs;
 import nikita.common.model.noark5.v5.metadata.DocumentStatus;
@@ -21,8 +22,6 @@ import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 
 /**
- * Created by tsodring on 1/6/17.
- * <p>
  * Deserialise an incoming DocumentDescription JSON object.
  * <p>
  * Having a own deserialiser is done to have more fine grained control over the
@@ -134,9 +133,17 @@ public class DocumentDescriptionDeserializer extends JsonDeserializer {
         documentDescription.setReferenceScreening(
                 deserialiseScreening(objectNode, errors));
         documentDescription.setReferenceClassified(
-		deserialiseClassified(objectNode, errors));
+                deserialiseClassified(objectNode, errors));
         documentDescription.setReferenceElectronicSignature(
-		deserialiseElectronicSignature(objectNode, errors));
+                deserialiseElectronicSignature(objectNode, errors));
+
+        // Deserialize businessSpecificMetadata (virksomhetsspesifikkeMetadata)
+        currentNode = objectNode.get(BSM_DEF);
+        if (null != currentNode) {
+            BSM base = mapper.readValue(currentNode.traverse(), BSM.class);
+            documentDescription.addReferenceBSMBase(base.getReferenceBSMBase());
+            objectNode.remove(BSM_DEF);
+        }
 
         currentNode = objectNode.get(LINKS);
         if (null != currentNode) {

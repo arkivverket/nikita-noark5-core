@@ -73,19 +73,14 @@ public class CorrespondencePart
         }
     }
 
+    @Override
     public List<BSMBase> getReferenceBSMBase() {
         return referenceBSMBase;
     }
 
-    public void setReferenceBSMBase(List<BSMBase> referenceBSMBase) {
-        this.referenceBSMBase = referenceBSMBase;
-        for (BSMBase bsmBase : referenceBSMBase) {
-            bsmBase.setReferenceCorrespondencePart(this);
-        }
-    }
-
-    public void addBSMBaseList(List<BSMBase> referenceBSMBase) {
-        this.referenceBSMBase.addAll(referenceBSMBase);
+    @Override
+    public void addReferenceBSMBase(List<BSMBase> bSMBase) {
+        this.referenceBSMBase.addAll(bSMBase);
         for (BSMBase bsm : referenceBSMBase) {
             bsm.setReferenceCorrespondencePart(this);
         }

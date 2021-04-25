@@ -593,7 +593,7 @@ public class RecordService
     public Object associateBSM(@NotNull UUID systemId,
                                @NotNull List<BSMBase> bsm) {
         Record record = getRecordOrThrow(systemId);
-        record.setReferenceBSMBase(bsm);
+        record.addReferenceBSMBase(bsm);
         return record;
     }
 

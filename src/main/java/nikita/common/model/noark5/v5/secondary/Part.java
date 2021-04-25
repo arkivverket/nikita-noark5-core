@@ -144,22 +144,26 @@ public class Part
         documentDescription.getReferencePart().remove(this);
     }
 
+    @Override
     public List<BSMBase> getReferenceBSMBase() {
         return referenceBSMBase;
     }
 
-    public void setReferenceBSMBase(List<BSMBase> referenceBSMBase) {
-        this.referenceBSMBase = referenceBSMBase;
-        for (BSMBase base : referenceBSMBase) {
-            base.setReferencePart(this);
+    @Override
+    public void addReferenceBSMBase(List<BSMBase> bSMBase) {
+        this.referenceBSMBase.addAll(bSMBase);
+        for (BSMBase bsm : referenceBSMBase) {
+            bsm.setReferencePart(this);
         }
     }
 
+    @Override
     public void addBSMBase(BSMBase bsmBase) {
         referenceBSMBase.add(bsmBase);
         bsmBase.setReferencePart(this);
     }
 
+    @Override
     public void removeBSMBase(BSMBase bsmBase) {
         referenceBSMBase.remove(bsmBase);
         bsmBase.setReferencePart(null);

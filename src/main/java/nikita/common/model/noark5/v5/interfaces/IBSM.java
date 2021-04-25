@@ -6,8 +6,9 @@ import java.util.List;
 
 public interface IBSM {
     List<BSMBase> getReferenceBSMBase();
-    void setReferenceBSMBase(List<BSMBase> bSMBases);
     void addBSMBase(BSMBase bSMBase);
+
+    void addReferenceBSMBase(List<BSMBase> bSMBase);
 
     void removeBSMBase(BSMBase bSMBase);
 }
