@@ -353,6 +353,7 @@ public class DocumentObjectService
         DocumentObject archiveDocumentObject = new DocumentObject();
 
         try {
+            OffsetDateTime now = OffsetDateTime.now();
             Path archiveFile = convertFileFromStorage(originalDocumentObject,
                     archiveDocumentObject);
             // Parent document description
@@ -373,14 +374,14 @@ public class DocumentObjectService
             // Set creation details. Logged in user is responsible
             String username = getUser();
             archiveDocumentObject.setCreatedBy(username);
-            archiveDocumentObject.setCreatedDate(OffsetDateTime.now());
+            archiveDocumentObject.setCreatedDate(now);
 
             // Handle the conversion details
             Conversion conversion = new Conversion();
             // perhaps here capture unoconv --version
-            conversion.setConversionTool("LibreOffice via uconov ");
+            conversion.setConversionTool("LibreOffice via uconov (from Nikita)");
             conversion.setConvertedBy(username);
-            conversion.setConvertedDate(OffsetDateTime.now());
+            conversion.setConvertedDate(now);
             conversion.setConvertedFromFormat(
                     originalDocumentObject.getFormat());
             conversion.setConvertedToFormat(
