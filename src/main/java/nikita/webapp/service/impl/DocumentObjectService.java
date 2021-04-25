@@ -158,10 +158,6 @@ public class DocumentObjectService
 
     @Override
     @Transactional
-    // TODO: How do we handle if the document has already been converted?
-    // Related metadata is a one:one. So we either overwrite that the
-    // original conversion happened or throw an Exception
-    // Probably need administrator rights to reconvert document.
     public DocumentObjectHateoas convertDocumentToPDF(
             String documentObjectSystemId) {
         DocumentObject originalDocumentObject =
