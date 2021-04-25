@@ -2,10 +2,15 @@ insert into system_id_entity(system_id, created_date, created_by, owned_by, vers
 values ('3318a63f-11a7-4ec9-8bf1-4144b7f281cf', '2019-04-08 00:00:00', 'admin@example.com', 'admin@example.com', 0);
 insert into system_id_entity(system_id, created_date, created_by, owned_by, version)
 values ('f1102ae8-6c4c-4d93-aaa5-7c6220e50c4d', '2019-04-08 00:00:00', 'admin@example.com', 'admin@example.com', 0);
+
+-- system_id:file objects
 insert into system_id_entity(system_id, created_date, created_by, owned_by, version)
 values ('f1677c47-99e1-42a7-bda2-b0bbc64841b7', '2019-04-08 00:00:00', 'admin@example.com', 'admin@example.com', 0);
 insert into system_id_entity(system_id, created_date, created_by, owned_by, version)
 values ('43d305de-b3c8-4922-86fd-45bd26f3bf01', '2020-04-08 00:00:00', 'admin@example.com', 'admin@example.com', 0);
+insert into system_id_entity(system_id, created_date, created_by, owned_by, version)
+values ('fed888c6-83e1-4ed0-922a-bd5770af3fad', '2020-04-08 00:00:00', 'admin@example.com', 'admin@example.com', 0);
+
 insert into system_id_entity(system_id, created_date, created_by, owned_by, version)
 values ('dc600862-3298-4ec0-8541-3e51fb900054', '2019-04-08 00:00:00', 'admin@example.com', 'admin@example.com', 0);
 insert into system_id_entity(system_id, created_date, created_by, owned_by, version)
@@ -16,8 +21,12 @@ insert into system_id_entity(system_id, created_date, created_by, owned_by, vers
 values ('66b92e78-b75d-4b0f-9558-4204ab31c2d1', '2020-07-01 22:25:06', 'admin@example.com', 'admin@example.com', 0);
 insert into system_id_entity(system_id, created_date, created_by, owned_by, version)
 values ('ebcefc44-73e5-485e-94c9-1b210359c125', '2020-07-01 22:25:06', 'admin@example.com', 'admin@example.com', 0);
+--
 insert into system_id_entity(system_id, created_date, created_by, owned_by, version)
 values ('f32c1fa0-8e42-4236-8f40-e006940ea70b', '2020-07-01 22:25:06', 'admin@example.com', 'admin@example.com', 0);
+-- admin unit
+insert into system_id_entity(system_id, created_date, created_by, owned_by, version)
+values ('c3d4affc-66a0-4663-b63a-6ecc4f3d6009', '2020-07-01 22:25:06', 'admin@example.com', 'admin@example.com', 0);
 
 insert into as_fonds (system_id, title, description)
 values ('3318a63f-11a7-4ec9-8bf1-4144b7f281cf', 'test title alpha', 'test description 1');
@@ -30,12 +39,15 @@ insert into as_series (system_id, title, description, series_status_code, series
 values ('f32c1fa0-8e42-4236-8f40-e006940ea70b', 'test title charlie', 'test description charlie', 'O', 'Opprettet',
         '3318a63f-11a7-4ec9-8bf1-4144b7f281cf');
 
+-- file objects
 insert into as_file (system_id, title, description, file_series_id)
 values ('f1677c47-99e1-42a7-bda2-b0bbc64841b7', 'test title bravo', 'test description 2',
         'f1102ae8-6c4c-4d93-aaa5-7c6220e50c4d');
-
 insert into as_file (system_id, title, description, file_series_id)
 values ('43d305de-b3c8-4922-86fd-45bd26f3bf01', 'test title charlie', 'test description 2',
+        'f1102ae8-6c4c-4d93-aaa5-7c6220e50c4d');
+insert into as_file (system_id, title, description, file_series_id)
+values ('fed888c6-83e1-4ed0-922a-bd5770af3fad', 'test title charlie', 'test description 2',
         'f1102ae8-6c4c-4d93-aaa5-7c6220e50c4d');
 
 insert into as_record (system_id, title, description, record_file_id)
@@ -79,3 +91,19 @@ values ('43d305de-b3c8-4922-86fd-45bd26f3bf01', '8131049d-dcac-43d8-bee4-656e728
 
 insert into as_record_part(f_pk_record_id, f_pk_part_id)
 values ('dc600862-3298-4ec0-8541-3e51fb900054', '8131049d-dcac-43d8-bee4-656e72842da9');
+
+
+-- Make an administrative_unit
+insert into ad_administrative_unit (system_id, administrative_unit_name, default_administrative_unit, short_name)
+values ('c3d4affc-66a0-4663-b63a-6ecc4f3d6009', 'example test administrative unit', '1', 'test');
+
+-- Make the existing File a Case File. Requires an associated administrativeUnit
+
+insert into sa_case_file (system_id, case_date, case_responsible, case_sequence_number, case_status_code,
+                          case_status_code_name, case_year, case_file_administrative_unit_id)
+values ('fed888c6-83e1-4ed0-922a-bd5770af3fad', '2021-04-24 14:55:13', 'admin@example.com', '1', 'R',
+        'Opprettet av saksbehandler', '2021', 'c3d4affc-66a0-4663-b63a-6ecc4f3d6009');
+
+insert into sa_sequence_generator(f_pk_administrative_unit_id, year, administrative_unit_name, record_sequence_number,
+                                  case_file_sequence_number)
+values ('c3d4affc-66a0-4663-b63a-6ecc4f3d6009', '2021', 'example test administrative unit', '1', '1')
