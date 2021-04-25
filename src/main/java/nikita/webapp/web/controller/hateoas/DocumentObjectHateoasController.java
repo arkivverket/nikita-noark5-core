@@ -333,43 +333,6 @@ public class DocumentObjectHateoasController
                 .body(documentObjectHateoas);
     }
 
-    // konverterFil
-    // upload a file and associate it with a documentObject
-    // POST [contextPath][api]/arkivstruktur/dokumentobjekt/{systemID}/konverterFil
-    @Operation(summary = "Converts the file associated with the " +
-            "documentObject identified by a systemId")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = OK_VAL,
-                    description = "File convertedsuccessfully"),
-            @ApiResponse(
-                    responseCode = UNAUTHORIZED_VAL,
-                    description = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(
-                    responseCode = FORBIDDEN_VAL,
-                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(
-                    responseCode = INTERNAL_SERVER_ERROR_VAL,
-                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @PutMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + CONVERT_FILE,
-            headers = "Accept=*/*",
-            produces = NOARK5_V5_CONTENT_TYPE_JSON)
-    public ResponseEntity<DocumentObjectHateoas> convertFile(
-            HttpServletRequest request,
-            @Parameter(name = SYSTEM_ID,
-                    description = "systemID of the documentObject you wish to " +
-                            "convert the file that is associated with it",
-                    required = true)
-            @PathVariable(SYSTEM_ID) final String documentObjectSystemId)
-            throws Exception {
-        DocumentObjectHateoas documentObjectHateoas = documentObjectService.
-                convertDocumentToPDF(documentObjectSystemId);
-        return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(documentObjectHateoas.getEntityVersion().toString())
-                .body(documentObjectHateoas);
-    }
-
     // Delete a DocumentObject identified by systemID
     // DELETE [contextPath][api]/arkivstruktur/dokumentobjekt/{systemId}
     @Operation(summary = "Deletes a single DocumentObject object")
