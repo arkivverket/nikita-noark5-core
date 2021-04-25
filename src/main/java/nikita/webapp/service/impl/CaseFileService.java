@@ -264,6 +264,7 @@ public class CaseFileService
         CaseFile parentCaseFile = getCaseFileOrThrow(parentSystemId);
         processCaseFileBeforeSave(caseFile);
         parentCaseFile.addFile(caseFile);
+        caseFileRepository.save(caseFile);
         CaseFileHateoas caseFileHateoas = new CaseFileHateoas(caseFile);
         caseFileHateoasHandler.addLinks(caseFileHateoas, new Authorisation());
         return ResponseEntity.status(CREATED)
