@@ -7,10 +7,9 @@ import nikita.N5CoreApp;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
-import nikita.common.model.noark5.v5.metadata.AssociatedWithRecordAs;
-import nikita.common.model.noark5.v5.metadata.CaseStatus;
-import nikita.common.model.noark5.v5.metadata.DocumentStatus;
-import nikita.common.model.noark5.v5.metadata.DocumentType;
+import nikita.common.model.noark5.v5.metadata.*;
+import nikita.common.model.noark5.v5.secondary.Screening;
+import nikita.common.model.noark5.v5.secondary.ScreeningMetadataLocal;
 import nikita.webapp.spring.TestSecurityConfiguration;
 import nikita.webapp.spring.WithMockCustomUser;
 import nikita.webapp.spring.security.NikitaUserDetailsService;
@@ -41,6 +40,7 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.time.OffsetDateTime;
 
 import static java.time.OffsetDateTime.now;
 import static nikita.common.config.Constants.*;
@@ -48,7 +48,9 @@ import static nikita.common.config.HATEOASConstants.HREF;
 import static nikita.common.config.HATEOASConstants.SELF;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Serialize.*;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.core.AnyOf.anyOf;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
@@ -214,6 +216,145 @@ public class GeneralTest {
     }
 
     /**
+     * Check that it is possible to add a Screening. The following payload
+     * shouøld be generated and persisted while persisting a file
+     * <p>
+     * 'tittel' :'Title of screened test document description created'
+     * 'skjerming': {
+     * 'tilgangsrestriksjon': {
+     * 'kode': 'P',
+     * 'kodenavn': 'Personalsaker'
+     * },
+     * 'skjermingshjemmel': 'Unntatt etter Offentleglova',
+     * 'skjermingMetadata': [
+     * { 'kode': 'NA', 'kodenavn': 'Skjerming navn avsender' },
+     * { 'kode': 'TKL', 'kodenavn': 'Skjerming tittel klasse' },
+     * ],
+     * 'skjermingDokument': { 'kode': 'H', 'kodenavn': 'Skjerming av hele dokumentet' },
+     * 'skjermingsvarighet': 60,
+     * 'skjermingOpphoererDato': '1942-07-25T00:00:00Z',
+     * }
+     *
+     * @throws Exception Serialising or validation exception
+     */
+    @Test
+    @Sql("/db-tests/basic_structure.sql")
+    @WithMockCustomUser
+    public void addScreeningToFile() throws Exception {
+        // First create / POST file
+        File file = new File();
+        file.setTitle("Title of file");
+        String url = "/noark5v5/api/arkivstruktur/arkivdel" +
+                "/f1102ae8-6c4c-4d93-aaa5-7c6220e50c4d/ny-mappe";
+
+        // Create Metadata objects
+        AccessRestriction accessRestriction =
+                new AccessRestriction("P", "Personalsaker");
+        ScreeningDocument screeningDocument = new ScreeningDocument(
+                "H", "Skjerming av hele dokumentet");
+
+        ScreeningMetadataLocal screeningMetadata1 =
+                new ScreeningMetadataLocal();
+        screeningMetadata1.setCode("NA");
+        screeningMetadata1.setCodeName("Skjerming navn avsender");
+
+        ScreeningMetadataLocal screeningMetadata = new ScreeningMetadataLocal();
+        screeningMetadata.setCode("TKL");
+        screeningMetadata.setCodeName("Skjerming tittel klasse");
+
+        Screening screening = new Screening();
+        screening.addReferenceScreeningMetadata(screeningMetadata);
+        screening.addReferenceScreeningMetadata(screeningMetadata1);
+        screening.setAccessRestriction(accessRestriction);
+        screening.setScreeningDocument(screeningDocument);
+        screening.setScreeningAuthority("Unntatt etter Offentleglova");
+        screening.setScreeningExpiresDate(
+                OffsetDateTime.parse("1942-07-25T00:00:00Z"));
+        screening.setScreeningDuration(60);
+        file.setReferenceScreening(screening);
+
+        JsonFactory factory = new JsonFactory();
+        StringWriter jsonFileWriter = new StringWriter();
+        JsonGenerator jsonFile = factory.createGenerator(jsonFileWriter);
+        jsonFile.writeStartObject();
+        printFileEntity(jsonFile, file);
+        printScreening(jsonFile, file);
+        jsonFile.writeEndObject();
+        jsonFile.close();
+
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .post(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON)
+                .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
+                .content(jsonFileWriter.toString()));
+
+        resultActions
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$." + SYSTEM_ID)
+                        .exists())
+                .andExpect(jsonPath("$." + TITLE)
+                        .value("Title of file"));
+        resultActions.andDo(document("home",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint())));
+
+        // Next see if we can get this File
+        MockHttpServletResponse response =
+                resultActions.andReturn().getResponse();
+        url = "/noark5v5/api/arkivstruktur/mappe/" +
+                JsonPath.read(response.getContentAsString(), "$." + SYSTEM_ID);
+
+        resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON));
+
+
+        response = resultActions.andReturn().getResponse();
+        System.out.println(response.getContentAsString());
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$." + SCREENING + "." + ACCESS_RESTRICTION +
+                        "." +
+                        CODE).value("P"))
+                .andExpect(jsonPath("$." + SCREENING + "." + ACCESS_RESTRICTION + "." +
+                        CODE_NAME).value("Personalsaker"))
+                .andExpect(jsonPath("$." + SCREENING + "." + SCREENING_SCREENING_DOCUMENT + "." +
+                        CODE).value("H"))
+                .andExpect(jsonPath("$." + SCREENING + "." + SCREENING_SCREENING_DOCUMENT + "." +
+                        CODE_NAME)
+                        .value("Skjerming av hele dokumentet"))
+                .andExpect(jsonPath("$." + SCREENING + "." + SCREENING_AUTHORITY)
+                        .value("Unntatt etter Offentleglova"))
+                .andExpect(jsonPath("$." + SCREENING + "." + SCREENING_DURATION)
+                        .value(60))
+                // Not picking them explicitly out as [0] [1] objects in the
+                // array as the order might change later and then the test
+                // will fail unnecessary
+                .andExpect(jsonPath("$." + SCREENING + "." + SCREENING_METADATA +
+                        "[0]." + CODE).value(
+                        anyOf(is("TKL"), is("NA"))))
+                .andExpect(jsonPath("$." + SCREENING + "." + SCREENING_METADATA +
+                        "[1]." + CODE_NAME).value(
+                        anyOf(
+                                is("Skjerming tittel klasse"),
+                                is("Skjerming navn avsender"))))
+                .andExpect(jsonPath("$." + SCREENING + "." +
+                        SCREENING_EXPIRES_DATE).value(
+                        anyOf(
+                                is("1942-07-25T00:00:00Z"),
+                                is("1942-07-25T00:00:00+00:00"))))
+                .andExpect(jsonPath("$." + TITLE)
+                        .value("Title of file"));
+        resultActions.andDo(document("home",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint())));
+    }
+
+
+    /**
      * nikita was returning the following JSON for en empty list:
      * <p>
      * {
@@ -293,9 +434,7 @@ public class GeneralTest {
     @Sql("/db-tests/basic_structure.sql")
     @WithMockCustomUser
     public void checkODataSearchForCreatedBy() throws Exception {
-        String url = "/noark5v5/api/arkivstruktur/dokumentbeskrivelse";
-
-        url = "/noark5v5/odata/api/arkivstruktur/dokumentbeskrivelse" +
+        String url = "/noark5v5/odata/api/arkivstruktur/dokumentbeskrivelse" +
                 "?$filter=" + CREATED_BY + " eq 'admin@example.com'";
 
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
@@ -509,7 +648,7 @@ public class GeneralTest {
         jsonPatch.writeEndObject();
         jsonPatch.close();
 
-        System.out.println(jsonPatchWriter.toString());
+        System.out.println(jsonPatchWriter);
 
         resultActions = mockMvc.perform(MockMvcRequestBuilders
                 .patch(url)
@@ -614,10 +753,6 @@ public class GeneralTest {
         // Next see if we can expand this File to a CaseFile
         response = resultActions.andReturn().getResponse();
         System.out.println(response.getContentAsString());
-        url = "/noark5v5/api/arkivstruktur/mappe/" +
-                JsonPath.read(response.getContentAsString(), "$." + SYSTEM_ID) +
-                "/" + FILE_EXPAND_TO_CASE_FILE;
-
     }
 
     /**
@@ -648,7 +783,7 @@ public class GeneralTest {
         jsonPatch.writeStringField("path", toSeries);
         jsonPatch.writeEndObject();
         jsonPatch.close();
-        System.out.println(jsonPatchWriter.toString());
+        System.out.println(jsonPatchWriter);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
                 .patch(url)
                 .contextPath("/noark5v5")
