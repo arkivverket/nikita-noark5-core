@@ -1,5 +1,6 @@
 package nikita.common.model.noark5.v5.secondary;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.*;
 import nikita.common.model.noark5.v5.interfaces.entities.IScreeningEntity;
@@ -16,8 +17,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import static javax.persistence.CascadeType.PERSIST;
 import static nikita.common.config.Constants.TABLE_SCREENING;
 import static nikita.common.config.N5ResourceMappings.SCREENING;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
@@ -48,14 +52,6 @@ public class Screening
     @Column(name = "screening_authority")
     @Audited
     private String screeningAuthority;
-
-    /**
-     * M502 - skjermingMetadata should be 1-M
-     */
-    @Column(name = "screening_metadata")
-    @Audited
-    // TODO convert to list/entity
-    private String screeningMetadata;
 
     /**
      * M??? - skjermingDokument code (xs:string)
@@ -107,11 +103,20 @@ public class Screening
     private List<DocumentDescription> referenceDocumentDescription =
             new ArrayList<>();
 
+    // Links to ScreeningMetadata
+    /**
+     * M502 - skjermingMetadata. Note this is a list
+     */
+    @OneToMany(mappedBy = "referenceScreening", cascade = {PERSIST})
+    @JsonIgnore
+    private Set<ScreeningMetadataLocal> referenceScreeningMetadata
+            = new HashSet<>();
+
     public AccessRestriction getAccessRestriction() {
         if (null == accessRestrictionCode)
             return null;
         return new AccessRestriction(accessRestrictionCode,
-                                     accessRestrictionCodeName);
+                accessRestrictionCodeName);
     }
 
     public void setAccessRestriction(AccessRestriction accessRestriction) {
@@ -130,14 +135,6 @@ public class Screening
 
     public void setScreeningAuthority(String screeningAuthority) {
         this.screeningAuthority = screeningAuthority;
-    }
-
-    public String getScreeningMetadata() {
-        return screeningMetadata;
-    }
-
-    public void setScreeningMetadata(String screeningMetadata) {
-        this.screeningMetadata = screeningMetadata;
     }
 
     public ScreeningDocument getScreeningDocument() {
@@ -276,6 +273,20 @@ public class Screening
         documentDescription.setReferenceScreening(null);
     }
 
+    public Set<ScreeningMetadataLocal> getReferenceScreeningMetadata() {
+        return referenceScreeningMetadata;
+    }
+
+    public void addReferenceScreeningMetadata(
+            ScreeningMetadataLocal screeningMetadata) {
+        this.referenceScreeningMetadata.add(screeningMetadata);
+    }
+
+    public void removeReferenceScreeningMetadata(
+            ScreeningMetadataLocal screeningMetadata) {
+        this.referenceScreeningMetadata.remove(screeningMetadata);
+    }
+
     @Override
     public String toString() {
         return "Screening {" + super.toString() +
@@ -283,7 +294,6 @@ public class Screening
                 ", screeningExpiresDate=" + screeningExpiresDate +
                 ", screeningDocumentCode='" + screeningDocumentCode + '\'' +
                 ", screeningDocumentCodeName='" + screeningDocumentCodeName + '\'' +
-                ", screeningMetadata='" + screeningMetadata + '\'' +
                 ", screeningAuthority='" + screeningAuthority + '\'' +
                 ", accessRestrictionCode='" + accessRestrictionCode + '\'' +
                 ", accessRestrictionCodeName='" + accessRestrictionCodeName + '\'' +
@@ -308,7 +318,6 @@ public class Screening
                 .append(screeningExpiresDate, rhs.screeningExpiresDate)
                 .append(screeningDocumentCode, rhs.screeningDocumentCode)
                 .append(screeningDocumentCodeName, rhs.screeningDocumentCodeName)
-                .append(screeningMetadata, rhs.screeningMetadata)
                 .append(screeningAuthority, rhs.screeningAuthority)
                 .append(accessRestrictionCode, rhs.accessRestrictionCode)
                 .append(accessRestrictionCodeName, rhs.accessRestrictionCodeName)
@@ -323,7 +332,6 @@ public class Screening
                 .append(screeningExpiresDate)
                 .append(screeningDocumentCode)
                 .append(screeningDocumentCodeName)
-                .append(screeningMetadata)
                 .append(screeningAuthority)
                 .append(accessRestrictionCode)
                 .append(accessRestrictionCodeName)
