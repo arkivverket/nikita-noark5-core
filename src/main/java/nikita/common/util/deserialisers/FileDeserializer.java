@@ -6,11 +6,9 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.bsm.BSM;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Series;
-import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,34 +17,17 @@ import java.io.IOException;
 import java.util.UUID;
 
 import static nikita.common.config.HATEOASConstants.LINKS;
-import static nikita.common.config.N5ResourceMappings.BSM_DEF;
+import static nikita.common.config.N5ResourceMappings.*;
+import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 
 /**
- * Created by tsodring on 1/6/17.
- * <p>
  * Deserialise an incoming File JSON object.
- * <p>
- * Having a own deserialiser is done to have more fine grained control over the input. This allows us to be less strict
- * with property names, allowing for both English and Norwegian property names
- * <p>
- * <p>
- * Note this implementation expects that the File object to deserialise is in compliance with the Noark standard where
- * certain properties i.e. createdBy and createdDate are set by the core, not the caller. This deserializer will not
- * enforce this and will deserialize a file object correctly. This is because e.g the import interface will require
- * such functionality.
- * <p>
- * - Testing of compliance of properties is handled by the core, either in FileController or FileService
- * <p>
- * Note. Currently we do not include 'id' or 'deleted' properties. 'id' is a primary key and it is assumed this is
- * taken care of by the DBMS and 'deleted' is a field internal to the core to handle soft delete. Importing soft deleted
- * objects is something we do not consider necessary.
- * <p>
  * Note:
  * - Unknown property values in the JSON will trigger an exception
  * - Missing obligatory property values in the JSON will trigger an exception
  */
 public class FileDeserializer
-        extends JsonDeserializer {
+        extends JsonDeserializer<File> {
 
     private static final Logger logger =
             LoggerFactory.getLogger(FileDeserializer.class);
@@ -61,30 +42,30 @@ public class FileDeserializer
         ObjectNode objectNode = mapper.readTree(jsonParser);
 
         // Deserialise general properties
-        CommonUtils.Hateoas.Deserialize.deserialiseNoarkGeneralEntity(file, objectNode, errors);
-        CommonUtils.Hateoas.Deserialize.deserialiseDocumentMedium(file, objectNode, errors);
-        CommonUtils.Hateoas.Deserialize.deserialiseStorageLocation(file, objectNode, errors);
-        CommonUtils.Hateoas.Deserialize.deserialiseKeyword(file, objectNode, errors);
+        deserialiseNoarkGeneralEntity(file, objectNode, errors);
+        deserialiseDocumentMedium(file, objectNode, errors);
+        deserialiseStorageLocation(file, objectNode, errors);
+        deserialiseKeyword(file, objectNode, errors);
 
         // Deserialize fileId
-        JsonNode currentNode = objectNode.get(N5ResourceMappings.FILE_ID);
+        JsonNode currentNode = objectNode.get(FILE_ID);
         if (null != currentNode) {
             file.setFileId(currentNode.textValue());
-            objectNode.remove(N5ResourceMappings.FILE_ID);
+            objectNode.remove(FILE_ID);
         }
         // Deserialize publicTitle
-        currentNode = objectNode.get(N5ResourceMappings.FILE_PUBLIC_TITLE);
+        currentNode = objectNode.get(FILE_PUBLIC_TITLE);
         if (null != currentNode) {
             file.setPublicTitle(currentNode.textValue());
-            objectNode.remove(N5ResourceMappings.FILE_PUBLIC_TITLE);
+            objectNode.remove(FILE_PUBLIC_TITLE);
         }
-        // TODO: FIX THIS CommonCommonUtils.Hateoas.Deserialize.deserialiseCrossReference(file, objectNode);
-        file.setReferenceDisposal(CommonUtils.Hateoas.Deserialize.deserialiseDisposal(objectNode, errors));
-        file.setReferenceScreening(CommonUtils.Hateoas.Deserialize.deserialiseScreening(objectNode, errors));
-        file.setReferenceClassified(CommonUtils.Hateoas.Deserialize.deserialiseClassified(objectNode, errors));
+        // TODO: FIX THIS CommondeserialiseCrossReference(file, objectNode);
+        file.setReferenceDisposal(deserialiseDisposal(objectNode, errors));
+        file.setReferenceScreening(deserialiseScreening(objectNode, errors));
+        file.setReferenceClassified(deserialiseClassified(objectNode, errors));
 
         // Deserialize referenceSeries
-        currentNode = objectNode.get(N5ResourceMappings.REFERENCE_SERIES);
+        currentNode = objectNode.get(REFERENCE_SERIES);
         if (null != currentNode) {
             Series series = new Series();
             String systemID = currentNode.textValue();
@@ -92,7 +73,7 @@ public class FileDeserializer
                 series.setSystemId(UUID.fromString(systemID));
             }
             file.setReferenceSeries(series);
-            objectNode.remove(N5ResourceMappings.REFERENCE_SERIES);
+            objectNode.remove(REFERENCE_SERIES);
         }
 
         // Deserialize businessSpecificMetadata (virksomhetsspesifikkeMetadata)
@@ -113,9 +94,11 @@ public class FileDeserializer
         // Check that there are no additional values left after processing the tree
         // If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {
-            errors.append("The mappe you tried to create is malformed. The " +
-                    "following fields are not recognised as mappe fields  [" +
-                    CommonUtils.Hateoas.Deserialize.checkNodeObjectEmpty(objectNode) + "]. ");
+            errors.append("The mappe/file object you tried to create is ");
+            errors.append("malformed. The following fields are not ");
+            errors.append("recognised as mappe fields  [");
+            errors.append(checkNodeObjectEmpty(objectNode));
+            errors.append("]. ");
         }
 
         if (0 < errors.length())
