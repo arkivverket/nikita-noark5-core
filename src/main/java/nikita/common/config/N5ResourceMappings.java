@@ -739,7 +739,8 @@ public final class N5ResourceMappings {
     public static final String SCREENING_AUTHORITY_ENG = "skjermingshjemmel";
     public static final String SCREENING_DURATION_ENG = "skjermingsvarighet";
     public static final String SCREENING_ENG = "skjerming";
-    public static final String SCREENING_EXPIRES_DATE_ENG = "skjermingOpphoererDato";
+    public static final String SCREENING_EXPIRES_DATE_ENG =
+            "screening_expires_date";
     public static final String SCREENING_SCREENING_DOCUMENT_ENG = "screening_document";
     public static final String SCREENING_SCREENING_METADATA_ENG =
             "screening_metadata";
@@ -1003,7 +1004,7 @@ public final class N5ResourceMappings {
     public static final String SCREENING_AUTHORITY_ENG_OBJECT = "skjermingshjemmel";
     public static final String SCREENING_DURATION_ENG_OBJECT = "skjermingsvarighet";
     public static final String SCREENING_ENG_OBJECT = "skjerming";
-    public static final String SCREENING_EXPIRES_DATE_ENG_OBJECT = "skjermingOpphoererDato";
+    public static final String SCREENING_EXPIRES_DATE_ENG_OBJECT = "screeningExpiresDate";
     public static final String SCREENING_SCREENING_DOCUMENT_ENG_OBJECT =
             "ScreeningDocument";
     public static final String SCREENING_SCREENING_METADATA_ENG_OBJECT = "ScreeningMetadata";
