@@ -446,6 +446,8 @@ public final class Constants {
     public static final String REL_FONDS_STRUCTURE_PART = REL_FONDS_STRUCTURE + PART + SLASH;
     public static final String REL_FONDS_STRUCTURE_NEW_PART = REL_FONDS_STRUCTURE + NEW_PART + SLASH;
 
+    public static final String REL_FONDS_STRUCTURE_SCREENING_METADATA =
+            REL_FONDS_STRUCTURE + SCREENING_METADATA + SLASH;
 
     // CaseFileHateoas REL links
     public static final String REL_CASE_HANDLING_NEW_CLASS = REL_FONDS_STRUCTURE + NEW_CLASS + SLASH;
@@ -777,6 +779,8 @@ public final class Constants {
             "as_disposal_undertaken";
     public static final String TABLE_CORRESPONDENCE_PART =
             "as_correspondence_part";
+    public static final String TABLE_FONDS_STRUCTURE_SCREENING_METADATA =
+            "as_screening_metadata";
 
     public static final String TABLE_AUTHORITY_SEQ = "ad_authority_seq";
     public static final String TABLE_USER_AUTHORITY = "ad_user_authority";
@@ -1029,6 +1033,8 @@ public final class Constants {
 
     public static final String PART_PART_ROLE_ID = "part_part_role_id";
 
+    public static final String SCREENING_SCREENING_METADATA_ID =
+            "screening_screening_metadata_id";
     public static final String SERIES_FONDS_ID = "series_fonds_id";
     public static final String SERIES_DISPOSAL_ID = "series_disposal_id";
     public static final String SERIES_SCREENING_ID = "series_screening_id";
