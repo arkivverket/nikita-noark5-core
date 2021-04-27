@@ -289,6 +289,11 @@ public class GeneralTest {
                 .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
                 .content(jsonFileWriter.toString()));
 
+
+        MockHttpServletResponse response =
+                resultActions.andReturn().getResponse();
+        System.out.println(response.getContentAsString());
+
         resultActions
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$." + SYSTEM_ID)
@@ -300,10 +305,61 @@ public class GeneralTest {
                 preprocessResponse(prettyPrint())));
 
         // Next see if we can get this File
-        MockHttpServletResponse response =
-                resultActions.andReturn().getResponse();
+        response = resultActions.andReturn().getResponse();
+
+        // Make sure we can retrieve what we stored
         url = "/noark5v5/api/arkivstruktur/mappe/" +
                 JsonPath.read(response.getContentAsString(), "$." + SYSTEM_ID);
+
+        resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON));
+
+        response = resultActions.andReturn().getResponse();
+        System.out.println(response.getContentAsString());
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$." + SCREENING + "." +
+                        ACCESS_RESTRICTION +
+                        "." +
+                        CODE).value("P"))
+                .andExpect(jsonPath("$." + SCREENING + "." +
+                        ACCESS_RESTRICTION + "." +
+                        CODE_NAME).value("Personalsaker"))
+                .andExpect(jsonPath("$." + SCREENING + "." +
+                        SCREENING_SCREENING_DOCUMENT + "." +
+                        CODE).value("H"))
+                .andExpect(jsonPath("$." + SCREENING + "." +
+                        SCREENING_SCREENING_DOCUMENT + "." +
+                        CODE_NAME)
+                        .value("Skjerming av hele dokumentet"))
+                .andExpect(jsonPath("$." + SCREENING + "." +
+                        SCREENING_AUTHORITY)
+                        .value("Unntatt etter Offentleglova"))
+                .andExpect(jsonPath("$." + SCREENING + "." +
+                        SCREENING_DURATION)
+                        .value(60))
+                // Not picking them explicitly out as [0] [1] objects in the
+                // array as the order might change later and then the test
+                // will fail unnecessary
+                .andExpect(jsonPath("$._links.['" +
+                        REL_METADATA_SCREENING_METADATA + "'].href").exists())
+                .andExpect(jsonPath("$." + SCREENING + "." +
+                        SCREENING_EXPIRES_DATE).value(
+                        anyOf(
+                                is("1942-07-25T00:00:00Z"),
+                                is("1942-07-25T00:00:00+00:00"))))
+                .andExpect(jsonPath("$." + TITLE)
+                        .value("Title of file"));
+        resultActions.andDo(document("home",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint())));
+
+        url = "/noark5v5/api/arkivstruktur/mappe/" +
+                JsonPath.read(response.getContentAsString(),
+                        "$." + SYSTEM_ID) + "/" + SCREENING_METADATA + "/";
 
         resultActions = mockMvc.perform(MockMvcRequestBuilders
                 .get(url)
@@ -326,7 +382,7 @@ public class GeneralTest {
                 .andExpect(jsonPath("$." + SCREENING + "." + SCREENING_SCREENING_DOCUMENT + "." +
                         CODE_NAME)
                         .value("Skjerming av hele dokumentet"))
-                .andExpect(jsonPath("$." + SCREENING + "." + SCREENING_AUTHORITY)
+                .andExpect(jsonPath("$._links" + SCREENING + "." + SCREENING_AUTHORITY)
                         .value("Unntatt etter Offentleglova"))
                 .andExpect(jsonPath("$." + SCREENING + "." + SCREENING_DURATION)
                         .value(60))
