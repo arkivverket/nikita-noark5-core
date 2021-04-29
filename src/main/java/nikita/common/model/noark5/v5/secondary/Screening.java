@@ -107,9 +107,9 @@ public class Screening
     /**
      * M502 - skjermingMetadata. Note this is a list
      */
-    @OneToMany(mappedBy = "referenceScreening", cascade = {PERSIST})
+    @OneToMany(mappedBy = "referenceScreening", cascade = PERSIST)
     @JsonIgnore
-    private Set<ScreeningMetadataLocal> referenceScreeningMetadata
+    private final Set<ScreeningMetadataLocal> referenceScreeningMetadata
             = new HashSet<>();
 
     public AccessRestriction getAccessRestriction() {
@@ -280,11 +280,13 @@ public class Screening
     public void addReferenceScreeningMetadata(
             ScreeningMetadataLocal screeningMetadata) {
         this.referenceScreeningMetadata.add(screeningMetadata);
+        screeningMetadata.setReferenceScreening(this);
     }
 
     public void removeReferenceScreeningMetadata(
             ScreeningMetadataLocal screeningMetadata) {
         this.referenceScreeningMetadata.remove(screeningMetadata);
+        screeningMetadata.setReferenceScreening(null);
     }
 
     @Override
