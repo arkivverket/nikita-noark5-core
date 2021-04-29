@@ -449,6 +449,9 @@ public final class Constants {
     public static final String REL_FONDS_STRUCTURE_SCREENING_METADATA =
             REL_FONDS_STRUCTURE + SCREENING_METADATA + SLASH;
 
+    public static final String REL_FONDS_STRUCTURE_NEW_SCREENING_METADATA =
+            REL_FONDS_STRUCTURE + NEW_SCREENING_METADATA + SLASH;
+
     // CaseFileHateoas REL links
     public static final String REL_CASE_HANDLING_NEW_CLASS = REL_FONDS_STRUCTURE + NEW_CLASS + SLASH;
     public static final String REL_CASE_HANDLING_CLASS = REL_FONDS_STRUCTURE + CLASS + SLASH;
@@ -737,6 +740,9 @@ public final class Constants {
 
     public static final String REL_METADATA_SCREENING_METADATA =
             REL_METADATA + SCREENING_METADATA + SLASH;
+
+    public static final String REL_METADATA_NEW_SCREENING_METADATA =
+            REL_METADATA + NEW + SCREENING_METADATA + SLASH;
 
     public static final String REL_METADATA_COORDINATE_SYSTEM =
             REL_METADATA + COORDINATE_SYSTEM + SLASH;
