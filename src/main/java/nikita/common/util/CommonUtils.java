@@ -777,8 +777,8 @@ public final class CommonUtils {
                                                 errors, true);
                         screeningEntity.addReferenceScreeningMetadata(
                                 screeningMetadataLocal);
-
                     }
+
                 }
             }
 
@@ -2474,26 +2474,33 @@ public final class CommonUtils {
             }
 
             public static void printScreening(JsonGenerator jgen,
+                                              Screening screening)
+                    throws IOException {
+                if (screening != null) {
+                    printNullableMetadata(jgen, SCREENING_ACCESS_RESTRICTION,
+                            screening.getAccessRestriction());
+                    printNullable(jgen, SCREENING_AUTHORITY,
+                            screening.getScreeningAuthority());
+                    printScreeningMetadata(jgen,
+                            screening.getReferenceScreeningMetadata());
+                    printNullableMetadata(jgen, SCREENING_SCREENING_DOCUMENT,
+                            screening.getScreeningDocument());
+                    printNullableDateTime(jgen, SCREENING_EXPIRES_DATE,
+                            screening.getScreeningExpiresDate());
+                    printNullable(jgen, SCREENING_DURATION,
+                            screening.getScreeningDuration());
+                }
+            }
+
+            public static void printScreening(JsonGenerator jgen,
                                               IScreening screeningEntity)
                     throws IOException {
-                if (screeningEntity != null) {
-                    Screening screening = screeningEntity.getReferenceScreening();
-                    if (screening != null) {
-                        jgen.writeObjectFieldStart(SCREENING);
-                        printNullableMetadata(jgen, SCREENING_ACCESS_RESTRICTION,
-                                screening.getAccessRestriction());
-                        printNullable(jgen, SCREENING_AUTHORITY,
-                                screening.getScreeningAuthority());
-                        printScreeningMetadata(jgen,
-                                screening.getReferenceScreeningMetadata());
-                        printNullableMetadata(jgen, SCREENING_SCREENING_DOCUMENT,
-                                screening.getScreeningDocument());
-                        printNullableDateTime(jgen, SCREENING_EXPIRES_DATE,
-                                screening.getScreeningExpiresDate());
-                        printNullable(jgen, SCREENING_DURATION,
-                                screening.getScreeningDuration());
-                        jgen.writeEndObject();
-                    }
+                if (null != screeningEntity && null !=
+                        screeningEntity.getReferenceScreening()) {
+                    jgen.writeObjectFieldStart(SCREENING);
+                    printScreening(jgen,
+                            screeningEntity.getReferenceScreening());
+                    jgen.writeEndObject();
                 }
             }
 
@@ -2505,11 +2512,18 @@ public final class CommonUtils {
                     jgen.writeArrayFieldStart(SCREENING_METADATA);
                     for (ScreeningMetadataLocal screeningMetadata :
                             screeningMetadataSet) {
-                        printNullableMetadata(jgen, SCREENING_SCREENING_DOCUMENT,
-                                screeningMetadata, false);
+                        printScreeningMetadata(jgen, screeningMetadata);
                     }
                     jgen.writeEndArray();
                 }
+            }
+
+            public static void printScreeningMetadata(
+                    @NotNull JsonGenerator jgen,
+                    @NotNull ScreeningMetadataLocal screeningMetadata)
+                    throws IOException {
+                printNullableMetadata(jgen, SCREENING_SCREENING_DOCUMENT,
+                        screeningMetadata, false);
             }
 
 
