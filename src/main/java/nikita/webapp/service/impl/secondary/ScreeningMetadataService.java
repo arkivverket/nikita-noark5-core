@@ -92,19 +92,18 @@ public class ScreeningMetadataService
     public ScreeningMetadataHateoas updateScreeningMetadataBySystemId(
             UUID systemId, Long etag,
             Metadata incomingScreeningMetadata) {
-        ScreeningMetadata screeningMetadata2 = new ScreeningMetadata(
+        ScreeningMetadata screeningMetadata = new ScreeningMetadata(
                 incomingScreeningMetadata.getCode(),
                 incomingScreeningMetadata.getCodeName());
-        validateScreeningMetadata(metadataService, screeningMetadata2);
-        ScreeningMetadataLocal screeningMetadata =
+        validateScreeningMetadata(metadataService, screeningMetadata);
+
+        ScreeningMetadataLocal screeningMetadataLocal =
                 getScreeningMetadataLocalOrThrow(systemId);
-
-        screeningMetadata.setCode(incomingScreeningMetadata.getCode());
-        screeningMetadata.setCodeName(incomingScreeningMetadata.getCodeName());
-        screeningMetadata.setVersion(etag);
-
+        screeningMetadataLocal.setCode(incomingScreeningMetadata.getCode());
+        screeningMetadataLocal.setCodeName(incomingScreeningMetadata.getCodeName());
+        screeningMetadataLocal.setVersion(etag);
         ScreeningMetadataHateoas screeningMetadataHateoas =
-                new ScreeningMetadataHateoas(screeningMetadata);
+                new ScreeningMetadataHateoas(screeningMetadataLocal);
         screeningMetadataHateoasHandler.addLinks(screeningMetadataHateoas,
                 new Authorisation());
         return screeningMetadataHateoas;
