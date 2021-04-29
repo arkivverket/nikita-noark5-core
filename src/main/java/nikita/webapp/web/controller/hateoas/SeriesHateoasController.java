@@ -382,7 +382,7 @@ public class SeriesHateoasController
         SeriesHateoas seriesHateoas = new SeriesHateoas(updatedSeries);
         seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(new AfterNoarkEntityUpdatedEvent(this, updatedSeries));
-        return ResponseEntity.status(CREATED)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(updatedSeries.getVersion().toString())
                 .body(seriesHateoas);

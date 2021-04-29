@@ -18,7 +18,8 @@ import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping(value = HREF_BASE_CASE_HANDLING + SLASH + DOCUMENT_FLOW,
@@ -135,7 +136,7 @@ public class DocumentFlowHateoasController
                         .updateDocumentFlowBySystemId(systemID,
                                 parseETAG(request.getHeader(ETAG)),
                                 documentFlow);
-        return ResponseEntity.status(CREATED)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentFlowHateoas);
     }

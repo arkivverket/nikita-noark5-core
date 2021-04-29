@@ -608,7 +608,7 @@ public class RegistryEntryHateoasController
                 registryEntryHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityUpdatedEvent(this, updatedRegistryEntry));
-        return ResponseEntity.status(CREATED)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(updatedRegistryEntry.getVersion().toString())
                 .body(registryEntryHateoas);
@@ -652,7 +652,7 @@ public class RegistryEntryHateoasController
                 registryEntryService.handleUpdateSignOff(systemID,
                         subSystemID, parseETAG(request.getHeader(ETAG)),
                         signOff);
-        return ResponseEntity.status(CREATED)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(signOffHateoas.getEntityVersion().toString())
                 .body(signOffHateoas);

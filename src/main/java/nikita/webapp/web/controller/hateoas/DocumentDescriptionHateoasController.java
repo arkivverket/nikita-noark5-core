@@ -807,7 +807,7 @@ public class DocumentDescriptionHateoasController
         DocumentDescriptionHateoas documentDescriptionHateoas =
                 documentDescriptionService.handleUpdate(systemID,
                         parseETAG(request.getHeader(ETAG)), documentDescription);
-        return ResponseEntity.status(CREATED)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(documentDescriptionHateoas.getEntityVersion().toString())
                 .body(documentDescriptionHateoas);

@@ -20,7 +20,8 @@ import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping(value = HREF_BASE_FONDS_STRUCTURE + SLASH,
@@ -330,7 +331,7 @@ public class NationalIdentifierHateoasController
         BuildingHateoas buildingHateoas = new BuildingHateoas(updatedBuilding);
         nationalIdentifierHateoasHandler
                 .addLinks(buildingHateoas, new Authorisation());
-        return ResponseEntity.status(CREATED)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(updatedBuilding.getVersion().toString())
                 .body(buildingHateoas);
@@ -388,7 +389,7 @@ public class NationalIdentifierHateoasController
                 new CadastralUnitHateoas(updatedCadastralUnit);
         nationalIdentifierHateoasHandler
                 .addLinks(cadastralUnitHateoas, new Authorisation());
-        return ResponseEntity.status(CREATED)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(updatedCadastralUnit.getVersion().toString())
                 .body(cadastralUnitHateoas);
@@ -442,7 +443,7 @@ public class NationalIdentifierHateoasController
         DNumberHateoas dNumberHateoas = new DNumberHateoas(updatedDNumber);
         nationalIdentifierHateoasHandler
                 .addLinks(dNumberHateoas, new Authorisation());
-        return ResponseEntity.status(CREATED)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(updatedDNumber.getVersion().toString())
                 .body(dNumberHateoas);
@@ -496,7 +497,7 @@ public class NationalIdentifierHateoasController
         PlanHateoas planHateoas = new PlanHateoas(updatedPlan);
         nationalIdentifierHateoasHandler
                 .addLinks(planHateoas, new Authorisation());
-        return ResponseEntity.status(CREATED)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(updatedPlan.getVersion().toString())
                 .body(planHateoas);
@@ -548,7 +549,7 @@ public class NationalIdentifierHateoasController
         PositionHateoas positionHateoas = new PositionHateoas(updatedPosition);
         nationalIdentifierHateoasHandler
                 .addLinks(positionHateoas, new Authorisation());
-        return ResponseEntity.status(CREATED)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(updatedPosition.getVersion().toString())
                 .body(positionHateoas);
@@ -606,7 +607,7 @@ public class NationalIdentifierHateoasController
                 new SocialSecurityNumberHateoas(updatedSocialSecurityNumber);
         nationalIdentifierHateoasHandler
                 .addLinks(socialSecurityNumberHateoas, new Authorisation());
-        return ResponseEntity.status(CREATED)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(updatedSocialSecurityNumber.getVersion().toString())
                 .body(socialSecurityNumberHateoas);
@@ -658,7 +659,7 @@ public class NationalIdentifierHateoasController
         UnitHateoas unitHateoas = new UnitHateoas(updatedUnit);
         nationalIdentifierHateoasHandler
                 .addLinks(unitHateoas, new Authorisation());
-        return ResponseEntity.status(CREATED)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(updatedUnit.getVersion().toString())
                 .body(unitHateoas);

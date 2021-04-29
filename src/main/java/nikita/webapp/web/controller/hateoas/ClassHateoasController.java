@@ -642,7 +642,7 @@ public class ClassHateoasController
         validateForUpdate(klass);
         ClassHateoas classHateoas = classService.handleUpdate(systemID,
                 parseETAG(request.getHeader(ETAG)), klass);
-        return ResponseEntity.status(CREATED)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(classHateoas.getEntityVersion().toString())
                 .body(classHateoas);

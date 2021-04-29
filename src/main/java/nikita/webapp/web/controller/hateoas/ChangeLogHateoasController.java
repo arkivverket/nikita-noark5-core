@@ -19,6 +19,7 @@ import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping(value = HREF_BASE_LOGGING + SLASH,
@@ -55,7 +56,7 @@ public class ChangeLogHateoasController
             HttpServletRequest request) {
         ChangeLogHateoas changeLogHateoas = changeLogService.
                 findChangeLogByOwner();
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(changeLogHateoas);
     }
@@ -84,7 +85,7 @@ public class ChangeLogHateoasController
             @PathVariable(SYSTEM_ID) final String systemID) {
         ChangeLogHateoas changeLogHateoas =
             changeLogService.findSingleChangeLog(systemID);
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(changeLogHateoas.getEntityVersion().toString())
                 .body(changeLogHateoas);
@@ -136,7 +137,7 @@ public class ChangeLogHateoasController
                 changeLogService.handleUpdate(systemID,
                         parseETAG(request.getHeader(ETAG)), changeLog);
 
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(changeLogHateoas.getEntityVersion().toString())
                 .body(changeLogHateoas);

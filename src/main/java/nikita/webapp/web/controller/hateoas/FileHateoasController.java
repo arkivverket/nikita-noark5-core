@@ -1369,7 +1369,7 @@ public class FileHateoasController
         fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityUpdatedEvent(this, updatedFile));
-        return ResponseEntity.status(CREATED)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(updatedFile.getVersion().toString())
                 .body(fileHateoas);

@@ -1859,7 +1859,7 @@ public class RecordHateoasController
         recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityUpdatedEvent(this, updatedRecord));
-        return ResponseEntity.status(CREATED)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(updatedRecord.getVersion().toString())
                 .body(recordHateoas);
