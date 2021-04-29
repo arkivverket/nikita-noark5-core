@@ -55,7 +55,9 @@ public class FileHateoasHandler
         addNewPartPerson(entity, hateoasNoarkObject);
         addNewPartUnit(entity, hateoasNoarkObject);
 
-        addScreening(entity, hateoasNoarkObject);
+        addScreeningMetadata(entity, hateoasNoarkObject);
+        addScreeningMetadataLocal(entity, hateoasNoarkObject);
+        addNewScreeningMetadataLocal(entity, hateoasNoarkObject);
         addNewBuilding(entity, hateoasNoarkObject);
         addNewCadastralUnit(entity, hateoasNoarkObject);
         addNewDNumber(entity, hateoasNoarkObject);
@@ -73,6 +75,7 @@ public class FileHateoasHandler
         super.addEntityLinksOnTemplate(entity, hateoasNoarkObject);
         addDocumentMedium(entity, hateoasNoarkObject);
         addMetadataFileType(entity, hateoasNoarkObject);
+        addScreeningMetadata(entity, hateoasNoarkObject);
     }
 
     /**
@@ -288,11 +291,33 @@ public class FileHateoasHandler
     }
 
     @Override
-    public void addScreening(ISystemId entity,
-                             IHateoasNoarkObject hateoasNoarkObject) {
+    public void addScreeningMetadata(ISystemId entity,
+                                     IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_FONDS_STRUCTURE + SLASH + entity.getSystemId() +
-                SLASH + SCREENING_METADATA, REL_METADATA_SCREENING_METADATA));
+                HREF_BASE_METADATA + SLASH + SCREENING_METADATA,
+                REL_METADATA_SCREENING_METADATA));
+    }
+
+    @Override
+    public void addScreeningMetadataLocal(ISystemId entity,
+                                          IHateoasNoarkObject hateoasNoarkObject) {
+        if (null != ((File) entity).getReferenceScreening()) {
+            hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                    HREF_BASE_FONDS_STRUCTURE + SLASH + entity.getSystemId() +
+                    SLASH + SCREENING_METADATA,
+                    REL_FONDS_STRUCTURE_SCREENING_METADATA));
+        }
+    }
+
+    @Override
+    public void addNewScreeningMetadataLocal(ISystemId entity,
+                                             IHateoasNoarkObject hateoasNoarkObject) {
+        if (null != ((File) entity).getReferenceScreening()) {
+            hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                    HREF_BASE_FONDS_STRUCTURE + SLASH + entity.getSystemId() +
+                    SLASH + SCREENING_METADATA,
+                    REL_FONDS_STRUCTURE_NEW_SCREENING_METADATA));
+        }
     }
 
     @Override
