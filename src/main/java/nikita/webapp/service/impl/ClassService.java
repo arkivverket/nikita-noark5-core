@@ -9,19 +9,26 @@ import nikita.common.model.noark5.v5.hateoas.ClassificationSystemHateoas;
 import nikita.common.model.noark5.v5.hateoas.FileHateoas;
 import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.ScreeningMetadataHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.metadata.Metadata;
+import nikita.common.model.noark5.v5.secondary.Screening;
+import nikita.common.model.noark5.v5.secondary.ScreeningMetadataLocal;
 import nikita.common.repository.n5v5.IClassRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IClassHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IClassificationSystemHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IFileHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
+import nikita.webapp.hateoas.interfaces.secondary.IScreeningMetadataHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.ICaseFileService;
 import nikita.webapp.service.interfaces.IClassService;
 import nikita.webapp.service.interfaces.IFileService;
 import nikita.webapp.service.interfaces.IRecordService;
+import nikita.webapp.service.interfaces.metadata.IMetadataService;
+import nikita.webapp.service.interfaces.secondary.IScreeningMetadataService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,11 +41,14 @@ import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
+import static java.util.List.copyOf;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setFinaliseEntityValues;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateScreening;
 import static org.springframework.http.HttpStatus.OK;
 
 /**
@@ -64,8 +74,11 @@ public class ClassService
     private final IClassHateoasHandler classHateoasHandler;
     private final IClassificationSystemHateoasHandler
             classificationSystemHateoasHandler;
+    private final IMetadataService metadataService;
     private final IFileHateoasHandler fileHateoasHandler;
     private final IRecordHateoasHandler recordHateoasHandler;
+    private final IScreeningMetadataService screeningMetadataService;
+    private final IScreeningMetadataHateoasHandler screeningMetadataHateoasHandler;
 
     public ClassService(EntityManager entityManager,
                         ApplicationEventPublisher applicationEventPublisher,
@@ -77,8 +90,12 @@ public class ClassService
                         IClassHateoasHandler classHateoasHandler,
                         IClassificationSystemHateoasHandler
                                 classificationSystemHateoasHandler,
+                        IMetadataService metadataService,
                         IFileHateoasHandler fileHateoasHandler,
-                        IRecordHateoasHandler recordHateoasHandler) {
+                        IRecordHateoasHandler recordHateoasHandler,
+                        IScreeningMetadataService screeningMetadataService,
+                        IScreeningMetadataHateoasHandler
+                                screeningMetadataHateoasHandler) {
         super(entityManager, applicationEventPublisher, patchService);
         this.classRepository = classRepository;
         this.fileService = fileService;
@@ -87,8 +104,11 @@ public class ClassService
         this.classHateoasHandler = classHateoasHandler;
         this.classificationSystemHateoasHandler =
                 classificationSystemHateoasHandler;
+        this.metadataService = metadataService;
         this.fileHateoasHandler = fileHateoasHandler;
         this.recordHateoasHandler = recordHateoasHandler;
+        this.screeningMetadataService = screeningMetadataService;
+        this.screeningMetadataHateoasHandler = screeningMetadataHateoasHandler;
     }
 
     // All CREATE operations
@@ -105,6 +125,7 @@ public class ClassService
     @Transactional
     public ClassHateoas save(Class klass) {
         setFinaliseEntityValues(klass);
+        validateScreening(metadataService, klass);
         ClassHateoas classHateoas = new
                 ClassHateoas(classRepository.save(klass));
         classHateoasHandler.addLinks(classHateoas, new Authorisation());
@@ -170,6 +191,24 @@ public class ClassService
             String classSystemId, CaseFile caseFile) {
         caseFile.setReferenceClass(getClassOrThrow(classSystemId));
         return caseFileService.saveHateoas(caseFile);
+    }
+
+    @Override
+    public ScreeningMetadataHateoas createScreeningMetadataAssociatedWithClass(
+            UUID systemId, Metadata screeningMetadata) {
+        Class klass = getClassOrThrow(systemId.toString());
+        if (null == klass.getReferenceScreening()) {
+            throw new NoarkEntityNotFoundException(INFO_CANNOT_FIND_OBJECT +
+                    " Screening, associated with Class with systemId " +
+                    systemId);
+        }
+        return screeningMetadataService.createScreeningMetadata(
+                klass.getReferenceScreening(), screeningMetadata);
+    }
+
+    @Override
+    public ScreeningMetadataHateoas getDefaultScreeningMetadata(UUID systemId) {
+        return screeningMetadataService.getDefaultScreeningMetadata(systemId);
     }
 
     /**
@@ -246,6 +285,25 @@ public class ClassService
                 ClassHateoas(getClassOrThrow(classSystemId));
         classHateoasHandler.addLinks(classHateoas, new Authorisation());
         return classHateoas;
+    }
+
+    @Override
+    public ScreeningMetadataHateoas
+    getScreeningMetadataAssociatedWithClass(UUID classSystemId) {
+        Screening screening = getClassOrThrow(classSystemId.toString())
+                .getReferenceScreening();
+        if (null == screening) {
+            throw new NoarkEntityNotFoundException(
+                    INFO_CANNOT_FIND_OBJECT + " Screening, using systemId " +
+                            classSystemId);
+        }
+        Set<ScreeningMetadataLocal> screeningMetadata =
+                screening.getReferenceScreeningMetadata();
+        ScreeningMetadataHateoas screeningMetadataHateoas =
+                new ScreeningMetadataHateoas(copyOf(screeningMetadata));
+        screeningMetadataHateoasHandler.addLinks(screeningMetadataHateoas,
+                new Authorisation());
+        return screeningMetadataHateoas;
     }
 
     /**

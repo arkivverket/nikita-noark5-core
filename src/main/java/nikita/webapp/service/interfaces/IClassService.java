@@ -9,9 +9,12 @@ import nikita.common.model.noark5.v5.hateoas.ClassificationSystemHateoas;
 import nikita.common.model.noark5.v5.hateoas.FileHateoas;
 import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.ScreeningMetadataHateoas;
+import nikita.common.model.noark5.v5.metadata.Metadata;
 import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 public interface IClassService {
 
@@ -56,8 +59,18 @@ public interface IClassService {
                               @NotNull final Long version,
                               @NotNull final Class klass);
 
-	// All DELETE operations
+    // All DELETE operations
     void deleteEntity(@NotNull String systemId);
 
     long deleteAllByOwnedBy();
+
+    ScreeningMetadataHateoas getScreeningMetadataAssociatedWithClass(
+            @NotNull final UUID systemID);
+
+    ScreeningMetadataHateoas createScreeningMetadataAssociatedWithClass(
+            @NotNull final UUID systemID,
+            @NotNull final Metadata screeningMetadata);
+
+    ScreeningMetadataHateoas getDefaultScreeningMetadata(
+            @NotNull final UUID systemID);
 }

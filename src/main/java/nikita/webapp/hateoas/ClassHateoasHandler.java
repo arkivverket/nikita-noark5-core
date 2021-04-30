@@ -4,7 +4,6 @@ import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
-import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.webapp.hateoas.interfaces.IClassHateoasHandler;
 import org.springframework.stereotype.Component;
 
@@ -45,15 +44,21 @@ public class ClassHateoasHandler
         addCrossReference(entity, hateoasNoarkObject);
         addNewCrossReference(entity, hateoasNoarkObject);
         // links for metadata entities
-        addAccessRestriction(entity,hateoasNoarkObject);
-        addDisposalDecision(entity,hateoasNoarkObject);
+        addAccessRestriction(entity, hateoasNoarkObject);
+        addDisposalDecision(entity, hateoasNoarkObject);
+        addScreeningMetadata(entity, hateoasNoarkObject);
+        addScreeningMetadataLocal(entity, hateoasNoarkObject);
+        addNewScreeningMetadataLocal(entity, hateoasNoarkObject);
     }
 
     @Override
-    public void addEntityLinksOnTemplate(ISystemId entity,
-                                         IHateoasNoarkObject hateoasNoarkObject) {
-        addAccessRestriction(entity,hateoasNoarkObject);
-        addDisposalDecision(entity,hateoasNoarkObject);
+    public void addEntityLinksOnTemplate(
+            ISystemId entity,
+            IHateoasNoarkObject hateoasNoarkObject) {
+        super.addEntityLinksOnTemplate(entity, hateoasNoarkObject);
+        addScreeningMetadata(entity, hateoasNoarkObject);
+        addAccessRestriction(entity, hateoasNoarkObject);
+        addDisposalDecision(entity, hateoasNoarkObject);
     }
 
     /**
@@ -187,6 +192,36 @@ public class ClassHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_METADATA + SLASH + DISPOSAL_DECISION,
                 REL_METADATA_DISPOSAL_DECISION, false));
+    }
+
+    @Override
+    public void addScreeningMetadata(ISystemId entity,
+                                     IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_METADATA + SLASH + SCREENING_METADATA,
+                REL_METADATA_SCREENING_METADATA));
+    }
+
+    @Override
+    public void addScreeningMetadataLocal(ISystemId entity,
+                                          IHateoasNoarkObject hateoasNoarkObject) {
+        if (null != ((Class) entity).getReferenceScreening()) {
+            hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                    HREF_BASE_FONDS_STRUCTURE + SLASH + entity.getSystemId() +
+                    SLASH + SCREENING_METADATA,
+                    REL_FONDS_STRUCTURE_SCREENING_METADATA));
+        }
+    }
+
+    @Override
+    public void addNewScreeningMetadataLocal(ISystemId entity,
+                                             IHateoasNoarkObject hateoasNoarkObject) {
+        if (null != ((Class) entity).getReferenceScreening()) {
+            hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                    HREF_BASE_FONDS_STRUCTURE + SLASH + entity.getSystemId() +
+                    SLASH + SCREENING_METADATA,
+                    REL_FONDS_STRUCTURE_NEW_SCREENING_METADATA));
+        }
     }
 
     /**
