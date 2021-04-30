@@ -542,6 +542,11 @@ public class FileService
     }
 
     @Override
+    public ScreeningMetadataHateoas getDefaultScreeningMetadata(UUID systemId) {
+        return screeningMetadataService.getDefaultScreeningMetadata(systemId);
+    }
+
+    @Override
     public CommentHateoas generateDefaultComment() {
         return commentService.generateDefaultComment();
     }

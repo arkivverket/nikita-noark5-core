@@ -855,7 +855,7 @@ public class FileHateoasController
                 .body(fileHateoas);
     }
 
-    // Create a Comment with default values
+    // Retrieve all ScreeningMetadata associated with the Screening of a File
     // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/skjermingmetadata
     @Operation(summary = "Retrieves all ScreeningMetadata associated with the" +
             " Screening object of a File")
@@ -910,6 +910,38 @@ public class FileHateoasController
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(fileService.generateDefaultComment());
+    }
+
+
+    // Create a default ScreeningMetadata
+    // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-skjermingmetadata
+    @Operation(summary = "Get a default ScreeningMetadata object")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "ScreeningMetadata returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @GetMapping(value =
+            SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_SCREENING_METADATA)
+    public ResponseEntity<ScreeningMetadataHateoas>
+    getDefaultScreeningMetadata(
+            HttpServletRequest request,
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the file",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(fileService
+                        .getDefaultScreeningMetadata(systemID));
     }
 
     // Retrieve all Comments associated with a File

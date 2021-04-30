@@ -154,4 +154,7 @@ public interface IFileService {
     ScreeningMetadataHateoas createScreeningMetadataAssociatedWithFile(
             @NotNull final UUID systemID,
             @NotNull final Metadata screeningMetadata);
+
+    ScreeningMetadataHateoas getDefaultScreeningMetadata(
+            @NotNull final UUID systemID);
 }
