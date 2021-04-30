@@ -4,7 +4,6 @@ import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
-import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
 import org.springframework.stereotype.Component;
 
@@ -14,8 +13,6 @@ import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 
 /**
- * Created by tsodring on 2/6/17.
- * <p>
  * Used to add SeriesHateoas links with Series specific information
  * <p>
  * Not sure if there is a difference in what should be returned of links for various CRUD operations so keeping
@@ -53,13 +50,20 @@ public class SeriesHateoasHandler
         addSeriesStatus(entity, hateoasNoarkObject);
         addNewStorageLocation(entity, hateoasNoarkObject);
         addListStorageLocation(entity, hateoasNoarkObject);
+        addScreeningMetadata(entity, hateoasNoarkObject);
+        addScreeningMetadataLocal(entity, hateoasNoarkObject);
+        addNewScreeningMetadataLocal(entity, hateoasNoarkObject);
     }
 
     @Override
-    public void addEntityLinksOnTemplate(ISystemId entity,
-                                         IHateoasNoarkObject hateoasNoarkObject) {
+    public void addEntityLinksOnTemplate(
+            ISystemId entity,
+            IHateoasNoarkObject hateoasNoarkObject) {
+        super.addEntityLinksOnTemplate(entity, hateoasNoarkObject);
+        addDocumentMedium(entity, hateoasNoarkObject);
         addSeriesStatus(entity, hateoasNoarkObject);
         addDocumentMedium(entity, hateoasNoarkObject);
+        addScreeningMetadata(entity, hateoasNoarkObject);
     }
 
     @Override
@@ -256,6 +260,37 @@ public class SeriesHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_SERIES + SLASH + entity.getSystemId() + SLASH + NEW_STORAGE_LOCATION + SLASH,
                 REL_FONDS_STRUCTURE_NEW_STORAGE_LOCATION, false));
+    }
+
+
+    @Override
+    public void addScreeningMetadata(ISystemId entity,
+                                     IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_METADATA + SLASH + SCREENING_METADATA,
+                REL_METADATA_SCREENING_METADATA));
+    }
+
+    @Override
+    public void addScreeningMetadataLocal(ISystemId entity,
+                                          IHateoasNoarkObject hateoasNoarkObject) {
+        if (null != ((Series) entity).getReferenceScreening()) {
+            hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                    HREF_BASE_FONDS_STRUCTURE + SLASH + entity.getSystemId() +
+                    SLASH + SCREENING_METADATA,
+                    REL_FONDS_STRUCTURE_SCREENING_METADATA));
+        }
+    }
+
+    @Override
+    public void addNewScreeningMetadataLocal(ISystemId entity,
+                                             IHateoasNoarkObject hateoasNoarkObject) {
+        if (null != ((Series) entity).getReferenceScreening()) {
+            hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                    HREF_BASE_FONDS_STRUCTURE + SLASH + entity.getSystemId() +
+                    SLASH + SCREENING_METADATA,
+                    REL_FONDS_STRUCTURE_NEW_SCREENING_METADATA));
+        }
     }
 
     /**

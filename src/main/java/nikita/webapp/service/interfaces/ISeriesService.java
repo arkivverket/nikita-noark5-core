@@ -7,9 +7,12 @@ import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.hateoas.*;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.ScreeningMetadataHateoas;
+import nikita.common.model.noark5.v5.metadata.Metadata;
 import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 public interface ISeriesService {
 
@@ -60,4 +63,14 @@ public interface ISeriesService {
     void deleteEntity(@NotNull String systemId);
 
     long deleteAllByOwnedBy();
+
+    ScreeningMetadataHateoas getScreeningMetadataAssociatedWithSeries(
+            @NotNull final UUID systemId);
+
+    ScreeningMetadataHateoas createScreeningMetadataAssociatedWithSeries(
+            @NotNull final UUID systemId,
+            @NotNull final Metadata screeningMetadata);
+
+    ScreeningMetadataHateoas getDefaultScreeningMetadata(
+            @NotNull final UUID systemID);
 }

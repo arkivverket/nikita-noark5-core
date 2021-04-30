@@ -4,8 +4,6 @@ import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 
 /**
- * Created by tsodring on 2/6/17.
- * <p>
  * Describe Hateoas links handler for Series
  */
 public interface ISeriesHateoasHandler 
@@ -41,16 +39,25 @@ public interface ISeriesHateoasHandler
     void addClassificationSystem(ISystemId entity, 
                             IHateoasNoarkObject hateoasNoarkObject);
 
-    void addFonds(ISystemId entity, 
-                            IHateoasNoarkObject hateoasNoarkObject);
+    void addFonds(ISystemId entity,
+                  IHateoasNoarkObject hateoasNoarkObject);
 
-    void addSeriesStatus(ISystemId entity, 
-                            IHateoasNoarkObject hateoasNoarkObject);
+    void addSeriesStatus(ISystemId entity,
+                         IHateoasNoarkObject hateoasNoarkObject);
 
-    void addNewStorageLocation(ISystemId entity, 
-                            IHateoasNoarkObject hateoasNoarkObject);
+    void addNewStorageLocation(ISystemId entity,
+                               IHateoasNoarkObject hateoasNoarkObject);
 
-    void addListStorageLocation(ISystemId entity, 
-                            IHateoasNoarkObject hateoasNoarkObject);
+    void addListStorageLocation(ISystemId entity,
+                                IHateoasNoarkObject hateoasNoarkObject);
+
+    void addScreeningMetadata(ISystemId entity,
+                              IHateoasNoarkObject hateoasNoarkObject);
+
+    void addScreeningMetadataLocal(ISystemId entity,
+                                   IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNewScreeningMetadataLocal(ISystemId entity,
+                                      IHateoasNoarkObject hateoasNoarkObject);
 
 }

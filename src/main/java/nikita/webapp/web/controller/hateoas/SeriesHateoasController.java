@@ -12,6 +12,8 @@ import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.hateoas.*;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.ScreeningMetadataHateoas;
+import nikita.common.model.noark5.v5.metadata.Metadata;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.hateoas.interfaces.ICaseFileHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IFileHateoasHandler;
@@ -26,6 +28,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
@@ -334,6 +337,60 @@ public class SeriesHateoasController
         return new ResponseEntity<>(API_MESSAGE_NOT_IMPLEMENTED, NOT_IMPLEMENTED);
     }
 
+    // POST [contextPath][api]/arkivstruktur/mappe/{systemId}/skjermingmetadata/
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/skjermingmetadata/
+    @Operation(summary = "Create a ScreeningMetadata associated with a File " +
+            "identified by the given systemId",
+            description = "Returns the newly updated ScreeningMetadata")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "ScreeningMetadata " +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED),
+            @ApiResponse(
+                    responseCode = CREATED_VAL,
+                    description = "ScreeningMetadata " +
+                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = NOT_FOUND_VAL,
+                    description = API_MESSAGE_PARENT_DOES_NOT_EXIST +
+                            " of type ScreeningMetadata"),
+            @ApiResponse(
+                    responseCode = CONFLICT_VAL,
+                    description = API_MESSAGE_CONFLICT),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
+            NEW_SCREENING_METADATA,
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<ScreeningMetadataHateoas>
+    createScreeningMetadataBySystemId(
+            HttpServletRequest request,
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemId of File to associate " +
+                            "ScreeningMetadata with",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID,
+            @Parameter(name = "ScreeningMetadata",
+                    description = "Incoming ScreeningMetadata object",
+                    required = true)
+            @RequestBody final Metadata screeningMetadata)
+            throws NikitaException {
+        ScreeningMetadataHateoas screeningMetadataHateoas =
+                seriesService.createScreeningMetadataAssociatedWithSeries(
+                        systemID, screeningMetadata);
+        return ResponseEntity.status(CREATED)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(screeningMetadataHateoas);
+    }
+
 
     // Update an identified Series
     // PUT [contextPath][api]/arkivstruktur/arkivdel/{systemId}
@@ -415,6 +472,40 @@ public class SeriesHateoasController
         return seriesService.findBySystemId(systemID);
     }
 
+
+    // Retrieve all ScreeningMetadata associated with the Screening of a Series
+    // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/skjermingmetadata
+    @Operation(summary = "Retrieves all ScreeningMetadata associated with the" +
+            " Screening object of a Series")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "ScreeningMetadata returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @GetMapping(value =
+            SLASH + SYSTEM_ID_PARAMETER + SLASH + SCREENING_METADATA)
+    public ResponseEntity<ScreeningMetadataHateoas>
+    getScreeningMetadataAssociatedWithSeries(
+            HttpServletRequest request,
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the series to retrieve " +
+                            "screening metadata",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(seriesService
+                        .getScreeningMetadataAssociatedWithSeries(systemID));
+    }
+
     // Create a ClassificationSystem object with default values
     // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/ny-klassifikasjonssystem/
     @Operation(summary = "Create a ClassificationSystem with default values")
@@ -437,6 +528,37 @@ public class SeriesHateoasController
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(classificationSystemService.generateDefaultClassificationSystem());
+    }
+
+
+    // Create a default ScreeningMetadata
+    // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/ny-skjermingmetadata
+    @Operation(summary = "Get a default ScreeningMetadata object")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "ScreeningMetadata returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @GetMapping(value =
+            SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_SCREENING_METADATA)
+    public ResponseEntity<ScreeningMetadataHateoas>
+    getDefaultScreeningMetadata(
+            HttpServletRequest request,
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the series",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(seriesService.getDefaultScreeningMetadata(systemID));
     }
 
     // Create a File object with default values

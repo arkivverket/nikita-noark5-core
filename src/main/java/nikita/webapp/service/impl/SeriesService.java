@@ -6,13 +6,18 @@ import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.hateoas.*;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.ScreeningMetadataHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.metadata.Metadata;
 import nikita.common.model.noark5.v5.metadata.SeriesStatus;
+import nikita.common.model.noark5.v5.secondary.Screening;
+import nikita.common.model.noark5.v5.secondary.ScreeningMetadataLocal;
 import nikita.common.repository.n5v5.ISeriesRepository;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import nikita.common.util.exceptions.NoarkEntityEditWhenClosedException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.*;
+import nikita.webapp.hateoas.interfaces.secondary.IScreeningMetadataHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.ICaseFileService;
@@ -20,6 +25,7 @@ import nikita.webapp.service.interfaces.IClassificationSystemService;
 import nikita.webapp.service.interfaces.IFileService;
 import nikita.webapp.service.interfaces.ISeriesService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
+import nikita.webapp.service.interfaces.secondary.IScreeningMetadataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -30,8 +36,10 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
+import static java.util.List.copyOf;
 import static nikita.common.config.Constants.INFO_CANNOT_ASSOCIATE_WITH_CLOSED_OBJECT;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.N5ResourceMappings.SERIES_STATUS_CLOSED_CODE;
@@ -58,6 +66,9 @@ public class SeriesService
     private final IFondsHateoasHandler fondsHateoasHandler;
     private final IClassificationSystemHateoasHandler
             classificationSystemHateoasHandler;
+    private final IScreeningMetadataService screeningMetadataService;
+    private final IScreeningMetadataHateoasHandler screeningMetadataHateoasHandler;
+
 
     public SeriesService(
             EntityManager entityManager,
@@ -73,7 +84,9 @@ public class SeriesService
             IFileHateoasHandler fileHateoasHandler,
             IFondsHateoasHandler fondsHateoasHandler,
             IClassificationSystemHateoasHandler
-                    classificationSystemHateoasHandler) {
+                    classificationSystemHateoasHandler,
+            IScreeningMetadataService screeningMetadataService,
+            IScreeningMetadataHateoasHandler screeningMetadataHateoasHandler) {
         super(entityManager, applicationEventPublisher, patchService);
         this.metadataService = metadataService;
         this.fileService = fileService;
@@ -86,6 +99,8 @@ public class SeriesService
         this.fondsHateoasHandler = fondsHateoasHandler;
         this.classificationSystemHateoasHandler =
                 classificationSystemHateoasHandler;
+        this.screeningMetadataService = screeningMetadataService;
+        this.screeningMetadataHateoasHandler = screeningMetadataHateoasHandler;
     }
 
     // All CREATE operations
@@ -114,6 +129,7 @@ public class SeriesService
     public Series save(Series series) {
         validateDocumentMedium(metadataService, series);
         validateDeletion(series.getReferenceDeletion());
+        validateScreening(metadataService, series);
         if (null == series.getSeriesStatus()) {
             checkSeriesStatusUponCreation(series);
         }
@@ -127,6 +143,19 @@ public class SeriesService
         Series series = getSeriesOrThrow(systemId);
         series.addClassificationSystem(classificationSystem);
         return classificationSystemService.save(classificationSystem);
+    }
+
+    @Override
+    public ScreeningMetadataHateoas createScreeningMetadataAssociatedWithSeries(
+            UUID systemId, Metadata screeningMetadata) {
+        Series series = getSeriesOrThrow(systemId.toString());
+        if (null == series.getReferenceScreening()) {
+            throw new NoarkEntityNotFoundException(INFO_CANNOT_FIND_OBJECT +
+                    " Screening, associated with Series with systemId " +
+                    systemId);
+        }
+        return screeningMetadataService.createScreeningMetadata(
+                series.getReferenceScreening(), screeningMetadata);
     }
 
     // All READ operations
@@ -233,6 +262,26 @@ public class SeriesService
                 .body(seriesHateoas);
     }
 
+
+    @Override
+    public ScreeningMetadataHateoas
+    getScreeningMetadataAssociatedWithSeries(UUID seriesSystemId) {
+        Screening screening = getSeriesOrThrow(seriesSystemId.toString())
+                .getReferenceScreening();
+        if (null == screening) {
+            throw new NoarkEntityNotFoundException(
+                    INFO_CANNOT_FIND_OBJECT + " Screening, using systemId " +
+                            seriesSystemId);
+        }
+        Set<ScreeningMetadataLocal> screeningMetadata =
+                screening.getReferenceScreeningMetadata();
+        ScreeningMetadataHateoas screeningMetadataHateoas =
+                new ScreeningMetadataHateoas(copyOf(screeningMetadata));
+        screeningMetadataHateoasHandler.addLinks(screeningMetadataHateoas,
+                new Authorisation());
+        return screeningMetadataHateoas;
+    }
+
     // All UPDATE operations
 
     /**
@@ -332,6 +381,11 @@ public class SeriesService
         seriesRepository.deleteAll();
         logger.info("Deleted [" + count + "] Series objects");
         return count;
+    }
+
+    @Override
+    public ScreeningMetadataHateoas getDefaultScreeningMetadata(UUID systemId) {
+        return screeningMetadataService.getDefaultScreeningMetadata(systemId);
     }
 
     // Helper methods
