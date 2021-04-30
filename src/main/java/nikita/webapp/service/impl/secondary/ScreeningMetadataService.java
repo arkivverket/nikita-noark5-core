@@ -67,6 +67,15 @@ public class ScreeningMetadataService
     }
 
     @Override
+    public ScreeningMetadataHateoas getDefaultScreeningMetadata(UUID systemId) {
+        ScreeningMetadataHateoas screeningMetadataHateoas =
+                new ScreeningMetadataHateoas(new ScreeningMetadataLocal());
+        screeningMetadataHateoasHandler.addLinksOnTemplate(
+                screeningMetadataHateoas, new Authorisation());
+        return screeningMetadataHateoas;
+    }
+
+    @Override
     public ScreeningMetadataHateoas findAllByOwner() {
         ScreeningMetadataHateoas screeningMetadataHateoas =
                 new ScreeningMetadataHateoas(copyOf(repository

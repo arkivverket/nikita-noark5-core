@@ -22,4 +22,7 @@ public interface IScreeningMetadataService {
             @NotNull final Metadata screeningMetadata);
 
     void deleteScreeningMetadataBySystemId(@NotNull final UUID systemId);
+
+    ScreeningMetadataHateoas getDefaultScreeningMetadata(
+            @NotNull final UUID systemId);
 }
