@@ -1,5 +1,6 @@
 package nikita.webapp.hateoas;
 
+import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
@@ -46,6 +47,9 @@ public class DocumentDescriptionHateoasHandler
         addDocumentMedium(entity, hateoasNoarkObject);
         addDocumentType(entity, hateoasNoarkObject);
         addDocumentStatus(entity, hateoasNoarkObject);
+        addScreeningMetadata(entity, hateoasNoarkObject);
+        addScreeningMetadataLocal(entity, hateoasNoarkObject);
+        addNewScreeningMetadataLocal(entity, hateoasNoarkObject);
     }
 
     @Override
@@ -54,8 +58,8 @@ public class DocumentDescriptionHateoasHandler
         addDocumentMedium(entity, hateoasNoarkObject);
         addDocumentType(entity, hateoasNoarkObject);
         addDocumentStatus(entity, hateoasNoarkObject);
+        addScreeningMetadata(entity, hateoasNoarkObject);
     }
-
     /**
      * Create a REL/HREF pair for the parent Record associated
      * with the given DocumentDescription
@@ -198,5 +202,35 @@ public class DocumentDescriptionHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemIdAsString() +
                 SLASH + NEW_AUTHOR + SLASH, REL_FONDS_STRUCTURE_NEW_AUTHOR));
+    }
+
+    @Override
+    public void addScreeningMetadata(ISystemId entity,
+                                     IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_METADATA + SLASH + SCREENING_METADATA,
+                REL_METADATA_SCREENING_METADATA));
+    }
+
+    @Override
+    public void addScreeningMetadataLocal(ISystemId entity,
+                                          IHateoasNoarkObject hateoasNoarkObject) {
+        if (null != ((DocumentDescription) entity).getReferenceScreening()) {
+            hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                    HREF_BASE_FONDS_STRUCTURE + SLASH + entity.getSystemId() +
+                    SLASH + SCREENING_METADATA,
+                    REL_FONDS_STRUCTURE_SCREENING_METADATA));
+        }
+    }
+
+    @Override
+    public void addNewScreeningMetadataLocal(ISystemId entity,
+                                             IHateoasNoarkObject hateoasNoarkObject) {
+        if (null != ((DocumentDescription) entity).getReferenceScreening()) {
+            hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                    HREF_BASE_FONDS_STRUCTURE + SLASH + entity.getSystemId() +
+                    SLASH + SCREENING_METADATA,
+                    REL_FONDS_STRUCTURE_NEW_SCREENING_METADATA));
+        }
     }
 }
