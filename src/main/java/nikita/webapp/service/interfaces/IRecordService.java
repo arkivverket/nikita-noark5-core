@@ -13,6 +13,7 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPers
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
 import nikita.common.model.noark5.v5.hateoas.secondary.*;
+import nikita.common.model.noark5.v5.metadata.Metadata;
 import nikita.common.model.noark5.v5.nationalidentifier.*;
 import nikita.common.model.noark5.v5.secondary.Author;
 import nikita.common.model.noark5.v5.secondary.Comment;
@@ -155,4 +156,14 @@ public interface IRecordService {
 
     ResponseEntity<RecordHateoas> handleUpdate(
             UUID systemID, PatchObjects patchObjects);
+
+    ScreeningMetadataHateoas createScreeningMetadataAssociatedWithRecord(
+            @NotNull final UUID systemID,
+            @NotNull final Metadata screeningMetadata);
+
+    ScreeningMetadataHateoas getScreeningMetadataAssociatedWithRecord(
+            @NotNull final UUID systemID);
+
+    ScreeningMetadataHateoas getDefaultScreeningMetadata(
+            @NotNull final UUID systemID);
 }
