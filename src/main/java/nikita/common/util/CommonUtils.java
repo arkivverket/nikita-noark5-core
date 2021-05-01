@@ -591,18 +591,10 @@ public final class CommonUtils {
                                      IMetadataEntity entity,
                                      StringBuilder errors,
                                      Boolean required) {
-                JsonNode currentNode = objectNode.get(parentname);
-                if (null != currentNode) {
-                    JsonNode node = currentNode.get(CODE);
-                    if (null != node) {
-                        entity.setCode(node.textValue());
-                    } else {
-                        errors.append(parentname + "." + CODE + " is missing. ");
-                    }
-                    node = currentNode.get(CODE_NAME);
-                    if (null != node) {
-                        entity.setCodeName(node.textValue());
-                    }
+                JsonNode metadataNode = objectNode.get(parentname);
+                if (null != metadataNode) {
+                    deserialiseMetadataValue(
+                            metadataNode, parentname, entity, errors);
                     if (null != entity.getCode()) {
                         objectNode.remove(parentname);
                     }
@@ -613,22 +605,26 @@ public final class CommonUtils {
             }
 
             public static IMetadataEntity
-            deserialiseMetadataValueWithoutParent(JsonNode metadataNode,
-                                                  IMetadataEntity entity,
-                                                  StringBuilder errors,
-                                                  Boolean required) {
-                if (null != metadataNode) {
-                    JsonNode node = metadataNode.get(CODE);
-                    if (null != node) {
-                        entity.setCode(node.textValue());
-                    } else {
-                        errors.append("MetadataValueWithoutParent : " + CODE +
-                                " is missing. ");
-                    }
-                    node = metadataNode.get(CODE_NAME);
-                    if (null != node) {
-                        entity.setCodeName(node.textValue());
-                    }
+            deserialiseMetadataValueWithoutParent(
+                    @NotNull JsonNode metadataNode,
+                    @NotNull IMetadataEntity entity,
+                    @NotNull StringBuilder errors) {
+                return deserialiseMetadataValue(metadataNode,
+                        "MetadataValueWithoutParent", entity, errors);
+            }
+
+            public static IMetadataEntity deserialiseMetadataValue(
+                    JsonNode metadataNode, String parentname,
+                    IMetadataEntity entity, StringBuilder errors) {
+                JsonNode node = metadataNode.get(CODE);
+                if (null != node) {
+                    entity.setCode(node.textValue());
+                } else {
+                    errors.append(parentname + "." + CODE + " is missing. ");
+                }
+                node = metadataNode.get(CODE_NAME);
+                if (null != node) {
+                    entity.setCodeName(node.textValue());
                 }
                 return entity;
             }
@@ -774,7 +770,7 @@ public final class CommonUtils {
                                         deserialiseMetadataValueWithoutParent(
                                                 node.deepCopy(),
                                                 new ScreeningMetadataLocal(),
-                                                errors, true);
+                                                errors);
                         screeningEntity.addReferenceScreeningMetadata(
                                 screeningMetadataLocal);
                     }
@@ -1868,11 +1864,8 @@ public final class CommonUtils {
             public static void printCode
                     (JsonGenerator jgen, IMetadataEntity metadataEntity)
                     throws IOException {
-                jgen.writeStringField(CODE, metadataEntity.getCode());
-                if (null != metadataEntity.getCodeName()) {
-                    jgen.writeStringField(CODE_NAME,
-                            metadataEntity.getCodeName());
-                }
+                printCode(jgen, metadataEntity.getCode(),
+                        metadataEntity.getCodeName());
             }
 
             public static void printNullableMetadata
