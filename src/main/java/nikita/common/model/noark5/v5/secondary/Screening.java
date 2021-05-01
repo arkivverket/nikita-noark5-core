@@ -84,6 +84,7 @@ public class Screening
     private Integer screeningDuration;
 
     /**
+     * Links to ScreeningMetadata
      * M502 - skjermingMetadata. Note this is a list
      */
     @OneToMany(mappedBy = REFERENCE_SCREENING, cascade = PERSIST)
@@ -103,7 +104,6 @@ public class Screening
     @OneToMany(mappedBy = REFERENCE_SCREENING)
     private List<Record> referenceRecord = new ArrayList<>();
 
-    // Links to ScreeningMetadata
     // Links to DocumentDescription
     @OneToMany(mappedBy = REFERENCE_SCREENING)
     private List<DocumentDescription> referenceDocumentDescription =
