@@ -28,6 +28,7 @@ import nikita.webapp.hateoas.interfaces.secondary.*;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.IBSMService;
+import nikita.webapp.service.interfaces.IDocumentDescriptionService;
 import nikita.webapp.service.interfaces.INationalIdentifierService;
 import nikita.webapp.service.interfaces.IRecordService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
@@ -66,7 +67,7 @@ public class RecordService
     private static final Logger logger =
             LoggerFactory.getLogger(RecordService.class);
 
-    private final DocumentDescriptionService documentDescriptionService;
+    private final IDocumentDescriptionService documentDescriptionService;
     private final IRecordRepository recordRepository;
     private final IBSMService bsmService;
     private final IRecordHateoasHandler recordHateoasHandler;
@@ -94,7 +95,7 @@ public class RecordService
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
             IPatchService patchService,
-            DocumentDescriptionService documentDescriptionService,
+            IDocumentDescriptionService documentDescriptionService,
             IRecordRepository recordRepository,
             IBSMService bsmService,
             IRecordHateoasHandler recordHateoasHandler,
