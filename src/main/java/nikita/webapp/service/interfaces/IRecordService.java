@@ -31,10 +31,10 @@ public interface IRecordService {
     ResponseEntity<RecordHateoas> save(Record record);
 
     DocumentDescriptionHateoas createDocumentDescriptionAssociatedWithRecord(
-            String systemID, DocumentDescription documentDescription);
+            String systemId, DocumentDescription documentDescription);
 
     CommentHateoas createCommentAssociatedWithRecord
-        (String systemID, Comment comment);
+            (String systemId, Comment comment);
 
     RecordHateoas generateDefaultRecord();
 
@@ -50,15 +50,15 @@ public interface IRecordService {
             String recordSystemId);
 
     CommentHateoas getCommentAssociatedWithRecord
-        (@NotNull final String systemID);
+            (@NotNull final String systemId);
 
     CorrespondencePartHateoas getCorrespondencePartAssociatedWithRecord(
-            final String systemID);
+            final String systemId);
 
-    PartHateoas getPartAssociatedWithRecord(final String systemID);
+    PartHateoas getPartAssociatedWithRecord(final String systemId);
 
     NationalIdentifierHateoas getNationalIdentifierAssociatedWithRecord
-	(@NotNull final String systemID);
+            (@NotNull final String systemId);
 
     PartPersonHateoas generateDefaultPartPerson(
             String recordSystemId);
@@ -68,43 +68,43 @@ public interface IRecordService {
 
     CorrespondencePartPersonHateoas
     createCorrespondencePartPersonAssociatedWithRecord(
-            String systemID, CorrespondencePartPerson correspondencePart);
+            String systemId, CorrespondencePartPerson correspondencePart);
 
     CorrespondencePartUnitHateoas
     createCorrespondencePartUnitAssociatedWithRecord(
-            String systemID, CorrespondencePartUnit correspondencePart);
+            String systemId, CorrespondencePartUnit correspondencePart);
 
     CorrespondencePartInternalHateoas
     createCorrespondencePartInternalAssociatedWithRecord(
-            String systemID, CorrespondencePartInternal correspondencePart);
+            String systemId, CorrespondencePartInternal correspondencePart);
 
     PartPersonHateoas createPartPersonAssociatedWithRecord(
-            String systemID, PartPerson partPerson);
+            String systemId, PartPerson partPerson);
 
     PartUnitHateoas createPartUnitAssociatedWithRecord(
-            String systemID, PartUnit partUnit);
+            String systemId, PartUnit partUnit);
 
     BuildingHateoas createBuildingAssociatedWithRecord
-	(@NotNull String systemID, @NotNull Building building);
+            (@NotNull String systemId, @NotNull Building building);
 
     CadastralUnitHateoas createCadastralUnitAssociatedWithRecord
-	(@NotNull String systemID, @NotNull CadastralUnit cadastralUnit);
+            (@NotNull String systemId, @NotNull CadastralUnit cadastralUnit);
 
     DNumberHateoas createDNumberAssociatedWithRecord
-	(@NotNull String systemID, @NotNull DNumber dNumber);
+            (@NotNull String systemId, @NotNull DNumber dNumber);
 
     PlanHateoas createPlanAssociatedWithRecord
-	(@NotNull String systemID, @NotNull Plan plan);
+            (@NotNull String systemId, @NotNull Plan plan);
 
     PositionHateoas createPositionAssociatedWithRecord
-	(@NotNull String systemID, @NotNull Position position);
+            (@NotNull String systemId, @NotNull Position position);
 
     SocialSecurityNumberHateoas createSocialSecurityNumberAssociatedWithRecord
-        (@NotNull String systemID,
-         @NotNull SocialSecurityNumber socialSecurityNumber);
+            (@NotNull String systemId,
+             @NotNull SocialSecurityNumber socialSecurityNumber);
 
     UnitHateoas createUnitAssociatedWithRecord
-	(@NotNull String systemID, @NotNull Unit unit);
+            (@NotNull String systemId, @NotNull Unit unit);
 
     // -- All READ operations
     List<Record> findAll();
@@ -132,13 +132,13 @@ public interface IRecordService {
                         @NotNull Long version, @NotNull Record record);
 
     // -- All DELETE operations
-    void deleteRecord(@NotNull UUID systemID);
+    void deleteRecord(@NotNull UUID systemId);
 
     long deleteAllByOwnedBy();
 
-    AuthorHateoas findAllAuthorWithRecordBySystemId(String systemID);
+    AuthorHateoas findAllAuthorWithRecordBySystemId(String systemId);
 
-    AuthorHateoas generateDefaultAuthor(String systemID);
+    AuthorHateoas generateDefaultAuthor(String systemId);
 
     BuildingHateoas generateDefaultBuilding();
 
@@ -155,15 +155,15 @@ public interface IRecordService {
     UnitHateoas generateDefaultUnit();
 
     ResponseEntity<RecordHateoas> handleUpdate(
-            UUID systemID, PatchObjects patchObjects);
+            UUID systemId, PatchObjects patchObjects);
 
     ScreeningMetadataHateoas createScreeningMetadataAssociatedWithRecord(
-            @NotNull final UUID systemID,
+            @NotNull final UUID systemId,
             @NotNull final Metadata screeningMetadata);
 
     ScreeningMetadataHateoas getScreeningMetadataAssociatedWithRecord(
-            @NotNull final UUID systemID);
+            @NotNull final UUID systemId);
 
     ScreeningMetadataHateoas getDefaultScreeningMetadata(
-            @NotNull final UUID systemID);
+            @NotNull final UUID systemId);
 }

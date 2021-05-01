@@ -4,10 +4,13 @@ import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.casehandling.RecordNote;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RecordNoteHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.DocumentFlowHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.ScreeningMetadataHateoas;
+import nikita.common.model.noark5.v5.metadata.Metadata;
 import nikita.common.model.noark5.v5.secondary.DocumentFlow;
 import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 public interface IRecordNoteService {
 
@@ -43,5 +46,9 @@ public interface IRecordNoteService {
     ResponseEntity<RecordNoteHateoas> generateDefaultRecordNote(
             @NotNull final String caseFilSystemId);
 
-    DocumentFlowHateoas generateDefaultDocumentFlow(String systemID);
+    DocumentFlowHateoas generateDefaultDocumentFlow(String systemId);
+
+    ScreeningMetadataHateoas createScreeningMetadataAssociatedWithRecordNote(
+            @NotNull final UUID systemId,
+            @NotNull final Metadata screeningMetadata);
 }
