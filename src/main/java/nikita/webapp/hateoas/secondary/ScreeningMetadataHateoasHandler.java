@@ -9,7 +9,6 @@ import nikita.webapp.security.IAuthorisation;
 import org.springframework.stereotype.Component;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.SCREENING;
 import static nikita.common.config.N5ResourceMappings.SCREENING_METADATA;
 
 @Component
@@ -24,8 +23,8 @@ public class ScreeningMetadataHateoasHandler
     public void addSelfLink(ISystemId entity,
                             IHateoasNoarkObject hateoasNoarkObject) {
         String selfHref = getOutgoingAddress() +
-                HREF_BASE_FONDS_STRUCTURE + SLASH + SCREENING + SLASH +
-                entity.getSystemId() + SCREENING_METADATA + SLASH;
+                HREF_BASE_FONDS_STRUCTURE + SLASH + SCREENING_METADATA + SLASH +
+                entity.getSystemId() + SLASH;
         hateoasNoarkObject.addLink(entity, new Link(selfHref,
                 getRelSelfLink()));
         hateoasNoarkObject.addLink(entity, new Link(selfHref,
