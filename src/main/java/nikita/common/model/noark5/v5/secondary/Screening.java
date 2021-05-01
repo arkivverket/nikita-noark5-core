@@ -1,6 +1,7 @@
 package nikita.common.model.noark5.v5.secondary;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.*;
 import nikita.common.model.noark5.v5.interfaces.entities.IScreeningEntity;
@@ -23,8 +24,7 @@ import java.util.Set;
 
 import static javax.persistence.CascadeType.PERSIST;
 import static nikita.common.config.Constants.TABLE_SCREENING;
-import static nikita.common.config.N5ResourceMappings.REFERENCE_SCREENING;
-import static nikita.common.config.N5ResourceMappings.SCREENING;
+import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
@@ -36,51 +36,58 @@ public class Screening
     /**
      * M??? - tilgangsrestriksjon code n4 (JP.TGKODE) (xs:string)
      */
-    @Column(name = "access_restriction_code")
+    @Column(name = ACCESS_RESTRICTION_CODE_ENG)
     @Audited
+    @JsonProperty(ACCESS_RESTRICTION_CODE)
     private String accessRestrictionCode;
 
     /**
      * M500 - tilgangsrestriksjon code name n4 (JP.TGKODE) (xs:string)
      */
-    @Column(name = "access_restriction_code_name")
+    @Column(name = ACCESS_RESTRICTION_CODE_NAME_ENG)
     @Audited
+    @JsonProperty(ACCESS_RESTRICTION_CODE_NAME)
     private String accessRestrictionCodeName;
 
     /**
      * M501 - skjermingshjemmel n4 (JP.UOFF)
      */
-    @Column(name = "screening_authority")
+    @Column(name = SCREENING_AUTHORITY_ENG)
     @Audited
+    @JsonProperty(SCREENING_AUTHORITY)
     private String screeningAuthority;
 
     /**
      * M??? - skjermingDokument code (xs:string)
      */
-    @Column(name = "screening_document_code")
+    @Column(name = SCREENING_DOCUMENT_CODE_ENG)
     @Audited
+    @JsonProperty(SCREENING_DOCUMENT_CODE)
     private String screeningDocumentCode;
 
     /**
-     * M503 - skjermingDokument code name (xs:string)
+     * M503 - skjermingdokument code name (xs:string)
      */
-    @Column(name = "screening_document_code_name")
+    @Column(name = SCREENING_DOCUMENT_CODE_NAME_ENG)
     @Audited
+    @JsonProperty(SCREENING_DOCUMENT_CODE_NAME)
     private String screeningDocumentCodeName;
 
     /**
      * M505 - skjermingOpphoererDato n4(JP.AGDATO)
      */
-    @Column(name = "screening_expires")
+    @Column(name = SCREENING_EXPIRES_DATE_ENG)
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
+    @JsonProperty(SCREENING_EXPIRES_DATE)
     private OffsetDateTime screeningExpiresDate;
 
     /**
      * M504 - skjermingsvarighet (xs:integer)
      */
-    @Column(name = "screening_duration")
+    @Column(name = SCREENING_DURATION_ENG)
     @Audited
+    @JsonProperty(SCREENING_DURATION)
     private Integer screeningDuration;
 
     /**
