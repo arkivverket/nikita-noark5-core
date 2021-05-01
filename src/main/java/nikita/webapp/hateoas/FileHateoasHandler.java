@@ -303,8 +303,8 @@ public class FileHateoasHandler
                                           IHateoasNoarkObject hateoasNoarkObject) {
         if (null != ((File) entity).getReferenceScreening()) {
             hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                    HREF_BASE_FONDS_STRUCTURE + SLASH + entity.getSystemId() +
-                    SLASH + SCREENING_METADATA,
+                    HREF_BASE_FONDS_STRUCTURE + SLASH + FILE + SLASH +
+                    entity.getSystemId() + SLASH + SCREENING_METADATA,
                     REL_FONDS_STRUCTURE_SCREENING_METADATA));
         }
     }
@@ -314,8 +314,8 @@ public class FileHateoasHandler
                                              IHateoasNoarkObject hateoasNoarkObject) {
         if (null != ((File) entity).getReferenceScreening()) {
             hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                    HREF_BASE_FONDS_STRUCTURE + SLASH + entity.getSystemId() +
-                    SLASH + SCREENING_METADATA,
+                    HREF_BASE_FONDS_STRUCTURE + SLASH + FILE + SLASH +
+                    entity.getSystemId() + SLASH + SCREENING_METADATA,
                     REL_FONDS_STRUCTURE_NEW_SCREENING_METADATA));
         }
     }
