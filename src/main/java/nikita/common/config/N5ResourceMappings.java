@@ -76,7 +76,7 @@ public final class N5ResourceMappings {
             "referenceCorrespondencePartUnit";
     public static final String REFERENCE_CORRESPONDENCE_PART_PERSON =
             "referenceCorrespondencePartPerson";
-
+    public static final String REFERENCE_SCREENING = "referenceScreening";
     public static final String SYSTEM_ID_PARAMETER =
             LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS;
 

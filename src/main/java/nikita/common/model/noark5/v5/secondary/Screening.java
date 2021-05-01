@@ -23,6 +23,7 @@ import java.util.Set;
 
 import static javax.persistence.CascadeType.PERSIST;
 import static nikita.common.config.Constants.TABLE_SCREENING;
+import static nikita.common.config.N5ResourceMappings.REFERENCE_SCREENING;
 import static nikita.common.config.N5ResourceMappings.SCREENING;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
@@ -82,35 +83,31 @@ public class Screening
     @Audited
     private Integer screeningDuration;
 
-    // Links to Series
-    @OneToMany(mappedBy = "referenceScreening")
-    private List<Series> referenceSeries = new ArrayList<>();
-
-    // Links to Class
-    @OneToMany(mappedBy = "referenceScreening")
-    private List<Class> referenceClass = new ArrayList<>();
-
-    // Links to File
-    @OneToMany(mappedBy = "referenceScreening")
-    private List<File> referenceFile = new ArrayList<>();
-
-    // Links to Record
-    @OneToMany(mappedBy = "referenceScreening")
-    private List<Record> referenceRecord = new ArrayList<>();
-
-    // Links to DocumentDescription
-    @OneToMany(mappedBy = "referenceScreening")
-    private List<DocumentDescription> referenceDocumentDescription =
-            new ArrayList<>();
-
-    // Links to ScreeningMetadata
     /**
      * M502 - skjermingMetadata. Note this is a list
      */
-    @OneToMany(mappedBy = "referenceScreening", cascade = PERSIST)
+    @OneToMany(mappedBy = REFERENCE_SCREENING, cascade = PERSIST)
     @JsonIgnore
     private final Set<ScreeningMetadataLocal> referenceScreeningMetadata
             = new HashSet<>();
+    // Links to Series
+    @OneToMany(mappedBy = REFERENCE_SCREENING)
+    private List<Series> referenceSeries = new ArrayList<>();
+    // Links to Class
+    @OneToMany(mappedBy = REFERENCE_SCREENING)
+    private List<Class> referenceClass = new ArrayList<>();
+    // Links to File
+    @OneToMany(mappedBy = REFERENCE_SCREENING)
+    private List<File> referenceFile = new ArrayList<>();
+    // Links to Record
+    @OneToMany(mappedBy = REFERENCE_SCREENING)
+    private List<Record> referenceRecord = new ArrayList<>();
+
+    // Links to ScreeningMetadata
+    // Links to DocumentDescription
+    @OneToMany(mappedBy = REFERENCE_SCREENING)
+    private List<DocumentDescription> referenceDocumentDescription =
+            new ArrayList<>();
 
     public AccessRestriction getAccessRestriction() {
         if (null == accessRestrictionCode)
