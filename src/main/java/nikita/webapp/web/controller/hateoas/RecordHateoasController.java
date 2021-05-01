@@ -137,9 +137,9 @@ public class RecordHateoasController
                 .body(documentDescriptionHateoas);
     }
 
-    // POST [contextPath][api]/arkivstruktur/mappe/{systemId}/skjermingmetadata/
+    // POST [contextPath][api]/arkivstruktur/registrering/{systemId}/skjermingmetadata/
     // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/skjermingmetadata/
-    @Operation(summary = "Create a ScreeningMetadata associated with a File " +
+    @Operation(summary = "Create a ScreeningMetadata associated with a Record" +
             "identified by the given systemId",
             description = "Returns the newly updated ScreeningMetadata")
     @ApiResponses(value = {
