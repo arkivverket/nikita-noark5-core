@@ -87,12 +87,14 @@ public class ClassDeserializer
                     "This value is being ignored.");
             objectNode.remove(LINKS);
         }
-        // Check that there are no additional values left after processing the tree
-        // If there are additional throw a malformed input exception
+        // Check that there are no additional values left after processing the
+        // tree. If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {
-            errors.append("The klasse you tried to create is malformed. The " +
-                    "following fields are not recognised as klasse fields [" +
-                    checkNodeObjectEmpty(objectNode) + "]. ");
+            errors.append("The klasse you tried to create is malformed.");
+            errors.append("The following fields are not recognised as klasse ");
+            errors.append("fields [");
+            errors.append(checkNodeObjectEmpty(objectNode));
+            errors.append("]. ");
         }
 
         if (0 < errors.length())
