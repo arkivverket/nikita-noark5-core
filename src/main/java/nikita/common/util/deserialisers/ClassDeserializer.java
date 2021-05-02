@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 import static nikita.common.config.HATEOASConstants.LINKS;
+import static nikita.common.config.N5ResourceMappings.CLASS_ID;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 
 /**
