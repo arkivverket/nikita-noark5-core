@@ -6,9 +6,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.Class;
-import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 import static nikita.common.config.HATEOASConstants.LINKS;
+import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 
 /**
  * Created by tsodring on 1/6/17.
@@ -58,28 +57,28 @@ public class ClassDeserializer
         ObjectNode objectNode = mapper.readTree(jsonParser);
 
         // Deserialise general properties
-        CommonUtils.Hateoas.Deserialize.deserialiseNoarkGeneralEntity(klass, objectNode, errors);
+        deserialiseNoarkGeneralEntity(klass, objectNode, errors);
 
         // Deserialize classId
-        JsonNode currentNode = objectNode.get(N5ResourceMappings.CLASS_ID);
+        JsonNode currentNode = objectNode.get(CLASS_ID);
         if (null != currentNode) {
             klass.setClassId(currentNode.textValue());
-            objectNode.remove(N5ResourceMappings.CLASS_ID);
+            objectNode.remove(CLASS_ID);
         }
 
-        CommonUtils.Hateoas.Deserialize.deserialiseKeyword(klass, objectNode, errors);
+        deserialiseKeyword(klass, objectNode, errors);
         klass.setReferenceDisposal(
-                CommonUtils.Hateoas.Deserialize.deserialiseDisposal(
+                deserialiseDisposal(
                         objectNode, errors));
 	// klasse.gradering is only XSD, not in the version 1.0 API
 	// specification.  See
 	// https://github.com/arkivverket/noark5-tjenestegrensesnitt-standard/pull/241
         klass.setReferenceClassified(
-		CommonUtils.Hateoas.Deserialize.deserialiseClassified(
-			objectNode, errors));
+                deserialiseClassified(
+                        objectNode, errors));
 
         klass.setReferenceScreening(
-                CommonUtils.Hateoas.Deserialize.deserialiseScreening(objectNode, errors));
+                deserialiseScreening(objectNode, errors));
 
         currentNode = objectNode.get(LINKS);
         if (null != currentNode) {
@@ -92,7 +91,7 @@ public class ClassDeserializer
         if (objectNode.size() != 0) {
             errors.append("The klasse you tried to create is malformed. The " +
                     "following fields are not recognised as klasse fields [" +
-                    CommonUtils.Hateoas.Deserialize.checkNodeObjectEmpty(objectNode) + "]. ");
+                    checkNodeObjectEmpty(objectNode) + "]. ");
         }
 
         if (0 < errors.length())
