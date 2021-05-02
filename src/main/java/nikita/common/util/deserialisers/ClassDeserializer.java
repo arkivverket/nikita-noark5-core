@@ -42,7 +42,7 @@ import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
  * - Missing obligatory property values in the JSON will trigger an exception
  */
 public class ClassDeserializer
-        extends JsonDeserializer {
+        extends JsonDeserializer<Class> {
 
     private static final Logger logger =
             LoggerFactory.getLogger(ClassDeserializer.class);
