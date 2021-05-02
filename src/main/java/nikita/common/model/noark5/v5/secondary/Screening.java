@@ -98,15 +98,19 @@ public class Screening
     @JsonIgnore
     private final Set<ScreeningMetadataLocal> referenceScreeningMetadata
             = new HashSet<>();
+
     // Links to Series
     @OneToMany(mappedBy = REFERENCE_SCREENING)
     private List<Series> referenceSeries = new ArrayList<>();
+
     // Links to Class
     @OneToMany(mappedBy = REFERENCE_SCREENING)
     private List<Class> referenceClass = new ArrayList<>();
+
     // Links to File
     @OneToMany(mappedBy = REFERENCE_SCREENING)
     private List<File> referenceFile = new ArrayList<>();
+
     // Links to Record
     @OneToMany(mappedBy = REFERENCE_SCREENING)
     private List<Record> referenceRecord = new ArrayList<>();
