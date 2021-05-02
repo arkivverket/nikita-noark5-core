@@ -30,7 +30,8 @@ import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping(value = HREF_BASE_FONDS_STRUCTURE + SLASH,
@@ -235,7 +236,7 @@ public class CorrespondencePartHateoasController
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityUpdatedEvent(this,
                         updatedCorrespondencePartUnit));
-        return ResponseEntity.status(CREATED)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(updatedCorrespondencePartUnit.getVersion().toString())
                 .body(correspondencePartUnitHateoas);
@@ -302,7 +303,7 @@ public class CorrespondencePartHateoasController
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityUpdatedEvent(this,
                         updatedCorrespondencePartPerson));
-        return ResponseEntity.status(CREATED)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(updatedCorrespondencePartPerson.getVersion().toString())
                 .body(correspondencePartPersonHateoas);
@@ -369,7 +370,7 @@ public class CorrespondencePartHateoasController
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityUpdatedEvent(this,
                         updatedCorrespondencePartInternal));
-        return ResponseEntity.status(CREATED)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(updatedCorrespondencePartInternal.getVersion().toString())
                 .body(correspondencePartInternalHateoas);

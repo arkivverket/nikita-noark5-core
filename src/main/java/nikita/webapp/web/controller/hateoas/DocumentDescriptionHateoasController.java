@@ -10,6 +10,7 @@ import nikita.common.model.noark5.v5.hateoas.DocumentDescriptionHateoas;
 import nikita.common.model.noark5.v5.hateoas.DocumentObjectHateoas;
 import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.*;
+import nikita.common.model.noark5.v5.metadata.Metadata;
 import nikita.common.model.noark5.v5.secondary.Author;
 import nikita.common.model.noark5.v5.secondary.Comment;
 import nikita.common.model.noark5.v5.secondary.PartPerson;
@@ -21,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
@@ -101,6 +103,61 @@ public class DocumentDescriptionHateoasController
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(documentObjectHateoas.getEntityVersion().toString())
                 .body(documentObjectHateoas);
+    }
+
+    // POST [contextPath][api]/arkivstruktur/dokumentbeskrivelse/{systemId}/skjermingmetadata/
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/skjermingmetadata/
+    @Operation(summary = "Create a ScreeningMetadata associated with a " +
+            "DocumentDescription identified by the given systemId",
+            description = "Returns the newly updated ScreeningMetadata")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "ScreeningMetadata " +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED),
+            @ApiResponse(
+                    responseCode = CREATED_VAL,
+                    description = "ScreeningMetadata " +
+                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = NOT_FOUND_VAL,
+                    description = API_MESSAGE_PARENT_DOES_NOT_EXIST +
+                            " of type ScreeningMetadata"),
+            @ApiResponse(
+                    responseCode = CONFLICT_VAL,
+                    description = API_MESSAGE_CONFLICT),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
+            NEW_SCREENING_METADATA,
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<ScreeningMetadataHateoas>
+    createScreeningMetadataBySystemId(
+            HttpServletRequest request,
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemId of File to associate " +
+                            "ScreeningMetadata with",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID,
+            @Parameter(name = "ScreeningMetadata",
+                    description = "Incoming ScreeningMetadata object",
+                    required = true)
+            @RequestBody final Metadata screeningMetadata)
+            throws NikitaException {
+        ScreeningMetadataHateoas screeningMetadataHateoas =
+                documentDescriptionService
+                        .createScreeningMetadataAssociatedWithDocumentDescription(
+                                systemID, screeningMetadata);
+        return ResponseEntity.status(CREATED)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(screeningMetadataHateoas);
     }
 
     // Create a new Author and associate it with the given DocumentDescription
@@ -356,6 +413,73 @@ public class DocumentDescriptionHateoasController
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(documentDescriptionHateoas.getEntityVersion().toString())
                 .body(documentDescriptionHateoas);
+    }
+
+
+    // Retrieve all ScreeningMetadata associated with the Screening of a
+    // DocumentDescription
+    // GET [contextPath][api]/arkivstruktur/dokumentbeskrivelse/{systemId}/skjermingmetadata
+    @Operation(summary = "Retrieves all ScreeningMetadata associated with the" +
+            " Screening object of a DocumentDescription")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "ScreeningMetadata returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @GetMapping(value =
+            SLASH + SYSTEM_ID_PARAMETER + SLASH + SCREENING_METADATA)
+    public ResponseEntity<ScreeningMetadataHateoas>
+    getScreeningMetadataAssociatedWithDocumentDescription(
+            HttpServletRequest request,
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the documentDescription to " +
+                            "retrieve screening metadata",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(documentDescriptionService
+                        .getScreeningMetadataAssociatedWithDocumentDescription(
+                                systemID));
+    }
+
+    // Create a default ScreeningMetadata
+    // GET [contextPath][api]/arkivstruktur/dokumentbeskrivelse/{systemId}/ny-skjermingmetadata
+    @Operation(summary = "Get a default ScreeningMetadata object")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "ScreeningMetadata returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @GetMapping(value =
+            SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_SCREENING_METADATA)
+    public ResponseEntity<ScreeningMetadataHateoas>
+    getDefaultScreeningMetadata(
+            HttpServletRequest request,
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the documentDescription",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(documentDescriptionService
+                        .getDefaultScreeningMetadata(systemID));
     }
 
     // GET [contextPath][api]/arkivstruktur/dokumentbeskrivelse/{systemId}/ny-merknad
@@ -807,7 +931,7 @@ public class DocumentDescriptionHateoasController
         DocumentDescriptionHateoas documentDescriptionHateoas =
                 documentDescriptionService.handleUpdate(systemID,
                         parseETAG(request.getHeader(ETAG)), documentDescription);
-        return ResponseEntity.status(CREATED)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(documentDescriptionHateoas.getEntityVersion().toString())
                 .body(documentDescriptionHateoas);

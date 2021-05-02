@@ -12,16 +12,12 @@ import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileExpansionHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
-import nikita.common.model.noark5.v5.hateoas.secondary.CommentHateoas;
-import nikita.common.model.noark5.v5.hateoas.secondary.PartHateoas;
-import nikita.common.model.noark5.v5.hateoas.secondary.PartPersonHateoas;
-import nikita.common.model.noark5.v5.hateoas.secondary.PartUnitHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.*;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.md_other.BSMMetadata;
+import nikita.common.model.noark5.v5.metadata.Metadata;
 import nikita.common.model.noark5.v5.nationalidentifier.*;
-import nikita.common.model.noark5.v5.secondary.Comment;
-import nikita.common.model.noark5.v5.secondary.PartPerson;
-import nikita.common.model.noark5.v5.secondary.PartUnit;
+import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.repository.n5v5.IFileRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IClassHateoasHandler;
@@ -30,12 +26,14 @@ import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
 import nikita.webapp.hateoas.interfaces.nationalidentifier.INationalIdentifierHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.ICommentHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.IPartHateoasHandler;
+import nikita.webapp.hateoas.interfaces.secondary.IScreeningMetadataHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.*;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import nikita.webapp.service.interfaces.secondary.ICommentService;
 import nikita.webapp.service.interfaces.secondary.IPartService;
+import nikita.webapp.service.interfaces.secondary.IScreeningMetadataService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
@@ -49,13 +47,14 @@ import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
+import static java.util.List.copyOf;
 import static java.util.UUID.fromString;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
-import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setFinaliseEntityValues;
-import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
+import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
@@ -80,6 +79,8 @@ public class FileService
     private final ICommentHateoasHandler commentHateoasHandler;
     private final INationalIdentifierHateoasHandler nationalIdentifierHateoasHandler;
     private final IPartHateoasHandler partHateoasHandler;
+    private final IScreeningMetadataService screeningMetadataService;
+    private final IScreeningMetadataHateoasHandler screeningMetadataHateoasHandler;
 
     public FileService(EntityManager entityManager,
                        ApplicationEventPublisher applicationEventPublisher,
@@ -97,7 +98,9 @@ public class FileService
                        IPartService partService,
                        ICommentHateoasHandler commentHateoasHandler,
                        INationalIdentifierHateoasHandler nationalIdentifierHateoasHandler,
-                       IPartHateoasHandler partHateoasHandler) {
+                       IPartHateoasHandler partHateoasHandler,
+                       IScreeningMetadataService screeningMetadataService,
+                       IScreeningMetadataHateoasHandler screeningMetadataHateoasHandler) {
         super(entityManager, applicationEventPublisher, patchService);
         this.recordService = recordService;
         this.caseFileService = caseFileService;
@@ -113,6 +116,8 @@ public class FileService
         this.commentHateoasHandler = commentHateoasHandler;
         this.nationalIdentifierHateoasHandler = nationalIdentifierHateoasHandler;
         this.partHateoasHandler = partHateoasHandler;
+        this.screeningMetadataService = screeningMetadataService;
+        this.screeningMetadataHateoasHandler = screeningMetadataHateoasHandler;
     }
 
     // All CREATE operations
@@ -123,6 +128,7 @@ public class FileService
         validateDocumentMedium(metadataService, file);
         setFinaliseEntityValues(file);
         bsmService.validateBSMList(file.getReferenceBSMBase());
+        validateScreening(metadataService, file);
         FileHateoas fileHateoas = new FileHateoas(fileRepository.save(file));
         fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(
@@ -134,9 +140,11 @@ public class FileService
     @Transactional
     public File createFile(File file) {
         validateDocumentMedium(metadataService, file);
-        setFinaliseEntityValues(file);
+        validateScreening(metadataService, file);
         bsmService.validateBSMList(file.getReferenceBSMBase());
-        return fileRepository.save(file);
+        fileRepository.save(file);
+        setFinaliseEntityValues(file);
+        return file;
     }
 
     /**
@@ -312,7 +320,7 @@ public class FileService
     public CommentHateoas getCommentAssociatedWithFile(
             @NotNull final String systemID) {
         CommentHateoas commentHateoas = new CommentHateoas(
-                List.copyOf(getFileOrThrow(systemID).getReferenceComment()));
+                copyOf(getFileOrThrow(systemID).getReferenceComment()));
         commentHateoasHandler.addLinks(commentHateoas, new Authorisation());
         return commentHateoas;
     }
@@ -321,7 +329,7 @@ public class FileService
     public PartHateoas getPartAssociatedWithFile(
             @NotNull final String systemID) {
         PartHateoas partHateoas = new PartHateoas(
-                List.copyOf(getFileOrThrow(systemID).getReferencePart()));
+                copyOf(getFileOrThrow(systemID).getReferencePart()));
         partHateoasHandler.addLinks(partHateoas, new Authorisation());
         return partHateoas;
     }
@@ -335,6 +343,25 @@ public class FileService
         nationalIdentifierHateoasHandler
                 .addLinks(niHateoas, new Authorisation());
         return niHateoas;
+    }
+
+    @Override
+    public ScreeningMetadataHateoas
+    getScreeningMetadataAssociatedWithFile(UUID fileSystemId) {
+        Screening screening = getFileOrThrow(fileSystemId)
+                .getReferenceScreening();
+        if (null == screening) {
+            throw new NoarkEntityNotFoundException(
+                    INFO_CANNOT_FIND_OBJECT + " Screening, using systemId " +
+                            fileSystemId);
+        }
+        Set<ScreeningMetadataLocal> screeningMetadata =
+                screening.getReferenceScreeningMetadata();
+        ScreeningMetadataHateoas screeningMetadataHateoas =
+                new ScreeningMetadataHateoas(copyOf(screeningMetadata));
+        screeningMetadataHateoasHandler.addLinks(screeningMetadataHateoas,
+                new Authorisation());
+        return screeningMetadataHateoas;
     }
 
     @Override
@@ -455,6 +482,20 @@ public class FileService
 
     @Override
     @Transactional
+    public ScreeningMetadataHateoas createScreeningMetadataAssociatedWithFile(
+            UUID systemId, Metadata screeningMetadata) {
+        File file = getFileOrThrow(systemId);
+        if (null == file.getReferenceScreening()) {
+            throw new NoarkEntityNotFoundException(INFO_CANNOT_FIND_OBJECT +
+                    " Screening, associated with File with systemId " +
+                    systemId);
+        }
+        return screeningMetadataService.createScreeningMetadata(
+                file.getReferenceScreening(), screeningMetadata);
+    }
+
+    @Override
+    @Transactional
     public Object associateBSM(@NotNull UUID systemId,
                                @NotNull List<BSMBase> bsm) {
         File file = getFileOrThrow(systemId);
@@ -494,9 +535,15 @@ public class FileService
     @Override
     public FileHateoas generateDefaultFile() {
         File defaultFile = new File();
+        //defaultFile.setReferenceScreening(generateDefaultScreening());
         FileHateoas fileHateoas = new FileHateoas(defaultFile);
         fileHateoasHandler.addLinksOnTemplate(fileHateoas, new Authorisation());
         return fileHateoas;
+    }
+
+    @Override
+    public ScreeningMetadataHateoas getDefaultScreeningMetadata(UUID systemId) {
+        return screeningMetadataService.getDefaultScreeningMetadata(systemId);
     }
 
     @Override

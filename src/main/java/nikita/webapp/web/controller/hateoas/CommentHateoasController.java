@@ -19,7 +19,8 @@ import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping(value = HREF_BASE_FONDS_STRUCTURE + SLASH,
@@ -108,7 +109,7 @@ public class CommentHateoasController
         CommentHateoas commentHateoas =
                 commentService.handleUpdate(systemID,
                         parseETAG(request.getHeader(ETAG)), comment);
-        return ResponseEntity.status(CREATED)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(commentHateoas.getEntityVersion().toString())
                 .body(commentHateoas);

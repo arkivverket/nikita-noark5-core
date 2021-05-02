@@ -51,41 +51,14 @@ import static org.springframework.http.HttpMethod.*;
 
 public final class CommonUtils {
 
-    /**
-     * Holds a list of servletPaths and their HTTP methods
-     */
-    private static Map<String, Set<HttpMethod>> requestMethodMap = new HashMap<>();
-
-    /**
-     * Holds a list of mimeType and boolean value stating if we should attempt
-     * to convert a file of that mimeType to an archive version
-     */
-    private static Map<String, Boolean> mimeTypeConversionMap =
-            new HashMap<>();
-
-    /**
-     * Holds a mapping of Norwegian entity names to English entity names
-     * e.g mappe->file
-     */
-    private static Map<String, ModelNames> nor2engEntityMap = new HashMap<>();
-
-    /**
-     * Holds a mapping of mimeTypes and their archive equivalent. The equivalent
-     * contains both the equivalent mimeType and file extension.
-     */
-    private static Map<String, FileExtensionAndMimeType> archiveVersion =
-            new HashMap<>();
-
     // Example 2020-06-30+02:00, 2020-06-30Z
     public static final Pattern DATE_PATTERN = Pattern.compile(
             "\\d{4}-(0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01])" +
                     "((\\+?\\d{2}:\\d{2}$)|(Z))");
-
     // Example 2020-06-30 02:00
     public static final Pattern DB_DATE_PATTERN = Pattern.compile(
             "\\d{4}-(0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01])" +
                     "(\\s|\\-|\\+)?\\d{2}:\\d{2}$");
-
     // Example 2020-06-30T16:25:50.041651+02:00,
     // 2020-06-30T16:25:50.041651Z,
     public static final Pattern DATE_TIME_PATTERN = Pattern.compile(
@@ -93,7 +66,6 @@ public final class CommonUtils {
                     "(?:00|0[0-9]|1[0-9]|2[0-3]):(?:00|[0-5][0-9]):" +
                     "(?:00|[0-5][0-9]).?[0-9]*" +
                     "(?:(?:[-+]\\d{2}:\\d{2})|Z)");
-
     // Example 2020-06-30T16:25:50.041651+02:00
     // Does not require T and drops ms part
     public static final Pattern DB_DATE_TIME_PATTERN = Pattern.compile(
@@ -101,6 +73,27 @@ public final class CommonUtils {
                     "(00|[0-9]|1[0-9]|2[0-3]):([0-9]|[0-5][0-9]):" +
                     "([0-9]|[0-5][0-9])" + "(\\.\\d\\d?\\d?\\d?\\d)?" +
                     "(\\+|\\-)\\d{2}:\\d{2}$");
+    /**
+     * Holds a list of servletPaths and their HTTP methods
+     */
+    private static Map<String, Set<HttpMethod>> requestMethodMap = new HashMap<>();
+    /**
+     * Holds a list of mimeType and boolean value stating if we should attempt
+     * to convert a file of that mimeType to an archive version
+     */
+    private static Map<String, Boolean> mimeTypeConversionMap =
+            new HashMap<>();
+    /**
+     * Holds a mapping of Norwegian entity names to English entity names
+     * e.g mappe->file
+     */
+    private static Map<String, ModelNames> nor2engEntityMap = new HashMap<>();
+    /**
+     * Holds a mapping of mimeTypes and their archive equivalent. The equivalent
+     * contains both the equivalent mimeType and file extension.
+     */
+    private static Map<String, FileExtensionAndMimeType> archiveVersion =
+            new HashMap<>();
 
     // You shall not instantiate me!
     private CommonUtils() {
@@ -598,23 +591,40 @@ public final class CommonUtils {
                                      IMetadataEntity entity,
                                      StringBuilder errors,
                                      Boolean required) {
-                JsonNode currentNode = objectNode.get(parentname);
-                if (null != currentNode) {
-                    JsonNode node = currentNode.get(CODE);
-                    if (null != node) {
-                        entity.setCode(node.textValue());
-                    } else {
-                        errors.append(parentname + "." + CODE + " is missing. ");
-                    }
-                    node = currentNode.get(CODE_NAME);
-                    if (null != node) {
-                        entity.setCodeName(node.textValue());
-                    }
+                JsonNode metadataNode = objectNode.get(parentname);
+                if (null != metadataNode) {
+                    deserialiseMetadataValue(
+                            metadataNode, parentname, entity, errors);
                     if (null != entity.getCode()) {
                         objectNode.remove(parentname);
                     }
                 } else if (required) {
                     errors.append(parentname + " is missing. ");
+                }
+                return entity;
+            }
+
+            public static IMetadataEntity
+            deserialiseMetadataValueWithoutParent(
+                    @NotNull JsonNode metadataNode,
+                    @NotNull IMetadataEntity entity,
+                    @NotNull StringBuilder errors) {
+                return deserialiseMetadataValue(metadataNode,
+                        "MetadataValueWithoutParent", entity, errors);
+            }
+
+            public static IMetadataEntity deserialiseMetadataValue(
+                    JsonNode metadataNode, String parentname,
+                    IMetadataEntity entity, StringBuilder errors) {
+                JsonNode node = metadataNode.get(CODE);
+                if (null != node) {
+                    entity.setCode(node.textValue());
+                } else {
+                    errors.append(parentname + "." + CODE + " is missing. ");
+                }
+                node = metadataNode.get(CODE_NAME);
+                if (null != node) {
+                    entity.setCodeName(node.textValue());
                 }
                 return entity;
             }
@@ -746,6 +756,25 @@ public final class CommonUtils {
                         }
                     }
                     objectNode.remove(STORAGE_LOCATION);
+                }
+            }
+
+            public static void deserialiseScreeningMetadataLocal(
+                    IScreeningEntity screeningEntity,
+                    JsonNode objectNode, StringBuilder errors) {
+                // Deserialize screeningMetadata
+                if (objectNode.isArray()) {
+                    for (JsonNode node : objectNode) {
+                        ScreeningMetadataLocal screeningMetadataLocal =
+                                (ScreeningMetadataLocal)
+                                        deserialiseMetadataValueWithoutParent(
+                                                node.deepCopy(),
+                                                new ScreeningMetadataLocal(),
+                                                errors);
+                        screeningEntity.addReferenceScreeningMetadata(
+                                screeningMetadataLocal);
+                    }
+
                 }
             }
 
@@ -1528,7 +1557,9 @@ public final class CommonUtils {
                 return screening;
             }
 
-            public static void deserialiseScreeningEntity(IScreeningEntity screeningEntity, ObjectNode objectNode, StringBuilder errors) {
+            public static void deserialiseScreeningEntity(
+                    IScreeningEntity screeningEntity, ObjectNode objectNode,
+                    StringBuilder errors) {
                 // Deserialize accessRestriction
                 AccessRestriction accessRestriction = (AccessRestriction)
                         deserialiseMetadataValue(objectNode,
@@ -1545,10 +1576,11 @@ public final class CommonUtils {
                     errors.append(SCREENING_AUTHORITY + " is missing. ");
                 }
                 // Deserialize screeningMetadata
-                currentNode = objectNode.get(SCREENING_SCREENING_METADATA);
+                currentNode = objectNode.get(SCREENING_METADATA);
                 if (null != currentNode) {
-                    screeningEntity.setScreeningMetadata(currentNode.textValue());
-                    objectNode.remove(SCREENING_SCREENING_METADATA);
+                    deserialiseScreeningMetadataLocal(screeningEntity,
+                            currentNode, errors);
+                    objectNode.remove(SCREENING_METADATA);
                 }
                 // Deserialize screeningDocument
                 ScreeningDocument screeningDocument = (ScreeningDocument)
@@ -1832,11 +1864,8 @@ public final class CommonUtils {
             public static void printCode
                     (JsonGenerator jgen, IMetadataEntity metadataEntity)
                     throws IOException {
-                jgen.writeStringField(CODE, metadataEntity.getCode());
-                if (null != metadataEntity.getCodeName()) {
-                    jgen.writeStringField(CODE_NAME,
-                            metadataEntity.getCodeName());
-                }
+                printCode(jgen, metadataEntity.getCode(),
+                        metadataEntity.getCodeName());
             }
 
             public static void printNullableMetadata
@@ -1844,6 +1873,19 @@ public final class CommonUtils {
                     throws IOException {
                 if (null != m && null != m.getCode()) {
                     jgen.writeObjectFieldStart(fieldName);
+                    printCode(jgen, m);
+                    jgen.writeEndObject();
+                }
+            }
+
+            public static void printNullableMetadata
+                    (JsonGenerator jgen, String fieldName, IMetadataEntity m,
+                     boolean printFieldName)
+                    throws IOException {
+                if (printFieldName) {
+                    printNullableMetadata(jgen, fieldName, m);
+                } else if (null != m && null != m.getCode()) {
+                    jgen.writeStartObject(fieldName);
                     printCode(jgen, m);
                     jgen.writeEndObject();
                 }
@@ -2424,28 +2466,59 @@ public final class CommonUtils {
                 }
             }
 
-            public static void printScreening(JsonGenerator jgen, IScreening screeningEntity)
+            public static void printScreening(JsonGenerator jgen,
+                                              Screening screening)
                     throws IOException {
-                if (screeningEntity != null) {
-                    Screening screening = screeningEntity.getReferenceScreening();
-                    if (screening != null) {
-                        jgen.writeObjectFieldStart(SCREENING);
-                        printNullableMetadata(jgen, SCREENING_ACCESS_RESTRICTION,
-                                screening.getAccessRestriction());
-                        printNullable(jgen, SCREENING_AUTHORITY,
-                                screening.getScreeningAuthority());
-                        printNullable(jgen, SCREENING_SCREENING_METADATA,
-                                screening.getScreeningMetadata());
-                        printNullableMetadata(jgen, SCREENING_SCREENING_DOCUMENT,
-                                screening.getScreeningDocument());
-                        printNullableDateTime(jgen, SCREENING_EXPIRES_DATE,
-                                screening.getScreeningExpiresDate());
-                        printNullable(jgen, SCREENING_DURATION,
-                                screening.getScreeningDuration());
-                        jgen.writeEndObject();
-                    }
+                if (screening != null) {
+                    printNullableMetadata(jgen, SCREENING_ACCESS_RESTRICTION,
+                            screening.getAccessRestriction());
+                    printNullable(jgen, SCREENING_AUTHORITY,
+                            screening.getScreeningAuthority());
+                    printScreeningMetadata(jgen,
+                            screening.getReferenceScreeningMetadata());
+                    printNullableMetadata(jgen, SCREENING_SCREENING_DOCUMENT,
+                            screening.getScreeningDocument());
+                    printNullableDateTime(jgen, SCREENING_EXPIRES_DATE,
+                            screening.getScreeningExpiresDate());
+                    printNullable(jgen, SCREENING_DURATION,
+                            screening.getScreeningDuration());
                 }
             }
+
+            public static void printScreening(JsonGenerator jgen,
+                                              IScreening screeningEntity)
+                    throws IOException {
+                if (null != screeningEntity && null !=
+                        screeningEntity.getReferenceScreening()) {
+                    jgen.writeObjectFieldStart(SCREENING);
+                    printScreening(jgen,
+                            screeningEntity.getReferenceScreening());
+                    jgen.writeEndObject();
+                }
+            }
+
+            public static void printScreeningMetadata(
+                    JsonGenerator jgen,
+                    Set<ScreeningMetadataLocal> screeningMetadataSet)
+                    throws IOException {
+                if (screeningMetadataSet.size() > 0) {
+                    jgen.writeArrayFieldStart(SCREENING_METADATA);
+                    for (ScreeningMetadataLocal screeningMetadata :
+                            screeningMetadataSet) {
+                        printScreeningMetadata(jgen, screeningMetadata);
+                    }
+                    jgen.writeEndArray();
+                }
+            }
+
+            public static void printScreeningMetadata(
+                    @NotNull JsonGenerator jgen,
+                    @NotNull ScreeningMetadataLocal screeningMetadata)
+                    throws IOException {
+                printNullableMetadata(jgen, SCREENING_SCREENING_DOCUMENT,
+                        screeningMetadata, false);
+            }
+
 
             public static void printCrossReferences(
                     @NotNull JsonGenerator jgen,

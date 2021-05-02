@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
@@ -89,8 +90,12 @@ public class HateoasSerializer
                         // will not retrieve annotations belonging to the
                         // parent class. Metadata objects will need a lookup
                         // to the super class to retrieve the annotation
+                        // Note: ScreeningMetadata is a special case of an
+                        // entity that is both a IMetadataEntity and a
+                        // SystemIdEntity. It is primarily a SystemIdEntity
                         if (null == packer || null == individualHateoasObject) {
-                            if (entity instanceof IMetadataEntity) {
+                            if (entity instanceof IMetadataEntity &&
+                                    !(entity instanceof SystemIdEntity)) {
                                 cls = (Class<? extends IMetadataEntity>)
                                         entity.getClass().getSuperclass();
                                 packer = cls.getAnnotation(HateoasPacker.class);
@@ -108,7 +113,8 @@ public class HateoasSerializer
                             throw new NikitaMisconfigurationException(
                                     errorMessage);
                         }
-                        if (entity instanceof IMetadataEntity) {
+                        if (entity instanceof IMetadataEntity &&
+                                !(entity instanceof SystemIdEntity)) {
                             // Create an instance of the HateoasObject
                             noarkObject = individualHateoasObject
                                     .using()

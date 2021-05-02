@@ -38,4 +38,13 @@ public interface IClassHateoasHandler extends IHateoasHandler {
 
     void addDisposalDecision(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject);
 
+    void addScreeningMetadata(ISystemId entity,
+                              IHateoasNoarkObject hateoasNoarkObject);
+
+    void addScreeningMetadataLocal(ISystemId entity,
+                                   IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNewScreeningMetadataLocal(ISystemId entity,
+                                      IHateoasNoarkObject hateoasNoarkObject);
+
 }

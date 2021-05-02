@@ -67,6 +67,34 @@ public final class N5ResourceMappings {
             "correspondence_part_type_code";
     public static final String CORRESPONDENCE_PART_TYPE_CODE_NAME =
             "correspondence_part_type_code_name";
+    public static final String ACCESS_RESTRICTION_CODE_ENG =
+            "access_restriction_code";
+    public static final String ACCESS_RESTRICTION_CODE =
+            "access_restriction_code";
+    public static final String ACCESS_RESTRICTION_CODE_OBJECT =
+            "accessRestrictionCode";
+    public static final String ACCESS_RESTRICTION_CODE_NAME_ENG =
+            "access_restriction_code_name";
+    public static final String ACCESS_RESTRICTION_CODE_NAME =
+            "access_restriction_code_name";
+    public static final String ACCESS_RESTRICTION_CODE_NAME_OBJECT =
+            "accessRestrictionCodeName";
+    public static final String SCREENING_DOCUMENT_CODE_ENG =
+            "screening_document_code";
+    public static final String SCREENING_DOCUMENT_CODE =
+            "screening_document_code";
+    public static final String SCREENING_DOCUMENT_CODE_OBJECT =
+            "screeningDocumentCode";
+    public static final String SCREENING_DOCUMENT_CODE_NAME_ENG =
+            "screening_document_code_name";
+    public static final String SCREENING_DOCUMENT_CODE_NAME =
+            "screening_document_code_name";
+    public static final String SCREENING_DOCUMENT_CODE_NAME_OBJECT =
+            "screeningCocumentCodeName";
+
+    public static final String SCREENING_AUTHORITY_ENG =
+            "screening_authority";
+
 
     public static final String REFERENCE_COMMENT =
             "referenceComment";
@@ -76,7 +104,7 @@ public final class N5ResourceMappings {
             "referenceCorrespondencePartUnit";
     public static final String REFERENCE_CORRESPONDENCE_PART_PERSON =
             "referenceCorrespondencePartPerson";
-
+    public static final String REFERENCE_SCREENING = "referenceScreening";
     public static final String SYSTEM_ID_PARAMETER =
             LEFT_PARENTHESIS + SYSTEM_ID + RIGHT_PARENTHESIS;
 
@@ -736,10 +764,10 @@ public final class N5ResourceMappings {
     public static final String RESIDING_ADDRESS_ENG = "bostedsadresse";
     public static final String RIGHT_ENG = "rettighet";
     public static final String SCREENING_ACCESS_RESTRICTION_ENG = "tilgangsrestriksjon";
-    public static final String SCREENING_AUTHORITY_ENG = "skjermingshjemmel";
     public static final String SCREENING_DURATION_ENG = "skjermingsvarighet";
     public static final String SCREENING_ENG = "skjerming";
-    public static final String SCREENING_EXPIRES_DATE_ENG = "skjermingOpphoererDato";
+    public static final String SCREENING_EXPIRES_DATE_ENG =
+            "screening_expires_date";
     public static final String SCREENING_SCREENING_DOCUMENT_ENG = "screening_document";
     public static final String SCREENING_SCREENING_METADATA_ENG =
             "screening_metadata";
@@ -1003,7 +1031,7 @@ public final class N5ResourceMappings {
     public static final String SCREENING_AUTHORITY_ENG_OBJECT = "skjermingshjemmel";
     public static final String SCREENING_DURATION_ENG_OBJECT = "skjermingsvarighet";
     public static final String SCREENING_ENG_OBJECT = "skjerming";
-    public static final String SCREENING_EXPIRES_DATE_ENG_OBJECT = "skjermingOpphoererDato";
+    public static final String SCREENING_EXPIRES_DATE_ENG_OBJECT = "screeningExpiresDate";
     public static final String SCREENING_SCREENING_DOCUMENT_ENG_OBJECT =
             "ScreeningDocument";
     public static final String SCREENING_SCREENING_METADATA_ENG_OBJECT = "ScreeningMetadata";

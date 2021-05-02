@@ -36,6 +36,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -70,6 +72,9 @@ import static utils.DocumentObjectCreator.createDocumentObjectAsJSON;
 public class GeneralTest {
 
     private MockMvc mockMvc;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     private NikitaUserDetailsService nikitaUserDetailsService;
@@ -293,9 +298,7 @@ public class GeneralTest {
     @Sql("/db-tests/basic_structure.sql")
     @WithMockCustomUser
     public void checkODataSearchForCreatedBy() throws Exception {
-        String url = "/noark5v5/api/arkivstruktur/dokumentbeskrivelse";
-
-        url = "/noark5v5/odata/api/arkivstruktur/dokumentbeskrivelse" +
+        String url = "/noark5v5/odata/api/arkivstruktur/dokumentbeskrivelse" +
                 "?$filter=" + CREATED_BY + " eq 'admin@example.com'";
 
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
@@ -509,7 +512,7 @@ public class GeneralTest {
         jsonPatch.writeEndObject();
         jsonPatch.close();
 
-        System.out.println(jsonPatchWriter.toString());
+        System.out.println(jsonPatchWriter);
 
         resultActions = mockMvc.perform(MockMvcRequestBuilders
                 .patch(url)
@@ -614,10 +617,6 @@ public class GeneralTest {
         // Next see if we can expand this File to a CaseFile
         response = resultActions.andReturn().getResponse();
         System.out.println(response.getContentAsString());
-        url = "/noark5v5/api/arkivstruktur/mappe/" +
-                JsonPath.read(response.getContentAsString(), "$." + SYSTEM_ID) +
-                "/" + FILE_EXPAND_TO_CASE_FILE;
-
     }
 
     /**
@@ -648,7 +647,7 @@ public class GeneralTest {
         jsonPatch.writeStringField("path", toSeries);
         jsonPatch.writeEndObject();
         jsonPatch.close();
-        System.out.println(jsonPatchWriter.toString());
+        System.out.println(jsonPatchWriter);
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
                 .patch(url)
                 .contextPath("/noark5v5")

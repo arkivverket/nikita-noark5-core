@@ -51,6 +51,10 @@ public class RecordHateoasHandler
         addNewComment(entity, hateoasNoarkObject);
         //addCrossReference(entity, hateoasNoarkObject);
         addNewCrossReference(entity, hateoasNoarkObject);
+        addScreeningMetadata(entity, hateoasNoarkObject);
+        addScreeningMetadataLocal(entity, hateoasNoarkObject);
+        addNewScreeningMetadataLocal(entity, hateoasNoarkObject);
+
         // Add national identifiers
         addNewBuilding(entity, hateoasNoarkObject);
         addNewCadastralUnit(entity, hateoasNoarkObject);
@@ -66,9 +70,10 @@ public class RecordHateoasHandler
     public void addEntityLinksOnTemplate(
             ISystemId entity,
             IHateoasNoarkObject hateoasNoarkObject) {
+        super.addEntityLinksOnTemplate(entity, hateoasNoarkObject);
         addDocumentMedium(entity, hateoasNoarkObject);
+        addScreeningMetadata(entity, hateoasNoarkObject);
     }
-
 
     @Override
     public void addComment(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
@@ -351,10 +356,41 @@ public class RecordHateoasHandler
 
     @Override
     public void addNationalIdentifier(ISystemId entity,
-                            IHateoasNoarkObject hateoasNoarkObject) {
+                                      IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() + SLASH + NATIONAL_IDENTIFIER,
                 REL_FONDS_STRUCTURE_NATIONAL_IDENTIFIER));
+    }
+
+
+    @Override
+    public void addScreeningMetadata(ISystemId entity,
+                                     IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_METADATA + SLASH + SCREENING_METADATA,
+                REL_METADATA_SCREENING_METADATA));
+    }
+
+    @Override
+    public void addScreeningMetadataLocal(ISystemId entity,
+                                          IHateoasNoarkObject hateoasNoarkObject) {
+        if (null != ((Record) entity).getReferenceScreening()) {
+            hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                    HREF_BASE_FONDS_STRUCTURE + SLASH + RECORD + SLASH +
+                    entity.getSystemId() + SLASH + SCREENING_METADATA,
+                    REL_FONDS_STRUCTURE_SCREENING_METADATA));
+        }
+    }
+
+    @Override
+    public void addNewScreeningMetadataLocal(ISystemId entity,
+                                             IHateoasNoarkObject hateoasNoarkObject) {
+        if (null != ((Record) entity).getReferenceScreening()) {
+            hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                    HREF_BASE_FONDS_STRUCTURE + SLASH + RECORD + SLASH +
+                    entity.getSystemId() + SLASH + SCREENING_METADATA,
+                    REL_FONDS_STRUCTURE_NEW_SCREENING_METADATA));
+        }
     }
 
     /**

@@ -467,7 +467,7 @@ public class DocumentObjectHateoasController
                 documentObjectService.handleUpdate
                         (systemID, parseETAG(
                                 request.getHeader(ETAG)), documentObject);
-        return ResponseEntity.status(CREATED)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(documentObjectHateoas.getEntityVersion().toString())
                 .body(documentObjectHateoas);
@@ -518,7 +518,7 @@ public class DocumentObjectHateoasController
                     description = "Incoming conversion object",
                     required = true)
             @RequestBody Conversion conversion) throws NikitaException {
-        return ResponseEntity.status(CREATED)
+        return ResponseEntity.status(OK)
                 .body(documentObjectService.handleUpdateConversionBySystemId
                         (systemID, subSystemID, conversion));
     }

@@ -18,7 +18,8 @@ import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping(value = HREF_BASE_FONDS_STRUCTURE + SLASH,
@@ -105,7 +106,7 @@ public class AuthorHateoasController
         AuthorHateoas authorHateoas =
             authorService.updateAuthorBySystemId
             (systemID, parseETAG(request.getHeader(ETAG)), author);
-        return ResponseEntity.status(CREATED)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(authorHateoas);
     }

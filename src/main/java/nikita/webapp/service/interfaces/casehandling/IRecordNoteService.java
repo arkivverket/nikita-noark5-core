@@ -43,5 +43,5 @@ public interface IRecordNoteService {
     ResponseEntity<RecordNoteHateoas> generateDefaultRecordNote(
             @NotNull final String caseFilSystemId);
 
-    DocumentFlowHateoas generateDefaultDocumentFlow(String systemID);
+    DocumentFlowHateoas generateDefaultDocumentFlow(String systemId);
 }

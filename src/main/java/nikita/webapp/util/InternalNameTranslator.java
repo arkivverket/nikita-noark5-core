@@ -211,6 +211,14 @@ public class InternalNameTranslator {
                         ACCESS_RESTRICTION_ENG,
                         ACCESS_RESTRICTION_ENG_OBJECT);
         addNorToEnglishNameMap
+                (ACCESS_RESTRICTION_CODE,
+                        ACCESS_RESTRICTION_CODE_ENG,
+                        ACCESS_RESTRICTION_CODE_OBJECT);
+        addNorToEnglishNameMap
+                (ACCESS_RESTRICTION_CODE_NAME,
+                        ACCESS_RESTRICTION_CODE_NAME_ENG,
+                        ACCESS_RESTRICTION_CODE_NAME_OBJECT);
+        addNorToEnglishNameMap
                 (ADDRESS_LINE_1,
                         ADDRESS_LINE_1_ENG,
                         ADDRESS_LINE_1_ENG_OBJECT);
@@ -924,6 +932,14 @@ public class InternalNameTranslator {
                 (SCREENING_SCREENING_DOCUMENT,
                         SCREENING_SCREENING_DOCUMENT_ENG,
                         SCREENING_SCREENING_DOCUMENT_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (SCREENING_DOCUMENT_CODE,
+                        SCREENING_DOCUMENT_CODE_ENG,
+                        SCREENING_DOCUMENT_CODE_OBJECT);
+        addNorToEnglishNameMap
+                (SCREENING_DOCUMENT_CODE_NAME,
+                        SCREENING_DOCUMENT_CODE_NAME_ENG,
+                        SCREENING_DOCUMENT_CODE_NAME_OBJECT);
         addNorToEnglishNameMap
                 (SCREENING_DURATION,
                         SCREENING_DURATION_ENG,

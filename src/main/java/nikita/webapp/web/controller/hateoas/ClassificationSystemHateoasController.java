@@ -391,7 +391,7 @@ public class ClassificationSystemHateoasController
                 classificationSystemService.handleUpdate(systemID,
                         parseETAG(request.getHeader(ETAG)),
                         classificationSystem);
-        return ResponseEntity.status(CREATED)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(classificationSystemHateoas.getEntityVersion().toString())
                 .body(classificationSystemHateoas);

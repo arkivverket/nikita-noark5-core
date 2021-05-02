@@ -79,6 +79,15 @@ public interface IFileHateoasHandler
     void addNewPartUnit(ISystemId entity,
                         IHateoasNoarkObject hateoasNoarkObject);
 
+    void addScreeningMetadata(ISystemId entity,
+                              IHateoasNoarkObject hateoasNoarkObject);
+
+    void addScreeningMetadataLocal(ISystemId entity,
+                                   IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNewScreeningMetadataLocal(ISystemId entity,
+                                      IHateoasNoarkObject hateoasNoarkObject);
+
     // Add national identifiers
 
     void addNewBuilding(ISystemId entity,

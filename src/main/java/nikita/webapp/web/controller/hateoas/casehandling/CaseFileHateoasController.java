@@ -593,7 +593,7 @@ public class CaseFileHateoasController
         caseFileHateoasHandler.addLinks(caseFileHateoas, new Authorisation());
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityUpdatedEvent(this, updatedCaseFile));
-        return ResponseEntity.status(CREATED)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(updatedCaseFile.getVersion().toString())
                 .body(caseFileHateoas);

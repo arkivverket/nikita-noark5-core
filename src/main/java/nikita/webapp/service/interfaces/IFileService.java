@@ -13,10 +13,8 @@ import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileExpansionHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
-import nikita.common.model.noark5.v5.hateoas.secondary.CommentHateoas;
-import nikita.common.model.noark5.v5.hateoas.secondary.PartHateoas;
-import nikita.common.model.noark5.v5.hateoas.secondary.PartPersonHateoas;
-import nikita.common.model.noark5.v5.hateoas.secondary.PartUnitHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.*;
+import nikita.common.model.noark5.v5.metadata.Metadata;
 import nikita.common.model.noark5.v5.nationalidentifier.*;
 import nikita.common.model.noark5.v5.secondary.Comment;
 import nikita.common.model.noark5.v5.secondary.PartPerson;
@@ -109,12 +107,15 @@ public interface IFileService {
     findSeriesAssociatedWithFile(@NotNull final String systemId);
 
     CommentHateoas getCommentAssociatedWithFile
-        (@NotNull final String systemID);
+            (@NotNull final String systemID);
 
     PartHateoas getPartAssociatedWithFile(@NotNull final String systemID);
 
     NationalIdentifierHateoas getNationalIdentifierAssociatedWithFile
-	(@NotNull final String systemID);
+            (@NotNull final String systemID);
+
+    ScreeningMetadataHateoas getScreeningMetadataAssociatedWithFile(
+            @NotNull final UUID fileSystemId);
 
     CommentHateoas generateDefaultComment();
 
@@ -149,4 +150,11 @@ public interface IFileService {
 
     ResponseEntity<FileHateoas> handleUpdate(
             UUID systemID, PatchObjects patchObjects);
+
+    ScreeningMetadataHateoas createScreeningMetadataAssociatedWithFile(
+            @NotNull final UUID systemID,
+            @NotNull final Metadata screeningMetadata);
+
+    ScreeningMetadataHateoas getDefaultScreeningMetadata(
+            @NotNull final UUID systemID);
 }

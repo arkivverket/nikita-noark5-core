@@ -556,7 +556,7 @@ public class FondsHateoasController
                 fondsService.handleUpdate(systemID,
                         parseETAG(request.getHeader(ETAG)), fonds);
 
-        return ResponseEntity.status(CREATED)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(fondsHateoas.getEntityVersion().toString())
                 .body(fondsHateoas);

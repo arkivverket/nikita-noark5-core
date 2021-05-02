@@ -10,10 +10,8 @@ import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.AssociatedWithRecordAs;
 import nikita.common.model.noark5.v5.metadata.DocumentStatus;
 import nikita.common.model.noark5.v5.metadata.DocumentType;
-import nikita.common.model.noark5.v5.secondary.Author;
-import nikita.common.model.noark5.v5.secondary.Comment;
-import nikita.common.model.noark5.v5.secondary.PartPerson;
-import nikita.common.model.noark5.v5.secondary.PartUnit;
+import nikita.common.model.noark5.v5.metadata.Metadata;
+import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.repository.n5v5.IDocumentDescriptionRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
@@ -22,6 +20,7 @@ import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.IAuthorHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.ICommentHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.IPartHateoasHandler;
+import nikita.webapp.hateoas.interfaces.secondary.IScreeningMetadataHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.IBSMService;
@@ -30,6 +29,7 @@ import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import nikita.webapp.service.interfaces.secondary.IAuthorService;
 import nikita.webapp.service.interfaces.secondary.ICommentService;
 import nikita.webapp.service.interfaces.secondary.IPartService;
+import nikita.webapp.service.interfaces.secondary.IScreeningMetadataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -40,8 +40,10 @@ import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
+import static java.util.List.copyOf;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.DatabaseConstants.DELETE_FROM_RECORD_DOCUMENT_DESCRIPTION;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -68,6 +70,8 @@ public class DocumentDescriptionService
     private final IAuthorHateoasHandler authorHateoasHandler;
     private final ICommentHateoasHandler commentHateoasHandler;
     private final IBSMService bsmService;
+    private final IScreeningMetadataService screeningMetadataService;
+    private final IScreeningMetadataHateoasHandler screeningMetadataHateoasHandler;
 
     public DocumentDescriptionService(
             EntityManager entityManager,
@@ -86,7 +90,9 @@ public class DocumentDescriptionService
             IPartHateoasHandler partHateoasHandler,
             IAuthorHateoasHandler authorHateoasHandler,
             ICommentHateoasHandler commentHateoasHandler,
-            IBSMService bsmService) {
+            IBSMService bsmService,
+            IScreeningMetadataService screeningMetadataService,
+            IScreeningMetadataHateoasHandler screeningMetadataHateoasHandler) {
         super(entityManager, applicationEventPublisher, patchService);
         this.documentObjectService = documentObjectService;
         this.documentDescriptionRepository = documentDescriptionRepository;
@@ -102,6 +108,8 @@ public class DocumentDescriptionService
         this.authorHateoasHandler = authorHateoasHandler;
         this.commentHateoasHandler = commentHateoasHandler;
         this.bsmService = bsmService;
+        this.screeningMetadataService = screeningMetadataService;
+        this.screeningMetadataHateoasHandler = screeningMetadataHateoasHandler;
     }
 
     // All CREATE operations
@@ -119,18 +127,35 @@ public class DocumentDescriptionService
         bsmService.validateBSMList(documentDescription.getReferenceBSMBase());
         DocumentObjectHateoas documentObjectHateoas =
                 new DocumentObjectHateoas
-                    (documentObjectService.save(documentObject));
+                        (documentObjectService.save(documentObject));
         documentObjectHateoasHandler.addLinks
-	    (documentObjectHateoas, new Authorisation());
+                (documentObjectHateoas, new Authorisation());
         return documentObjectHateoas;
+    }
+
+
+    @Override
+    @Transactional
+    public ScreeningMetadataHateoas
+    createScreeningMetadataAssociatedWithDocumentDescription(
+            UUID systemId, Metadata screeningMetadata) {
+        DocumentDescription documentDescription =
+                getDocumentDescriptionOrThrow(systemId.toString());
+        if (null == documentDescription.getReferenceScreening()) {
+            throw new NoarkEntityNotFoundException(INFO_CANNOT_FIND_OBJECT +
+                    " Screening, associated with DocumentDescription with systemId " +
+                    systemId);
+        }
+        return screeningMetadataService.createScreeningMetadata(
+                documentDescription.getReferenceScreening(), screeningMetadata);
     }
 
     @Override
     @Transactional
     public CommentHateoas createCommentAssociatedWithDocumentDescription
-        (String systemID, Comment comment) {
+            (String systemID, Comment comment) {
         return commentService.createNewComment
-            (comment, getDocumentDescriptionOrThrow(systemID));
+                (comment, getDocumentDescriptionOrThrow(systemID));
     }
 
     @Override
@@ -241,6 +266,11 @@ public class DocumentDescriptionService
     }
 
     @Override
+    public ScreeningMetadataHateoas getDefaultScreeningMetadata(UUID systemId) {
+        return screeningMetadataService.getDefaultScreeningMetadata(systemId);
+    }
+
+    @Override
     public DocumentDescriptionHateoas
     findBySystemId(String systemId) {
         DocumentDescriptionHateoas documentDescriptionHateoas = new
@@ -263,6 +293,28 @@ public class DocumentDescriptionService
         authorHateoasHandler.addLinks(authorHateoas, new Authorisation());
         setOutgoingRequestHeader(authorHateoas);
         return authorHateoas;
+    }
+
+    @Override
+    public ScreeningMetadataHateoas
+    getScreeningMetadataAssociatedWithDocumentDescription(
+            UUID documentDescriptionSystemId) {
+        Screening screening =
+                getDocumentDescriptionOrThrow(documentDescriptionSystemId
+                        .toString())
+                        .getReferenceScreening();
+        if (null == screening) {
+            throw new NoarkEntityNotFoundException(
+                    INFO_CANNOT_FIND_OBJECT + " Screening, using systemId " +
+                            documentDescriptionSystemId);
+        }
+        Set<ScreeningMetadataLocal> screeningMetadata =
+                screening.getReferenceScreeningMetadata();
+        ScreeningMetadataHateoas screeningMetadataHateoas =
+                new ScreeningMetadataHateoas(copyOf(screeningMetadata));
+        screeningMetadataHateoasHandler.addLinks(screeningMetadataHateoas,
+                new Authorisation());
+        return screeningMetadataHateoas;
     }
 
     @Override

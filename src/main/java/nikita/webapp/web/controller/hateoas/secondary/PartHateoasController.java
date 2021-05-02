@@ -26,7 +26,8 @@ import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping(value = HREF_BASE_FONDS_STRUCTURE + SLASH,
@@ -157,7 +158,7 @@ public class PartHateoasController
         PartUnitHateoas partUnitHateoas = new
                 PartUnitHateoas(updatedPartUnit);
         partHateoasHandler.addLinks(partUnitHateoas, new Authorisation());
-        return ResponseEntity.status(CREATED)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(updatedPartUnit.getVersion().toString())
                 .body(partUnitHateoas);
@@ -210,7 +211,7 @@ public class PartHateoasController
         PartPersonHateoas partPersonHateoas =
                 new PartPersonHateoas(updatedPartPerson);
         partHateoasHandler.addLinks(partPersonHateoas, new Authorisation());
-        return ResponseEntity.status(CREATED)
+        return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(updatedPartPerson.getVersion().toString())
                 .body(partPersonHateoas);
