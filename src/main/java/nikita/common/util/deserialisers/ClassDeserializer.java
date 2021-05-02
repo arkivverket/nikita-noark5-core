@@ -18,24 +18,7 @@ import static nikita.common.config.N5ResourceMappings.CLASS_ID;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 
 /**
- * Created by tsodring on 1/6/17.
- * <p>
  * Deserialise an incoming Class JSON object.
- * <p>
- * Having a own deserialiser is done to have more fine grained control over the input. This allows us to be less strict
- * with property names, allowing for both English and Norwegian property names
- * <p>
- * <p>
- * Note this implementation expects that the Class object to deserialise is in compliance with the Noark standard where
- * certain properties i.e. createdBy and createdDate are set by the core, not the caller. This deserializer will not
- * enforce this and will deserialize a class object correctly. This is because e.g the import interface will require
- * such functionality.
- * <p>
- * - Testing of compliance of properties is handled by the core, either in ClassController or ClassService
- * <p>
- * Note. Currently we do not include 'id' or 'deleted' properties. 'id' is a primary key and it is assumed this is
- * taken care of by the DBMS and 'deleted' is a field internal to the core to handle soft delete. Importing soft deleted
- * objects is something we do not consider necessary.
  * <p>
  * Note:
  * - Unknown property values in the JSON will trigger an exception
