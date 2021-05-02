@@ -4,8 +4,10 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.jayway.jsonpath.JsonPath;
 import nikita.N5CoreApp;
+import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.File;
+import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.metadata.*;
 import nikita.common.model.noark5.v5.secondary.Screening;
 import nikita.common.model.noark5.v5.secondary.ScreeningMetadataLocal;
@@ -561,6 +563,640 @@ public class ScreeningTest {
         // Make a note of the url for ScreeningMetadata associated with the
         // documentDescription. Will be used later.
         String urlScreeningMetadata = "/noark5v5/api/arkivstruktur/dokumentbeskrivelse/" +
+                JsonPath.read(response.getContentAsString(),
+                        "$." + SYSTEM_ID) + "/" + SCREENING_METADATA + "/";
+
+        ScreeningMetadataLocal screeningMetadata = new ScreeningMetadataLocal();
+        screeningMetadata.setCode("NA");
+        screeningMetadata.setCodeName("Skjerming navn avsender");
+
+        // Create a JSON object to POST
+        StringWriter jsonScreeningMetadataWriter = new StringWriter();
+        JsonGenerator jsonScreeningMetadata =
+                factory.createGenerator(jsonScreeningMetadataWriter);
+        printScreeningMetadata(jsonScreeningMetadata, screeningMetadata);
+        jsonScreeningMetadata.close();
+
+        resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .post(urlNewScreeningMetadata)
+                .contextPath("/noark5v5")
+                .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
+                .content(jsonScreeningMetadataWriter.toString())
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON));
+
+        resultActions
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$." + CODE)
+                        .exists())
+                .andExpect(jsonPath("$." + CODE_NAME)
+                        .exists())
+                .andExpect(jsonPath("$._links.['" + SELF + "'].href")
+                        .exists())
+                .andExpect(jsonPath(
+                        "$._links.['" +
+                                REL_FONDS_STRUCTURE_SCREENING_METADATA +
+                                "'].['" + HREF + "']").exists());
+        ;
+
+        // Create another ScreeningMetadata and POST it
+        screeningMetadata.setCode("TKL");
+        screeningMetadata.setCodeName("Skjerming tittel klasse");
+
+        // Create a JSON object to POST
+        jsonScreeningMetadataWriter = new StringWriter();
+        jsonScreeningMetadata = factory
+                .createGenerator(jsonScreeningMetadataWriter);
+        printScreeningMetadata(jsonScreeningMetadata, screeningMetadata);
+        jsonScreeningMetadata.close();
+
+        resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .post(urlNewScreeningMetadata)
+                .contextPath("/noark5v5")
+                .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
+                .content(jsonScreeningMetadataWriter.toString())
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON));
+
+        resultActions
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$." + CODE)
+                        .exists())
+                .andExpect(jsonPath("$." + CODE_NAME)
+                        .exists())
+                .andExpect(jsonPath("$._links.['" + SELF + "'].href")
+                        .exists())
+                .andExpect(jsonPath(
+                        "$._links.['" +
+                                REL_FONDS_STRUCTURE_SCREENING_METADATA +
+                                "'].['" + HREF + "']").exists());
+        ;
+
+        // Check that it is possible to retrieve the two ScreeningMetadata
+        // objects
+        resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .get(urlScreeningMetadata)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON));
+
+        response = resultActions.andReturn().getResponse();
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.results", hasSize(2)))
+                .andExpect(jsonPath("$.results.[0]." + CODE)
+                        .exists())
+                .andExpect(jsonPath("$.results.[0]." + CODE_NAME)
+                        .exists())
+                .andExpect(jsonPath("$.results.[1]." + CODE)
+                        .exists())
+                .andExpect(jsonPath("$.results.[1]." + CODE_NAME)
+                        .exists())
+                .andExpect(jsonPath("$.results.[0]._links.['" +
+                        SELF + "'].href")
+                        .exists())
+                .andExpect(jsonPath(
+                        "$.results.[0]._links.['" +
+                                REL_FONDS_STRUCTURE_SCREENING_METADATA + "'].['" +
+                                HREF + "']").exists())
+                .andExpect(jsonPath("$.results.[1]._links.['" +
+                        SELF + "'].href")
+                        .exists())
+                .andExpect(jsonPath(
+                        "$.results.[1]._links.['" +
+                                REL_FONDS_STRUCTURE_SCREENING_METADATA + "'].['" +
+                                HREF + "']").exists());
+
+        resultActions.andDo(document("home",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint())));
+
+        // Next, see that we can update the ScreeningMetadata
+        String urlComplete = JsonPath.read(response.getContentAsString(),
+                "$.results.[0]._links.self.href");
+        urlScreeningMetadata = "/noark5v5/api/arkivstruktur" +
+                "/skjermingmetadata" + urlComplete.split("/noark5v5/api" +
+                "/arkivstruktur/skjermingmetadata")[1];
+
+        // Create a ScreeningMetadata object different to the previous ones
+        // that we can use to override the data in nikita
+        ScreeningMetadata screeningMetadata2 = new ScreeningMetadata();
+        screeningMetadata2.setCode("TM1");
+        screeningMetadata2.setCodeName("Skjerming tittel mappe - unntatt første linje");
+
+        // Create a JSON object to POST
+        StringWriter jsonScreeningWriter = new StringWriter();
+        JsonGenerator jsonScreening =
+                factory.createGenerator(jsonScreeningWriter);
+        printNullableMetadata(jsonScreening, SCREENING_SCREENING_DOCUMENT,
+                screeningMetadata2, false);
+        jsonScreening.close();
+
+        resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .put(urlScreeningMetadata)
+                .contextPath("/noark5v5")
+                .header("ETAG", "\"0\"")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON)
+                .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
+                .content(jsonScreeningWriter.toString()));
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.['" + CODE + "']")
+                        .value("TM1"))
+                .andExpect(jsonPath("$.['" + CODE_NAME + "']")
+                        .value("Skjerming tittel mappe - unntatt første linje"))
+                .andExpect(jsonPath(
+                        "$._links.['" +
+                                REL_FONDS_STRUCTURE_SCREENING_METADATA + "'].['" +
+                                HREF + "']").exists())
+                .andExpect(jsonPath(
+                        "$._links.['" + SELF + "'].['" + HREF + "']").exists());
+
+        resultActions.andDo(document("home",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint())));
+
+        // Next, check it is possible to delete the ScreeningMetadata
+        resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .delete(urlScreeningMetadata)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON));
+
+        resultActions.andExpect(status().isNoContent());
+    }
+
+    /**
+     * Check that it is possible to add a Screening to a Class when creating
+     * the Class. Then check that it is possible to associate
+     * ScreeningMetadata with class.
+     * <p>
+     * The following steps are taken:
+     * 1. Get Class template (GET ny-klasse)
+     * 2. Create class (POST ny-klasse)
+     * 3. Get created class (GET klasse) and check Screeing attributes and
+     * REL/HREF
+     * 4. Create ScreeningMetadata (POST ny-skjermingmetadata)
+     * 5. Create ScreeningMetadata (POST ny-skjermingmetadata)
+     * 6. Update the first ScreeningMetadata (PUT skjermingmetadata)
+     * 7. Delete the first ScreeningMetadata (DELETE skjermingmetadata)
+     * The test creates a chain of requests that is expected to be applicable
+     * for Class/Screening/ScreeningMetadata
+     *
+     * @throws Exception Serialising or validation exception
+     */
+    @Test
+    @Sql("/db-tests/basic_structure.sql")
+    @WithMockCustomUser
+    public void addScreeningToClass() throws Exception {
+        // First get template to create / POST class
+        String urlNewClass = "/noark5v5/api/arkivstruktur" +
+                "/" + CLASSIFICATION_SYSTEM +
+                "/2d0b2dc1-f3bb-4239-bf04-582b1085581c/ny-klasse";
+/*
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .get(urlNewClass)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON));
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath(
+                        "$._links.['" +
+                                REL_METADATA_SCREENING_METADATA + "'].['" +
+                                HREF + "']").exists());
+*/
+        // Next create a Class object with an associated Screening
+        // Note: We are not using the result of the GET ny-klasse, but want the
+        // test to check tht it works
+
+        Class klass = new Class();
+        klass.setTitle("Title of class");
+        klass.setClassId("CLASSID");
+        // Create Metadata objects
+        AccessRestriction accessRestriction =
+                new AccessRestriction("P", "Personalsaker");
+        ScreeningDocument screeningDocument = new ScreeningDocument(
+                "H", "Skjerming av hele dokumentet");
+
+        // Create a screening object and associate it with the Class
+        Screening screening = new Screening();
+        screening.setAccessRestriction(accessRestriction);
+        screening.setScreeningDocument(screeningDocument);
+        screening.setScreeningAuthority("Unntatt etter Offentleglova");
+        screening.setScreeningExpiresDate(parse("1942-07-25T00:00:00Z"));
+        screening.setScreeningDuration(60);
+        klass.setReferenceScreening(screening);
+
+        // Create a JSON object to POST
+        JsonFactory factory = new JsonFactory();
+        StringWriter jsonClassWriter = new StringWriter();
+        JsonGenerator jsonClass =
+                factory.createGenerator(jsonClassWriter);
+        jsonClass.writeStartObject();
+        printTitleAndDescription(jsonClass, klass);
+        printScreening(jsonClass, klass);
+        jsonClass.writeEndObject();
+        jsonClass.close();
+        System.out.println(jsonClassWriter.toString());
+        ResultActions resultActions =
+                mockMvc.perform(MockMvcRequestBuilders
+                        .post(urlNewClass)
+                        .contextPath("/noark5v5")
+                        .accept(NOARK5_V5_CONTENT_TYPE_JSON)
+                        .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
+                        .content(jsonClassWriter.toString()));
+
+        resultActions
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$." + SYSTEM_ID)
+                        .exists())
+                .andExpect(jsonPath("$." + TITLE)
+                        .value("Title of class"));
+        resultActions.andDo(document("home",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint())));
+
+        MockHttpServletResponse response =
+                resultActions.andReturn().getResponse();
+
+        // Make sure we can retrieve the class and that the Screening
+        // attributes are present
+        String urlClass = "/noark5v5/api/arkivstruktur/klasse/" +
+                JsonPath.read(response.getContentAsString(), "$." + SYSTEM_ID);
+
+        resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .get(urlClass)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON));
+
+        response = resultActions.andReturn().getResponse();
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$." + SCREENING + "." +
+                        ACCESS_RESTRICTION +
+                        "." +
+                        CODE).value("P"))
+                .andExpect(jsonPath("$." + SCREENING + "." +
+                        ACCESS_RESTRICTION + "." +
+                        CODE_NAME).value("Personalsaker"))
+                .andExpect(jsonPath("$." + SCREENING + "." +
+                        SCREENING_SCREENING_DOCUMENT + "." +
+                        CODE).value("H"))
+                .andExpect(jsonPath("$." + SCREENING + "." +
+                        SCREENING_SCREENING_DOCUMENT + "." +
+                        CODE_NAME)
+                        .value("Skjerming av hele dokumentet"))
+                .andExpect(jsonPath("$." + SCREENING + "." +
+                        SCREENING_AUTHORITY)
+                        .value("Unntatt etter Offentleglova"))
+                .andExpect(jsonPath("$." + SCREENING + "." +
+                        SCREENING_DURATION)
+                        .value(60))
+                // Not picking them explicitly out as [0] [1] objects in the
+                // array as the order might change later and then the test
+                // will fail unnecessary
+                .andExpect(jsonPath("$._links.['" +
+                        REL_METADATA_SCREENING_METADATA + "'].href").exists())
+                .andExpect(jsonPath("$." + SCREENING + "." +
+                        SCREENING_EXPIRES_DATE).value(
+                        anyOf(
+                                is("1942-07-25T00:00:00Z"),
+                                is("1942-07-25T00:00:00+00:00"))))
+                .andExpect(jsonPath("$." + TITLE)
+                        .value("Title of class"));
+        resultActions.andDo(document("home",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint())));
+
+
+        // Next, Create a ScreeningMetadata and POST it
+        String urlNewScreeningMetadata = "/noark5v5/api/arkivstruktur/klasse/" +
+                JsonPath.read(response.getContentAsString(),
+                        "$." + SYSTEM_ID) + "/" + NEW_SCREENING_METADATA + "/";
+        // Make a note of the url for ScreeningMetadata associated with the
+        // class. Will be used later.
+        String urlScreeningMetadata = "/noark5v5/api/arkivstruktur/klasse/" +
+                JsonPath.read(response.getContentAsString(),
+                        "$." + SYSTEM_ID) + "/" + SCREENING_METADATA + "/";
+
+        ScreeningMetadataLocal screeningMetadata = new ScreeningMetadataLocal();
+        screeningMetadata.setCode("NA");
+        screeningMetadata.setCodeName("Skjerming navn avsender");
+
+        // Create a JSON object to POST
+        StringWriter jsonScreeningMetadataWriter = new StringWriter();
+        JsonGenerator jsonScreeningMetadata =
+                factory.createGenerator(jsonScreeningMetadataWriter);
+        printScreeningMetadata(jsonScreeningMetadata, screeningMetadata);
+        jsonScreeningMetadata.close();
+
+        resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .post(urlNewScreeningMetadata)
+                .contextPath("/noark5v5")
+                .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
+                .content(jsonScreeningMetadataWriter.toString())
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON));
+
+        resultActions
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$." + CODE)
+                        .exists())
+                .andExpect(jsonPath("$." + CODE_NAME)
+                        .exists())
+                .andExpect(jsonPath("$._links.['" + SELF + "'].href")
+                        .exists())
+                .andExpect(jsonPath(
+                        "$._links.['" +
+                                REL_FONDS_STRUCTURE_SCREENING_METADATA +
+                                "'].['" + HREF + "']").exists());
+        ;
+
+        // Create another ScreeningMetadata and POST it
+        screeningMetadata.setCode("TKL");
+        screeningMetadata.setCodeName("Skjerming tittel klasse");
+
+        // Create a JSON object to POST
+        jsonScreeningMetadataWriter = new StringWriter();
+        jsonScreeningMetadata = factory
+                .createGenerator(jsonScreeningMetadataWriter);
+        printScreeningMetadata(jsonScreeningMetadata, screeningMetadata);
+        jsonScreeningMetadata.close();
+
+        resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .post(urlNewScreeningMetadata)
+                .contextPath("/noark5v5")
+                .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
+                .content(jsonScreeningMetadataWriter.toString())
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON));
+
+        resultActions
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$." + CODE)
+                        .exists())
+                .andExpect(jsonPath("$." + CODE_NAME)
+                        .exists())
+                .andExpect(jsonPath("$._links.['" + SELF + "'].href")
+                        .exists())
+                .andExpect(jsonPath(
+                        "$._links.['" +
+                                REL_FONDS_STRUCTURE_SCREENING_METADATA +
+                                "'].['" + HREF + "']").exists());
+        ;
+
+        // Check that it is possible to retrieve the two ScreeningMetadata
+        // objects
+        resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .get(urlScreeningMetadata)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON));
+
+        response = resultActions.andReturn().getResponse();
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.results", hasSize(2)))
+                .andExpect(jsonPath("$.results.[0]." + CODE)
+                        .exists())
+                .andExpect(jsonPath("$.results.[0]." + CODE_NAME)
+                        .exists())
+                .andExpect(jsonPath("$.results.[1]." + CODE)
+                        .exists())
+                .andExpect(jsonPath("$.results.[1]." + CODE_NAME)
+                        .exists())
+                .andExpect(jsonPath("$.results.[0]._links.['" +
+                        SELF + "'].href")
+                        .exists())
+                .andExpect(jsonPath(
+                        "$.results.[0]._links.['" +
+                                REL_FONDS_STRUCTURE_SCREENING_METADATA + "'].['" +
+                                HREF + "']").exists())
+                .andExpect(jsonPath("$.results.[1]._links.['" +
+                        SELF + "'].href")
+                        .exists())
+                .andExpect(jsonPath(
+                        "$.results.[1]._links.['" +
+                                REL_FONDS_STRUCTURE_SCREENING_METADATA + "'].['" +
+                                HREF + "']").exists());
+
+        resultActions.andDo(document("home",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint())));
+
+        // Next, see that we can update the ScreeningMetadata
+        String urlComplete = JsonPath.read(response.getContentAsString(),
+                "$.results.[0]._links.self.href");
+        urlScreeningMetadata = "/noark5v5/api/arkivstruktur" +
+                "/skjermingmetadata" + urlComplete.split("/noark5v5/api" +
+                "/arkivstruktur/skjermingmetadata")[1];
+
+        // Create a ScreeningMetadata object different to the previous ones
+        // that we can use to override the data in nikita
+        ScreeningMetadata screeningMetadata2 = new ScreeningMetadata();
+        screeningMetadata2.setCode("TM1");
+        screeningMetadata2.setCodeName("Skjerming tittel mappe - unntatt første linje");
+
+        // Create a JSON object to POST
+        StringWriter jsonScreeningWriter = new StringWriter();
+        JsonGenerator jsonScreening =
+                factory.createGenerator(jsonScreeningWriter);
+        printNullableMetadata(jsonScreening, SCREENING_SCREENING_DOCUMENT,
+                screeningMetadata2, false);
+        jsonScreening.close();
+
+        resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .put(urlScreeningMetadata)
+                .contextPath("/noark5v5")
+                .header("ETAG", "\"0\"")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON)
+                .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
+                .content(jsonScreeningWriter.toString()));
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.['" + CODE + "']")
+                        .value("TM1"))
+                .andExpect(jsonPath("$.['" + CODE_NAME + "']")
+                        .value("Skjerming tittel mappe - unntatt første linje"))
+                .andExpect(jsonPath(
+                        "$._links.['" +
+                                REL_FONDS_STRUCTURE_SCREENING_METADATA + "'].['" +
+                                HREF + "']").exists())
+                .andExpect(jsonPath(
+                        "$._links.['" + SELF + "'].['" + HREF + "']").exists());
+
+        resultActions.andDo(document("home",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint())));
+
+        // Next, check it is possible to delete the ScreeningMetadata
+        resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .delete(urlScreeningMetadata)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON));
+
+        resultActions.andExpect(status().isNoContent());
+    }
+
+
+    /**
+     * Check that it is possible to add a Screening to a Series when creating
+     * the Series. Then check that it is possible to associate
+     * ScreeningMetadata with series.
+     * <p>
+     * The following steps are taken:
+     * 1. Get Series template (GET ny-arkivdel)
+     * 2. Create series (POST ny-arkivdel)
+     * 3. Get created series (GET arkivdel) and check Screeing attributes and
+     * REL/HREF
+     * 4. Create ScreeningMetadata (POST ny-skjermingmetadata)
+     * 5. Create ScreeningMetadata (POST ny-skjermingmetadata)
+     * 6. Update the first ScreeningMetadata (PUT skjermingmetadata)
+     * 7. Delete the first ScreeningMetadata (DELETE skjermingmetadata)
+     * The test creates a chain of requests that is expected to be applicable
+     * for Series/Screening/ScreeningMetadata
+     *
+     * @throws Exception Serialising or validation exception
+     */
+    @Test
+    @Sql("/db-tests/basic_structure.sql")
+    @WithMockCustomUser
+    public void addScreeningToSeries() throws Exception {
+        // First get template to create / POST series
+        String urlNewSeries = "/noark5v5/api/arkivstruktur" +
+                "/registrering/dc600862-3298-4ec0-8541-3e51fb900054/" +
+                "ny-arkivdel";
+
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .get(urlNewSeries)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON));
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath(
+                        "$._links.['" +
+                                REL_METADATA_SCREENING_METADATA + "'].['" +
+                                HREF + "']").exists());
+
+        // Next create a Series object with an associated Screening
+        // Note: We are not using the result of the GET ny-arkivdel, but want the
+        // test to check tht it works
+
+        Series series = new Series();
+        series.setTitle("Title of series");
+
+        // Create Metadata objects
+        AccessRestriction accessRestriction =
+                new AccessRestriction("P", "Personalsaker");
+        ScreeningDocument screeningDocument = new ScreeningDocument(
+                "H", "Skjerming av hele dokumentet");
+
+        // Create a screening object and associate it with the Series
+        Screening screening = new Screening();
+        screening.setAccessRestriction(accessRestriction);
+        screening.setScreeningDocument(screeningDocument);
+        screening.setScreeningAuthority("Unntatt etter Offentleglova");
+        screening.setScreeningExpiresDate(parse("1942-07-25T00:00:00Z"));
+        screening.setScreeningDuration(60);
+        series.setReferenceScreening(screening);
+
+        SeriesStatus seriesStatus = new SeriesStatus();
+        seriesStatus.setCode("B");
+        seriesStatus.setCodeName("Dokumentet er under redigering");
+        series.setSeriesStatus(seriesStatus);
+
+        // Create a JSON object to POST
+        JsonFactory factory = new JsonFactory();
+        StringWriter jsonSeriesWriter = new StringWriter();
+        JsonGenerator jsonSeries =
+                factory.createGenerator(jsonSeriesWriter);
+        jsonSeries.writeStartObject();
+        printTitleAndDescription(jsonSeries, series);
+        printNullableMetadata(jsonSeries,
+                SERIES_STATUS,
+                series.getSeriesStatus());
+        printScreening(jsonSeries, series);
+        jsonSeries.writeEndObject();
+        jsonSeries.close();
+
+        resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .post(urlNewSeries)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON)
+                .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
+                .content(jsonSeriesWriter.toString()));
+
+        resultActions
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$." + SYSTEM_ID)
+                        .exists())
+                .andExpect(jsonPath("$." + TITLE)
+                        .value("Title of series"));
+        resultActions.andDo(document("home",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint())));
+
+        MockHttpServletResponse response =
+                resultActions.andReturn().getResponse();
+
+        // Make sure we can retrieve the series and that the Screening
+        // attributes are present
+        String urlSeries = "/noark5v5/api/arkivstruktur/arkivdel/" +
+                JsonPath.read(response.getContentAsString(), "$." + SYSTEM_ID);
+
+        resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .get(urlSeries)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON));
+
+        response = resultActions.andReturn().getResponse();
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$." + SCREENING + "." +
+                        ACCESS_RESTRICTION +
+                        "." +
+                        CODE).value("P"))
+                .andExpect(jsonPath("$." + SCREENING + "." +
+                        ACCESS_RESTRICTION + "." +
+                        CODE_NAME).value("Personalsaker"))
+                .andExpect(jsonPath("$." + SCREENING + "." +
+                        SCREENING_SCREENING_DOCUMENT + "." +
+                        CODE).value("H"))
+                .andExpect(jsonPath("$." + SCREENING + "." +
+                        SCREENING_SCREENING_DOCUMENT + "." +
+                        CODE_NAME)
+                        .value("Skjerming av hele dokumentet"))
+                .andExpect(jsonPath("$." + SCREENING + "." +
+                        SCREENING_AUTHORITY)
+                        .value("Unntatt etter Offentleglova"))
+                .andExpect(jsonPath("$." + SCREENING + "." +
+                        SCREENING_DURATION)
+                        .value(60))
+                // Not picking them explicitly out as [0] [1] objects in the
+                // array as the order might change later and then the test
+                // will fail unnecessary
+                .andExpect(jsonPath("$._links.['" +
+                        REL_METADATA_SCREENING_METADATA + "'].href").exists())
+                .andExpect(jsonPath("$." + SCREENING + "." +
+                        SCREENING_EXPIRES_DATE).value(
+                        anyOf(
+                                is("1942-07-25T00:00:00Z"),
+                                is("1942-07-25T00:00:00+00:00"))))
+                .andExpect(jsonPath("$." + TITLE)
+                        .value("Title of series"));
+        resultActions.andDo(document("home",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint())));
+
+
+        // Next, Create a ScreeningMetadata and POST it
+        String urlNewScreeningMetadata = "/noark5v5/api/arkivstruktur/arkivdel/" +
+                JsonPath.read(response.getContentAsString(),
+                        "$." + SYSTEM_ID) + "/" + NEW_SCREENING_METADATA + "/";
+        // Make a note of the url for ScreeningMetadata associated with the
+        // series. Will be used later.
+        String urlScreeningMetadata = "/noark5v5/api/arkivstruktur/arkivdel/" +
                 JsonPath.read(response.getContentAsString(),
                         "$." + SYSTEM_ID) + "/" + SCREENING_METADATA + "/";
 
