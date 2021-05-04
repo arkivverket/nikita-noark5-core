@@ -18,11 +18,6 @@ import static nikita.common.util.CommonUtils.Hateoas.Serialize.printHateoasLinks
 
 /**
  * Serialise an outgoing Author object as JSON.
- * <p>
- * Having an own serializer is done to have more fine grained control over the
- * output. We need to be able to especially the HATEOAS links and the actual
- * format of the HATEOAS links might change over time with the standard. This
- * allows us to be able to easily adapt to any changes
  */
 @HateoasPacker(using = AuthorHateoasHandler.class)
 @HateoasObject(using = AuthorHateoas.class)
@@ -31,10 +26,10 @@ public class AuthorHateoasSerializer
         implements IHateoasSerializer {
 
     @Override
-    public void serializeNoarkEntity(INoarkEntity noarkSystemIdEntity,
-                                     HateoasNoarkObject authorHateoas, JsonGenerator jgen)
+    public void serializeNoarkEntity(
+            INoarkEntity noarkSystemIdEntity,
+            HateoasNoarkObject authorHateoas, JsonGenerator jgen)
             throws IOException {
-
         Author author = (Author) noarkSystemIdEntity;
         jgen.writeStartObject();
         printNullable(jgen, AUTHOR, author.getAuthor());
