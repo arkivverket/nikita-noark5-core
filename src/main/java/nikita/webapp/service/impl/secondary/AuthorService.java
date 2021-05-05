@@ -53,7 +53,6 @@ public class AuthorService
             (Author author, DocumentDescription documentDescription) {
         author.setReferenceDocumentDescription(documentDescription);
         author = authorRepository.save(author);
-        documentDescription.addAuthor(author);
         AuthorHateoas authorHateoas = new AuthorHateoas(author);
         authorHateoasHandler.addLinks(authorHateoas, new Authorisation());
         setOutgoingRequestHeader(authorHateoas);

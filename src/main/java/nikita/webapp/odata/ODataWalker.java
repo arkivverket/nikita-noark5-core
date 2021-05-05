@@ -7,6 +7,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
 
@@ -328,7 +329,7 @@ public abstract class ODataWalker
     }
 
     String getAliasAndAttribute(String entity, String attribute) {
-        return entity.toLowerCase() + "_1." + attribute;
+        return entity.toLowerCase() + "_1." + firstLetterToLower(attribute);
     }
 
     private Object getPrimitiveTypeObject(PrimitiveLiteralContext context) {
@@ -370,5 +371,22 @@ public abstract class ODataWalker
             logger.error(error);
             throw new NikitaMalformedInputDataException(error);
         }
+    }
+
+    /**
+     * Convert first letter to lowerCase. Useful when e.g., an Author is both
+     * a Object as  well as an attribute. referenceAuthor requires a capital
+     * letter, while author as attribute requires small letters.
+     *
+     * @param originalString the string to convert
+     * @return the converted string or the original
+     */
+    protected String firstLetterToLower(@NotNull String originalString) {
+        if (originalString != null && !originalString.isBlank()) {
+            char string[] = originalString.toCharArray();
+            string[0] = Character.toLowerCase(string[0]);
+            return new String(string);
+        }
+        return originalString;
     }
 }

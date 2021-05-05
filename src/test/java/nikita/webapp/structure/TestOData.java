@@ -2250,11 +2250,55 @@ public class TestOData {
     }
 
     /**
+     * Check that it is possible to do a query with filter join between a
+     * DocumentDescription and an Author
+     * Entity:  dokumentbeskrivelse, forfatter
+     * Attribute: forfatter
+     * <p>
+     * forfatter/author is a multi-valued attribute
+     * <p>
+     * ODATA Input:
+     * dokumentbeskrivelse?$filter=forfatter eq 'Frank Grimes'
+     * <p>
+     * Expected HQL:
+     * SELECT documentdescription_1 FROM DocumentDescription
+     * AS documentdescription_1
+     * JOIN
+     * documentdescription_1.referenceAuthor AS author_1
+     * WHERE
+     * author_1.organisationNumber = :parameter_0
+     * <p>
+     * Additionally parameter_0 should be
+     * Frank Grimes
+     * <p>
+     * Test added from incremental development work
+     */
+    @Test
+    @Transactional
+    public void shouldReturnValidHQLEntityJoinDocDescWithAuthor() {
+        String attributeName = "forfatter";
+        String compareValue = "Frank Grimes";
+        String odata = "dokumentbeskrivelse?$filter=forfatter/" +
+                attributeName + " eq " + "'" + compareValue + "')";
+        String hql = "SELECT documentdescription_1 FROM DocumentDescription" +
+                " AS documentdescription_1" +
+                " JOIN" +
+                " documentdescription_1.referenceAuthor AS author_1" +
+                " WHERE" +
+                " author_1.author = :parameter_0";
+        Query query = oDataService.convertODataToHQL(odata, "");
+        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+                compareValue);
+        Assertions.assertEquals(query.getQueryString(), hql);
+    }
+
+    /**
      * Check that it is possible to do a query with filter join between a File
      * and a Part
      * Entity:  mappe, part
      * Attribute: organisasjonsnummer
      * <p>
+     * forfatter/author is a multi-valued attribute
      * ODATA Input:
      * mappe?$filter=partEnhet/organisasjonsnummer eq '02020202022'
      * <p>

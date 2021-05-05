@@ -21,7 +21,10 @@ values ('7f000101-730c-1c94-8173-0c0ded71003c', '2020-07-01 22:25:06', 'admin@ex
 insert into system_id_entity(system_id, created_date, created_by, owned_by, version)
 values ('8131049d-dcac-43d8-bee4-656e72842da9', '2020-07-01 22:25:06', 'admin@example.com', 'admin@example.com', 0);
 insert into system_id_entity(system_id, created_date, created_by, owned_by, version)
+-- system_id:documentdescription objects
 values ('66b92e78-b75d-4b0f-9558-4204ab31c2d1', '2020-07-01 22:25:06', 'admin@example.com', 'admin@example.com', 0);
+insert into system_id_entity(system_id, created_date, created_by, owned_by, version)
+values ('9493c357-1345-4a55-98fd-fcba13b8a6dd', '2020-07-01 22:25:06', 'admin@example.com', 'admin@example.com', 0);
 insert into system_id_entity(system_id, created_date, created_by, owned_by, version)
 values ('ebcefc44-73e5-485e-94c9-1b210359c125', '2020-07-01 22:25:06', 'admin@example.com', 'admin@example.com', 0);
 --
@@ -71,8 +74,18 @@ insert into as_document_description (system_id, title, description, document_typ
 values ('66b92e78-b75d-4b0f-9558-4204ab31c2d1', 'test title bravo', 'test description bravo', 'B', 'Brev',
         'H', 'Hoveddokument', 1, '2020-04-08');
 
+
+insert into as_document_description (system_id, title, description, document_type_code, document_type_code_name,
+                                     associated_with_record_as_code, associated_with_record_as_code_name,
+                                     document_number, association_date)
+values ('9493c357-1345-4a55-98fd-fcba13b8a6dd', 'test title charlie', 'test description charlie', 'B', 'Brev',
+        'H', 'Hoveddokument', 1, '2020-04-08');
+
 insert into as_record_document_description (f_pk_record_id, f_pk_document_description_id)
 values ('dc600862-3298-4ec0-8541-3e51fb900054', '66b92e78-b75d-4b0f-9558-4204ab31c2d1');
+
+insert into as_record_document_description (f_pk_record_id, f_pk_document_description_id)
+values ('dc600862-3298-4ec0-8541-3e51fb900054', '9493c357-1345-4a55-98fd-fcba13b8a6dd');
 
 
 insert into as_correspondence_part(system_id, correspondence_part_type_code,

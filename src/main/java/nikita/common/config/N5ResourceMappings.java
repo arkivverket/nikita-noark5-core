@@ -816,7 +816,7 @@ public final class N5ResourceMappings {
     public static final String ADMINISTRATIVE_UNIT_STATUS_ENG_OBJECT = "administrativEnhetsstatus";
     public static final String ASSOCIATED_WITH_RECORD_AS_ENG_OBJECT =
             "AssociatedWithRecordAs";
-    public static final String AUTHOR_ENG_OBJECT = "forfatter";
+    public static final String AUTHOR_ENG_OBJECT = "Author";
     public static final String BUILDING_CHANGE_NUMBER_ENG_OBJECT = "continuousNumberingOfBuildingChange";
     public static final String BUILDING_NUMBER_ENG_OBJECT = "buildingNumber";
     public static final String RECORD_ENG_OBJECT = "Record";
