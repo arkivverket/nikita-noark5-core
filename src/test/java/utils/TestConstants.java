@@ -32,6 +32,19 @@ public final class TestConstants {
     public static String BUSINESS_POSTAL_CODE_TEST = "7010";
     public static String BUSINESS_POSTAL_TOWN_TEST = "Trondheim";
 
+    public static String TITLE_TEST = "Test title used in tests";
+    // DocumentDescription constants
+    public static String DOCUMENT_TYPE_CODE_TEST = "B";
+    public static String DOCUMENT_TYPE_CODE_NAME_TEST = "Brev";
+    public static String DOCUMENT_STATUS_CODE_TEST = "F";
+    public static String DOCUMENT_STATUS_CODE_NAME_TEST =
+            "Dokumentet er ferdigstilt";
+    public static String DOCUMENT_ASS_REC_CODE_TEST = "H";
+    public static String DOCUMENT_ASS_REC_CODE_NAME_TEST = "Hoveddokument";
+
+    public static String AUTHOR_TEST = "Frank Grimes";
+    public static String AUTHOR_TEST_UPDATED = "Henry Grimes II";
+
     // For BusinessSpecificMetatadata
     public static String BSM_DATE_NAME = "ppt-v1:datohenvist";
     public static String BSM_DATE_TIME_NAME = "ppt-v1:datotidvedtakferdig";
