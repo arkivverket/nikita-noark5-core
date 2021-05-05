@@ -120,7 +120,11 @@ public class AfterApplicationStartup {
             }
         } catch (IOException e) {
             ((ConfigurableApplicationContext) applicationContext).close();
-            logger.error("Unable to create document store directories! " +
+            logger.error("Unable to create document store directories! ");
+            logger.error("directoryStoreName:  " + directoryStoreName);
+            logger.error("incomingDirectoryName:  " + incomingDirectoryName);
+            logger.error("Hint: Check write permissions / available space.");
+            logger.error("Nikita cannot start without working storage! " +
                     "Exiting!");
         }
     }
