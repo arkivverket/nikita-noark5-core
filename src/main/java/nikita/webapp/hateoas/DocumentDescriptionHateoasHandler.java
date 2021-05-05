@@ -181,9 +181,11 @@ public class DocumentDescriptionHateoasHandler
     @Override
     public void addAuthor(ISystemId entity,
                           IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemIdAsString() +
-                SLASH + AUTHOR + SLASH, REL_FONDS_STRUCTURE_AUTHOR, true));
+        if (((DocumentDescription) entity).getReferenceAuthor().size() > 0) {
+            hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                    HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemIdAsString() +
+                    SLASH + AUTHOR + SLASH, REL_FONDS_STRUCTURE_AUTHOR, true));
+        }
     }
 
     /**
