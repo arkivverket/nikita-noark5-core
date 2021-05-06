@@ -458,7 +458,7 @@ public class RegistryEntryService
         }
         for (DocumentFlow documentFlow : registryEntry
                 .getReferenceDocumentFlow()) {
-            documentFlow.removeReferenceRegistryEntry();
+            registryEntry.removeDocumentFlow(documentFlow);
             documentFlowService.deleteDocumentFlow(documentFlow);
         }
         registryEntryRepository.delete(registryEntry);
