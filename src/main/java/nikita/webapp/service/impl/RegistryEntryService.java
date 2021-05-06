@@ -456,9 +456,8 @@ public class RegistryEntryService
                         "or RegistryEntry and cannot be deleted at this time");
             }
         }
-        for (DocumentFlow documentFlow : registryEntry
-                .getReferenceDocumentFlow()) {
-            registryEntry.removeDocumentFlow(documentFlow);
+        for (DocumentFlow documentFlow :
+                registryEntry.getReferenceDocumentFlow()) {
             documentFlowService.deleteDocumentFlow(documentFlow);
         }
         registryEntryRepository.delete(registryEntry);
