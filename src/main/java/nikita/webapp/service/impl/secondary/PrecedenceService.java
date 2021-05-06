@@ -178,6 +178,19 @@ public class PrecedenceService
         deleteEntity(getPrecedenceOrThrow(systemID));
     }
 
+    @Override
+    @Transactional
+    public boolean deletePrecedenceIfNotEmpty(Precedence precedence) {
+        if (precedence.getReferenceRegistryEntry().size() > 0) {
+            return false;
+        }
+        if (precedence.getReferenceCaseFile().size() > 0) {
+            return false;
+        }
+        precedenceRepository.delete(precedence);
+        return true;
+    }
+
     // All template methods
 
     public PrecedenceHateoas generateDefaultPrecedence() {
