@@ -107,6 +107,28 @@ public class BSMMetadataService
     }
     // All UPDATE methods
 
+
+    @Override
+    public ResponseEntity<BSMMetadataHateoas>
+    handleUpdate(UUID systemId, Long version, BSMMetadata incomingBsmMetadata) {
+        BSMMetadata bsmMetadata = getBSMMetadataOrThrow(systemId);
+        bsmMetadata.setDescription(incomingBsmMetadata.getDescription());
+        bsmMetadata.setName(incomingBsmMetadata.getName());
+        bsmMetadata.setOutdated(incomingBsmMetadata.getOutdated());
+        bsmMetadata.setSource(incomingBsmMetadata.getSource());
+        bsmMetadata.setType(incomingBsmMetadata.getType());
+        bsmMetadata.setVersion(version);
+        BSMMetadataHateoas bsmMetadataHateoas =
+                new BSMMetadataHateoas(bsmMetadata);
+        hateoasHandler.addLinks(bsmMetadataHateoas, new Authorisation());
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityUpdatedEvent(this, bsmMetadata));
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(getServletPath()))
+                .eTag(bsmMetadataHateoas.getEntityVersion().toString())
+                .body(bsmMetadataHateoas);
+    }
+
     @Override
     @Transactional
     public ResponseEntity<BSMMetadataHateoas> handleUpdate(

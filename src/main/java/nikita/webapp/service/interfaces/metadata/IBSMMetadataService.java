@@ -45,6 +45,20 @@ public interface IBSMMetadataService
             @NotNull UUID systemID, @NotNull PatchObjects patchObjects);
 
     /**
+     * Undertake an update to an existing BSMMetadata object identified by
+     * the given systemID.
+     * <p>
+     *
+     * @param systemID    UUID of the BSMMetadata to update
+     * @param aLong
+     * @param bsmMetadata incoming BSMMetadata object
+     * @return The updated BSMMetadata object wrapped as a BSMMetadataHateoas
+     */
+    ResponseEntity<BSMMetadataHateoas> handleUpdate(
+            @NotNull final UUID systemID,
+            Long aLong, @NotNull final BSMMetadata bsmMetadata);
+
+    /**
      * Delete the BSMMetadata object identified by the given systemID.
      * <p>
      *

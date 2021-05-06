@@ -20,6 +20,7 @@ import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
+import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -162,6 +163,40 @@ public class BSMMetadataController
             @RequestBody PatchMerge patchMerge) throws NikitaException {
         return (ResponseEntity<BSMMetadataHateoas>)
                 bsmMetadataService.handleUpdateRfc7396(systemID, patchMerge);
+    }
+
+    // Update a BSMMetadata identified by a UUID
+    // PATCH [contextPath][api]/metadata/virksomhetsspesifikkeMetadata/{systemId}
+    @Operation(summary = "Updates a BSMMetadata identified by a given systemId",
+            description = "Returns the newly updated bsmMetadata")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = OK_VAL,
+                    description = "BSMMetadata OK"),
+            @ApiResponse(responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(responseCode = NOT_FOUND_VAL,
+                    description = API_MESSAGE_PARENT_DOES_NOT_EXIST +
+                            " of type BSMMetadata"),
+            @ApiResponse(responseCode = CONFLICT_VAL,
+                    description = API_MESSAGE_CONFLICT),
+            @ApiResponse(responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @PutMapping(value = SLASH + BSM_DEF + SLASH + SYSTEM_ID_PARAMETER,
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<BSMMetadataHateoas> putBSMMetadata(
+            HttpServletRequest request,
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of BSM to update",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID,
+            @Parameter(name = "BSMMetadata",
+                    description = "Incoming BSMMetadata payload",
+                    required = true)
+            @RequestBody BSMMetadata bsmMetadata) throws NikitaException {
+        return bsmMetadataService.handleUpdate(systemID,
+                parseETAG(request.getHeader(ETAG)), bsmMetadata);
     }
 
     // API - All DELETE Requests (CRUD - DELETE)
