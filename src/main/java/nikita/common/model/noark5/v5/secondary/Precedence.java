@@ -111,11 +111,11 @@ public class Precedence
 
     // Links to RegistryEntry
     @ManyToMany(mappedBy = "referencePrecedence")
-    private Set<RegistryEntry> referenceRegistryEntry = new HashSet<>();
+    private final Set<RegistryEntry> referenceRegistryEntry = new HashSet<>();
 
     // Links to CaseFiles
     @ManyToMany(mappedBy = "referencePrecedence")
-    private Set<CaseFile> referenceCaseFile = new HashSet<>();
+    private final Set<CaseFile> referenceCaseFile = new HashSet<>();
 
     @Override
     public OffsetDateTime getPrecedenceDate() {
@@ -174,9 +174,9 @@ public class Precedence
 
     @Override
     public void setReferencePrecedenceApprovedBySystemID
-        (UUID referencePrecedenceApprovedBySystemID) {
+            (UUID referencePrecedenceApprovedBySystemID) {
         this.referencePrecedenceApprovedBySystemID =
-            referencePrecedenceApprovedBySystemID;
+                referencePrecedenceApprovedBySystemID;
     }
 
     @Override
@@ -186,7 +186,7 @@ public class Precedence
 
     @Override
     public void setReferencePrecedenceApprovedBy
-        (User referencePrecedenceApprovedBy) {
+            (User referencePrecedenceApprovedBy) {
         this.referencePrecedenceApprovedBy = referencePrecedenceApprovedBy;
     }
 
@@ -195,7 +195,7 @@ public class Precedence
         if (null == precedenceStatusCode)
             return null;
         return new PrecedenceStatus(precedenceStatusCode,
-                                    precedenceStatusCodeName);
+                precedenceStatusCodeName);
     }
 
     @Override
@@ -251,6 +251,7 @@ public class Precedence
         caseFile.getReferencePrecedence().add(this);
     }
 
+    @Override
     public void removeCaseFile(CaseFile caseFile) {
         this.referenceCaseFile.remove(caseFile);
         caseFile.getReferencePrecedence().remove(this);
