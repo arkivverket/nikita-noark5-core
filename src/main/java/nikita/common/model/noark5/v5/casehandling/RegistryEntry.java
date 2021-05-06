@@ -267,7 +267,7 @@ public class RegistryEntry
         if (null == registryEntryTypeCode)
             return null;
         return new RegistryEntryType(registryEntryTypeCode,
-                                     registryEntryTypeCodeName);
+                registryEntryTypeCodeName);
     }
 
     public void setRegistryEntryType(RegistryEntryType registryEntryType) {
@@ -284,7 +284,7 @@ public class RegistryEntry
         if (null == registryEntryStatusCode)
             return null;
         return new RegistryEntryStatus(registryEntryStatusCode,
-                                       registryEntryStatusCodeName);
+                registryEntryStatusCodeName);
     }
 
     public void setRegistryEntryStatus(RegistryEntryStatus registryEntryStatus) {
@@ -440,6 +440,12 @@ public class RegistryEntry
     public void addPrecedence(Precedence precedence) {
         this.referencePrecedence.add(precedence);
         precedence.getReferenceRegistryEntry().add(this);
+    }
+
+    @Override
+    public void removePrecedence(Precedence precedence) {
+        this.referencePrecedence.remove(precedence);
+        precedence.getReferenceRegistryEntry().remove(this);
     }
 
     public ElectronicSignature getReferenceElectronicSignature() {
