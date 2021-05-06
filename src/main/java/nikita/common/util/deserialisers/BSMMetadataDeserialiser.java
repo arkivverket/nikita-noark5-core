@@ -8,14 +8,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import nikita.common.model.noark5.v5.md_other.BSMMetadata;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static nikita.common.config.HATEOASConstants.LINKS;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.checkNodeObjectEmpty;
+import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserialiseSystemIdEntity;
 
 public class BSMMetadataDeserialiser
         extends JsonDeserializer<BSMMetadata> {
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(BSMMetadataDeserialiser.class);
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
@@ -27,7 +34,9 @@ public class BSMMetadataDeserialiser
 
         StringBuilder errors = new StringBuilder();
         ObjectNode objectNode = mapper.readTree(jsonParser);
+
         BSMMetadata bsmMetadata = new BSMMetadata();
+        deserialiseSystemIdEntity(bsmMetadata, objectNode, errors);
         JsonNode currentNode = objectNode.get(NAME);
         if (null != currentNode) {
             bsmMetadata.setName(currentNode.textValue());
@@ -58,6 +67,12 @@ public class BSMMetadataDeserialiser
             objectNode.remove(SOURCE);
         }
 
+        currentNode = objectNode.get(LINKS);
+        if (null != currentNode) {
+            logger.debug("Payload contains " + LINKS + ". " +
+                    "This value is being ignored.");
+            objectNode.remove(LINKS);
+        }
         // Check that there are no additional values left after
         // processing the tree. If there are additional throw a
         // malformed input exception
