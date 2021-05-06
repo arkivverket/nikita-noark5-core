@@ -175,7 +175,7 @@ public class PrecedenceService
     @Override
     @Transactional
     public void deletePrecedenceBySystemId(String systemID) {
-        deleteEntity(getPrecedenceOrThrow(systemID));
+        precedenceRepository.delete(getPrecedenceOrThrow(systemID));
     }
 
     @Override
