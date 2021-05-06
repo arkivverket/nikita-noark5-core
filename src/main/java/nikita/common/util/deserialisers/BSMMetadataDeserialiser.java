@@ -77,10 +77,12 @@ public class BSMMetadataDeserialiser
         // processing the tree. If there are additional throw a
         // malformed input exception
         if (objectNode.size() != 0) {
-            errors.append("The " + BSM_DEF + " you tried to create is " +
-                    "malformed. The following fields are not " +
-                    "recognised as " + BSM_DEF + " fields " +
-                    "[" + checkNodeObjectEmpty(objectNode) + "].");
+            errors.append("The virksomhetsspesifikkeMetadata object you tried");
+            errors.append(" to create is malformed. The following fields are");
+            errors.append(" not recognised as virksomhetsspesifikkeMetadata");
+            errors.append(" fields  [");
+            errors.append(checkNodeObjectEmpty(objectNode));
+            errors.append("]");
         }
 
         if (0 < errors.length())
