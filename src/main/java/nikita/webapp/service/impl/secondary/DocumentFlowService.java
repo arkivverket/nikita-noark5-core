@@ -183,6 +183,11 @@ public class DocumentFlowService
         deleteEntity(getDocumentFlowOrThrow(systemID));
     }
 
+    @Override
+    public void deleteDocumentFlow(DocumentFlow documentFlow) {
+        documentFlowRepository.delete(documentFlow);
+    }
+
     // All template methods
 
     public DocumentFlowHateoas generateDefaultDocumentFlow() {
