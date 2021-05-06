@@ -296,6 +296,10 @@ public class CaseFileExpansion
     }
 
     @Override
+    public void removePrecedence(Precedence precedence) {
+    }
+
+    @Override
     public Screening getReferenceScreening() {
         return null;
     }

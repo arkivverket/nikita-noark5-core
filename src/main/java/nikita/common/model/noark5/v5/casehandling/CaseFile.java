@@ -257,6 +257,12 @@ public class CaseFile
         precedence.getReferenceCaseFile().add(this);
     }
 
+    @Override
+    public void removePrecedence(Precedence precedence) {
+        this.referencePrecedence.remove(precedence);
+        precedence.getReferenceCaseFile().remove(this);
+    }
+
     public AdministrativeUnit getReferenceAdministrativeUnit() {
         return referenceAdministrativeUnit;
     }
