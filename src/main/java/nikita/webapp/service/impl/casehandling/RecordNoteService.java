@@ -247,10 +247,17 @@ public class RecordNoteService
             @NotNull final String recordNoteSystemId) {
         RecordNote recordNote = getRecordNoteOrThrow(recordNoteSystemId);
         if (deletePossible(recordNote)) {
-            deleteEntity(recordNote);
+            for (DocumentFlow documentFlow : recordNote
+                    .getReferenceDocumentFlow()) {
+                recordNote.removeDocumentFlow(documentFlow);
+                documentFlowService.deleteDocumentFlow(documentFlow);
+            }
+            recordNoteRepository.delete(recordNote);
             applicationEventPublisher.publishEvent(
                     new AfterNoarkEntityDeletedEvent(this, recordNote));
         }
+        // If the delete failed an exception should have been thrown. Getting
+        // this far means it went OK
         return ResponseEntity.status(NO_CONTENT).
                 body(DELETE_RESPONSE);
     }

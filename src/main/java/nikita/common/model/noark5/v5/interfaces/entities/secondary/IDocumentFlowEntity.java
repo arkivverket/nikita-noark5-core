@@ -51,4 +51,6 @@ public interface IDocumentFlowEntity
     RecordNote getReferenceRecordNote();
 
     void setReferenceRecordNote(RecordNote referenceRecordNote);
+
+    void removeReferenceRecordNote();
 }

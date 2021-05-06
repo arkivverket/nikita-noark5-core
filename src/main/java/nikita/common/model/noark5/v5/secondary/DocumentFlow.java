@@ -263,6 +263,11 @@ public class DocumentFlow
     }
 
     @Override
+    public void removeReferenceRecordNote() {
+        this.referenceRegistryEntry = null;
+    }
+
+    @Override
     public String getBaseTypeName() {
         return DOCUMENT_FLOW;
     }
