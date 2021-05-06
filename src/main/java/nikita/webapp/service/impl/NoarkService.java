@@ -8,7 +8,6 @@ import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.ITitleDescription;
 import nikita.common.model.noark5.v5.md_other.BSMMetadata;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
@@ -23,7 +22,6 @@ import org.apache.poi.ss.formula.functions.T;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -105,24 +103,6 @@ public class NoarkService
                 Objects.requireNonNull(
                         RequestContextHolder.getRequestAttributes()))
                 .getRequest().getHeader(ETAG));
-    }
-
-    protected boolean deletePossible(INoarkEntity entity) {
-        // Note, you cannot delete an entity unless you the latest copy. The
-        // following call may result in a NoarkConcurrencyException/409
-        // Conflict
-        entity.setVersion(getETag());
-
-        if (entity.getOwnedBy().equals(getUser())) {
-            return true;
-        } else {
-            String message = "User [" + getUser() + "] tried to delete a " +
-                    entity.getBaseTypeName() + " with " +
-                    entity.getIdentifierType() + "[" +
-                    entity.getIdentifier() + "] but is not the owner";
-            logger.error(message);
-            throw new AccessDeniedException(message);
-        }
     }
 
     /**
