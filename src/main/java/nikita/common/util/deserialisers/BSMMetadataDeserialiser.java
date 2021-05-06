@@ -12,7 +12,7 @@ import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import java.io.IOException;
 
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
+import static nikita.common.util.CommonUtils.Hateoas.Deserialize.checkNodeObjectEmpty;
 
 public class BSMMetadataDeserialiser
         extends JsonDeserializer<BSMMetadata> {
@@ -32,15 +32,15 @@ public class BSMMetadataDeserialiser
         if (null != currentNode) {
             bsmMetadata.setName(currentNode.textValue());
             objectNode.remove(NAME);
-	} else {
-		errors.append(NAME + " is missing. ");
+        } else {
+            errors.append(NAME + " is missing. ");
         }
         currentNode = objectNode.get(TYPE);
         if (null != currentNode) {
             bsmMetadata.setType(currentNode.textValue());
             objectNode.remove(TYPE);
-	} else {
-		errors.append(TYPE + " is missing. ");
+        } else {
+            errors.append(TYPE + " is missing. ");
         }
         currentNode = objectNode.get(OUTDATED);
         if (null != currentNode) {
@@ -63,9 +63,9 @@ public class BSMMetadataDeserialiser
         // malformed input exception
         if (objectNode.size() != 0) {
             errors.append("The " + BSM_DEF + " you tried to create is " +
-                          "malformed. The following fields are not " +
-                          "recognised as " + BSM_DEF + " fields " +
-                          "[" + checkNodeObjectEmpty(objectNode) + "].");
+                    "malformed. The following fields are not " +
+                    "recognised as " + BSM_DEF + " fields " +
+                    "[" + checkNodeObjectEmpty(objectNode) + "].");
         }
 
         if (0 < errors.length())
