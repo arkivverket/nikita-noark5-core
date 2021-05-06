@@ -191,15 +191,15 @@ public class RegistryEntryService
 
         if (null == signOff.getReferenceSignedOffRecord()) {
             String info = "Rejecting invalid reference in field "
-                + SIGN_OFF_REFERENCE_RECORD + ".";
+                    + SIGN_OFF_REFERENCE_RECORD + ".";
             logger.info(info);
             throw new NikitaMalformedInputDataException(info);
         }
         //  This one is optional, but must be valid if set
         if (null != signOff.getReferenceSignedOffCorrespondencePartSystemID()
-            && null == signOff.getReferenceSignedOffCorrespondencePart()) {
+                && null == signOff.getReferenceSignedOffCorrespondencePart()) {
             String info = "Rejecting invalid reference in field "
-                + SIGN_OFF_REFERENCE_CORRESPONDENCE_PART + ".";
+                    + SIGN_OFF_REFERENCE_CORRESPONDENCE_PART + ".";
             logger.info(info);
             throw new NikitaMalformedInputDataException(info);
         }
@@ -250,13 +250,13 @@ public class RegistryEntryService
     @Override
     @SuppressWarnings("unchecked")
     public DocumentFlowHateoas findAllDocumentFlowWithRegistryEntryBySystemId
-        (String systemID) {
+            (String systemID) {
         RegistryEntry registryEntry = getRegistryEntryOrThrow(systemID);
         DocumentFlowHateoas documentFlowHateoas =
                 new DocumentFlowHateoas((List<INoarkEntity>)
                         (List) registryEntry.getReferenceDocumentFlow());
         documentFlowHateoasHandler.addLinks(documentFlowHateoas,
-                                            new Authorisation());
+                new Authorisation());
         setOutgoingRequestHeader(documentFlowHateoas);
         return documentFlowHateoas;
     }
@@ -406,13 +406,13 @@ public class RegistryEntryService
 
         existingSignOff.setSignOffMethod(incomingSignOff.getSignOffMethod());
         existingSignOff.setReferenceSignedOffRecordSystemID
-            (incomingSignOff.getReferenceSignedOffRecordSystemID());
+                (incomingSignOff.getReferenceSignedOffRecordSystemID());
         existingSignOff.setReferenceSignedOffCorrespondencePartSystemID
-            (incomingSignOff.getReferenceSignedOffCorrespondencePartSystemID());
+                (incomingSignOff.getReferenceSignedOffCorrespondencePartSystemID());
         existingSignOff.setReferenceSignedOffRecord
-            (incomingSignOff.getReferenceSignedOffRecord());
+                (incomingSignOff.getReferenceSignedOffRecord());
         existingSignOff.setReferenceSignedOffCorrespondencePart
-            (incomingSignOff.getReferenceSignedOffCorrespondencePart());
+                (incomingSignOff.getReferenceSignedOffCorrespondencePart());
 
         SignOffHateoas signOffHateoas =
                 new SignOffHateoas(signOffRepository
@@ -444,9 +444,19 @@ public class RegistryEntryService
     @Override
     @Transactional
     public void deleteEntity(@NotNull String registryEntrySystemId) {
-        RegistryEntry registryEntry = getRegistryEntryOrThrow(
-                registryEntrySystemId);
-        deleteEntity(registryEntry);
+        RegistryEntry registryEntry =
+                getRegistryEntryOrThrow(registryEntrySystemId);
+        // Delete all precedence associated with the RegistryEntry. If the
+        // precedence is associated with another RegistryEntry or CaseFile
+        // the precedence object cannot be deleted. This event is logged.
+        for (Precedence precedence : registryEntry.getReferencePrecedence()) {
+            precedence.removeRegistryEntry(registryEntry);
+            if (!precedenceService.deletePrecedenceIfNotEmpty(precedence)) {
+                logger.info("Precedence is associated with another CaseFile " +
+                        "or RegistryEntry and cannot be deleted at this time");
+            }
+        }
+        registryEntryRepository.delete(registryEntry);
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityDeletedEvent(this, registryEntry));
     }
@@ -646,7 +656,7 @@ public class RegistryEntryService
 
     protected SignOff getSignOffOrThrow(@NotNull String signOffSystemId) {
         SignOff signOff = signOffRepository
-            .findBySystemId(UUID.fromString(signOffSystemId));
+                .findBySystemId(UUID.fromString(signOffSystemId));
         if (signOff == null) {
             String info = INFO_CANNOT_FIND_OBJECT +
                     " SignOff, using systemId " +
