@@ -456,6 +456,11 @@ public class RegistryEntryService
                         "or RegistryEntry and cannot be deleted at this time");
             }
         }
+        for (DocumentFlow documentFlow : registryEntry
+                .getReferenceDocumentFlow()) {
+            documentFlow.removeReferenceRegistryEntry();
+            documentFlowService.deleteDocumentFlow(documentFlow);
+        }
         registryEntryRepository.delete(registryEntry);
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityDeletedEvent(this, registryEntry));

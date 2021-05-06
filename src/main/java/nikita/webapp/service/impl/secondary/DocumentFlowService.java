@@ -180,7 +180,7 @@ public class DocumentFlowService
 
     @Override
     public void deleteDocumentFlowBySystemId(String systemID) {
-        documentFlowRepository.delete(getDocumentFlowOrThrow(systemID);
+        documentFlowRepository.delete(getDocumentFlowOrThrow(systemID));
     }
 
     @Override
