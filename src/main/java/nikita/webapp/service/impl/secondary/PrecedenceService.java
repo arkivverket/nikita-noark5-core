@@ -1,6 +1,8 @@
 package nikita.webapp.service.impl.secondary;
 
 import nikita.common.model.noark5.v5.admin.User;
+import nikita.common.model.noark5.v5.casehandling.CaseFile;
+import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.hateoas.secondary.PrecedenceHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.PrecedenceStatus;
@@ -172,10 +174,28 @@ public class PrecedenceService
 
     // All DELETE methods
 
+    /**
+     * Delete the Precedence object identified by systemId.
+     * Before deleting, disassociate the foreign keys between Precedence and
+     * any related objects.
+     *
+     * @param systemId systemId of the Precedence object to delete
+     */
     @Override
     @Transactional
-    public void deletePrecedenceBySystemId(String systemID) {
-        precedenceRepository.delete(getPrecedenceOrThrow(systemID));
+    public void deletePrecedenceBySystemId(String systemId) {
+        Precedence precedence = getPrecedenceOrThrow(systemId);
+        // Remove any associations between a CaseFile and the given Precedence
+        for (CaseFile caseFile : precedence.getReferenceCaseFile()) {
+            caseFile.removePrecedence(precedence);
+        }
+        // Remove any associations between a RegistryEntry and the given
+        // Precedence
+        for (RegistryEntry registryEntry :
+                precedence.getReferenceRegistryEntry()) {
+            registryEntry.removePrecedence(precedence);
+        }
+        precedenceRepository.delete(precedence);
     }
 
     @Override
