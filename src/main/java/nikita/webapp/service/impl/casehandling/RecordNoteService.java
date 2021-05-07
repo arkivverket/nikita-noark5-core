@@ -127,7 +127,7 @@ public class RecordNoteService
 
     @Override
     public DocumentFlowHateoas findAllDocumentFlowWithRecordNoteBySystemId
-        (String systemID) {
+            (String systemID) {
         RecordNote recordNote = getRecordNoteOrThrow(systemID);
         DocumentFlowHateoas documentFlowHateoas =
                 new DocumentFlowHateoas((List<INoarkEntity>)
@@ -246,11 +246,15 @@ public class RecordNoteService
     public ResponseEntity<String> deleteEntity(
             @NotNull final String recordNoteSystemId) {
         RecordNote recordNote = getRecordNoteOrThrow(recordNoteSystemId);
-        if (deletePossible(recordNote)) {
-            deleteEntity(recordNote);
-            applicationEventPublisher.publishEvent(
-                    new AfterNoarkEntityDeletedEvent(this, recordNote));
+        for (DocumentFlow documentFlow : recordNote
+                .getReferenceDocumentFlow()) {
+            documentFlowService.deleteDocumentFlow(documentFlow);
         }
+        recordNoteRepository.delete(recordNote);
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityDeletedEvent(this, recordNote));
+        // If the delete failed an exception should have been thrown. Getting
+        // this far means it went OK
         return ResponseEntity.status(NO_CONTENT).
                 body(DELETE_RESPONSE);
     }

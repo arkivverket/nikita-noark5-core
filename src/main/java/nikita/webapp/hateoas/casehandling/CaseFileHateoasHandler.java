@@ -1,5 +1,6 @@
 package nikita.webapp.hateoas.casehandling;
 
+import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
@@ -70,9 +71,11 @@ public class CaseFileHateoasHandler
 
     @Override
     public void addPrecedence(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_CASE_FILE + SLASH + entity.getSystemId() + SLASH + PRECEDENCE + SLASH,
-                REL_CASE_HANDLING_PRECEDENCE, false));
+        if (((CaseFile) entity).getReferencePrecedence().size() > 0) {
+            hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                    HREF_BASE_CASE_FILE + SLASH + entity.getSystemId() + SLASH
+                    + PRECEDENCE + SLASH, REL_CASE_HANDLING_PRECEDENCE, false));
+        }
     }
 
     @Override

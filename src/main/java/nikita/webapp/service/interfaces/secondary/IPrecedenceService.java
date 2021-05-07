@@ -1,13 +1,14 @@
 package nikita.webapp.service.interfaces.secondary;
 
 import nikita.common.model.noark5.v5.hateoas.secondary.PrecedenceHateoas;
-
 import nikita.common.model.noark5.v5.secondary.Precedence;
+
+import javax.validation.constraints.NotNull;
 
 public interface IPrecedenceService {
 
     PrecedenceHateoas updatePrecedenceBySystemId
-        (String systemId, Long version, Precedence incomingPrecedence);
+            (String systemId, Long version, Precedence incomingPrecedence);
 
     PrecedenceHateoas createNewPrecedence(Precedence entity);
 
@@ -18,4 +19,6 @@ public interface IPrecedenceService {
     PrecedenceHateoas findBySystemId(String precedenceSystemId);
 
     PrecedenceHateoas generateDefaultPrecedence();
+
+    boolean deletePrecedenceIfNotEmpty(@NotNull final Precedence precedence);
 }

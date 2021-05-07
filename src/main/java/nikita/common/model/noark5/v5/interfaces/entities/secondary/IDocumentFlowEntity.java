@@ -35,14 +35,22 @@ public interface IDocumentFlowEntity
     void setFlowSentDate(OffsetDateTime flowSentDate);
 
     FlowStatus getFlowStatus();
+
     void setFlowStatus(FlowStatus flowStatus);
 
     String getFlowComment();
+
     void setFlowComment(String flowComment);
 
     RegistryEntry getReferenceRegistryEntry();
+
     void setReferenceRegistryEntry(RegistryEntry referenceRegistryEntry);
 
+    void removeReferenceRegistryEntry();
+
     RecordNote getReferenceRecordNote();
+
     void setReferenceRecordNote(RecordNote referenceRecordNote);
+
+    void removeReferenceRecordNote();
 }

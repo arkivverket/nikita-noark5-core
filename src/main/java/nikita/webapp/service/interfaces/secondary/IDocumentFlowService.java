@@ -5,6 +5,8 @@ import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.hateoas.secondary.DocumentFlowHateoas;
 import nikita.common.model.noark5.v5.secondary.DocumentFlow;
 
+import javax.validation.constraints.NotNull;
+
 public interface IDocumentFlowService {
 
     DocumentFlowHateoas associateDocumentFlowWithRegistryEntry
@@ -14,7 +16,7 @@ public interface IDocumentFlowService {
 	(DocumentFlow documentFlow, RecordNote recordNote);
 
     DocumentFlowHateoas updateDocumentFlowBySystemId
-	(String systemId, Long version, DocumentFlow incomingDocumentFlow);
+            (String systemId, Long version, DocumentFlow incomingDocumentFlow);
 
     void deleteDocumentFlowBySystemId(String systemID);
 
@@ -23,4 +25,6 @@ public interface IDocumentFlowService {
     DocumentFlowHateoas findBySystemId(String precedenceSystemId);
 
     DocumentFlowHateoas generateDefaultDocumentFlow();
+
+    void deleteDocumentFlow(@NotNull final DocumentFlow documentFlow);
 }

@@ -243,8 +243,13 @@ public class DocumentFlow
     }
 
     @Override
-    public void setReferenceRegistryEntry(RegistryEntry referenceRegistryEntry) {
-        this.referenceRegistryEntry = referenceRegistryEntry;
+    public void setReferenceRegistryEntry(RegistryEntry registryEntry) {
+        this.referenceRegistryEntry = registryEntry;
+    }
+
+    @Override
+    public void removeReferenceRegistryEntry() {
+        this.referenceRegistryEntry = null;
     }
 
     @Override
@@ -255,6 +260,11 @@ public class DocumentFlow
     @Override
     public void setReferenceRecordNote(RecordNote referenceRecordNote) {
         this.referenceRecordNote = referenceRecordNote;
+    }
+
+    @Override
+    public void removeReferenceRecordNote() {
+        this.referenceRegistryEntry = null;
     }
 
     @Override

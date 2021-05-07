@@ -400,9 +400,19 @@ public class CaseFileService
     @Transactional
     public void deleteEntity(@NotNull String caseFileSystemId) {
         CaseFile caseFile = getCaseFileOrThrow(caseFileSystemId);
+        // Delete all precedence associated with the CaseFile. If the
+        // precedence is associated with another RegistryEntry or CaseFile
+        // the precedence object cannot be deleted. This event is logged.
+        for (Precedence precedence : caseFile.getReferencePrecedence()) {
+            precedence.removeCaseFile(caseFile);
+            if (!precedenceService.deletePrecedenceIfNotEmpty(precedence)) {
+                logger.info("Precedence is associated with another CaseFile " +
+                        "or RegistryEntry and cannot be deleted at this time");
+            }
+        }
+        caseFileRepository.delete(caseFile);
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityDeletedEvent(this, caseFile));
-        deleteEntity(caseFile);
     }
 
     /**

@@ -6,6 +6,7 @@ import java.util.Set;
 
 public interface IPrecedence {
     Set<Precedence> getReferencePrecedence();
-
     void addPrecedence(Precedence precedence);
+
+    void removePrecedence(Precedence precedence);
 }
