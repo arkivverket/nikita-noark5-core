@@ -1,5 +1,6 @@
 package nikita.webapp.hateoas.casehandling;
 
+import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
@@ -48,9 +49,12 @@ public class RegistryEntryHateoasHandler
 
     @Override
     public void addPrecedence(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_CASE_HANDLING + SLASH + REGISTRY_ENTRY + SLASH + entity.getSystemIdAsString() + SLASH + PRECEDENCE + SLASH,
-                REL_CASE_HANDLING_PRECEDENCE, false));
+        if (((RegistryEntry) entity).getReferencePrecedence().size() > 0) {
+            hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                    HREF_BASE_CASE_HANDLING + SLASH + REGISTRY_ENTRY + SLASH +
+                    entity.getSystemIdAsString() + SLASH + PRECEDENCE + SLASH,
+                    REL_CASE_HANDLING_PRECEDENCE, false));
+        }
     }
 
     @Override
