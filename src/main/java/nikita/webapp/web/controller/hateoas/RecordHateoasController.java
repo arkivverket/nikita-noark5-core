@@ -21,10 +21,7 @@ import nikita.common.model.noark5.v5.hateoas.secondary.*;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.Metadata;
 import nikita.common.model.noark5.v5.nationalidentifier.*;
-import nikita.common.model.noark5.v5.secondary.Author;
-import nikita.common.model.noark5.v5.secondary.Comment;
-import nikita.common.model.noark5.v5.secondary.PartPerson;
-import nikita.common.model.noark5.v5.secondary.PartUnit;
+import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
@@ -452,6 +449,59 @@ public class RecordHateoasController
                         (systemID, author));
     }
 
+    // Create a new Keyword and associate it with the given Record
+    // POST [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-noekkelord
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-noekkelord/
+    @Operation(
+            summary = "Persists an keyword object associated with the given " +
+                    "Record systemId",
+            description = "Returns the newly created keyword object after it " +
+                    "was associated with a Record object and persisted to the" +
+                    " database")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "Keyword " +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED),
+            @ApiResponse(
+                    responseCode = CREATED_VAL,
+                    description = "Keyword " +
+                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = NOT_FOUND_VAL,
+                    description = API_MESSAGE_PARENT_DOES_NOT_EXIST +
+                            " of type Record"),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_KEYWORD,
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<KeywordHateoas> addKeywordAssociatedWithRecord(
+            HttpServletRequest request,
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the record to associate the " +
+                            "keyword with.",
+                    required = true)
+            @PathVariable UUID systemID,
+            @Parameter(name = "keyword",
+                    description = "Incoming keyword object",
+                    required = true)
+            @RequestBody Keyword keyword)
+            throws NikitaException {
+        KeywordHateoas keywordHateoas = recordService
+                .createKeywordAssociatedWithRecord(systemID, keyword);
+        return ResponseEntity.status(CREATED)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .eTag(keywordHateoas.getEntityVersion().toString())
+                .body(keywordHateoas);
+    }
+
     // Create a suggested CorrespondencePartPerson (like a template)
     // object with default values (nothing persisted)
     // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-korrespondansepartperson
@@ -681,6 +731,31 @@ public class RecordHateoasController
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(recordService.generateDefaultComment());
+    }
+
+    // Create a Keyword with default values
+    // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-noekkelord
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-noekkelord/
+    @Operation(summary = "Create a Keyword with default values")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "Keyword returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_KEYWORD)
+    public ResponseEntity<KeywordHateoas> createDefaultKeyword(
+            HttpServletRequest request) {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(recordService.generateDefaultKeyword());
     }
 
     // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/merknad
