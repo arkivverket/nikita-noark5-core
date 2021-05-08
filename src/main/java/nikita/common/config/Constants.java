@@ -478,6 +478,12 @@ public final class Constants {
     public static final String REL_FONDS_STRUCTURE_END_FILE =
             NIKITA_CONFORMANCE_REL + FILE_END + SLASH;
 
+    // Keyword
+    public static final String REL_FONDS_STRUCTURE_KEYWORD =
+            NIKITA_CONFORMANCE_REL + KEYWORD + SLASH;
+    public static final String REL_FONDS_STRUCTURE_NEW_KEYWORD =
+            NIKITA_CONFORMANCE_REL + NEW_KEYWORD + SLASH;
+
     // Comment
     public static final String REL_FONDS_STRUCTURE_COMMENT =
             REL_FONDS_STRUCTURE + COMMENT + SLASH;

@@ -29,6 +29,7 @@ public final class N5ResourceMappings {
     public static final String STORAGE_LOCATION = "oppbevaringssted";
 
     public static final String KEYWORD = "noekkelord";
+    public static final String NEW_KEYWORD = NEW + DASH + KEYWORD;
 
     public static final String FILE_TYPE = "mappetype";
     public static final String FLOW_STATUS = "flytstatus";
@@ -95,7 +96,8 @@ public final class N5ResourceMappings {
     public static final String SCREENING_AUTHORITY_ENG =
             "screening_authority";
 
-
+    public static final String REFERENCE_KEYWORD =
+            "referenceKeyword";
     public static final String REFERENCE_COMMENT =
             "referenceComment";
     public static final String REFERENCE_CORRESPONDENCE_PART =
