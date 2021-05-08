@@ -41,6 +41,12 @@ public interface IRecordHateoasHandler
     void addNewComment(ISystemId entity,
                        IHateoasNoarkObject hateoasNoarkObject);
 
+    void addKeyword(ISystemId entity,
+                    IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNewKeyword(ISystemId entity,
+                       IHateoasNoarkObject hateoasNoarkObject);
+
     void addCrossReference(ISystemId entity,
                            IHateoasNoarkObject hateoasNoarkObject);
 

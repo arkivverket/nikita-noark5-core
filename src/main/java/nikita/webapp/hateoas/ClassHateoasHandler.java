@@ -13,8 +13,6 @@ import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 
 /**
- * Created by tsodring on 2/6/17.
- * <p>
  * Used to add ClassHateoas links with Class specific information
  */
 @Component("classHateoasHandler")
@@ -46,6 +44,8 @@ public class ClassHateoasHandler
         // links for metadata entities
         addAccessRestriction(entity, hateoasNoarkObject);
         addDisposalDecision(entity, hateoasNoarkObject);
+        addNewKeyword(entity, hateoasNoarkObject);
+        addKeyword(entity, hateoasNoarkObject);
         addScreeningMetadata(entity, hateoasNoarkObject);
         addScreeningMetadataLocal(entity, hateoasNoarkObject);
         addNewScreeningMetadataLocal(entity, hateoasNoarkObject);
@@ -192,6 +192,22 @@ public class ClassHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_METADATA + SLASH + DISPOSAL_DECISION,
                 REL_METADATA_DISPOSAL_DECISION, false));
+    }
+
+    @Override
+    public void addKeyword(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
+        if (((Class) entity).getReferenceKeyword().size() > 0) {
+            hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                    HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() +
+                    SLASH + KEYWORD + SLASH, REL_FONDS_STRUCTURE_KEYWORD, true));
+        }
+    }
+
+    @Override
+    public void addNewKeyword(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() + SLASH + NEW_KEYWORD + SLASH,
+                REL_FONDS_STRUCTURE_NEW_KEYWORD, false));
     }
 
     @Override

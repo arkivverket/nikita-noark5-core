@@ -13,8 +13,6 @@ import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 
 /**
- * Created by tsodring on 2/6/17.
- * <p>
  * Used to add RecordHateoas links with Record specific information
  */
 @Component("recordHateoasHandler")
@@ -49,6 +47,9 @@ public class RecordHateoasHandler
         addNewStorageLocation(entity, hateoasNoarkObject);
         //addComment(entity, hateoasNoarkObject);
         addNewComment(entity, hateoasNoarkObject);
+        addComment(entity, hateoasNoarkObject);
+        addNewKeyword(entity, hateoasNoarkObject);
+        addKeyword(entity, hateoasNoarkObject);
         //addCrossReference(entity, hateoasNoarkObject);
         addNewCrossReference(entity, hateoasNoarkObject);
         addScreeningMetadata(entity, hateoasNoarkObject);
@@ -86,7 +87,23 @@ public class RecordHateoasHandler
     public void addNewComment(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() + SLASH + NEW_COMMENT + SLASH,
-                REL_FONDS_STRUCTURE_NEW_COMMENT, false));
+                REL_FONDS_STRUCTURE_NEW_COMMENT));
+    }
+
+    @Override
+    public void addKeyword(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
+        if (((Record) entity).getReferenceKeyword().size() > 0) {
+            hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                    HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() +
+                    SLASH + KEYWORD + SLASH, REL_FONDS_STRUCTURE_KEYWORD, true));
+        }
+    }
+
+    @Override
+    public void addNewKeyword(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() + SLASH + NEW_KEYWORD + SLASH,
+                REL_FONDS_STRUCTURE_NEW_KEYWORD, false));
     }
 
     @Override

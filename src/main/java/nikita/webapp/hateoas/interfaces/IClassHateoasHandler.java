@@ -38,6 +38,12 @@ public interface IClassHateoasHandler extends IHateoasHandler {
 
     void addDisposalDecision(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject);
 
+    void addKeyword(ISystemId entity,
+                    IHateoasNoarkObject hateoasNoarkObject);
+
+    void addNewKeyword(ISystemId entity,
+                       IHateoasNoarkObject hateoasNoarkObject);
+
     void addScreeningMetadata(ISystemId entity,
                               IHateoasNoarkObject hateoasNoarkObject);
 
