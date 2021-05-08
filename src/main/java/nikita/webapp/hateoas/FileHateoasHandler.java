@@ -136,14 +136,14 @@ public class FileHateoasHandler
     @Override
     public void addExpandToCaseFile(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + FILE_EXPAND_TO_CASE_FILE + SLASH,
+                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + FILE_EXPAND_TO_CASE_FILE,
                 REL_FONDS_STRUCTURE_EXPAND_TO_CASE_FILE, false));
     }
 
     @Override
     public void addExpandToMeetingFile(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + FILE_EXPAND_TO_MEETING_FILE + SLASH,
+                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + FILE_EXPAND_TO_MEETING_FILE,
                 REL_FONDS_STRUCTURE_EXPAND_TO_MEETING_FILE, false));
     }
 
