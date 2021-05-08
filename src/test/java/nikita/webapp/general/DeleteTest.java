@@ -37,7 +37,8 @@ public class DeleteTest
 
     /**
      * Check that it is possible to delete a precedence associated with a
-     * CaseFile
+     * CaseFile. The point of the test is to make sure that the deletion of
+     * the caseFile does not experience a referential integrity issue.
      *
      * @throws Exception Serialising or validation exception
      */
@@ -47,6 +48,7 @@ public class DeleteTest
     public void deletePrecedenceWithCaseFile() throws Exception {
         String urlCaseFile = "/noark5v5/api/sakarkiv/" +
                 "saksmappe/ccefaca8-4eda-4164-84c8-4f2176312f29/";
+
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
                 .delete(urlCaseFile)
                 .contextPath(contextPath)

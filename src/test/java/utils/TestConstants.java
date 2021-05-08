@@ -45,6 +45,9 @@ public final class TestConstants {
     public static String AUTHOR_TEST = "Frank Grimes";
     public static String AUTHOR_TEST_UPDATED = "Henry Grimes II";
 
+    public static String KEYWORD_TEST = "Cool";
+    public static String KEYWORD_TEST_UPDATED = "Fabulous";
+
     // For BusinessSpecificMetatadata
     public static String BSM_DATE_NAME = "ppt-v1:datohenvist";
     public static String BSM_DATE_TIME_NAME = "ppt-v1:datotidvedtakferdig";

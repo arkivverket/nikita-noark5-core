@@ -78,6 +78,7 @@ public class RecordService
             documentDescriptionHateoasHandler;
     private final IDocumentDescriptionRepository documentDescriptionRepository;
     private final IAuthorService authorService;
+    private final IKeywordService keywordService;
     private final ICommentService commentService;
     private final ICorrespondencePartService correspondencePartService;
     private final IMetadataService metadataService;
@@ -106,6 +107,7 @@ public class RecordService
                     documentDescriptionHateoasHandler,
             IDocumentDescriptionRepository documentDescriptionRepository,
             IAuthorService authorService,
+            IKeywordService keywordService,
             ICommentService commentService,
             ICorrespondencePartService correspondencePartService,
             IMetadataService metadataService,
@@ -131,6 +133,7 @@ public class RecordService
                 documentDescriptionHateoasHandler;
         this.documentDescriptionRepository = documentDescriptionRepository;
         this.authorService = authorService;
+        this.keywordService = keywordService;
         this.commentService = commentService;
         this.correspondencePartService = correspondencePartService;
         this.metadataService = metadataService;
@@ -339,6 +342,13 @@ public class RecordService
             (String systemID, Comment comment) {
         return commentService.createNewComment
                 (comment, getRecordOrThrow(systemID));
+    }
+
+    @Override
+    public KeywordHateoas createKeywordAssociatedWithRecord(
+            UUID systemId, Keyword keyword) {
+        Record record = getRecordOrThrow(systemId.toString());
+        return keywordService.createKeywordAssociatedWithRecord(keyword, record);
     }
 
     @Override
@@ -685,6 +695,11 @@ public class RecordService
     @Override
     public ScreeningMetadataHateoas getDefaultScreeningMetadata(UUID systemId) {
         return screeningMetadataService.getDefaultScreeningMetadata(systemId);
+    }
+
+    @Override
+    public KeywordHateoas generateDefaultKeyword() {
+        return keywordService.generateDefaultKeyword();
     }
 
     @Override

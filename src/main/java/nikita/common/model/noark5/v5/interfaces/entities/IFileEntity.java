@@ -1,6 +1,7 @@
 package nikita.common.model.noark5.v5.interfaces.entities;
 
 import nikita.common.model.noark5.v5.interfaces.*;
+import nikita.common.model.noark5.v5.secondary.Keyword;
 
 public interface IFileEntity
         extends INoarkGeneralEntity, IDocumentMedium, IStorageLocation,
@@ -13,4 +14,6 @@ public interface IFileEntity
     String getPublicTitle();
 
     void setPublicTitle(String publicTitle);
+
+    void removeKeyword(Keyword keyword);
 }

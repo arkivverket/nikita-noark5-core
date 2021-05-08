@@ -385,6 +385,12 @@ public class Record
     }
 
     @Override
+    public void removeKeyword(Keyword keyword) {
+        this.referenceKeyword.remove(keyword);
+        keyword.getReferenceRecord().remove(this);
+    }
+
+    @Override
     public List<Author> getReferenceAuthor() {
         return referenceAuthor;
     }

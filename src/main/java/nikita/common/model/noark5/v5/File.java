@@ -261,6 +261,12 @@ public class File
         keyword.getReferenceFile().add(this);
     }
 
+    @Override
+    public void removeKeyword(Keyword keyword) {
+        this.referenceKeyword.remove(keyword);
+        keyword.getReferenceFile().remove(this);
+    }
+
     public File getReferenceParentFile() {
         return referenceParentFile;
     }

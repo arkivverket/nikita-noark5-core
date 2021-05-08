@@ -15,10 +15,7 @@ import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
 import nikita.common.model.noark5.v5.hateoas.secondary.*;
 import nikita.common.model.noark5.v5.metadata.Metadata;
 import nikita.common.model.noark5.v5.nationalidentifier.*;
-import nikita.common.model.noark5.v5.secondary.Author;
-import nikita.common.model.noark5.v5.secondary.Comment;
-import nikita.common.model.noark5.v5.secondary.PartPerson;
-import nikita.common.model.noark5.v5.secondary.PartUnit;
+import nikita.common.model.noark5.v5.secondary.*;
 import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
@@ -106,6 +103,9 @@ public interface IRecordService {
     UnitHateoas createUnitAssociatedWithRecord
             (@NotNull String systemId, @NotNull Unit unit);
 
+    KeywordHateoas createKeywordAssociatedWithRecord(
+            @NotNull final UUID systemId, @NotNull final Keyword keyword);
+
     // -- All READ operations
     List<Record> findAll();
 
@@ -166,4 +166,6 @@ public interface IRecordService {
 
     ScreeningMetadataHateoas getDefaultScreeningMetadata(
             @NotNull final UUID systemId);
+
+    KeywordHateoas generateDefaultKeyword();
 }

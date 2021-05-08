@@ -55,6 +55,8 @@ public class FileHateoasHandler
         addNewPartPerson(entity, hateoasNoarkObject);
         addNewPartUnit(entity, hateoasNoarkObject);
 
+        addNewKeyword(entity, hateoasNoarkObject);
+        addKeyword(entity, hateoasNoarkObject);
         addScreeningMetadata(entity, hateoasNoarkObject);
         addScreeningMetadataLocal(entity, hateoasNoarkObject);
         addNewScreeningMetadataLocal(entity, hateoasNoarkObject);
@@ -288,6 +290,22 @@ public class FileHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_METADATA + SLASH + FILE_TYPE,
                 REL_METADATA_FILE_TYPE, false));
+    }
+
+    @Override
+    public void addKeyword(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
+        if (((File) entity).getReferenceKeyword().size() > 0) {
+            hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                    HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() +
+                    SLASH + KEYWORD + SLASH, REL_FONDS_STRUCTURE_KEYWORD, true));
+        }
+    }
+
+    @Override
+    public void addNewKeyword(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() + SLASH + NEW_KEYWORD + SLASH,
+                REL_FONDS_STRUCTURE_NEW_KEYWORD, false));
     }
 
     @Override
