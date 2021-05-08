@@ -1,9 +1,17 @@
 package nikita.common.model.noark5.v5.secondary;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.SystemIdEntity;
+import nikita.common.model.noark5.v5.hateoas.secondary.KeywordHateoas;
+import nikita.common.model.noark5.v5.interfaces.entities.secondary.IKeywordEntity;
+import nikita.common.util.deserialisers.secondary.KeywordDeserializer;
+import nikita.webapp.hateoas.secondary.KeywordHateoasHandler;
+import nikita.webapp.util.annotation.HateoasObject;
+import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -15,32 +23,35 @@ import javax.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
 
+import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_KEYWORD;
 import static nikita.common.config.Constants.TABLE_KEYWORD;
-import static nikita.common.config.N5ResourceMappings.KEYWORD;
+import static nikita.common.config.N5ResourceMappings.*;
 
 @Entity
 @Table(name = TABLE_KEYWORD)
+@JsonDeserialize(using = KeywordDeserializer.class)
+@HateoasPacker(using = KeywordHateoasHandler.class)
+@HateoasObject(using = KeywordHateoas.class)
 public class Keyword
-        extends SystemIdEntity {
+        extends SystemIdEntity
+        implements IKeywordEntity {
 
+    // Links to Class
+    @ManyToMany(mappedBy = REFERENCE_KEYWORD)
+    private final Set<Class> referenceClass = new HashSet<>();
+    // Links to File
+    @ManyToMany(mappedBy = REFERENCE_KEYWORD)
+    private final Set<File> referenceFile = new HashSet<>();
+    // Links to Record
+    @ManyToMany(mappedBy = REFERENCE_KEYWORD)
+    private final Set<Record> referenceRecord = new HashSet<>();
     /**
      * M022 - noekkelord (xs:string)
      */
-    @Column(name = "keyword")
+    @Column(name = KEYWORD_ENG_OBJECT)
     @Audited
+    @JsonProperty(KEYWORD)
     private String keyword;
-
-    // Links to Class
-    @ManyToMany(mappedBy = "referenceKeyword")
-    private Set<Class> referenceClass = new HashSet<>();
-
-    // Links to File
-    @ManyToMany(mappedBy = "referenceKeyword")
-    private Set<File> referenceFile = new HashSet<>();
-
-    // Links to Record
-    @ManyToMany(mappedBy = "referenceKeyword")
-    private Set<Record> referenceRecord = new HashSet<>();
 
     public String getKeyword() {
         return keyword;
@@ -57,47 +68,56 @@ public class Keyword
 
     @Override
     public String getBaseRel() {
-        return KEYWORD; // TODO, should it have a relation key?
+        return REL_FONDS_STRUCTURE_KEYWORD;
     }
 
+    @Override
     public Set<Class> getReferenceClass() {
         return referenceClass;
     }
 
-    public void addClass(Class klass) {
+    @Override
+    public void addReferenceClass(Class klass) {
         referenceClass.add(klass);
         klass.getReferenceKeyword().add(this);
     }
 
-    public void removeClass(Class klass) {
+    @Override
+    public void removeReferenceClass(Class klass) {
         referenceClass.remove(klass);
         klass.getReferenceKeyword().remove(this);
     }
 
+    @Override
     public Set<File> getReferenceFile() {
         return referenceFile;
     }
 
-    public void addFile(File file) {
+    @Override
+    public void addReferenceFile(File file) {
         referenceFile.add(file);
         file.getReferenceKeyword().add(this);
     }
 
-    public void removeFile(File file) {
+    @Override
+    public void removeReferenceFile(File file) {
         referenceFile.remove(file);
         file.getReferenceKeyword().remove(this);
     }
 
+    @Override
     public Set<Record> getReferenceRecord() {
         return referenceRecord;
     }
 
-    public void addRecord(Record record) {
+    @Override
+    public void addReferenceRecord(Record record) {
         referenceRecord.add(record);
         record.getReferenceKeyword().add(this);
     }
 
-    public void removeRecord(Record record) {
+    @Override
+    public void removeReferenceRecord(Record record) {
         referenceRecord.remove(record);
         record.getReferenceKeyword().remove(this);
     }

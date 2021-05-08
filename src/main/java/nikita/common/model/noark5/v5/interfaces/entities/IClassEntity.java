@@ -1,10 +1,11 @@
 package nikita.common.model.noark5.v5.interfaces.entities;
 
-import nikita.common.model.noark5.v5.ClassificationSystem;
 import nikita.common.model.noark5.v5.Class;
+import nikita.common.model.noark5.v5.ClassificationSystem;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.interfaces.*;
+import nikita.common.model.noark5.v5.secondary.Keyword;
 
 import java.util.List;
 
@@ -15,6 +16,8 @@ public interface IClassEntity
     String getClassId();
 
     void setClassId(String fileId);
+
+    void removeKeyword(Keyword keyword);
 
     ClassificationSystem getReferenceClassificationSystem();
 

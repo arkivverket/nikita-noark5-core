@@ -236,6 +236,11 @@ public class CaseFileExpansion
     }
 
     @Override
+    public void removeKeyword(Keyword keyword) {
+
+    }
+
+    @Override
     public void removeCrossReference(CrossReference crossReference) {
 
     }

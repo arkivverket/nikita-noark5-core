@@ -1,6 +1,7 @@
 package nikita.common.model.noark5.v5.interfaces.entities;
 
 import nikita.common.model.noark5.v5.interfaces.*;
+import nikita.common.model.noark5.v5.secondary.Keyword;
 
 import java.time.OffsetDateTime;
 
@@ -35,4 +36,6 @@ public interface IRecordEntity
     String getDescription();
 
     void setDescription(String description);
+
+    void removeKeyword(Keyword keyword);
 }

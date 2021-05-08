@@ -127,6 +127,12 @@ public class Class
     }
 
     @Override
+    public void removeKeyword(Keyword keyword) {
+        this.referenceKeyword.remove(keyword);
+        keyword.getReferenceClass().remove(this);
+    }
+
+    @Override
     public ClassificationSystem getReferenceClassificationSystem() {
         return referenceClassificationSystem;
     }
