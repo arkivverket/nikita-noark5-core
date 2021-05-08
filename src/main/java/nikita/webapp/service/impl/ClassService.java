@@ -9,9 +9,11 @@ import nikita.common.model.noark5.v5.hateoas.ClassificationSystemHateoas;
 import nikita.common.model.noark5.v5.hateoas.FileHateoas;
 import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.KeywordHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.ScreeningMetadataHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.Metadata;
+import nikita.common.model.noark5.v5.secondary.Keyword;
 import nikita.common.model.noark5.v5.secondary.Screening;
 import nikita.common.model.noark5.v5.secondary.ScreeningMetadataLocal;
 import nikita.common.repository.n5v5.IClassRepository;
@@ -28,6 +30,7 @@ import nikita.webapp.service.interfaces.IClassService;
 import nikita.webapp.service.interfaces.IFileService;
 import nikita.webapp.service.interfaces.IRecordService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
+import nikita.webapp.service.interfaces.secondary.IKeywordService;
 import nikita.webapp.service.interfaces.secondary.IScreeningMetadataService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import org.slf4j.Logger;
@@ -71,6 +74,7 @@ public class ClassService
     private final IFileService fileService;
     private final ICaseFileService caseFileService;
     private final IRecordService recordService;
+    private final IKeywordService keywordService;
     private final IClassHateoasHandler classHateoasHandler;
     private final IClassificationSystemHateoasHandler
             classificationSystemHateoasHandler;
@@ -87,6 +91,7 @@ public class ClassService
                         IFileService fileService,
                         ICaseFileService caseFileService,
                         IRecordService recordService,
+                        IKeywordService keywordService,
                         IClassHateoasHandler classHateoasHandler,
                         IClassificationSystemHateoasHandler
                                 classificationSystemHateoasHandler,
@@ -99,6 +104,7 @@ public class ClassService
         super(entityManager, applicationEventPublisher, patchService);
         this.classRepository = classRepository;
         this.fileService = fileService;
+        this.keywordService = keywordService;
         this.caseFileService = caseFileService;
         this.recordService = recordService;
         this.classHateoasHandler = classHateoasHandler;
@@ -211,6 +217,11 @@ public class ClassService
         return screeningMetadataService.getDefaultScreeningMetadata(systemId);
     }
 
+    @Override
+    public KeywordHateoas generateDefaultKeyword() {
+        return keywordService.generateDefaultKeyword();
+    }
+
     /**
      * Generate a Default Class object that can be associated with the
      * identified Class. Note this object has not been persisted to the core.
@@ -251,6 +262,13 @@ public class ClassService
             String classSystemId, Record record) {
         record.setReferenceClass(getClassOrThrow(classSystemId));
         return recordService.save(record);
+    }
+
+    @Override
+    public KeywordHateoas createKeywordAssociatedWithClass(
+            UUID systemId, Keyword keyword) {
+        return keywordService.createKeywordAssociatedWithClass(
+                keyword, getClassOrThrow(systemId.toString()));
     }
 
     // All READ operations

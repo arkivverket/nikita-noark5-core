@@ -17,6 +17,7 @@ import nikita.common.model.noark5.v5.hateoas.secondary.*;
 import nikita.common.model.noark5.v5.metadata.Metadata;
 import nikita.common.model.noark5.v5.nationalidentifier.*;
 import nikita.common.model.noark5.v5.secondary.Comment;
+import nikita.common.model.noark5.v5.secondary.Keyword;
 import nikita.common.model.noark5.v5.secondary.PartPerson;
 import nikita.common.model.noark5.v5.secondary.PartUnit;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +44,9 @@ public interface IFileService {
 
     PartUnitHateoas createPartUnitAssociatedWithFile(
             String systemID, PartUnit partUnit);
+
+    KeywordHateoas createKeywordAssociatedWithFile(
+            @NotNull final UUID systemId, @NotNull final Keyword keyword);
 
     FileHateoas save(File file);
 
@@ -157,4 +161,6 @@ public interface IFileService {
 
     ScreeningMetadataHateoas getDefaultScreeningMetadata(
             @NotNull final UUID systemID);
+
+    KeywordHateoas generateDefaultKeyword();
 }

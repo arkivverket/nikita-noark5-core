@@ -32,6 +32,7 @@ import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.*;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import nikita.webapp.service.interfaces.secondary.ICommentService;
+import nikita.webapp.service.interfaces.secondary.IKeywordService;
 import nikita.webapp.service.interfaces.secondary.IPartService;
 import nikita.webapp.service.interfaces.secondary.IScreeningMetadataService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
@@ -73,6 +74,7 @@ public class FileService
     private final ISeriesHateoasHandler seriesHateoasHandler;
     private final IClassHateoasHandler classHateoasHandler;
     private final ICommentService commentService;
+    private final IKeywordService keywordService;
     private final IMetadataService metadataService;
     private final INationalIdentifierService nationalIdentifierService;
     private final IPartService partService;
@@ -93,6 +95,7 @@ public class FileService
                        ISeriesHateoasHandler seriesHateoasHandler,
                        IClassHateoasHandler classHateoasHandler,
                        ICommentService commentService,
+                       IKeywordService keywordService,
                        IMetadataService metadataService,
                        INationalIdentifierService nationalIdentifierService,
                        IPartService partService,
@@ -110,6 +113,7 @@ public class FileService
         this.seriesHateoasHandler = seriesHateoasHandler;
         this.classHateoasHandler = classHateoasHandler;
         this.commentService = commentService;
+        this.keywordService = keywordService;
         this.metadataService = metadataService;
         this.nationalIdentifierService = nationalIdentifierService;
         this.partService = partService;
@@ -198,6 +202,13 @@ public class FileService
             @NotNull String systemID, @NotNull PartUnit partUnit) {
         return partService.
                 createNewPartUnit(partUnit, getFileOrThrow(systemID));
+    }
+
+    @Override
+    public KeywordHateoas createKeywordAssociatedWithFile(
+            UUID systemId, Keyword keyword) {
+        return keywordService.createKeywordAssociatedWithFile(keyword,
+                getFileOrThrow(systemId));
     }
 
     @Override
@@ -549,6 +560,11 @@ public class FileService
     @Override
     public CommentHateoas generateDefaultComment() {
         return commentService.generateDefaultComment();
+    }
+
+    @Override
+    public KeywordHateoas generateDefaultKeyword() {
+        return keywordService.generateDefaultKeyword();
     }
 
     @Override

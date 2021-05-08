@@ -9,8 +9,10 @@ import nikita.common.model.noark5.v5.hateoas.ClassificationSystemHateoas;
 import nikita.common.model.noark5.v5.hateoas.FileHateoas;
 import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.KeywordHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.ScreeningMetadataHateoas;
 import nikita.common.model.noark5.v5.metadata.Metadata;
+import nikita.common.model.noark5.v5.secondary.Keyword;
 import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
@@ -33,9 +35,12 @@ public interface IClassService {
     ResponseEntity<RecordHateoas> createRecordAssociatedWithClass(
             String classSystemId, Record record);
 
+    KeywordHateoas createKeywordAssociatedWithClass(
+            @NotNull final UUID systemId, @NotNull final Keyword keyword);
+
     ClassHateoas generateDefaultSubClass(@NotNull String classSystemId);
 
-	// -- All READ operations
+    // -- All READ operations
     ClassHateoas findAll(String ownedBy);
 
     ClassHateoas findSingleClass(String classSystemId);
@@ -73,4 +78,6 @@ public interface IClassService {
 
     ScreeningMetadataHateoas getDefaultScreeningMetadata(
             @NotNull final UUID systemID);
+
+    KeywordHateoas generateDefaultKeyword();
 }
