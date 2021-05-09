@@ -80,6 +80,9 @@ public interface IRecordHateoasHandler
     void addNewAuthor(ISystemId entity,
                       IHateoasNoarkObject hateoasNoarkObject);
 
+    void addClassifiedCodeMetadata(ISystemId entity,
+                                   IHateoasNoarkObject hateoasNoarkObject);
+
     void addScreeningMetadata(ISystemId entity,
                               IHateoasNoarkObject hateoasNoarkObject);
 

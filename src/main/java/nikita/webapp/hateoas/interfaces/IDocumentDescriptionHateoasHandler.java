@@ -32,6 +32,9 @@ public interface IDocumentDescriptionHateoasHandler
     void addNewComment(ISystemId entity,
                        IHateoasNoarkObject hateoasNoarkObject);
 
+    void addClassifiedCodeMetadata(ISystemId entity,
+                                   IHateoasNoarkObject hateoasNoarkObject);
+
     void addDocumentType(ISystemId entity,
                          IHateoasNoarkObject hateoasNoarkObject);
 

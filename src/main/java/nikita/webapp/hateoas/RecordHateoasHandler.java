@@ -52,6 +52,7 @@ public class RecordHateoasHandler
         addKeyword(entity, hateoasNoarkObject);
         //addCrossReference(entity, hateoasNoarkObject);
         addNewCrossReference(entity, hateoasNoarkObject);
+        addClassifiedCodeMetadata(entity, hateoasNoarkObject);
         addScreeningMetadata(entity, hateoasNoarkObject);
         addScreeningMetadataLocal(entity, hateoasNoarkObject);
         addNewScreeningMetadataLocal(entity, hateoasNoarkObject);
@@ -72,6 +73,7 @@ public class RecordHateoasHandler
             ISystemId entity,
             IHateoasNoarkObject hateoasNoarkObject) {
         super.addEntityLinksOnTemplate(entity, hateoasNoarkObject);
+        addClassifiedCodeMetadata(entity, hateoasNoarkObject);
         addDocumentMedium(entity, hateoasNoarkObject);
         addScreeningMetadata(entity, hateoasNoarkObject);
     }
@@ -381,6 +383,14 @@ public class RecordHateoasHandler
                 REL_FONDS_STRUCTURE_NATIONAL_IDENTIFIER));
     }
 
+
+    @Override
+    public void addClassifiedCodeMetadata(ISystemId entity,
+                                     IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_METADATA + SLASH + CLASSIFIED_CODE,
+                REL_METADATA_CLASSIFIED_CODE));
+    }
 
     @Override
     public void addScreeningMetadata(ISystemId entity,

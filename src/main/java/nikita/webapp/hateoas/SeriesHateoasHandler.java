@@ -35,6 +35,7 @@ public class SeriesHateoasHandler
     @Override
     public void addEntityLinks(ISystemId entity,
                                IHateoasNoarkObject hateoasNoarkObject) {
+        addClassifiedCodeMetadata(entity, hateoasNoarkObject);
         addDocumentMedium(entity, hateoasNoarkObject);
         addNewRegistration(entity, hateoasNoarkObject);
         addNewFile(entity, hateoasNoarkObject);
@@ -60,6 +61,7 @@ public class SeriesHateoasHandler
             ISystemId entity,
             IHateoasNoarkObject hateoasNoarkObject) {
         super.addEntityLinksOnTemplate(entity, hateoasNoarkObject);
+        addClassifiedCodeMetadata(entity, hateoasNoarkObject);
         addDocumentMedium(entity, hateoasNoarkObject);
         addSeriesStatus(entity, hateoasNoarkObject);
         addDocumentMedium(entity, hateoasNoarkObject);
@@ -262,6 +264,14 @@ public class SeriesHateoasHandler
                 REL_FONDS_STRUCTURE_NEW_STORAGE_LOCATION, false));
     }
 
+
+    @Override
+    public void addClassifiedCodeMetadata(ISystemId entity,
+                                     IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_METADATA + SLASH + CLASSIFIED_CODE,
+                REL_METADATA_CLASSIFIED_CODE));
+    }
 
     @Override
     public void addScreeningMetadata(ISystemId entity,

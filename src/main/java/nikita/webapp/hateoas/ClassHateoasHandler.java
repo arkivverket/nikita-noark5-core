@@ -46,6 +46,7 @@ public class ClassHateoasHandler
         addDisposalDecision(entity, hateoasNoarkObject);
         addNewKeyword(entity, hateoasNoarkObject);
         addKeyword(entity, hateoasNoarkObject);
+        addClassifiedCodeMetadata(entity, hateoasNoarkObject);
         addScreeningMetadata(entity, hateoasNoarkObject);
         addScreeningMetadataLocal(entity, hateoasNoarkObject);
         addNewScreeningMetadataLocal(entity, hateoasNoarkObject);
@@ -56,6 +57,7 @@ public class ClassHateoasHandler
             ISystemId entity,
             IHateoasNoarkObject hateoasNoarkObject) {
         super.addEntityLinksOnTemplate(entity, hateoasNoarkObject);
+        addClassifiedCodeMetadata(entity, hateoasNoarkObject);
         addScreeningMetadata(entity, hateoasNoarkObject);
         addAccessRestriction(entity, hateoasNoarkObject);
         addDisposalDecision(entity, hateoasNoarkObject);
@@ -208,6 +210,14 @@ public class ClassHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() + SLASH + NEW_KEYWORD + SLASH,
                 REL_FONDS_STRUCTURE_NEW_KEYWORD, false));
+    }
+
+    @Override
+    public void addClassifiedCodeMetadata(ISystemId entity,
+                                     IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_METADATA + SLASH + CLASSIFIED_CODE,
+                REL_METADATA_CLASSIFIED_CODE));
     }
 
     @Override

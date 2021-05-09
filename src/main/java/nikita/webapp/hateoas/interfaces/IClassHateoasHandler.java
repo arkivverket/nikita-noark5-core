@@ -44,6 +44,9 @@ public interface IClassHateoasHandler extends IHateoasHandler {
     void addNewKeyword(ISystemId entity,
                        IHateoasNoarkObject hateoasNoarkObject);
 
+    void addClassifiedCodeMetadata(ISystemId entity,
+                                   IHateoasNoarkObject hateoasNoarkObject);
+
     void addScreeningMetadata(ISystemId entity,
                               IHateoasNoarkObject hateoasNoarkObject);
 
