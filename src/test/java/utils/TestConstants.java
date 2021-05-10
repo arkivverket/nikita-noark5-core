@@ -33,6 +33,8 @@ public final class TestConstants {
     public static String BUSINESS_POSTAL_TOWN_TEST = "Trondheim";
 
     public static String TITLE_TEST = "Test title used in tests";
+    public static String TITLE_TEST_UPDATED =
+            "Test title used in tests updated";
     // DocumentDescription constants
     public static String DOCUMENT_TYPE_CODE_TEST = "B";
     public static String DOCUMENT_TYPE_CODE_NAME_TEST = "Brev";
@@ -47,6 +49,9 @@ public final class TestConstants {
 
     public static String KEYWORD_TEST = "Cool";
     public static String KEYWORD_TEST_UPDATED = "Fabulous";
+
+    public static String STORAGE_LOCATION_TEST = "Archive Room X";
+    public static String STORAGE_LOCATION_TEST_UPDATED = "Archive Room XVI";
 
     // For BusinessSpecificMetatadata
     public static String BSM_DATE_NAME = "ppt-v1:datohenvist";

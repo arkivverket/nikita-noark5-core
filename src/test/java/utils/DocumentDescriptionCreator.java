@@ -37,7 +37,7 @@ public final class DocumentDescriptionCreator {
         documentStatus.setCode(DOCUMENT_STATUS_CODE_TEST);
         documentStatus.setCodeName(DOCUMENT_STATUS_CODE_NAME_TEST);
         documentDescription.setDocumentStatus(documentStatus);
-
+        documentDescription.setStorageLocation(STORAGE_LOCATION_TEST);
         return documentDescription;
     }
 
@@ -63,6 +63,8 @@ public final class DocumentDescriptionCreator {
         printNullableMetadata(jgen,
                 DOCUMENT_DESCRIPTION_ASSOCIATED_WITH_RECORD_AS,
                 documentDescription.getAssociatedWithRecordAs());
+        printNullable(jgen, STORAGE_LOCATION, documentDescription
+                .getStorageLocation());
         jgen.writeEndObject();
         jgen.close();
         return jsonWriter.toString();
