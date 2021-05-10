@@ -250,7 +250,7 @@ public class DocumentDescription
 
     // Links to businessSpecificMetadata (virksomhetsspesifikkeMetadata)
     @OneToMany(mappedBy = REFERENCE_DOCUMENT_DESCRIPTION_DB,
-            cascade = {PERSIST, MERGE})
+            cascade = {PERSIST, MERGE, REMOVE})
     private final List<BSMBase> referenceBSMBase = new ArrayList<>();
 
     public DocumentType getDocumentType() {

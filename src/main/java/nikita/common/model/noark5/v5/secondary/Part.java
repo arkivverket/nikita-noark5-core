@@ -19,8 +19,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static javax.persistence.CascadeType.MERGE;
-import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.*;
 import static nikita.common.config.Constants.NOARK_FONDS_STRUCTURE_PATH;
 import static nikita.common.config.Constants.TABLE_PART;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -71,7 +70,7 @@ public class Part
             new HashSet<>();
 
     // Links to businessSpecificMetadata (virksomhetsspesifikkeMetadata)
-    @OneToMany(mappedBy = "referencePart", cascade = {PERSIST, MERGE})
+    @OneToMany(mappedBy = "referencePart", cascade = {PERSIST, MERGE, REMOVE})
     private List<BSMBase> referenceBSMBase = new ArrayList<>();
 
     public Set<File> getReferenceFile() {

@@ -177,7 +177,7 @@ public class Record
     private final List<CrossReference> referenceCrossReference =
             new ArrayList<>();
     // Links to businessSpecificMetadata (virksomhetsspesifikkeMetadata)
-    @OneToMany(mappedBy = "referenceRecord", cascade = {PERSIST, MERGE})
+    @OneToMany(mappedBy = "referenceRecord", cascade = {PERSIST, MERGE, REMOVE})
     private final List<BSMBase> referenceBSMBase = new ArrayList<>();
     /**
      * M??? - dokumentmedium code (xs:string)
