@@ -161,7 +161,7 @@ public class File
             new ArrayList<>();
 
     // Links to businessSpecificMetadata (virksomhetsspesifikkeMetadata)
-    @OneToMany(mappedBy = "referenceFile", cascade = {PERSIST, MERGE})
+    @OneToMany(mappedBy = "referenceFile", cascade = {PERSIST, MERGE, REMOVE})
     @JsonDeserialize(using = BSMDeserialiser.class)
     @JsonProperty(BSM_DEF)
     private List<BSMBase> referenceBSMBase = new ArrayList<>();
