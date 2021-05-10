@@ -61,14 +61,14 @@ public class File
     /**
      * M??? - dokumentmedium code (xs:string)
      */
-    @Column(name = "document_medium_code")
+    @Column(name = DOCUMENT_MEDIUM_CODE_ENG)
     @Audited
     private String documentMediumCode;
 
     /**
      * M300 - dokumentmedium code name (xs:string)
      */
-    @Column(name = "document_medium_code_name")
+    @Column(name = DOCUMENT_MEDIUM_CODE_NAME_ENG)
     @Audited
     private String documentMediumCodeName;
 
@@ -244,10 +244,17 @@ public class File
     }
 
     @Override
-    public void addStorageLocation(
+    public void addReferenceStorageLocation(
             StorageLocation storageLocation) {
         this.referenceStorageLocation.add(storageLocation);
         storageLocation.getReferenceFile().add(this);
+    }
+
+    @Override
+    public void removeReferenceStorageLocation(
+            StorageLocation storageLocation) {
+        this.referenceStorageLocation.remove(storageLocation);
+        storageLocation.getReferenceFile().remove(this);
     }
 
     @Override
@@ -344,12 +351,6 @@ public class File
     @Override
     public List<CrossReference> getReferenceCrossReference() {
         return referenceCrossReference;
-    }
-
-    @Override
-    public void setReferenceCrossReference(
-            List<CrossReference> referenceCrossReference) {
-        this.referenceCrossReference = referenceCrossReference;
     }
 
     @Override

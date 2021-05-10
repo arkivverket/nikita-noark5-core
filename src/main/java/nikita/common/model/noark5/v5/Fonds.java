@@ -1,6 +1,7 @@
 package nikita.common.model.noark5.v5;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.hateoas.FondsHateoas;
 import nikita.common.model.noark5.v5.interfaces.IDocumentMedium;
@@ -27,7 +28,7 @@ import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.FONDS;
+import static nikita.common.config.N5ResourceMappings.*;
 
 @Entity
 @Table(name = TABLE_FONDS)
@@ -40,47 +41,13 @@ public class Fonds
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * M??? - arkivstatus code (xs:string)
-     */
-    @Column(name = "fonds_status_code")
-    @Audited
-    private String fondsStatusCode;
-
-    /**
-     * M050 - arkivstatus code name (xs:string)
-     */
-    @Column(name = "fonds_status_code_name")
-    @Audited
-    private String fondsStatusCodeName;
-
-    /**
-     * M??? - dokumentmedium code (xs:string)
-     */
-    @Column(name = "document_medium_code")
-    @Audited
-    private String documentMediumCode;
-
-    /**
-     * M300 - dokumentmedium code name (xs:string)
-     */
-    @Column(name = "document_medium_code_name")
-    @Audited
-    private String documentMediumCodeName;
-
     // Links to Series
-    @OneToMany(mappedBy = "referenceFonds")
+    @OneToMany(mappedBy = REFERENCE_FONDS)
     @JsonIgnore
-    private List<Series> referenceSeries = new ArrayList<>();
-
-    // Link to parent Fonds
-    @ManyToOne(fetch = LAZY)
-    private Fonds referenceParentFonds;
-
+    private final List<Series> referenceSeries = new ArrayList<>();
     // Links to child Fonds
-    @OneToMany(mappedBy = "referenceParentFonds", fetch = LAZY)
-    private List<Fonds> referenceChildFonds = new ArrayList<>();
-
+    @OneToMany(mappedBy = REFERENCE_PARENT_FONDS, fetch = LAZY)
+    private final List<Fonds> referenceChildFonds = new ArrayList<>();
     // Links to StorageLocations
     @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = TABLE_FONDS_STORAGE_LOCATION,
@@ -89,10 +56,9 @@ public class Fonds
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
             inverseJoinColumns = @JoinColumn(
                     name = FOREIGN_KEY_STORAGE_LOCATION_PK,
-                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
-    )
-    private Set<StorageLocation> referenceStorageLocation = new HashSet<>();
-
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
+    private final Set<StorageLocation> referenceStorageLocation =
+            new HashSet<>();
     // Links to FondsCreators
     @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = TABLE_FONDS_FONDS_CREATOR,
@@ -101,9 +67,40 @@ public class Fonds
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
             inverseJoinColumns = @JoinColumn(
                     name = FOREIGN_KEY_FONDS_CREATOR_PK,
-                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
-    )
-    private Set<FondsCreator> referenceFondsCreator = new HashSet<>();
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
+    private final Set<FondsCreator> referenceFondsCreator = new HashSet<>();
+    /**
+     * M??? - arkivstatus code (xs:string)
+     */
+    @Column(name = FONDS_STATUS_CODE_ENG)
+    @Audited
+    @JsonProperty(FONDS_STATUS_CODE_NAME)
+    private String fondsStatusCode;
+
+    // Link to parent Fonds
+    @ManyToOne(fetch = LAZY)
+    private Fonds referenceParentFonds;
+    /**
+     * M050 - arkivstatus code name (xs:string)
+     */
+    @Column(name = FONDS_STATUS_CODE_NAME_ENG)
+    @Audited
+    @JsonProperty(FONDS_STATUS_CODE_NAME)
+    private String fondsStatusCodeName;
+    /**
+     * M??? - dokumentmedium code (xs:string)
+     */
+    @Column(name = DOCUMENT_MEDIUM_CODE_ENG)
+    @Audited
+    @JsonProperty(DOCUMENT_MEDIUM_CODE)
+    private String documentMediumCode;
+    /**
+     * M300 - dokumentmedium code name (xs:string)
+     */
+    @Column(name = DOCUMENT_MEDIUM_CODE_NAME_ENG)
+    @Audited
+    @JsonProperty(DOCUMENT_MEDIUM_CODE_NAME)
+    private String documentMediumCodeName;
 
     public FondsStatus getFondsStatus() {
         if (null == fondsStatusCode)
@@ -151,10 +148,6 @@ public class Fonds
         return referenceSeries;
     }
 
-    public void setReferenceSeries(List<Series> referenceSeries) {
-        this.referenceSeries = referenceSeries;
-    }
-
     public void addSeries(Series series) {
         this.referenceSeries.add(series);
         series.setReferenceFonds(this);
@@ -177,10 +170,6 @@ public class Fonds
         return referenceChildFonds;
     }
 
-    public void setReferenceChildFonds(List<Fonds> referenceChildFonds) {
-        this.referenceChildFonds = referenceChildFonds;
-    }
-
     public void addReferenceChildFonds(Fonds childFonds) {
         this.referenceChildFonds.add(childFonds);
         childFonds.setReferenceParentFonds(this);
@@ -197,9 +186,15 @@ public class Fonds
     }
 
     @Override
-    public void addStorageLocation(StorageLocation storageLocation) {
+    public void addReferenceStorageLocation(StorageLocation storageLocation) {
         this.referenceStorageLocation.add(storageLocation);
         storageLocation.getReferenceFonds().add(this);
+    }
+
+    @Override
+    public void removeReferenceStorageLocation(StorageLocation storageLocation) {
+        this.referenceStorageLocation.remove(storageLocation);
+        storageLocation.getReferenceFonds().remove(this);
     }
 
     @Override

@@ -79,14 +79,14 @@ public class Series
     /**
      * M??? - dokumentmedium code (xs:string)
      */
-    @Column(name = "document_medium_code")
+    @Column(name = DOCUMENT_MEDIUM_CODE_ENG)
     @Audited
     private String documentMediumCode;
 
     /**
      * M300 - dokumentmedium code name (xs:string)
      */
-    @Column(name = "document_medium_code_name")
+    @Column(name = DOCUMENT_MEDIUM_CODE_NAME_ENG)
     @Audited
     private String documentMediumCodeName;
 
@@ -253,9 +253,15 @@ public class Series
     }
 
     @Override
-    public void addStorageLocation(StorageLocation storageLocation) {
+    public void addReferenceStorageLocation(StorageLocation storageLocation) {
         this.referenceStorageLocation.add(storageLocation);
         storageLocation.getReferenceSeries().add(this);
+    }
+
+    @Override
+    public void removeReferenceStorageLocation(StorageLocation storageLocation) {
+        this.referenceStorageLocation.remove(storageLocation);
+        storageLocation.getReferenceSeries().remove(this);
     }
 
     public Fonds getReferenceFonds() {
