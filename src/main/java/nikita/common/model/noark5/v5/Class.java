@@ -249,12 +249,6 @@ public class Class
     }
 
     @Override
-    public void setReferenceCrossReference(
-            List<CrossReference> referenceCrossReference) {
-        this.referenceCrossReference = referenceCrossReference;
-    }
-
-    @Override
     public void addCrossReference(CrossReference crossReference) {
         this.referenceCrossReference.add(crossReference);
         crossReference.setReferenceClass(this);

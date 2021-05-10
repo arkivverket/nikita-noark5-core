@@ -6,7 +6,6 @@ import java.util.List;
 
 public interface ICorrespondencePart {
     List<CorrespondencePart> getReferenceCorrespondencePart();
-    void setReferenceCorrespondencePart(List<CorrespondencePart> part);
     void addCorrespondencePart(CorrespondencePart part);
 
     void removeCorrespondencePart(CorrespondencePart part);

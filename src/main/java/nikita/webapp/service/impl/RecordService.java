@@ -91,6 +91,7 @@ public class RecordService
     private final ICommentHateoasHandler commentHateoasHandler;
     private final IScreeningMetadataService screeningMetadataService;
     private final IScreeningMetadataHateoasHandler screeningMetadataHateoasHandler;
+    private final IStorageLocationService storageLocationService;
 
     public RecordService(
             EntityManager entityManager,
@@ -119,7 +120,8 @@ public class RecordService
             IAuthorHateoasHandler authorHateoasHandler,
             ICommentHateoasHandler commentHateoasHandler,
             IScreeningMetadataService screeningMetadataService,
-            IScreeningMetadataHateoasHandler screeningMetadataHateoasHandler) {
+            IScreeningMetadataHateoasHandler screeningMetadataHateoasHandler,
+            IStorageLocationService storageLocationService) {
         super(entityManager, applicationEventPublisher, patchService);
         this.documentDescriptionService = documentDescriptionService;
         this.recordRepository = recordRepository;
@@ -146,6 +148,7 @@ public class RecordService
         this.commentHateoasHandler = commentHateoasHandler;
         this.screeningMetadataService = screeningMetadataService;
         this.screeningMetadataHateoasHandler = screeningMetadataHateoasHandler;
+        this.storageLocationService = storageLocationService;
     }
 
     // All CREATE operations
@@ -362,6 +365,16 @@ public class RecordService
         }
         return screeningMetadataService.createScreeningMetadata(
                 record.getReferenceScreening(), screeningMetadata);
+    }
+
+    @Override
+    @Transactional
+    public StorageLocationHateoas createStorageLocationAssociatedWithRecord(
+            UUID systemId, StorageLocation storageLocation) {
+        Record record = getRecordOrThrow(systemId);
+        return storageLocationService
+                .createStorageLocationAssociatedWithRecord(
+                        storageLocation, record);
     }
 
     // All READ operations
@@ -848,6 +861,11 @@ public class RecordService
     @Override
     public UnitHateoas generateDefaultUnit() {
         return nationalIdentifierService.generateDefaultUnit();
+    }
+
+    @Override
+    public StorageLocationHateoas getDefaultStorageLocation(UUID systemId) {
+        return storageLocationService.getDefaultStorageLocation(systemId);
     }
 
     // All HELPER operations

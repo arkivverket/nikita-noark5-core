@@ -6,10 +6,12 @@ import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.hateoas.FondsCreatorHateoas;
 import nikita.common.model.noark5.v5.hateoas.FondsHateoas;
 import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.StorageLocationHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.DocumentMedium;
 import nikita.common.model.noark5.v5.metadata.FondsStatus;
 import nikita.common.model.noark5.v5.metadata.SeriesStatus;
+import nikita.common.model.noark5.v5.secondary.StorageLocation;
 import nikita.common.repository.n5v5.IFondsRepository;
 import nikita.common.util.exceptions.NoarkEntityEditWhenClosedException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
@@ -22,6 +24,7 @@ import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.IFondsCreatorService;
 import nikita.webapp.service.interfaces.IFondsService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
+import nikita.webapp.service.interfaces.secondary.IStorageLocationService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
@@ -60,6 +63,7 @@ public class FondsService
     private final IFondsHateoasHandler fondsHateoasHandler;
     private final ISeriesHateoasHandler seriesHateoasHandler;
     private final IFondsCreatorHateoasHandler fondsCreatorHateoasHandler;
+    private final IStorageLocationService storageLocationService;
 
     public FondsService(EntityManager entityManager,
                         ApplicationEventPublisher applicationEventPublisher,
@@ -71,7 +75,8 @@ public class FondsService
                         IFondsHateoasHandler fondsHateoasHandler,
                         ISeriesHateoasHandler seriesHateoasHandler,
                         IFondsCreatorHateoasHandler
-                                fondsCreatorHateoasHandler) {
+                                fondsCreatorHateoasHandler,
+                        IStorageLocationService storageLocationService) {
         super(entityManager, applicationEventPublisher, patchService);
         this.fondsRepository = fondsRepository;
         this.seriesService = seriesService;
@@ -81,6 +86,7 @@ public class FondsService
         this.fondsHateoasHandler = fondsHateoasHandler;
         this.seriesHateoasHandler = seriesHateoasHandler;
         this.fondsCreatorHateoasHandler = fondsCreatorHateoasHandler;
+        this.storageLocationService = storageLocationService;
     }
 
     // All CREATE operations
@@ -213,6 +219,16 @@ public class FondsService
                 Authorisation());
 
         return fondsCreatorHateoas;
+    }
+
+    @Override
+    @Transactional
+    public StorageLocationHateoas createStorageLocationAssociatedWithFonds(
+            UUID systemId, StorageLocation storageLocation) {
+        Fonds fonds = getFondsOrThrow(systemId.toString());
+        return storageLocationService
+                .createStorageLocationAssociatedWithFonds(
+                        storageLocation, fonds);
     }
 
     // All READ operations
@@ -367,12 +383,17 @@ public class FondsService
     public FondsHateoas generateDefaultFonds(String fondsSystemId) {
         Fonds defaultFonds = new Fonds();
         DocumentMedium documentMedium = (DocumentMedium)
-            metadataService.findValidMetadataByEntityTypeOrThrow
-                (DOCUMENT_MEDIUM, DOCUMENT_MEDIUM_ELECTRONIC_CODE, null);
+                metadataService.findValidMetadataByEntityTypeOrThrow
+                        (DOCUMENT_MEDIUM, DOCUMENT_MEDIUM_ELECTRONIC_CODE, null);
         defaultFonds.setDocumentMedium(documentMedium);
         FondsHateoas fondsHateoas = new FondsHateoas(defaultFonds);
         fondsHateoasHandler.addLinksOnTemplate(fondsHateoas, new Authorisation());
         return fondsHateoas;
+    }
+
+    @Override
+    public StorageLocationHateoas getDefaultStorageLocation(UUID systemId) {
+        return storageLocationService.getDefaultStorageLocation(systemId);
     }
 
     // All UPDATE operations

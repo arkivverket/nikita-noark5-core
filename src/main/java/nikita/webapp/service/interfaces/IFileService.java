@@ -16,10 +16,7 @@ import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
 import nikita.common.model.noark5.v5.hateoas.secondary.*;
 import nikita.common.model.noark5.v5.metadata.Metadata;
 import nikita.common.model.noark5.v5.nationalidentifier.*;
-import nikita.common.model.noark5.v5.secondary.Comment;
-import nikita.common.model.noark5.v5.secondary.Keyword;
-import nikita.common.model.noark5.v5.secondary.PartPerson;
-import nikita.common.model.noark5.v5.secondary.PartUnit;
+import nikita.common.model.noark5.v5.secondary.*;
 import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
@@ -53,6 +50,10 @@ public interface IFileService {
     ResponseEntity<RecordHateoas> createRecordAssociatedWithFile(
             @NotNull final String fileSystemId,
             @NotNull final Record record);
+
+    StorageLocationHateoas createStorageLocationAssociatedWithFile(
+            @NotNull final UUID systemId,
+            @NotNull final StorageLocation storageLocation);
 
     // -- All READ operations
 
@@ -163,4 +164,7 @@ public interface IFileService {
             @NotNull final UUID systemID);
 
     KeywordHateoas generateDefaultKeyword();
+
+    StorageLocationHateoas getDefaultStorageLocation(
+            @NotNull final UUID systemID);
 }

@@ -26,7 +26,7 @@ import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
  * - Missing obligatory property values in the JSON will trigger an exception
  */
 public class CaseFileDeserializer
-        extends JsonDeserializer {
+        extends JsonDeserializer<CaseFile> {
 
     private static final Logger logger =
             LoggerFactory.getLogger(CaseFileDeserializer.class);
@@ -102,8 +102,6 @@ public class CaseFileDeserializer
             objectNode.remove(CASE_LOANED_TO);
         }
 
-        caseFile.setReferenceCrossReference(
-                deserialiseCrossReferences(caseFile, objectNode, errors));
         caseFile.setReferenceDisposal(
                 deserialiseDisposal(objectNode, errors));
         caseFile.setReferenceScreening(

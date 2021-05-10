@@ -13,8 +13,6 @@ import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 
 /**
- * Created by tsodring on 2/6/17.
- * <p>
  * Used to add FondsHateoas links with Fonds specific information
  */
 @Component
@@ -44,6 +42,8 @@ public class FondsHateoasHandler
         // links for metadata entities
         addDocumentMedium(entity, hateoasNoarkObject);
         addFondsStatus(entity, hateoasNoarkObject);
+        addNewStorageLocation(entity, hateoasNoarkObject);
+        addStorageLocation(entity, hateoasNoarkObject);
     }
 
     @Override
@@ -160,6 +160,25 @@ public class FondsHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FONDS + SLASH + entity.getSystemIdAsString() + SLASH + NEW_SERIES,
                 REL_FONDS_STRUCTURE_NEW_SERIES));
+    }
+
+
+    @Override
+    public void addStorageLocation(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
+        if (((Fonds) entity).getReferenceStorageLocation().size() > 0) {
+            hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                    HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() +
+                    SLASH + STORAGE_LOCATION + SLASH,
+                    REL_FONDS_STRUCTURE_STORAGE_LOCATION, true));
+        }
+    }
+
+    @Override
+    public void addNewStorageLocation(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() +
+                SLASH + NEW_STORAGE_LOCATION + SLASH,
+                REL_FONDS_STRUCTURE_NEW_STORAGE_LOCATION, false));
     }
 
     /**

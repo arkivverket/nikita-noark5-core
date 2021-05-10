@@ -7,5 +7,7 @@ import java.util.Set;
 public interface IStorageLocation {
     Set<StorageLocation> getReferenceStorageLocation();
 
-    void addStorageLocation(StorageLocation storageLocation);
+    void addReferenceStorageLocation(StorageLocation storageLocation);
+
+    void removeReferenceStorageLocation(StorageLocation storageLocation);
 }
