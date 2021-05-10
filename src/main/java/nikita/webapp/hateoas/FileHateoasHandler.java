@@ -353,7 +353,7 @@ public class FileHateoasHandler
         if (null != ((File) entity).getReferenceScreening()) {
             hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                     HREF_BASE_FONDS_STRUCTURE + SLASH + FILE + SLASH +
-                    entity.getSystemId() + SLASH + SCREENING_METADATA,
+                    entity.getSystemId() + SLASH + NEW_SCREENING_METADATA,
                     REL_FONDS_STRUCTURE_NEW_SCREENING_METADATA));
         }
     }
