@@ -49,7 +49,7 @@ public class SeriesHateoasHandler
         addFonds(entity, hateoasNoarkObject);
         addSeriesStatus(entity, hateoasNoarkObject);
         addNewStorageLocation(entity, hateoasNoarkObject);
-        addListStorageLocation(entity, hateoasNoarkObject);
+        addStorageLocation(entity, hateoasNoarkObject);
         addScreeningMetadata(entity, hateoasNoarkObject);
         addScreeningMetadataLocal(entity, hateoasNoarkObject);
         addNewScreeningMetadataLocal(entity, hateoasNoarkObject);
@@ -243,22 +243,20 @@ public class SeriesHateoasHandler
     }
 
     @Override
-    /**
-     * Get a list of StorageLocation associated with the Series  (GET)
-     */
-    public void addListStorageLocation(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_SERIES + SLASH + entity.getSystemId() + SLASH + STORAGE_LOCATION + SLASH,
-                REL_FONDS_STRUCTURE_STORAGE_LOCATION, false));
+    public void addStorageLocation(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
+        if (((Series) entity).getReferenceStorageLocation().size() > 0) {
+            hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                    HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() +
+                    SLASH + STORAGE_LOCATION + SLASH,
+                    REL_FONDS_STRUCTURE_STORAGE_LOCATION, true));
+        }
     }
 
     @Override
-    /**
-     * Add a new StorageLocation to be associated with the Series (POST)
-     */
     public void addNewStorageLocation(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_SERIES + SLASH + entity.getSystemId() + SLASH + NEW_STORAGE_LOCATION + SLASH,
+                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() +
+                SLASH + NEW_STORAGE_LOCATION + SLASH,
                 REL_FONDS_STRUCTURE_NEW_STORAGE_LOCATION, false));
     }
 

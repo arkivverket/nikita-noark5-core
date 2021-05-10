@@ -43,7 +43,7 @@ public class RecordHateoasHandler
         addNewCorrespondencePartPerson(entity, hateoasNoarkObject);
         addNewCorrespondencePartUnit(entity, hateoasNoarkObject);
         addNewCorrespondencePartInternal(entity, hateoasNoarkObject);
-        //addStorageLocation(entity, hateoasNoarkObject);
+        addStorageLocation(entity, hateoasNoarkObject);
         addNewStorageLocation(entity, hateoasNoarkObject);
         //addComment(entity, hateoasNoarkObject);
         addNewComment(entity, hateoasNoarkObject);
@@ -108,15 +108,19 @@ public class RecordHateoasHandler
 
     @Override
     public void addStorageLocation(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() + SLASH + STORAGE_LOCATION + SLASH,
-                REL_FONDS_STRUCTURE_STORAGE_LOCATION, false));
+        if (((Record) entity).getReferenceStorageLocation().size() > 0) {
+            hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                    HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() +
+                    SLASH + STORAGE_LOCATION + SLASH,
+                    REL_FONDS_STRUCTURE_STORAGE_LOCATION, true));
+        }
     }
 
     @Override
     public void addNewStorageLocation(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() + SLASH + NEW_STORAGE_LOCATION + SLASH,
+                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() +
+                SLASH + NEW_STORAGE_LOCATION + SLASH,
                 REL_FONDS_STRUCTURE_NEW_STORAGE_LOCATION, false));
     }
 

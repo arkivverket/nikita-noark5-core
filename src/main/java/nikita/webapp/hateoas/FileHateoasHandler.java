@@ -57,6 +57,8 @@ public class FileHateoasHandler
 
         addNewKeyword(entity, hateoasNoarkObject);
         addKeyword(entity, hateoasNoarkObject);
+        addNewStorageLocation(entity, hateoasNoarkObject);
+        addStorageLocation(entity, hateoasNoarkObject);
         addScreeningMetadata(entity, hateoasNoarkObject);
         addScreeningMetadataLocal(entity, hateoasNoarkObject);
         addNewScreeningMetadataLocal(entity, hateoasNoarkObject);
@@ -306,6 +308,24 @@ public class FileHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() + SLASH + NEW_KEYWORD + SLASH,
                 REL_FONDS_STRUCTURE_NEW_KEYWORD, false));
+    }
+
+    @Override
+    public void addStorageLocation(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
+        if (((File) entity).getReferenceStorageLocation().size() > 0) {
+            hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                    HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() +
+                    SLASH + STORAGE_LOCATION + SLASH,
+                    REL_FONDS_STRUCTURE_STORAGE_LOCATION, true));
+        }
+    }
+
+    @Override
+    public void addNewStorageLocation(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() +
+                SLASH + NEW_STORAGE_LOCATION + SLASH,
+                REL_FONDS_STRUCTURE_NEW_STORAGE_LOCATION, false));
     }
 
     @Override
