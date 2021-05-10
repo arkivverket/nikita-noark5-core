@@ -10,12 +10,15 @@ import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.hateoas.FondsCreatorHateoas;
 import nikita.common.model.noark5.v5.hateoas.FondsHateoas;
 import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.StorageLocationHateoas;
+import nikita.common.model.noark5.v5.secondary.StorageLocation;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.service.interfaces.IFondsService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
@@ -260,6 +263,42 @@ public class FondsHateoasController
                 .body(fondsCreatorHateoas);
     }
 
+    // Create a StorageLocation
+    // POST [contextPath][api]/arkivstruktur/arkiv/{systemId}/ny-oppbevaringssted
+    @Operation(summary = "Get a default StorageLocation object")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "StorageLocation returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @PostMapping(value =
+            SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_STORAGE_LOCATION)
+    public ResponseEntity<StorageLocationHateoas> createStorageLocation(
+            HttpServletRequest request,
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the record",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID,
+            @Parameter(name = "StorageLocation",
+                    description = "Incoming storageLocation",
+                    required = true)
+            @RequestBody StorageLocation storageLocation)
+            throws NikitaException {
+        return ResponseEntity.status(CREATED)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(fondsService
+                        .createStorageLocationAssociatedWithFonds(
+                                systemID, storageLocation));
+    }
+
     // GET [contextPath][api]/arkivstruktur/arkiv/{systemId}/
     @Operation(summary = "Retrieves a single fonds entity given a systemId")
     @ApiResponses(value = {
@@ -474,6 +513,36 @@ public class FondsHateoasController
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(fondsService.generateDefaultFonds(systemID));
+    }
+
+    // Create a default StorageLocation
+    // GET [contextPath][api]/arkivstruktur/arkiv/{systemId}/ny-oppbevaringssted
+    @Operation(summary = "Get a default StorageLocation object")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "StorageLocation returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @GetMapping(value =
+            SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_STORAGE_LOCATION)
+    public ResponseEntity<StorageLocationHateoas>
+    getDefaultStorageLocation(
+            HttpServletRequest request,
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the fonds",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(fondsService.getDefaultStorageLocation(systemID));
     }
 
     // Create a suggested sub-fonds (like a template) object with default values

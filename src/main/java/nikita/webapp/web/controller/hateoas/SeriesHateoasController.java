@@ -13,7 +13,9 @@ import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.hateoas.*;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.ScreeningMetadataHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.StorageLocationHateoas;
 import nikita.common.model.noark5.v5.metadata.Metadata;
+import nikita.common.model.noark5.v5.secondary.StorageLocation;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.hateoas.interfaces.ICaseFileHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IFileHateoasHandler;
@@ -292,6 +294,41 @@ public class SeriesHateoasController
         return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
     }
 
+    // Create a default StorageLocation
+    // POST [contextPath][api]/arkivstruktur/arkivdel/{systemId}/ny-oppbevaringssted
+    @Operation(summary = "Get a default StorageLocation object")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "StorageLocation returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @PostMapping(value =
+            SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_STORAGE_LOCATION)
+    public ResponseEntity<StorageLocationHateoas> createStorageLocation(
+            HttpServletRequest request,
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the series",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID,
+            @Parameter(name = "StorageLocation",
+                    description = "Incoming storageLocation",
+                    required = true)
+            @RequestBody StorageLocation storageLocation) throws NikitaException {
+        return ResponseEntity.status(CREATED)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(seriesService
+                        .createStorageLocationAssociatedWithSeries(
+                                systemID, storageLocation));
+    }
+
     // API - All PUT Requests (CRUD - UPDATE)
     // Associate ClassificationSystem to identified Series
     // PUT [contextPath][api]/arkivstruktur/arkivdel/{systemId}/ny-klassifikasjonssystem/
@@ -559,6 +596,36 @@ public class SeriesHateoasController
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(seriesService.getDefaultScreeningMetadata(systemID));
+    }
+
+    // Create a default StorageLocation
+    // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/ny-oppbevaringssted
+    @Operation(summary = "Get a default StorageLocation object")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "StorageLocation returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @GetMapping(value =
+            SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_STORAGE_LOCATION)
+    public ResponseEntity<StorageLocationHateoas>
+    getDefaultStorageLocation(
+            HttpServletRequest request,
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the series",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(seriesService.getDefaultStorageLocation(systemID));
     }
 
     // Create a File object with default values
