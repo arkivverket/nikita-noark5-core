@@ -4,8 +4,6 @@ import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 
 /**
- * Created by tsodring on 2/6/17.
- * <p>
  * Describe Hateoas links handler
  */
 public interface IRecordHateoasHandler
@@ -79,6 +77,9 @@ public interface IRecordHateoasHandler
 
     void addNewAuthor(ISystemId entity,
                       IHateoasNoarkObject hateoasNoarkObject);
+
+    void addClassifiedCodeMetadata(ISystemId entity,
+                                   IHateoasNoarkObject hateoasNoarkObject);
 
     void addScreeningMetadata(ISystemId entity,
                               IHateoasNoarkObject hateoasNoarkObject);

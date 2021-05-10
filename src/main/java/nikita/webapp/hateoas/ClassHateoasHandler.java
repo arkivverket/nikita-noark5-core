@@ -46,6 +46,7 @@ public class ClassHateoasHandler
         addDisposalDecision(entity, hateoasNoarkObject);
         addNewKeyword(entity, hateoasNoarkObject);
         addKeyword(entity, hateoasNoarkObject);
+        addClassifiedCodeMetadata(entity, hateoasNoarkObject);
         addScreeningMetadata(entity, hateoasNoarkObject);
         addScreeningMetadataLocal(entity, hateoasNoarkObject);
         addNewScreeningMetadataLocal(entity, hateoasNoarkObject);
@@ -56,6 +57,7 @@ public class ClassHateoasHandler
             ISystemId entity,
             IHateoasNoarkObject hateoasNoarkObject) {
         super.addEntityLinksOnTemplate(entity, hateoasNoarkObject);
+        addClassifiedCodeMetadata(entity, hateoasNoarkObject);
         addScreeningMetadata(entity, hateoasNoarkObject);
         addAccessRestriction(entity, hateoasNoarkObject);
         addDisposalDecision(entity, hateoasNoarkObject);
@@ -211,6 +213,14 @@ public class ClassHateoasHandler
     }
 
     @Override
+    public void addClassifiedCodeMetadata(ISystemId entity,
+                                     IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_METADATA + SLASH + CLASSIFIED_CODE,
+                REL_METADATA_CLASSIFIED_CODE));
+    }
+
+    @Override
     public void addScreeningMetadata(ISystemId entity,
                                      IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
@@ -235,7 +245,7 @@ public class ClassHateoasHandler
         if (null != ((Class) entity).getReferenceScreening()) {
             hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                     HREF_BASE_FONDS_STRUCTURE + SLASH + CLASS + SLASH +
-                    entity.getSystemId() + SLASH + SCREENING_METADATA,
+                    entity.getSystemId() + SLASH + NEW_SCREENING_METADATA,
                     REL_FONDS_STRUCTURE_NEW_SCREENING_METADATA));
         }
     }

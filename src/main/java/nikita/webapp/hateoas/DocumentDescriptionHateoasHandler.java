@@ -44,6 +44,7 @@ public class DocumentDescriptionHateoasHandler
         addAuthor(entity, hateoasNoarkObject);
         addNewAuthor(entity, hateoasNoarkObject);
         // links for metadata entities
+        addClassifiedCodeMetadata(entity, hateoasNoarkObject);
         addDocumentMedium(entity, hateoasNoarkObject);
         addDocumentType(entity, hateoasNoarkObject);
         addDocumentStatus(entity, hateoasNoarkObject);
@@ -55,6 +56,7 @@ public class DocumentDescriptionHateoasHandler
     @Override
     public void addEntityLinksOnTemplate(ISystemId entity,
                                          IHateoasNoarkObject hateoasNoarkObject) {
+        addClassifiedCodeMetadata(entity, hateoasNoarkObject);
         addDocumentMedium(entity, hateoasNoarkObject);
         addDocumentType(entity, hateoasNoarkObject);
         addDocumentStatus(entity, hateoasNoarkObject);
@@ -118,6 +120,14 @@ public class DocumentDescriptionHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemIdAsString() + SLASH + NEW_DOCUMENT_OBJECT + SLASH,
                 REL_FONDS_STRUCTURE_NEW_DOCUMENT_OBJECT, false));
+    }
+
+    @Override
+    public void addClassifiedCodeMetadata(ISystemId entity,
+                                     IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_METADATA + SLASH + CLASSIFIED_CODE,
+                REL_METADATA_CLASSIFIED_CODE));
     }
 
     @Override
@@ -232,7 +242,7 @@ public class DocumentDescriptionHateoasHandler
             hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                     HREF_BASE_FONDS_STRUCTURE + SLASH + DOCUMENT_DESCRIPTION +
                     SLASH + entity.getSystemId() +
-                    SLASH + SCREENING_METADATA,
+                    SLASH + NEW_SCREENING_METADATA,
                     REL_FONDS_STRUCTURE_NEW_SCREENING_METADATA));
         }
     }

@@ -39,6 +39,9 @@ public interface ISeriesHateoasHandler
     void addClassificationSystem(ISystemId entity, 
                             IHateoasNoarkObject hateoasNoarkObject);
 
+    void addClassifiedCodeMetadata(ISystemId entity,
+                                   IHateoasNoarkObject hateoasNoarkObject);
+
     void addFonds(ISystemId entity,
                   IHateoasNoarkObject hateoasNoarkObject);
 
@@ -48,8 +51,8 @@ public interface ISeriesHateoasHandler
     void addNewStorageLocation(ISystemId entity,
                                IHateoasNoarkObject hateoasNoarkObject);
 
-    void addListStorageLocation(ISystemId entity,
-                                IHateoasNoarkObject hateoasNoarkObject);
+    void addStorageLocation(ISystemId entity,
+                            IHateoasNoarkObject hateoasNoarkObject);
 
     void addScreeningMetadata(ISystemId entity,
                               IHateoasNoarkObject hateoasNoarkObject);
@@ -59,5 +62,4 @@ public interface ISeriesHateoasHandler
 
     void addNewScreeningMetadataLocal(ISystemId entity,
                                       IHateoasNoarkObject hateoasNoarkObject);
-
 }

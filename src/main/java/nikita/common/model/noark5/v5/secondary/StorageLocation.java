@@ -1,9 +1,17 @@
 package nikita.common.model.noark5.v5.secondary;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import nikita.common.model.noark5.v5.*;
+import nikita.common.model.noark5.v5.hateoas.secondary.StorageLocationHateoas;
+import nikita.common.model.noark5.v5.interfaces.entities.secondary.IStorageLocationEntity;
+import nikita.common.util.deserialisers.secondary.StorageLocationDeserializer;
 import nikita.common.util.serializers.noark5v5.StorageLocationSerializer;
+import nikita.webapp.hateoas.secondary.StorageLocationHateoasHandler;
+import nikita.webapp.util.annotation.HateoasObject;
+import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -17,38 +25,38 @@ import java.util.Set;
 
 import static nikita.common.config.Constants.REL_FONDS_STRUCTURE_STORAGE_LOCATION;
 import static nikita.common.config.Constants.TABLE_STORAGE_LOCATION;
-import static nikita.common.config.N5ResourceMappings.STORAGE_LOCATION;
+import static nikita.common.config.N5ResourceMappings.*;
 
 @Entity
 @Table(name = TABLE_STORAGE_LOCATION)
 @JsonSerialize(using = StorageLocationSerializer.class)
+@JsonDeserialize(using = StorageLocationDeserializer.class)
+@HateoasPacker(using = StorageLocationHateoasHandler.class)
+@HateoasObject(using = StorageLocationHateoas.class)
 public class StorageLocation
-        extends SystemIdEntity {
+        extends SystemIdEntity
+        implements IStorageLocationEntity {
 
+    // Links to Fonds
+    @ManyToMany(mappedBy = REFERENCE_STORAGE_LOCATION)
+    private final Set<Fonds> referenceFonds = new HashSet<>();
+    // Links to Series
+    @ManyToMany(mappedBy = REFERENCE_STORAGE_LOCATION)
+    private final Set<Series> referenceSeries = new HashSet<>();
+    // Links to File
+    @ManyToMany(mappedBy = REFERENCE_STORAGE_LOCATION)
+    private final Set<File> referenceFile = new HashSet<>();
+    // Links to Record
+    @ManyToMany(mappedBy = REFERENCE_STORAGE_LOCATION)
+    @JsonIgnore
+    private final Set<Record> referenceRecord = new HashSet<>();
     /**
      * M301 - oppbevaringssted (xs:string)
      */
-    @Column(name = "storage_location")
+    @Column(name = STORAGE_LOCATION_ENG)
     @Audited
+    @JsonProperty(STORAGE_LOCATION)
     private String storageLocation;
-
-    // Links to Fonds
-    @ManyToMany(mappedBy = "referenceStorageLocation")
-    @JsonIgnore
-    private Set<Fonds> referenceFonds = new HashSet<>();
-
-    // Links to Series
-    @ManyToMany(mappedBy = "referenceStorageLocation")
-    private Set<Series> referenceSeries = new HashSet<>();
-
-    // Links to File
-    @ManyToMany(mappedBy = "referenceStorageLocation")
-    private Set<File> referenceFile = new HashSet<>();
-
-    // Links to Record
-    @ManyToMany(mappedBy = "referenceStorageLocation")
-    @JsonIgnore
-    private Set<Record> referenceRecord = new HashSet<>();
 
     public String getStorageLocation() {
         return storageLocation;
@@ -62,12 +70,12 @@ public class StorageLocation
         return referenceFonds;
     }
 
-    public void addFonds(Fonds fonds) {
+    public void addReferenceFonds(Fonds fonds) {
         this.referenceFonds.add(fonds);
         fonds.getReferenceStorageLocation().add(this);
     }
 
-    public void removeFonds(Fonds fonds) {
+    public void removeReferenceFonds(Fonds fonds) {
         this.referenceFonds.remove(fonds);
         fonds.getReferenceStorageLocation().remove(this);
     }
@@ -76,12 +84,12 @@ public class StorageLocation
         return referenceSeries;
     }
 
-    public void addSeries(Series series) {
+    public void addReferenceSeries(Series series) {
         this.referenceSeries.add(series);
         series.getReferenceStorageLocation().add(this);
     }
 
-    public void removeSeries(Series series) {
+    public void removeReferenceSeries(Series series) {
         this.referenceSeries.remove(series);
         series.getReferenceStorageLocation().remove(this);
     }
@@ -90,12 +98,12 @@ public class StorageLocation
         return referenceFile;
     }
 
-    public void addFile(File file) {
+    public void addReferenceFile(File file) {
         this.referenceFile.add(file);
         file.getReferenceStorageLocation().add(this);
     }
 
-    public void removeFile(File file) {
+    public void removeReferenceFile(File file) {
         this.referenceFile.remove(file);
         file.getReferenceStorageLocation().remove(this);
     }
@@ -104,16 +112,12 @@ public class StorageLocation
         return referenceRecord;
     }
 
-    public void setReferenceRecord(Set<Record> referenceRecord) {
-        this.referenceRecord = referenceRecord;
-    }
-
-    public void addRecord(Record record) {
+    public void addReferenceRecord(Record record) {
         this.referenceRecord.add(record);
         record.getReferenceStorageLocation().add(this);
     }
 
-    public void removeRecord(Record record) {
+    public void removeReferenceRecord(Record record) {
         this.referenceRecord.remove(record);
         record.getReferenceStorageLocation().remove(this);
     }

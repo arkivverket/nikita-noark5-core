@@ -8,7 +8,9 @@ import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.hateoas.*;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.ScreeningMetadataHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.StorageLocationHateoas;
 import nikita.common.model.noark5.v5.metadata.Metadata;
+import nikita.common.model.noark5.v5.secondary.StorageLocation;
 import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
@@ -19,6 +21,10 @@ public interface ISeriesService {
 
     // -- All CREATE operations
     Series save(Series series);
+
+    StorageLocationHateoas createStorageLocationAssociatedWithSeries(
+            @NotNull final UUID seriesSystemId,
+            @NotNull final StorageLocation storageLocation);
 
     File createFileAssociatedWithSeries(String seriesSystemId, File file);
 
@@ -72,5 +78,8 @@ public interface ISeriesService {
             @NotNull final Metadata screeningMetadata);
 
     ScreeningMetadataHateoas getDefaultScreeningMetadata(
+            @NotNull final UUID systemID);
+
+    StorageLocationHateoas getDefaultStorageLocation(
             @NotNull final UUID systemID);
 }

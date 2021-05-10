@@ -57,6 +57,9 @@ public class FileHateoasHandler
 
         addNewKeyword(entity, hateoasNoarkObject);
         addKeyword(entity, hateoasNoarkObject);
+        addClassifiedCodeMetadata(entity, hateoasNoarkObject);
+        addNewStorageLocation(entity, hateoasNoarkObject);
+        addStorageLocation(entity, hateoasNoarkObject);
         addScreeningMetadata(entity, hateoasNoarkObject);
         addScreeningMetadataLocal(entity, hateoasNoarkObject);
         addNewScreeningMetadataLocal(entity, hateoasNoarkObject);
@@ -77,6 +80,7 @@ public class FileHateoasHandler
         super.addEntityLinksOnTemplate(entity, hateoasNoarkObject);
         addDocumentMedium(entity, hateoasNoarkObject);
         addMetadataFileType(entity, hateoasNoarkObject);
+        addClassifiedCodeMetadata(entity, hateoasNoarkObject);
         addScreeningMetadata(entity, hateoasNoarkObject);
     }
 
@@ -136,14 +140,14 @@ public class FileHateoasHandler
     @Override
     public void addExpandToCaseFile(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + FILE_EXPAND_TO_CASE_FILE + SLASH,
+                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + FILE_EXPAND_TO_CASE_FILE,
                 REL_FONDS_STRUCTURE_EXPAND_TO_CASE_FILE, false));
     }
 
     @Override
     public void addExpandToMeetingFile(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + FILE_EXPAND_TO_MEETING_FILE + SLASH,
+                HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + FILE_EXPAND_TO_MEETING_FILE,
                 REL_FONDS_STRUCTURE_EXPAND_TO_MEETING_FILE, false));
     }
 
@@ -309,6 +313,32 @@ public class FileHateoasHandler
     }
 
     @Override
+
+    public void addClassifiedCodeMetadata(ISystemId entity,
+                                     IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_METADATA + SLASH + CLASSIFIED_CODE,
+                REL_METADATA_CLASSIFIED_CODE));
+
+    public void addStorageLocation(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
+        if (((File) entity).getReferenceStorageLocation().size() > 0) {
+            hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                    HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() +
+                    SLASH + STORAGE_LOCATION + SLASH,
+                    REL_FONDS_STRUCTURE_STORAGE_LOCATION, true));
+        }
+    }
+
+    @Override
+    public void addNewStorageLocation(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() +
+                SLASH + NEW_STORAGE_LOCATION + SLASH,
+                REL_FONDS_STRUCTURE_NEW_STORAGE_LOCATION, false));
+
+    }
+
+    @Override
     public void addScreeningMetadata(ISystemId entity,
                                      IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
@@ -333,7 +363,7 @@ public class FileHateoasHandler
         if (null != ((File) entity).getReferenceScreening()) {
             hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                     HREF_BASE_FONDS_STRUCTURE + SLASH + FILE + SLASH +
-                    entity.getSystemId() + SLASH + SCREENING_METADATA,
+                    entity.getSystemId() + SLASH + NEW_SCREENING_METADATA,
                     REL_FONDS_STRUCTURE_NEW_SCREENING_METADATA));
         }
     }

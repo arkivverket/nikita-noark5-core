@@ -33,6 +33,10 @@ public interface IRecordService {
     CommentHateoas createCommentAssociatedWithRecord
             (String systemId, Comment comment);
 
+    StorageLocationHateoas createStorageLocationAssociatedWithRecord(
+            @NotNull final UUID systemId,
+            @NotNull final StorageLocation storageLocation);
+
     RecordHateoas generateDefaultRecord();
 
     CommentHateoas generateDefaultComment();
@@ -168,4 +172,7 @@ public interface IRecordService {
             @NotNull final UUID systemId);
 
     KeywordHateoas generateDefaultKeyword();
+
+    StorageLocationHateoas getDefaultStorageLocation(
+            @NotNull final UUID systemID);
 }

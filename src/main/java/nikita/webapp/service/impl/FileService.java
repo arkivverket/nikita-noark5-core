@@ -31,10 +31,7 @@ import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.*;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
-import nikita.webapp.service.interfaces.secondary.ICommentService;
-import nikita.webapp.service.interfaces.secondary.IKeywordService;
-import nikita.webapp.service.interfaces.secondary.IPartService;
-import nikita.webapp.service.interfaces.secondary.IScreeningMetadataService;
+import nikita.webapp.service.interfaces.secondary.*;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
@@ -83,6 +80,7 @@ public class FileService
     private final IPartHateoasHandler partHateoasHandler;
     private final IScreeningMetadataService screeningMetadataService;
     private final IScreeningMetadataHateoasHandler screeningMetadataHateoasHandler;
+    private final IStorageLocationService storageLocationService;
 
     public FileService(EntityManager entityManager,
                        ApplicationEventPublisher applicationEventPublisher,
@@ -103,7 +101,8 @@ public class FileService
                        INationalIdentifierHateoasHandler nationalIdentifierHateoasHandler,
                        IPartHateoasHandler partHateoasHandler,
                        IScreeningMetadataService screeningMetadataService,
-                       IScreeningMetadataHateoasHandler screeningMetadataHateoasHandler) {
+                       IScreeningMetadataHateoasHandler screeningMetadataHateoasHandler,
+                       IStorageLocationService storageLocationService) {
         super(entityManager, applicationEventPublisher, patchService);
         this.recordService = recordService;
         this.caseFileService = caseFileService;
@@ -122,6 +121,7 @@ public class FileService
         this.partHateoasHandler = partHateoasHandler;
         this.screeningMetadataService = screeningMetadataService;
         this.screeningMetadataHateoasHandler = screeningMetadataHateoasHandler;
+        this.storageLocationService = storageLocationService;
     }
 
     // All CREATE operations
@@ -282,6 +282,16 @@ public class FileService
             @NotNull UUID systemId, @NotNull PatchMerge patchMerge) {
         return caseFileService.expandFileAsCaseFileHateoas(
                 getFileOrThrow(systemId), patchMerge);
+    }
+
+    @Override
+    @Transactional
+    public StorageLocationHateoas createStorageLocationAssociatedWithFile(
+            UUID systemId, StorageLocation storageLocation) {
+        File file = getFileOrThrow(systemId.toString());
+        return storageLocationService
+                .createStorageLocationAssociatedWithFile(
+                        storageLocation, file);
     }
 
     // All READ operations.
@@ -534,6 +544,12 @@ public class FileService
     }
 
     // All template operations
+
+    @Override
+    public StorageLocationHateoas getDefaultStorageLocation(UUID systemId) {
+        return storageLocationService.getDefaultStorageLocation(systemId);
+    }
+
     /**
      * Generate a Default File object
      * <br>
