@@ -2336,6 +2336,38 @@ public class TestOData {
     }
 
     /**
+     * Check that it is possible to do a query with StorageLocation
+     * Entity:  oppbevaringssted
+     * Attribute: oppbevaringssted
+     * <p>
+     * ODATA Input:
+     * oppbevaringssted?$filter=oppbevaringssted eq 'Archive Room XVI'
+     * <p>
+     * Expected HQL:
+     * SELECT storagelocation_1 FROM StorageLocation AS storagelocation_1
+     * WHERE
+     * storagelocation_1.storageLocation = :parameter_0
+     * <p>
+     * Additionally parameter_0 should be
+     * Archive Room XVI
+     */
+    @Test
+    @Transactional
+    public void shouldReturnValidHQLStorageLocation() {
+        String compareValue = "Archive Room XVI";
+        String odata = STORAGE_LOCATION + "?$filter=" + STORAGE_LOCATION +
+                " eq '" + compareValue + "')";
+        String hql = "SELECT storagelocation_1 FROM StorageLocation AS" +
+                " storagelocation_1" +
+                " WHERE" +
+                " storagelocation_1.storageLocation = :parameter_0";
+        Query query = oDataService.convertODataToHQL(odata, "");
+        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+                compareValue);
+        Assertions.assertEquals(query.getQueryString(), hql);
+    }
+
+    /**
      * Check that a space between date and time of a dateTime object results in
      * the throwing of an exception
      * Note:

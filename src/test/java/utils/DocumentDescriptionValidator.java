@@ -1,5 +1,6 @@
 package utils;
 
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static nikita.common.config.Constants.*;
@@ -20,7 +21,28 @@ public final class DocumentDescriptionValidator {
             throws Exception {
         resultActions
                 .andExpect(jsonPath("$." + SYSTEM_ID).exists())
-                .andExpect(jsonPath("$." + TITLE).value(TITLE_TEST));
+                .andExpect(jsonPath("$." + TITLE).value(TITLE_TEST))
+                .andExpect(jsonPath("$." + STORAGE_LOCATION)
+                        .value(STORAGE_LOCATION_TEST));
+        // A test will expect the template content in addition to other values
+        validateDocumentDescriptionTemplate(resultActions);
+    }
+
+    /**
+     * @param resultActions with request result
+     * @throws Exception if there is a problem
+     */
+    public static void validateUpdatedDocumentDescription(ResultActions resultActions)
+            throws Exception {
+        MockHttpServletResponse response =
+                resultActions.andReturn().getResponse();
+        System.out.println(response.getContentAsString());
+        resultActions
+                .andExpect(jsonPath("$." + SYSTEM_ID).exists())
+                .andExpect(jsonPath("$." + TITLE)
+                        .value(TITLE_TEST_UPDATED))
+                .andExpect(jsonPath("$." + STORAGE_LOCATION)
+                        .value(STORAGE_LOCATION_TEST_UPDATED));
         // A test will expect the template content in addition to other values
         validateDocumentDescriptionTemplate(resultActions);
     }

@@ -95,26 +95,6 @@ public class Record
     @JsonProperty(DESCRIPTION)
     private String description;
 
-    /**
-     * M??? - dokumentmedium code (xs:string)
-     */
-    @Column(name = "document_medium_code")
-    @Audited
-    private String documentMediumCode;
-
-    /**
-     * M300 - dokumentmedium code name (xs:string)
-     */
-    @Column(name = "document_medium_code_name")
-    @Audited
-    private String documentMediumCodeName;
-
-    // Link to File
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = RECORD_FILE_ID,
-            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
-    private File referenceFile;
-
     // Links to Part
     @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = TABLE_RECORD_PART,
@@ -124,14 +104,18 @@ public class Record
             inverseJoinColumns = @JoinColumn(
                     name = FOREIGN_KEY_PART_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private Set<Part> referencePart = new HashSet<>();
-
+    private final Set<Part> referencePart = new HashSet<>();
     // Links to CorrespondencePart
     @OneToMany(mappedBy = "referenceRecord",
             cascade = ALL, orphanRemoval = true)
-    private List<CorrespondencePart>
+    private final List<CorrespondencePart>
             referenceCorrespondencePart = new ArrayList<>();
 
+    // Link to File
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = RECORD_FILE_ID,
+            referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
+    private File referenceFile;
     // Link to StorageLocation
     @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = TABLE_RECORD_STORAGE_LOCATION,
@@ -140,8 +124,20 @@ public class Record
             inverseJoinColumns = @JoinColumn(
                     name = FOREIGN_KEY_STORAGE_LOCATION_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private Set<StorageLocation> referenceStorageLocation =
+    private final Set<StorageLocation> referenceStorageLocation =
             new HashSet<>();
+    // Links to Keywords
+    @ManyToMany(cascade = {PERSIST, MERGE})
+    @JoinTable(name = TABLE_RECORD_KEYWORD,
+            joinColumns = @JoinColumn(name = FOREIGN_KEY_RECORD_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
+            inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_KEYWORD_PK,
+                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
+    private final Set<Keyword> referenceKeyword = new HashSet<>();
+    // Links to Authors
+    @OneToMany(mappedBy = "referenceRecord",
+            cascade = ALL, orphanRemoval = true)
+    private final List<Author> referenceAuthor = new ArrayList<>();
 
     // Link to Series
     @ManyToOne(fetch = LAZY)
@@ -154,21 +150,6 @@ public class Record
     @JoinColumn(name = RECORD_CLASS_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Class referenceClass;
-
-    // Links to Keywords
-    @ManyToMany(cascade = {PERSIST, MERGE})
-    @JoinTable(name = TABLE_RECORD_KEYWORD,
-            joinColumns = @JoinColumn(name = FOREIGN_KEY_RECORD_PK,
-                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
-            inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_KEYWORD_PK,
-                    referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private Set<Keyword> referenceKeyword = new HashSet<>();
-
-    // Links to Authors
-    @OneToMany(mappedBy = "referenceRecord",
-            cascade = ALL, orphanRemoval = true)
-    private List<Author> referenceAuthor = new ArrayList<>();
-
     // Links to Comments
     @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = TABLE_RECORD_COMMENT,
@@ -179,8 +160,7 @@ public class Record
             @JoinColumn(
                     name = FOREIGN_KEY_COMMENT_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private Set<Comment> referenceComment = new HashSet<>();
-
+    private final Set<Comment> referenceComment = new HashSet<>();
     // Links to DocumentDescriptions
     @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = TABLE_RECORD_DOCUMENT_DESCRIPTION,
@@ -190,12 +170,21 @@ public class Record
             inverseJoinColumns = @JoinColumn(
                     name = FOREIGN_KEY_DOCUMENT_DESCRIPTION_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private Set<DocumentDescription> referenceDocumentDescription =
+    private final Set<DocumentDescription> referenceDocumentDescription =
             new HashSet<>();
-
     // Links to CrossReference
     @OneToMany(mappedBy = "referenceRecord")
-    private List<CrossReference> referenceCrossReference = new ArrayList<>();
+    private final List<CrossReference> referenceCrossReference =
+            new ArrayList<>();
+    // Links to businessSpecificMetadata (virksomhetsspesifikkeMetadata)
+    @OneToMany(mappedBy = "referenceRecord", cascade = {PERSIST, MERGE})
+    private final List<BSMBase> referenceBSMBase = new ArrayList<>();
+    /**
+     * M??? - dokumentmedium code (xs:string)
+     */
+    @Column(name = DOCUMENT_MEDIUM_CODE_ENG)
+    @Audited
+    private String documentMediumCode;
 
     // Links to Classified
     @ManyToOne(fetch = LAZY, cascade = ALL)
@@ -219,10 +208,12 @@ public class Record
     @OneToMany(mappedBy = "referenceRecord")
     private List<NationalIdentifier> referenceNationalIdentifier =
             new ArrayList<>();
-
-    // Links to businessSpecificMetadata (virksomhetsspesifikkeMetadata)
-    @OneToMany(mappedBy = "referenceRecord", cascade = {PERSIST, MERGE})
-    private List<BSMBase> referenceBSMBase = new ArrayList<>();
+    /**
+     * M300 - dokumentmedium code name (xs:string)
+     */
+    @Column(name = DOCUMENT_MEDIUM_CODE_NAME_ENG)
+    @Audited
+    private String documentMediumCodeName;
 
     public OffsetDateTime getArchivedDate() {
         return archivedDate;
@@ -368,9 +359,15 @@ public class Record
     }
 
     @Override
-    public void addStorageLocation(StorageLocation storageLocation) {
+    public void addReferenceStorageLocation(StorageLocation storageLocation) {
         this.referenceStorageLocation.add(storageLocation);
         storageLocation.getReferenceRecord().add(this);
+    }
+
+    @Override
+    public void removeReferenceStorageLocation(StorageLocation storageLocation) {
+        this.referenceStorageLocation.remove(storageLocation);
+        storageLocation.getReferenceRecord().remove(this);
     }
 
     @Override
@@ -424,12 +421,6 @@ public class Record
     }
 
     @Override
-    public void setReferenceCrossReference(
-            List<CrossReference> referenceCrossReference) {
-        this.referenceCrossReference = referenceCrossReference;
-    }
-
-    @Override
     public void addCrossReference(CrossReference crossReference) {
         referenceCrossReference.add(crossReference);
         crossReference.setReferenceRecord(this);
@@ -461,12 +452,6 @@ public class Record
     @Override
     public List<CorrespondencePart> getReferenceCorrespondencePart() {
         return referenceCorrespondencePart;
-    }
-
-    @Override
-    public void setReferenceCorrespondencePart(
-            List<CorrespondencePart> referenceCorrespondencePart) {
-        this.referenceCorrespondencePart = referenceCorrespondencePart;
     }
 
     @Override

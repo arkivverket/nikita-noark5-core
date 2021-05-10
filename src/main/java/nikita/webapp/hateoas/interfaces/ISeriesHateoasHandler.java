@@ -48,8 +48,8 @@ public interface ISeriesHateoasHandler
     void addNewStorageLocation(ISystemId entity,
                                IHateoasNoarkObject hateoasNoarkObject);
 
-    void addListStorageLocation(ISystemId entity,
-                                IHateoasNoarkObject hateoasNoarkObject);
+    void addStorageLocation(ISystemId entity,
+                            IHateoasNoarkObject hateoasNoarkObject);
 
     void addScreeningMetadata(ISystemId entity,
                               IHateoasNoarkObject hateoasNoarkObject);
@@ -59,5 +59,4 @@ public interface ISeriesHateoasHandler
 
     void addNewScreeningMetadataLocal(ISystemId entity,
                                       IHateoasNoarkObject hateoasNoarkObject);
-
 }

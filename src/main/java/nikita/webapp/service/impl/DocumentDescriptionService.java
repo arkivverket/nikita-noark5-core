@@ -430,9 +430,11 @@ public class DocumentDescriptionService
         bsmService.validateBSMList(incomingDocumentDescription
                 .getReferenceBSMBase());
 
+        existingDocumentDescription.setStorageLocation(
+                incomingDocumentDescription.getStorageLocation());
+
         DocumentDescriptionHateoas documentDescriptionHateoas =
-                new DocumentDescriptionHateoas
-                        (documentDescriptionRepository.save(existingDocumentDescription));
+                new DocumentDescriptionHateoas(existingDocumentDescription);
         documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas,
                 new Authorisation());
         return documentDescriptionHateoas;

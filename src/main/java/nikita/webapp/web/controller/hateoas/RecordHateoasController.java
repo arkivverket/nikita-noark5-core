@@ -188,6 +188,42 @@ public class RecordHateoasController
                 .body(screeningMetadataHateoas);
     }
 
+    // Create a StorageLocation
+    // POST [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-oppbevaringssted
+    @Operation(summary = "Get a default StorageLocation object")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "StorageLocation returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @PostMapping(value =
+            SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_STORAGE_LOCATION)
+    public ResponseEntity<StorageLocationHateoas> createStorageLocation(
+            HttpServletRequest request,
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the record",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID,
+            @Parameter(name = "StorageLocation",
+                    description = "Incoming storageLocation",
+                    required = true)
+            @RequestBody StorageLocation storageLocation)
+            throws NikitaException {
+        return ResponseEntity.status(CREATED)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(recordService
+                        .createStorageLocationAssociatedWithRecord(
+                                systemID, storageLocation));
+    }
+
     // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/part
     // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/part/
     @Operation(summary = "Retrieves a list of Part associated with a Record")
@@ -674,6 +710,36 @@ public class RecordHateoasController
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(recordService.
                         generateDefaultPartPerson(systemID));
+    }
+
+    // Create a default StorageLocation
+    // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-oppbevaringssted
+    @Operation(summary = "Get a default StorageLocation object")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "StorageLocation returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @GetMapping(value =
+            SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_STORAGE_LOCATION)
+    public ResponseEntity<StorageLocationHateoas>
+    getDefaultStorageLocation(
+            HttpServletRequest request,
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the record",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(recordService.getDefaultStorageLocation(systemID));
     }
 
     // Create a suggested Author (like a template) object with default values

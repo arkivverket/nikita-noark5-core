@@ -22,10 +22,7 @@ import nikita.common.model.noark5.v5.interfaces.entities.ICrossReferenceEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.Metadata;
 import nikita.common.model.noark5.v5.nationalidentifier.*;
-import nikita.common.model.noark5.v5.secondary.Comment;
-import nikita.common.model.noark5.v5.secondary.Keyword;
-import nikita.common.model.noark5.v5.secondary.PartPerson;
-import nikita.common.model.noark5.v5.secondary.PartUnit;
+import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IFileHateoasHandler;
@@ -1287,6 +1284,37 @@ public class FileHateoasController
                 .body(fileService.generateDefaultCadastralUnit());
     }
 
+
+    // Create a default StorageLocation
+    // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-oppbevaringssted
+    @Operation(summary = "Get a default StorageLocation object")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "StorageLocation returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @GetMapping(value =
+            SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_STORAGE_LOCATION)
+    public ResponseEntity<StorageLocationHateoas>
+    getDefaultStorageLocation(
+            HttpServletRequest request,
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the file",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(fileService.getDefaultStorageLocation(systemID));
+    }
+
     // Add a Position to a File
     // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-posisjon
     // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-posisjon/
@@ -1722,6 +1750,42 @@ public class FileHateoasController
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .eTag(partPersonHateoas.getEntityVersion().toString())
                 .body(partPersonHateoas);
+    }
+
+    // Create a StorageLocation
+    // POST [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-oppbevaringssted
+    @Operation(summary = "Get a default StorageLocation object")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "StorageLocation returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @PostMapping(value =
+            SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_STORAGE_LOCATION)
+    public ResponseEntity<StorageLocationHateoas> createStorageLocation(
+            HttpServletRequest request,
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the record",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID,
+            @Parameter(name = "StorageLocation",
+                    description = "Incoming storageLocation",
+                    required = true)
+            @RequestBody StorageLocation storageLocation)
+            throws NikitaException {
+        return ResponseEntity.status(CREATED)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(fileService
+                        .createStorageLocationAssociatedWithFile(
+                                systemID, storageLocation));
     }
 
     // Add a Building to a File

@@ -96,6 +96,9 @@ public final class N5ResourceMappings {
     public static final String SCREENING_AUTHORITY_ENG =
             "screening_authority";
 
+    public static final String REFERENCE_FONDS = "referenceFonds";
+    public static final String REFERENCE_PARENT_FONDS = "referenceParentFonds";
+    public static final String REFERENCE_STORAGE_LOCATION = "referenceStorageLocation";
     public static final String REFERENCE_KEYWORD =
             "referenceKeyword";
     public static final String REFERENCE_COMMENT =
@@ -1051,7 +1054,7 @@ public final class N5ResourceMappings {
     public static final String SIGN_OFF_DATE_ENG_OBJECT = "signOffDate";
     public static final String SOCIAL_SECURITY_NUMBER_ENG_OBJECT = "socialSecurityNumber";
     public static final String SIGN_OFF_ENG_OBJECT = "SignOff";
-    public static final String STORAGE_LOCATION_ENG_OBJECT = "storageLocation";
+    public static final String STORAGE_LOCATION_ENG_OBJECT = "StorageLocation";
     public static final String SIGN_OFF_METHOD_ENG_OBJECT = "avskrivningsmaate";
     public static final String SUB_CLASS_ENG_OBJECT = "underklasse";
     public static final String SUB_FONDS_ENG_OBJECT = "underarkiv";
@@ -1123,6 +1126,16 @@ public final class N5ResourceMappings {
     public static final String DOCUMENT_MEDIUM_CODE = "dokumentmediumkode";
     public static final String DOCUMENT_MEDIUM_CODE_ENG = "document_medium_code";
     public static final String DOCUMENT_MEDIUM_CODE_ENG_OBJECT = "documentMediumCode";
+
+    public static final String FONDS_STATUS_CODE = "arkivStatusKode";
+    public static final String FONDS_STATUS_CODE_ENG = "fonds_status_code";
+    public static final String FONDS_STATUS_CODE_ENG_OBJECT = "fondsStatusCode";
+
+    public static final String FONDS_STATUS_CODE_NAME = "arkivStatusKodenavn";
+    public static final String FONDS_STATUS_CODE_NAME_ENG =
+            "fonds_status_code_name";
+    public static final String FONDS_STATUS_CODE_NAME_ENG_OBJECT =
+            "fondsStatusCodeName";
 
     public static final String DOCUMENT_MEDIUM_CODE_NAME = "dokumentmediumkodenavn";
     public static final String DOCUMENT_MEDIUM_CODE_NAME_ENG =

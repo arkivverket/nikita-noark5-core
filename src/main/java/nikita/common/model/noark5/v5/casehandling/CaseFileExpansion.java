@@ -226,11 +226,6 @@ public class CaseFileExpansion
     }
 
     @Override
-    public void setReferenceCrossReference(List<CrossReference> crossReference) {
-
-    }
-
-    @Override
     public void addCrossReference(CrossReference crossReference) {
 
     }
@@ -320,9 +315,15 @@ public class CaseFileExpansion
     }
 
     @Override
-    public void addStorageLocation(StorageLocation storageLocation) {
+    public void addReferenceStorageLocation(StorageLocation storageLocation) {
 
     }
+
+    @Override
+    public void removeReferenceStorageLocation(StorageLocation storageLocation) {
+
+    }
+
 
     @Override
     public OffsetDateTime getCreatedDate() {
