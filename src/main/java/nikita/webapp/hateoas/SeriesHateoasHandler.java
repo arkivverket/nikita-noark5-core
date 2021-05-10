@@ -62,7 +62,6 @@ public class SeriesHateoasHandler
         super.addEntityLinksOnTemplate(entity, hateoasNoarkObject);
         addDocumentMedium(entity, hateoasNoarkObject);
         addSeriesStatus(entity, hateoasNoarkObject);
-        addDocumentMedium(entity, hateoasNoarkObject);
         addScreeningMetadata(entity, hateoasNoarkObject);
     }
 
