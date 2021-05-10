@@ -315,10 +315,11 @@ public class FileHateoasHandler
     @Override
 
     public void addClassifiedCodeMetadata(ISystemId entity,
-                                     IHateoasNoarkObject hateoasNoarkObject) {
+                                          IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_METADATA + SLASH + CLASSIFIED_CODE,
                 REL_METADATA_CLASSIFIED_CODE));
+    }
 
     public void addStorageLocation(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         if (((File) entity).getReferenceStorageLocation().size() > 0) {
