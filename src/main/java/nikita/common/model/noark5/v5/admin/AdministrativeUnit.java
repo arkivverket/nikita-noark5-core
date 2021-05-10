@@ -120,7 +120,8 @@ public class AdministrativeUnit
             new ArrayList<>();
 
     // Links to businessSpecificMetadata (virksomhetsspesifikkeMetadata)
-    @OneToMany(mappedBy = "referenceAdministrativeUnit", cascade = {PERSIST, MERGE})
+    @OneToMany(mappedBy = "referenceAdministrativeUnit",
+            cascade = {PERSIST, MERGE, REMOVE})
     private List<BSMBase> referenceBSMBase = new ArrayList<>();
 
     @Override

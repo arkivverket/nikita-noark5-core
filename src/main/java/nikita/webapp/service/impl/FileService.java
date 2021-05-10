@@ -33,6 +33,7 @@ import nikita.webapp.service.interfaces.*;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import nikita.webapp.service.interfaces.secondary.*;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
+import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -529,7 +530,10 @@ public class FileService
     @Override
     @Transactional
     public void deleteEntity(@NotNull String fileSystemId) {
-        deleteEntity(getFileOrThrow(fileSystemId));
+        File file = getFileOrThrow(fileSystemId);
+        fileRepository.delete(file);
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityDeletedEvent(this, file));
     }
 
     /**
