@@ -7,11 +7,13 @@ import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.hateoas.*;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.ScreeningMetadataHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.StorageLocationHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.Metadata;
 import nikita.common.model.noark5.v5.metadata.SeriesStatus;
 import nikita.common.model.noark5.v5.secondary.Screening;
 import nikita.common.model.noark5.v5.secondary.ScreeningMetadataLocal;
+import nikita.common.model.noark5.v5.secondary.StorageLocation;
 import nikita.common.repository.n5v5.ISeriesRepository;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import nikita.common.util.exceptions.NoarkEntityEditWhenClosedException;
@@ -26,6 +28,7 @@ import nikita.webapp.service.interfaces.IFileService;
 import nikita.webapp.service.interfaces.ISeriesService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import nikita.webapp.service.interfaces.secondary.IScreeningMetadataService;
+import nikita.webapp.service.interfaces.secondary.IStorageLocationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -67,6 +70,7 @@ public class SeriesService
     private final IClassificationSystemHateoasHandler
             classificationSystemHateoasHandler;
     private final IScreeningMetadataService screeningMetadataService;
+    private final IStorageLocationService storageLocationService;
     private final IScreeningMetadataHateoasHandler screeningMetadataHateoasHandler;
 
 
@@ -86,6 +90,7 @@ public class SeriesService
             IClassificationSystemHateoasHandler
                     classificationSystemHateoasHandler,
             IScreeningMetadataService screeningMetadataService,
+            IStorageLocationService storageLocationService,
             IScreeningMetadataHateoasHandler screeningMetadataHateoasHandler) {
         super(entityManager, applicationEventPublisher, patchService);
         this.metadataService = metadataService;
@@ -100,6 +105,7 @@ public class SeriesService
         this.classificationSystemHateoasHandler =
                 classificationSystemHateoasHandler;
         this.screeningMetadataService = screeningMetadataService;
+        this.storageLocationService = storageLocationService;
         this.screeningMetadataHateoasHandler = screeningMetadataHateoasHandler;
     }
 
@@ -112,6 +118,17 @@ public class SeriesService
         checkOpenOrThrow(series);
         caseFile.setReferenceSeries(series);
         return caseFileService.save(caseFile);
+    }
+
+    @Override
+    @Transactional
+    public StorageLocationHateoas createStorageLocationAssociatedWithSeries(
+            UUID systemId, StorageLocation storageLocation) {
+        Series series = getSeriesOrThrow(systemId.toString());
+        checkOpenOrThrow(series);
+        return storageLocationService
+                .createStorageLocationAssociatedWithSeries(
+                        storageLocation, series);
     }
 
     @Override
@@ -386,6 +403,11 @@ public class SeriesService
     @Override
     public ScreeningMetadataHateoas getDefaultScreeningMetadata(UUID systemId) {
         return screeningMetadataService.getDefaultScreeningMetadata(systemId);
+    }
+
+    @Override
+    public StorageLocationHateoas getDefaultStorageLocation(UUID systemId) {
+        return storageLocationService.getDefaultStorageLocation(systemId);
     }
 
     // Helper methods
