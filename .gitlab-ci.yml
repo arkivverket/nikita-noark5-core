@@ -56,14 +56,14 @@ noark5tester-inoutin:
     - cd noark5-tester
     - export LC_ALL=C.UTF-8
     - ./runtest  --baseurl $baseurl --keep
-    - ./export-all --baseurl $baseurl --verbose
+    - ./export-all --baseurl $baseurl 
     - firstseries=$(jq -r '.results []._links.self.href' json-dump-*/api/arkivstruktur/arkivdel.json | head -1)
-    - ./import-email --verbose --baseurl $baseurl --saksmappe --mbox testdata/nikita-noark.mbox --storageurl "$firstseries" --maxinserts 10
-    - ./export-all --baseurl $baseurl --xml --verbose
+    - ./import-email --baseurl $baseurl --saksmappe --mbox testdata/nikita-noark.mbox --storageurl "$firstseries" --maxinserts 10
+    - ./export-all --baseurl $baseurl --xml 
     - find uttrekk-*
     - depotdir="$(dirname "$(ls uttrekk-*/*/arkivstruktur.xml | head -1)")"
     - echo "Trying to load data from $depotdir"
-    - ./import-uttrekk --baseurl $baseurl "$depotdir" --verbose
+    - ./import-uttrekk --baseurl $baseurl "$depotdir" 
     - (cd "$depotdir"; xmllint --noout  --schema arkivstruktur.xsd arkivstruktur.xml) > nikita-xml-validation-report.txt 2>&1 || true
   artifacts:
     paths:
