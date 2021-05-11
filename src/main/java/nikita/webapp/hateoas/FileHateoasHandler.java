@@ -300,7 +300,7 @@ public class FileHateoasHandler
     public void addKeyword(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         if (((File) entity).getReferenceKeyword().size() > 0) {
             hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                    HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() +
+                    HREF_BASE_FILE + SLASH + entity.getSystemIdAsString() +
                     SLASH + KEYWORD + SLASH, REL_FONDS_STRUCTURE_KEYWORD, true));
         }
     }
@@ -308,7 +308,7 @@ public class FileHateoasHandler
     @Override
     public void addNewKeyword(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() + SLASH + NEW_KEYWORD + SLASH,
+                HREF_BASE_FILE + SLASH + entity.getSystemIdAsString() + SLASH + NEW_KEYWORD + SLASH,
                 REL_FONDS_STRUCTURE_NEW_KEYWORD, false));
     }
 
@@ -324,7 +324,7 @@ public class FileHateoasHandler
     public void addStorageLocation(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         if (((File) entity).getReferenceStorageLocation().size() > 0) {
             hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                    HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() +
+                    HREF_BASE_FILE + SLASH + entity.getSystemIdAsString() +
                     SLASH + STORAGE_LOCATION + SLASH,
                     REL_FONDS_STRUCTURE_STORAGE_LOCATION, true));
         }
@@ -333,7 +333,7 @@ public class FileHateoasHandler
     @Override
     public void addNewStorageLocation(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() +
+                HREF_BASE_FILE + SLASH + entity.getSystemIdAsString() +
                 SLASH + NEW_STORAGE_LOCATION + SLASH,
                 REL_FONDS_STRUCTURE_NEW_STORAGE_LOCATION, false));
 

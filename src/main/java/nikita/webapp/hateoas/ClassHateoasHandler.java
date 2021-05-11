@@ -200,7 +200,7 @@ public class ClassHateoasHandler
     public void addKeyword(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         if (((Class) entity).getReferenceKeyword().size() > 0) {
             hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                    HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() +
+                    HREF_BASE_CLASS + SLASH + entity.getSystemIdAsString() +
                     SLASH + KEYWORD + SLASH, REL_FONDS_STRUCTURE_KEYWORD, true));
         }
     }
@@ -208,7 +208,7 @@ public class ClassHateoasHandler
     @Override
     public void addNewKeyword(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() + SLASH + NEW_KEYWORD + SLASH,
+                HREF_BASE_CLASS + SLASH + entity.getSystemIdAsString() + SLASH + NEW_KEYWORD + SLASH,
                 REL_FONDS_STRUCTURE_NEW_KEYWORD, false));
     }
 
@@ -233,7 +233,7 @@ public class ClassHateoasHandler
                                           IHateoasNoarkObject hateoasNoarkObject) {
         if (null != ((Class) entity).getReferenceScreening()) {
             hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                    HREF_BASE_FONDS_STRUCTURE + SLASH + CLASS + SLASH +
+                    HREF_BASE_CLASS + SLASH +
                     entity.getSystemId() + SLASH + SCREENING_METADATA,
                     REL_FONDS_STRUCTURE_SCREENING_METADATA));
         }
@@ -244,7 +244,7 @@ public class ClassHateoasHandler
                                              IHateoasNoarkObject hateoasNoarkObject) {
         if (null != ((Class) entity).getReferenceScreening()) {
             hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                    HREF_BASE_FONDS_STRUCTURE + SLASH + CLASS + SLASH +
+                    HREF_BASE_CLASS + SLASH +
                     entity.getSystemId() + SLASH + NEW_SCREENING_METADATA,
                     REL_FONDS_STRUCTURE_NEW_SCREENING_METADATA));
         }
