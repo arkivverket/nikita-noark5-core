@@ -9,9 +9,11 @@ import nikita.common.model.noark5.v5.hateoas.ClassificationSystemHateoas;
 import nikita.common.model.noark5.v5.hateoas.FileHateoas;
 import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.CrossReferenceHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.KeywordHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.ScreeningMetadataHateoas;
 import nikita.common.model.noark5.v5.metadata.Metadata;
+import nikita.common.model.noark5.v5.secondary.CrossReference;
 import nikita.common.model.noark5.v5.secondary.Keyword;
 import org.springframework.http.ResponseEntity;
 
@@ -34,6 +36,10 @@ public interface IClassService {
 
     ResponseEntity<RecordHateoas> createRecordAssociatedWithClass(
             String classSystemId, Record record);
+
+    CrossReferenceHateoas createCrossReferenceAssociatedWithClass(
+            @NotNull final UUID systemId,
+            @NotNull CrossReference crossReference);
 
     KeywordHateoas createKeywordAssociatedWithClass(
             @NotNull final UUID systemId, @NotNull final Keyword keyword);
@@ -80,4 +86,7 @@ public interface IClassService {
             @NotNull final UUID systemID);
 
     KeywordHateoas generateDefaultKeyword();
+
+    CrossReferenceHateoas getDefaultCrossReference();
+
 }

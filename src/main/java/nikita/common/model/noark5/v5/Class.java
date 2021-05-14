@@ -92,7 +92,7 @@ public class Class
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Screening referenceScreening;
 
-    @OneToMany(mappedBy = "referenceClass", cascade = ALL)
+    @OneToMany(mappedBy = "referenceClass", cascade = {PERSIST, MERGE, REMOVE})
     private List<CrossReference> referenceCrossReference = new ArrayList<>();
 
     @Override

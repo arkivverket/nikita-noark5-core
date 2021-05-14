@@ -79,6 +79,7 @@ public class RecordService
     private final IDocumentDescriptionRepository documentDescriptionRepository;
     private final IAuthorService authorService;
     private final IKeywordService keywordService;
+    private final ICrossReferenceService crossReferenceService;
     private final ICommentService commentService;
     private final ICorrespondencePartService correspondencePartService;
     private final IMetadataService metadataService;
@@ -109,6 +110,7 @@ public class RecordService
             IDocumentDescriptionRepository documentDescriptionRepository,
             IAuthorService authorService,
             IKeywordService keywordService,
+            ICrossReferenceService crossReferenceService,
             ICommentService commentService,
             ICorrespondencePartService correspondencePartService,
             IMetadataService metadataService,
@@ -136,6 +138,7 @@ public class RecordService
         this.documentDescriptionRepository = documentDescriptionRepository;
         this.authorService = authorService;
         this.keywordService = keywordService;
+        this.crossReferenceService = crossReferenceService;
         this.commentService = commentService;
         this.correspondencePartService = correspondencePartService;
         this.metadataService = metadataService;
@@ -375,6 +378,14 @@ public class RecordService
         return storageLocationService
                 .createStorageLocationAssociatedWithRecord(
                         storageLocation, record);
+    }
+
+    @Override
+    public CrossReferenceHateoas createCrossReferenceAssociatedWithRecord(
+            @NotNull final UUID systemId,
+            final CrossReference crossReference) {
+        return crossReferenceService.createCrossReferenceAssociatedWithRecord(
+                crossReference, getRecordOrThrow(systemId));
     }
 
     // All READ operations
@@ -866,6 +877,11 @@ public class RecordService
     @Override
     public StorageLocationHateoas getDefaultStorageLocation(UUID systemId) {
         return storageLocationService.getDefaultStorageLocation(systemId);
+    }
+
+    @Override
+    public CrossReferenceHateoas getDefaultCrossReference() {
+        return crossReferenceService.getDefaultCrossReference();
     }
 
     // All HELPER operations

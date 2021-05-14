@@ -5,9 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.bsm.BSMBase;
 import nikita.common.model.noark5.v5.hateoas.FileHateoas;
-import nikita.common.model.noark5.v5.interfaces.ICrossReference;
 import nikita.common.model.noark5.v5.interfaces.entities.IFileEntity;
-import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.common.model.noark5.v5.metadata.DocumentMedium;
 import nikita.common.model.noark5.v5.nationalidentifier.NationalIdentifier;
 import nikita.common.model.noark5.v5.secondary.*;
@@ -21,7 +19,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -80,7 +77,8 @@ public class File
             inverseJoinColumns =
             @JoinColumn(name = FOREIGN_KEY_STORAGE_LOCATION_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private Set<StorageLocation> referenceStorageLocation = new HashSet<>();
+    private final Set<StorageLocation> referenceStorageLocation =
+            new HashSet<>();
 
     // Links to Keywords
     @ManyToMany(cascade = {PERSIST, MERGE})
@@ -89,7 +87,7 @@ public class File
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
             inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_KEYWORD_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private Set<Keyword> referenceKeyword = new HashSet<>();
+    private final Set<Keyword> referenceKeyword = new HashSet<>();
 
     // Link to parent File
     @ManyToOne(fetch = LAZY)
@@ -97,7 +95,7 @@ public class File
 
     // Links to child Files
     @OneToMany(mappedBy = "referenceParentFile")
-    private List<File> referenceChildFile = new ArrayList<>();
+    private final List<File> referenceChildFile = new ArrayList<>();
 
     // Link to Series
     @ManyToOne(fetch = LAZY)
@@ -113,7 +111,7 @@ public class File
 
     // Links to Records
     @OneToMany(mappedBy = "referenceFile")
-    private List<Record> referenceRecord = new ArrayList<>();
+    private final List<Record> referenceRecord = new ArrayList<>();
 
     // Links to Comments
     @ManyToMany(cascade = {PERSIST, MERGE})
@@ -122,7 +120,7 @@ public class File
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
             inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_COMMENT_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private Set<Comment> referenceComment = new HashSet<>();
+    private final Set<Comment> referenceComment = new HashSet<>();
 
     // Links to Classified
     @ManyToOne(fetch = LAZY, cascade = PERSIST)
@@ -143,8 +141,9 @@ public class File
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Screening referenceScreening;
 
-    @OneToMany(mappedBy = "referenceFile", cascade = ALL)
-    private List<CrossReference> referenceCrossReference = new ArrayList<>();
+    @OneToMany(mappedBy = "referenceFile", cascade = {PERSIST, MERGE, REMOVE})
+    private final List<CrossReference> referenceCrossReference =
+            new ArrayList<>();
 
     // Links to Part
     @ManyToMany(cascade = {PERSIST, MERGE})
@@ -153,18 +152,18 @@ public class File
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID),
             inverseJoinColumns = @JoinColumn(name = FOREIGN_KEY_PART_PK,
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
-    private Set<Part> referencePart = new HashSet<>();
+    private final Set<Part> referencePart = new HashSet<>();
 
     // Links to NationalIdentifiers
     @OneToMany(mappedBy = "referenceFile")
-    private List<NationalIdentifier> referenceNationalIdentifier =
+    private final List<NationalIdentifier> referenceNationalIdentifier =
             new ArrayList<>();
 
     // Links to businessSpecificMetadata (virksomhetsspesifikkeMetadata)
     @OneToMany(mappedBy = "referenceFile", cascade = {PERSIST, MERGE, REMOVE})
     @JsonDeserialize(using = BSMDeserialiser.class)
     @JsonProperty(BSM_DEF)
-    private List<BSMBase> referenceBSMBase = new ArrayList<>();
+    private final List<BSMBase> referenceBSMBase = new ArrayList<>();
 
     public String getFileId() {
         return fileId;
@@ -286,10 +285,6 @@ public class File
         return referenceChildFile;
     }
 
-    public void setReferenceChildFile(List<File> referenceChildFile) {
-        this.referenceChildFile = referenceChildFile;
-    }
-
     public void addFile(File file) {
         this.referenceChildFile.add(file);
         file.setReferenceParentFile(file);
@@ -320,10 +315,6 @@ public class File
         return referenceRecord;
     }
 
-    public void setReferenceRecord(List<Record> referenceRecord) {
-        this.referenceRecord = referenceRecord;
-    }
-
     public void addRecord(Record record) {
         referenceRecord.add(record);
         record.setReferenceFile(this);
@@ -336,10 +327,6 @@ public class File
 
     public Set<Comment> getReferenceComment() {
         return referenceComment;
-    }
-
-    public void setReferenceComment(Set<Comment> referenceComment) {
-        this.referenceComment = referenceComment;
     }
 
     @Override
@@ -381,35 +368,8 @@ public class File
         crossReference.setReferenceFile(null);
     }
 
-    public void createReference(@NotNull ISystemId entity,
-                                @NotNull String referenceType) {
-
-        if (referenceType.equalsIgnoreCase(NEW_CROSS_REFERENCE)) {
-            CrossReference crossReference = new CrossReference();
-            crossReference.setFromSystemId(getSystemIdAsString());
-            crossReference.setToSystemId(entity.getSystemIdAsString());
-
-            if (entity.getBaseTypeName().equals(CLASS)) {
-                crossReference.setReferenceClass((Class) entity);
-                crossReference.setReferenceType(REFERENCE_TO_CLASS);
-            } else if (entity.getBaseTypeName().equals(REGISTRATION)) {
-                crossReference.setReferenceRecord((Record) entity);
-                crossReference.setReferenceType(REFERENCE_TO_REGISTRATION);
-            }
-            crossReference.setReferenceFile(this);
-            referenceCrossReference.add(crossReference);
-            ((ICrossReference) entity).
-                    addCrossReference(crossReference);
-        }
-    }
-
     public List<NationalIdentifier> getReferenceNationalIdentifier() {
         return referenceNationalIdentifier;
-    }
-
-    public void setReferenceNationalIdentifier(
-            List<NationalIdentifier> referenceNationalIdentifier) {
-        this.referenceNationalIdentifier = referenceNationalIdentifier;
     }
 
     public void addNationalIdentifier(

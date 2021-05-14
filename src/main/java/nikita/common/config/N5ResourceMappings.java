@@ -975,6 +975,18 @@ public final class N5ResourceMappings {
     public static final String FORMAT_ENG_OBJECT = "Format";
     public static final String HOLDING_NUMBER_ENG_OBJECT = "holdingNumber";
     public static final String KEYWORD_ENG_OBJECT = "Keyword";
+
+    public static final String FROM_SYSTEM_ID = "fraSystemID";
+    public static final String FROM_SYSTEM_ID_ENG = "from_system_id";
+    public static final String FROM_SYSTEM_ID_ENG_OBJECT = "fromSystemId";
+    public static final String TO_SYSTEM_ID = "tilSystemID";
+    public static final String TO_SYSTEM_ID_ENG = "to_system_id";
+    public static final String TO_SYSTEM_ID_ENG_OBJECT = "toSystemId";
+    public static final String REFERENCE_TYPE = "referanseType";
+    public static final String REFERENCE_TYPE_ENG = "reference_type";
+    public static final String REFERENCE_TYPE_ENG_OBJECT = "referenceType";
+    public static final String REFERENCE_FROM_TYPE = "reference_from_type";
+
     public static final String LAST_MODIFIED_BY_ENG_OBJECT = "lastModifiedBy";
     public static final String LAST_MODIFIED_DATE_ENG_OBJECT = "lastModifiedDate";
     public static final String LEASE_NUMBER_ENG_OBJECT = "leaseNumber";

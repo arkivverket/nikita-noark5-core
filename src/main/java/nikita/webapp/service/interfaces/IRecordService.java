@@ -37,6 +37,10 @@ public interface IRecordService {
             @NotNull final UUID systemId,
             @NotNull final StorageLocation storageLocation);
 
+    CrossReferenceHateoas createCrossReferenceAssociatedWithRecord(
+            @NotNull final UUID systemId,
+            @NotNull @NotNull CrossReference crossReference);
+
     RecordHateoas generateDefaultRecord();
 
     CommentHateoas generateDefaultComment();
@@ -175,4 +179,6 @@ public interface IRecordService {
 
     StorageLocationHateoas getDefaultStorageLocation(
             @NotNull final UUID systemID);
+
+    CrossReferenceHateoas getDefaultCrossReference();
 }

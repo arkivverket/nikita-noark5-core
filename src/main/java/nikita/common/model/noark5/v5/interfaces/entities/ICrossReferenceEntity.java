@@ -1,20 +1,18 @@
 package nikita.common.model.noark5.v5.interfaces.entities;
 
 import java.io.Serializable;
+import java.util.UUID;
 
-/**
- * Created by tsodring on 1/16/17.
- */
 public interface ICrossReferenceEntity
         extends Serializable, ISystemId {
 
-    String getFromSystemId();
+    UUID getFromSystemId();
 
-    void setFromSystemId(String fromSystemId);
+    void setFromSystemId(UUID fromSystemId);
 
-    String getToSystemId();
+    UUID getToSystemId();
 
-    void setToSystemId(String toSystemId);
+    void setToSystemId(UUID toSystemId);
 
     String getReferenceType();
 

@@ -145,6 +145,10 @@ public class InternalNameTranslator {
                         FONDS_ENG,
                         FONDS_ENG_OBJECT);
         addNorToEnglishNameMap
+                (FROM_SYSTEM_ID,
+                        FROM_SYSTEM_ID_ENG,
+                        FROM_SYSTEM_ID_ENG_OBJECT);
+        addNorToEnglishNameMap
                 (KEYWORD,
                         KEYWORD_ENG,
                         KEYWORD_ENG_OBJECT);
@@ -168,6 +172,10 @@ public class InternalNameTranslator {
                 (RECORD_ID,
                         RECORD_ID_ENG,
                         RECORD_ID_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (REFERENCE_TYPE,
+                        REFERENCE_TYPE_ENG,
+                        REFERENCE_TYPE_ENG_OBJECT);
         addNorToEnglishNameMap
                 (REGISTRY_ENTRY,
                         REGISTRY_ENTRY_ENG,
@@ -196,6 +204,10 @@ public class InternalNameTranslator {
                 (SUB_FONDS,
                         SUB_FONDS_ENG,
                         SUB_FONDS_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (TO_SYSTEM_ID,
+                        TO_SYSTEM_ID_ENG,
+                        TO_SYSTEM_ID_ENG_OBJECT);
         addNorToEnglishNameMap
                 (USER,
                         USER_ENG,

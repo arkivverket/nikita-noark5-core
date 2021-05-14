@@ -73,6 +73,7 @@ public class FileService
     private final IClassHateoasHandler classHateoasHandler;
     private final ICommentService commentService;
     private final IKeywordService keywordService;
+    private final ICrossReferenceService crossReferenceService;
     private final IMetadataService metadataService;
     private final INationalIdentifierService nationalIdentifierService;
     private final IPartService partService;
@@ -95,6 +96,7 @@ public class FileService
                        IClassHateoasHandler classHateoasHandler,
                        ICommentService commentService,
                        IKeywordService keywordService,
+                       ICrossReferenceService crossReferenceService,
                        IMetadataService metadataService,
                        INationalIdentifierService nationalIdentifierService,
                        IPartService partService,
@@ -114,6 +116,7 @@ public class FileService
         this.classHateoasHandler = classHateoasHandler;
         this.commentService = commentService;
         this.keywordService = keywordService;
+        this.crossReferenceService = crossReferenceService;
         this.metadataService = metadataService;
         this.nationalIdentifierService = nationalIdentifierService;
         this.partService = partService;
@@ -518,6 +521,15 @@ public class FileService
 
     @Override
     @Transactional
+    public CrossReferenceHateoas createCrossReferenceAssociatedWithFile(
+            @NotNull final UUID systemId,
+            @NotNull final CrossReference crossReference) {
+        return crossReferenceService.createCrossReferenceAssociatedWithFile(
+                crossReference, getFileOrThrow(systemId));
+    }
+
+    @Override
+    @Transactional
     public Object associateBSM(@NotNull UUID systemId,
                                @NotNull List<BSMBase> bsm) {
         File file = getFileOrThrow(systemId);
@@ -552,6 +564,11 @@ public class FileService
     @Override
     public StorageLocationHateoas getDefaultStorageLocation(UUID systemId) {
         return storageLocationService.getDefaultStorageLocation(systemId);
+    }
+
+    @Override
+    public CrossReferenceHateoas getDefaultCrossReference() {
+        return crossReferenceService.getDefaultCrossReference();
     }
 
     /**

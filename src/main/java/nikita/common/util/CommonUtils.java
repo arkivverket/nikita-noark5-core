@@ -44,6 +44,7 @@ import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE;
 import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 import static java.time.temporal.ChronoField.HOUR_OF_DAY;
 import static java.time.temporal.ChronoField.MINUTE_OF_HOUR;
+import static java.util.UUID.fromString;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -472,7 +473,7 @@ public final class CommonUtils {
                     objectNode.remove(fieldname);
                     if (currentNode.isTextual()) {
                         try {
-                            return UUID.fromString(currentNode.textValue());
+                            return fromString(currentNode.textValue());
                         } catch (IllegalArgumentException e) {
                             errors.append(fieldname + " (\"" +
                                     currentNode.textValue() +
@@ -646,7 +647,7 @@ public final class CommonUtils {
                 JsonNode currentNode = objectNode.get(SYSTEM_ID);
                 if (null != currentNode) {
                     noarkSystemIdEntity.setSystemId(
-                            UUID.fromString(currentNode.textValue()));
+                            fromString(currentNode.textValue()));
                     objectNode.remove(SYSTEM_ID);
                 }
             }
@@ -911,23 +912,23 @@ public final class CommonUtils {
                 JsonNode currentNode = objectNode.get(REFERENCE_TO_CLASS);
                 if (null != currentNode) {
                     crossReferenceEntity.setReferenceType(REFERENCE_TO_CLASS);
-                    crossReferenceEntity.setToSystemId(
-                            currentNode.textValue());
+                    crossReferenceEntity.setToSystemId(fromString(
+                            currentNode.textValue()));
                     objectNode.remove(REFERENCE_TO_CLASS);
                 }
                 currentNode = objectNode.get(REFERENCE_TO_REGISTRATION);
                 if (null != currentNode) {
                     crossReferenceEntity.setReferenceType(
                             REFERENCE_TO_REGISTRATION);
-                    crossReferenceEntity.setToSystemId(
-                            currentNode.textValue());
+                    crossReferenceEntity.setToSystemId(fromString(
+                            currentNode.textValue()));
                     objectNode.remove(REFERENCE_TO_REGISTRATION);
                 }
                 currentNode = objectNode.get(REFERENCE_TO_FILE);
                 if (null != currentNode) {
                     crossReferenceEntity.setReferenceType(REFERENCE_TO_FILE);
-                    crossReferenceEntity.setToSystemId(
-                            currentNode.textValue());
+                    crossReferenceEntity.setToSystemId(fromString(
+                            currentNode.textValue()));
                     objectNode.remove(REFERENCE_TO_FILE);
                 }
                 objectNode.remove(CROSS_REFERENCE);
@@ -1086,7 +1087,7 @@ public final class CommonUtils {
                     if (null != currentNode) {
                         AdministrativeUnit parent = new AdministrativeUnit();
                         parent.setSystemId(
-                                UUID.fromString(currentNode.textValue()));
+                                fromString(currentNode.textValue()));
                         parent.getReferenceChildAdministrativeUnit().add((AdministrativeUnit) administrativeUnit);
                         administrativeUnit.setParentAdministrativeUnit(parent);
                         objectNode.remove(ADMINISTRATIVE_UNIT_PARENT_REFERENCE);
@@ -2528,22 +2529,32 @@ public final class CommonUtils {
                     jgen.writeArrayFieldStart(CROSS_REFERENCES);
                     for (CrossReference crossReference :
                             crossReferences.getReferenceCrossReference()) {
+                        jgen.writeStartObject();
                         printCrossReference(jgen, crossReference);
+                        jgen.writeEndObject();
                     }
                     jgen.writeEndArray();
                 }
             }
 
-            private static void printCrossReference(
+            public static void printCrossReference(
                     @NotNull JsonGenerator jgen,
                     @NotNull ICrossReferenceEntity crossReference)
                     throws IOException {
                 if (crossReference != null) {
-                    jgen.writeStartObject();
                     printSystemIdEntity(jgen, crossReference);
-                    jgen.writeStringField(crossReference.getReferenceType(),
-                            crossReference.getToSystemId());
-                    jgen.writeEndObject();
+                    if (null != crossReference.getFromSystemId()) {
+                        jgen.writeStringField(FROM_SYSTEM_ID,
+                                crossReference.getFromSystemId().toString());
+                    }
+                    if (null != crossReference.getToSystemId()) {
+                        jgen.writeStringField(TO_SYSTEM_ID,
+                                crossReference.getToSystemId().toString());
+                    }
+                    if (null != crossReference.getReferenceType()) {
+                        jgen.writeStringField(REFERENCE_TYPE,
+                                crossReference.getReferenceType());
+                    }
                 }
             }
 

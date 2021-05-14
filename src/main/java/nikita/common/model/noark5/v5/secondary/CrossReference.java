@@ -1,24 +1,30 @@
 package nikita.common.model.noark5.v5.secondary;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.SystemIdEntity;
+import nikita.common.model.noark5.v5.hateoas.secondary.CrossReferenceHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.ICrossReferenceEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
+import nikita.common.util.deserialisers.secondary.CrossReferenceDeserializer;
+import nikita.webapp.hateoas.secondary.CrossReferenceHateoasHandler;
+import nikita.webapp.util.annotation.HateoasObject;
+import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.CROSS_REFERENCE;
+import static nikita.common.config.N5ResourceMappings.*;
 
 /**
- * Created by tsodring
- * <p>
  * Note a cross-reference is a a one way relationship from an entity to
  * another entity. It is a NoarkGeneral entity so it has a systemID for
  * identification purposes. This breaks with the current understanding of the
@@ -29,24 +35,37 @@ import static nikita.common.config.N5ResourceMappings.CROSS_REFERENCE;
  */
 @Entity
 @Table(name = TABLE_CROSS_REFERENCE)
+@JsonDeserialize(using = CrossReferenceDeserializer.class)
+@HateoasPacker(using = CrossReferenceHateoasHandler.class)
+@HateoasObject(using = CrossReferenceHateoas.class)
 public class CrossReference
         extends SystemIdEntity
         implements ISystemId, ICrossReferenceEntity {
 
     private static final long serialVersionUID = 1L;
 
-    @Column(name = "from_system_id", nullable = false)
-    private String fromSystemId;
+    @Column(name = FROM_SYSTEM_ID_ENG, nullable = false)
+    @JsonProperty(FROM_SYSTEM_ID)
+    private UUID fromSystemId;
 
-    @Column(name = "to_system_id", nullable = false)
-    private String toSystemId;
+    @Column(name = TO_SYSTEM_ID_ENG, nullable = false)
+    @JsonProperty(TO_SYSTEM_ID)
+    private UUID toSystemId;
 
     /**
      * Can be referanseTilKlasse, referanseTilMappe or
      * referanseTilRegistrering
      */
-    @Column(name = "reference_type", nullable = false)
+    @Column(name = REFERENCE_TYPE_ENG, nullable = false)
+    @JsonProperty(REFERENCE_TYPE)
     private String referenceType;
+
+    /**
+     * Can be class(klasse), mappe or registrering. This field is only used
+     * internally and should never be serialised as JSON
+     */
+    @Column(name = REFERENCE_FROM_TYPE, nullable = false)
+    private String fromReferenceType;
 
     /**
      * Link to Class
@@ -81,19 +100,19 @@ public class CrossReference
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     private Record referenceRecord;
 
-    public String getFromSystemId() {
+    public UUID getFromSystemId() {
         return fromSystemId;
     }
 
-    public void setFromSystemId(String fromSystemId) {
+    public void setFromSystemId(UUID fromSystemId) {
         this.fromSystemId = fromSystemId;
     }
 
-    public String getToSystemId() {
+    public UUID getToSystemId() {
         return toSystemId;
     }
 
-    public void setToSystemId(String toSystemId) {
+    public void setToSystemId(UUID toSystemId) {
         this.toSystemId = toSystemId;
     }
 
@@ -103,6 +122,14 @@ public class CrossReference
 
     public void setReferenceType(String referenceType) {
         this.referenceType = referenceType;
+    }
+
+    public String getFromReferenceType() {
+        return fromReferenceType;
+    }
+
+    public void setFromReferenceType(String fromReferenceType) {
+        this.fromReferenceType = fromReferenceType;
     }
 
     public Class getReferenceClass() {
