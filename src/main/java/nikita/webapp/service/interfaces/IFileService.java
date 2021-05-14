@@ -160,6 +160,10 @@ public interface IFileService {
             @NotNull final UUID systemID,
             @NotNull final Metadata screeningMetadata);
 
+    CrossReferenceHateoas createCrossReferenceAssociatedWithFile(
+            @NotNull final UUID systemId,
+            @NotNull CrossReference crossReference);
+
     ScreeningMetadataHateoas getDefaultScreeningMetadata(
             @NotNull final UUID systemID);
 
@@ -167,4 +171,6 @@ public interface IFileService {
 
     StorageLocationHateoas getDefaultStorageLocation(
             @NotNull final UUID systemID);
+
+    CrossReferenceHateoas getDefaultCrossReference();
 }

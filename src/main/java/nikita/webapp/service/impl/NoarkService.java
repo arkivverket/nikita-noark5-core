@@ -25,6 +25,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.util.UrlPathHelper;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -36,6 +37,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static nikita.common.config.DatabaseConstants.ID;
 import static nikita.common.config.N5ResourceMappings.BSM_DEF;
@@ -96,6 +99,21 @@ public class NoarkService
                 Objects.requireNonNull(
                         RequestContextHolder.getRequestAttributes()))
                 .getRequest().getServletPath();
+    }
+
+    protected String getFirstSystemIDFromRequest() {
+        HttpServletRequest request = ((ServletRequestAttributes)
+                Objects.requireNonNull(RequestContextHolder.getRequestAttributes()))
+                .getRequest();
+        String path = new UrlPathHelper().getPathWithinApplication(request);
+        Pattern pattern = Pattern.compile(
+                "([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f" +
+                        "]{12})");
+        Matcher matcher = pattern.matcher(path);
+        if (matcher.find()) {
+            return matcher.group(0);
+        }
+        return "";
     }
 
     protected Long getETag() {
@@ -444,5 +462,4 @@ public class NoarkService
             }
         }
     }
-
 }

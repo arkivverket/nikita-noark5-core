@@ -1540,6 +1540,60 @@ public class RecordHateoasController
                 .body(unitHateoas);
     }
 
+    // Create a CrossReference
+    // POST [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-kryssreferanse
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-kryssreferanse/
+    @Operation(summary = "Create a CrossReference associated with a File " +
+            "identified by the given systemId",
+            description = "Returns the newly updated CrossReference")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "CrossReference " +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED),
+            @ApiResponse(
+                    responseCode = CREATED_VAL,
+                    description = "CrossReference " +
+                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = NOT_FOUND_VAL,
+                    description = API_MESSAGE_PARENT_DOES_NOT_EXIST +
+                            " of type CrossReference"),
+            @ApiResponse(
+                    responseCode = CONFLICT_VAL,
+                    description = API_MESSAGE_CONFLICT),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
+            NEW_CROSS_REFERENCE,
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<CrossReferenceHateoas>
+    createCrossReferenceBySystemId(
+            HttpServletRequest request,
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemId of File to associate " +
+                            "CrossReference with",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID,
+            @Parameter(name = "CrossReference",
+                    description = "Incoming CrossReference object",
+                    required = true)
+            @RequestBody CrossReference crossReference)
+            throws NikitaException {
+        return ResponseEntity.status(CREATED)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(recordService
+                        .createCrossReferenceAssociatedWithRecord(
+                                systemID, crossReference));
+    }
+
     // Delete all Record
     // DELETE [contextPath][api]/arkivstruktur/registrering/
     @Operation(summary = "Deletes all Record")
@@ -1936,6 +1990,32 @@ public class RecordHateoasController
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(recordService.generateDefaultPlan());
+    }
+
+
+    // Get a CrossReference template
+    // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-kryssreferanse
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-kryssreferanse
+    @Operation(summary = "Get a default CrossReference")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "CrossReference returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CROSS_REFERENCE)
+    public ResponseEntity<CrossReferenceHateoas> getDefaultCrossReference(
+            HttpServletRequest request) {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(recordService.getDefaultCrossReference());
     }
 
     // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-posisjon

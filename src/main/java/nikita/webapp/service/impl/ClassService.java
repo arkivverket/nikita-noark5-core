@@ -9,10 +9,12 @@ import nikita.common.model.noark5.v5.hateoas.ClassificationSystemHateoas;
 import nikita.common.model.noark5.v5.hateoas.FileHateoas;
 import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.CrossReferenceHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.KeywordHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.ScreeningMetadataHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.Metadata;
+import nikita.common.model.noark5.v5.secondary.CrossReference;
 import nikita.common.model.noark5.v5.secondary.Keyword;
 import nikita.common.model.noark5.v5.secondary.Screening;
 import nikita.common.model.noark5.v5.secondary.ScreeningMetadataLocal;
@@ -30,6 +32,7 @@ import nikita.webapp.service.interfaces.IClassService;
 import nikita.webapp.service.interfaces.IFileService;
 import nikita.webapp.service.interfaces.IRecordService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
+import nikita.webapp.service.interfaces.secondary.ICrossReferenceService;
 import nikita.webapp.service.interfaces.secondary.IKeywordService;
 import nikita.webapp.service.interfaces.secondary.IScreeningMetadataService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
@@ -74,6 +77,7 @@ public class ClassService
     private final IFileService fileService;
     private final ICaseFileService caseFileService;
     private final IRecordService recordService;
+    private final ICrossReferenceService crossReferenceService;
     private final IKeywordService keywordService;
     private final IClassHateoasHandler classHateoasHandler;
     private final IClassificationSystemHateoasHandler
@@ -91,6 +95,7 @@ public class ClassService
                         IFileService fileService,
                         ICaseFileService caseFileService,
                         IRecordService recordService,
+                        ICrossReferenceService crossReferenceService,
                         IKeywordService keywordService,
                         IClassHateoasHandler classHateoasHandler,
                         IClassificationSystemHateoasHandler
@@ -105,6 +110,7 @@ public class ClassService
         this.classRepository = classRepository;
         this.fileService = fileService;
         this.keywordService = keywordService;
+        this.crossReferenceService = crossReferenceService;
         this.caseFileService = caseFileService;
         this.recordService = recordService;
         this.classHateoasHandler = classHateoasHandler;
@@ -222,6 +228,11 @@ public class ClassService
         return keywordService.generateDefaultKeyword();
     }
 
+    @Override
+    public CrossReferenceHateoas getDefaultCrossReference() {
+        return crossReferenceService.getDefaultCrossReference();
+    }
+
     /**
      * Generate a Default Class object that can be associated with the
      * identified Class. Note this object has not been persisted to the core.
@@ -262,6 +273,14 @@ public class ClassService
             String classSystemId, Record record) {
         record.setReferenceClass(getClassOrThrow(classSystemId));
         return recordService.save(record);
+    }
+
+    @Override
+    public CrossReferenceHateoas createCrossReferenceAssociatedWithClass(
+            @NotNull final UUID systemId,
+            final CrossReference crossReference) {
+        return crossReferenceService.createCrossReferenceAssociatedWithClass(
+                crossReference, getClassOrThrow(systemId.toString()));
     }
 
     @Override

@@ -18,7 +18,6 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileExpansionHateo
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
 import nikita.common.model.noark5.v5.hateoas.secondary.*;
-import nikita.common.model.noark5.v5.interfaces.entities.ICrossReferenceEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.Metadata;
 import nikita.common.model.noark5.v5.nationalidentifier.*;
@@ -121,58 +120,6 @@ public class FileHateoasController
                     required = true)
             @RequestBody Record record) throws NikitaException {
         return fileService.createRecordAssociatedWithFile(systemID, record);
-    }
-
-    // Create a CrossReference
-    // POST [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-kryssreferanse
-    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-kryssreferanse/
-    @Operation(summary = "Persists a Record associated with the given Series " +
-            "systemID",
-            description = "Returns the newly created Record after it was " +
-                    "associated with a File and persisted to the database")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = OK_VAL,
-                    description = "Record " +
-                            API_MESSAGE_OBJECT_ALREADY_PERSISTED),
-            @ApiResponse(
-                    responseCode = CREATED_VAL,
-                    description = "Record " +
-                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED),
-            @ApiResponse(
-                    responseCode = UNAUTHORIZED_VAL,
-                    description = API_MESSAGE_UNAUTHENTICATED_USER),
-            @ApiResponse(
-                    responseCode = FORBIDDEN_VAL,
-                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
-            @ApiResponse(
-                    responseCode = NOT_FOUND_VAL,
-                    description = API_MESSAGE_PARENT_DOES_NOT_EXIST +
-                            " of type Record"),
-            @ApiResponse(
-                    responseCode = CONFLICT_VAL,
-                    description = API_MESSAGE_CONFLICT),
-            @ApiResponse(
-                    responseCode = INTERNAL_SERVER_ERROR_VAL,
-                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-
-    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
-            NEW_CROSS_REFERENCE,
-            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
-    @SuppressWarnings("unused")
-    public ResponseEntity<ApiError> createCrossReferenceAssociatedWithFile(
-            @Parameter(name = SYSTEM_ID,
-                    description = "systemID of file to associate the Record " +
-                            "with",
-                    required = true)
-            @PathVariable(SYSTEM_ID) final String systemID,
-            @Parameter(name = "crossReferenceEntity",
-                    description = "Noark entity that supports cross reference" +
-                            " functionality",
-                    required = true)
-            @RequestBody ICrossReferenceEntity crossReferenceEntity)
-            throws NikitaException {
-        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
     }
 
     // API - All GET Requests (CRUD - READ)
@@ -535,6 +482,60 @@ public class FileHateoasController
                     required = true)
             @RequestBody Class klass) throws NikitaException {
         return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
+    }
+
+    // Create a CrossReference
+    // POST [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-kryssreferanse
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-kryssreferanse/
+    @Operation(summary = "Create a CrossReference associated with a File " +
+            "identified by the given systemId",
+            description = "Returns the newly updated CrossReference")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "CrossReference " +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED),
+            @ApiResponse(
+                    responseCode = CREATED_VAL,
+                    description = "CrossReference " +
+                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = NOT_FOUND_VAL,
+                    description = API_MESSAGE_PARENT_DOES_NOT_EXIST +
+                            " of type CrossReference"),
+            @ApiResponse(
+                    responseCode = CONFLICT_VAL,
+                    description = API_MESSAGE_CONFLICT),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
+            NEW_CROSS_REFERENCE,
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<CrossReferenceHateoas>
+    createCrossReferenceBySystemId(
+            HttpServletRequest request,
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemId of File to associate " +
+                            "CrossReference with",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID,
+            @Parameter(name = "CrossReference",
+                    description = "Incoming CrossReference object",
+                    required = true)
+            @RequestBody CrossReference crossReference)
+            throws NikitaException {
+        return ResponseEntity.status(CREATED)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(fileService
+                        .createCrossReferenceAssociatedWithFile(
+                                systemID, crossReference));
     }
 
     // API - All GET Requests (CRUD - READ)
@@ -987,6 +988,29 @@ public class FileHateoasController
                 .body(fileService.generateDefaultComment());
     }
 
+    // Get a CrossReference template
+    // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-kryssreferanse
+    @Operation(summary = "Get a default CrossReference")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "CrossReference returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CROSS_REFERENCE)
+    public ResponseEntity<CrossReferenceHateoas> getDefaultCrossReference(
+            HttpServletRequest request) {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(fileService.getDefaultCrossReference());
+    }
 
     // Create a default ScreeningMetadata
     // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-skjermingmetadata
