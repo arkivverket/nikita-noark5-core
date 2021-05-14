@@ -14,8 +14,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.time.OffsetDateTime;
 import java.util.Iterator;
 import java.util.Map;
@@ -48,9 +46,8 @@ public class MetadataInsert {
 
                 ObjectMapper objectMapper = new ObjectMapper();
 
-                JsonNode tree = objectMapper.readTree(
-                        Files.newBufferedReader(resource.getFile().toPath(),
-                                StandardCharsets.UTF_8));
+                JsonNode tree = objectMapper
+                        .readTree(resource.getInputStream());
 
                 Iterator<Map.Entry<String, JsonNode>> itr = tree.getFields();
 
