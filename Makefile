@@ -27,7 +27,7 @@ docker_push: docker
 	@echo Assuming DOCKER_HUB_USER DOCKER_HUB_PASSWORD shell variables are set to log into Docker hub
 	mvn compile -DskipTests=true jib:build -Djib.to.image=registry.hub.docker.com/oslometabi/nikita-noark5-core:latest -Djib.to.auth.username=$$DOCKER_HUB_USER -Djib.to.auth.password=$$DOCKER_HUB_PASSWORD
 docker_run: docker
-	docker run  -dit -v /data:/data -p8092:8092 oslometabi/nikita-noark5-core:latest
+	docker run  -dit -v /data2:/data2 -p8092:8092 oslometabi/nikita-noark5-core:latest
 docker_tail:
 	docker logs `docker ps | grep ${project} | awk ' { print $$1 } '`
 docker_compose:
