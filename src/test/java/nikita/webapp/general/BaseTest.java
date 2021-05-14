@@ -23,6 +23,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.transaction.Transactional;
 import java.io.UnsupportedEncodingException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static nikita.common.config.HATEOASConstants.HREF;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -78,5 +80,16 @@ public class BaseTest {
         resultActions.andDo(document("home",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint())));
+    }
+
+    protected String getFirstSystemIDFromRequest(String url) {
+        Pattern pattern = Pattern.compile(
+                "([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f" +
+                        "]{12})");
+        Matcher matcher = pattern.matcher(url);
+        if (matcher.find()) {
+            return matcher.group(0);
+        }
+        return "";
     }
 }
