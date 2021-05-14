@@ -1148,6 +1148,9 @@ public final class Constants {
     public static final String HREF_BASE_CLASSIFICATION_SYSTEM =
             HREF_BASE_FONDS_STRUCTURE + SLASH + CLASSIFICATION_SYSTEM;
 
+    public static final String HREF_BASE_CROSS_REFERENCE =
+            HREF_BASE_FONDS_STRUCTURE + SLASH + CROSS_REFERENCE;
+
     public static final String HREF_BASE_FONDS =
             HREF_BASE_FONDS_STRUCTURE + SLASH + FONDS;
 
