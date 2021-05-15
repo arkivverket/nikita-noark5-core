@@ -3,6 +3,7 @@ package nikita.common.model.noark5.v5.hateoas;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.util.serializers.noark5v5.hateoas.HateoasSerializer;
+import org.springframework.data.domain.Page;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,6 +72,12 @@ public class HateoasNoarkObject implements IHateoasNoarkObject {
     public HateoasNoarkObject(List<INoarkEntity> entityList,
                               String entityType) {
         this.entityList.addAll(entityList);
+        this.entityType = entityType;
+        singleEntity = false;
+    }
+
+    public HateoasNoarkObject(Page<INoarkEntity> page, String entityType) {
+        this.entityList.addAll(page.getContent());
         this.entityType = entityType;
         singleEntity = false;
     }
