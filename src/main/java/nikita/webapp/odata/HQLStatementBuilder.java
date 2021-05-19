@@ -197,7 +197,7 @@ public class HQLStatementBuilder {
             for (String s : entityList) {
                 join.add(s);
             }
-            from.insert(0, join.toString() + " ");
+            from.insert(0, join + " ");
         }
 
         // For JOIN queries it is important to state the entity you want to
@@ -212,8 +212,8 @@ public class HQLStatementBuilder {
             }
         }
 
-        String query = select.toString() + " FROM " + this.fromEntity + " AS " +
-                this.fromEntityAlias + " " + from.toString();
+        String query = select + " FROM " + this.fromEntity + " AS " +
+                this.fromEntityAlias + " " + from;
 
         if (where.length() > 0) {
             String whereString = where.toString();
