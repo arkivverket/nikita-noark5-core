@@ -61,7 +61,8 @@ public class HateoasSerializer
         if (list.size() > 0) {
             if (!hateoasObject.isSingleEntity()) {
                 jgen.writeStartObject();
-                jgen.writeNumberField(ENTITY_ROOT_NAME_LIST_COUNT, list.size());
+                jgen.writeNumberField(ENTITY_ROOT_NAME_LIST_COUNT,
+                        hateoasObject.getCount());
                 jgen.writeFieldName(ENTITY_ROOT_NAME_LIST);
                 jgen.writeStartArray();
             }

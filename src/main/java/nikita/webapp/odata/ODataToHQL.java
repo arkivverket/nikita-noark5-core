@@ -1,5 +1,6 @@
 package nikita.webapp.odata;
 
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import nikita.webapp.odata.model.Comparison;
 import org.hibernate.Session;
@@ -186,7 +187,7 @@ public class ODataToHQL
         statement.addOrderBy(attribute, sortOrder);
     }
 
-    public Query getHqlStatement(Session session) {
+    public Query<INoarkEntity> getHqlStatement(Session session) {
         return statement.getQuery(session);
     }
 
@@ -232,5 +233,9 @@ public class ODataToHQL
         } else {
             comparison.setRight(value);
         }
+    }
+
+    public String getEntity() {
+        return statement.getFromEntity();
     }
 }
