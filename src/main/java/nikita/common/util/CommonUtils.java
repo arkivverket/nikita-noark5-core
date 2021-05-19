@@ -23,12 +23,15 @@ import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NikitaMalformedHeaderException;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
+import nikita.webapp.util.annotation.ANationalIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
 
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.BadRequestException;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -96,6 +99,9 @@ public final class CommonUtils {
     private static Map<String, FileExtensionAndMimeType> archiveVersion =
             new HashMap<>();
 
+    public static Map<String, Class<?>> entityMap = new HashMap<>();
+    public static Map<String, Class<?>> natIdentMap = new HashMap<>();
+
     // You shall not instantiate me!
     private CommonUtils() {
     }
@@ -153,6 +159,22 @@ public final class CommonUtils {
 
     public static final class FileUtils {
 
+        public static void addClassToMap(String simpleName, Class klass) {
+            entityMap.put(simpleName, klass);
+        }
+
+        public static void addClassToNatIdentMap(String simpleName,
+                                                 Class klass,
+                                                 Annotation annotation) {
+            natIdentMap.put(
+                    ((ANationalIdentifier) annotation).name(), klass);
+        }
+
+        public static Class getClassFromName(String className) {
+            return Optional.ofNullable(entityMap.get(className))
+                    .orElseThrow(() -> new BadRequestException(
+                            "Unsupported Noark class: " + className));
+        }
 
         public static Boolean mimeTypeIsConvertible(@NotNull String mimeType) {
             return mimeTypeConversionMap.containsKey(mimeType);
