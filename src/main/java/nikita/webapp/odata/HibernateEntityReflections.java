@@ -1,36 +1,34 @@
 package nikita.webapp.odata;
 
-import nikita.webapp.util.annotation.ANationalIdentifier;
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.*;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.InternalServerErrorException;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.Collection;
+import java.util.Optional;
+
+import static nikita.common.util.CommonUtils.entityMap;
+import static nikita.common.util.CommonUtils.natIdentMap;
 
 public class HibernateEntityReflections {
 
     private static final Logger logger =
             LoggerFactory.getLogger(HibernateEntityReflections.class);
 
-    private final Map<String, Class<?>> entityMap = new HashMap<>();
-    private final Map<String, Class<?>> natIdentMap = new HashMap<>();
-
-    public HibernateEntityReflections() {
-        constructEntityList();
-    }
 
     protected String getForeignKey(String fromClassName, String toClassName) {
 
-        Class klass = Optional.ofNullable(entityMap.get(fromClassName))
+        Class<?> klass = Optional.ofNullable(entityMap.get(fromClassName))
                 .orElseThrow(() -> new BadRequestException(
                         "Unsupported Entity class: " + fromClassName));
 
@@ -89,17 +87,10 @@ public class HibernateEntityReflections {
                 }
             }
         }
-
         if (foreignKeyName.isEmpty() && null != natIdentMap.get(toClassName)) {
             foreignKeyName = "referenceNationalIdentifier";
         }
         return foreignKeyName;
-    }
-
-    public Class getClass(String className) {
-        return Optional.ofNullable(entityMap.get(className))
-                .orElseThrow(() -> new BadRequestException(
-                        "Unsupported Noark class: " + className));
     }
 
     public String getPrimaryKey(String className) {
@@ -115,22 +106,5 @@ public class HibernateEntityReflections {
             }
         }
         return "";
-    }
-
-    protected void constructEntityList() {
-        Reflections ref = new Reflections("nikita.common.model.noark5.v5");
-        Iterator<Class<?>> itr =
-                ref.getTypesAnnotatedWith(Entity.class).iterator();
-        while (itr.hasNext()) {
-            Class klass = itr.next();
-            String simpleName = klass.getSimpleName();
-            entityMap.put(simpleName, klass);
-            if (klass.isAnnotationPresent(ANationalIdentifier.class)) {
-                Annotation annotation =
-                        klass.getAnnotation(ANationalIdentifier.class);
-                natIdentMap.put(
-                        ((ANationalIdentifier) annotation).name(), klass);
-            }
-        }
     }
 }
