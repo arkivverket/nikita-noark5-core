@@ -304,11 +304,11 @@ public class HQLStatementBuilder {
 
     /**
      * Make a note of the entityName e.g., Part and the original
-     * originalEntityName e.g., so that we can allow higher layers that
-     * understand the domain model the ability fix the inheritance
+     * originalEntityName e.g., PartPerson, so that we can allow higher layers
+     * that understand the domain model the ability fix the inheritance
      *
-     * @param entityName
-     * @param originalEntityName
+     * @param entityName         The name of the entity e.g., Part
+     * @param originalEntityName The name of the entity e.g., PartPerson
      */
     public void addPotentialTypeMapping(
             String entityName, String originalEntityName) {
