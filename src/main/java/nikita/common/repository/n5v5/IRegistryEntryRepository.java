@@ -2,6 +2,8 @@ package nikita.common.repository.n5v5;
 
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,13 +14,9 @@ import java.util.UUID;
 public interface IRegistryEntryRepository extends
         PagingAndSortingRepository<RegistryEntry, UUID> {
 
-    // -- All SAVE operations
-    @Override
-    RegistryEntry save(RegistryEntry registryEntry);
-
     RegistryEntry findBySystemId(UUID systemId);
 
-    List<RegistryEntry> findByOwnedBy(String ownedBy);
+    Page<RegistryEntry> findByOwnedBy(String ownedBy, Pageable pageable);
 
     List<RegistryEntry> findByReferenceFile(File file);
 

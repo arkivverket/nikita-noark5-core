@@ -14,19 +14,9 @@ import java.util.UUID;
 public interface ICaseFileRepository
         extends PagingAndSortingRepository<CaseFile, UUID> {
 
-    // -- All SAVE operations
-    CaseFile save(CaseFile caseFile);
-
-    // -- All READ operations
-    // systemId
-    CaseFile findBySystemId(UUID systemId);
-
     List<CaseFile> findByReferenceSeries(Series series);
 
-    List<CaseFile> findByOwnedBy(String ownedBy);
-
-    Page<CaseFile> findByReferenceSeries(Series series, Pageable page);
+    Page<CaseFile> findByOwnedBy(String ownedBy, Pageable pageable);
 
     long deleteByOwnedBy(String ownedBy);
-
 }
