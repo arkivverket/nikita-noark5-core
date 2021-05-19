@@ -2,6 +2,7 @@ package nikita.common.repository.n5v5.secondary;
 
 import nikita.common.model.noark5.v5.secondary.ScreeningMetadataLocal;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
