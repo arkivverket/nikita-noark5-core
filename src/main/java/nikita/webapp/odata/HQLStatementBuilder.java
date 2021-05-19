@@ -1,6 +1,7 @@
 package nikita.webapp.odata;
 
 import nikita.common.model.nikita.Pair;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -29,7 +30,7 @@ public class HQLStatementBuilder {
 
     public Map<String, StringBuilder> bsmParameters = new HashMap<>();
     // Setting a hard limit of 1000 unless overridden
-    private AtomicInteger limitHowMany = new AtomicInteger(1000);
+    private AtomicInteger limitHowMany = new AtomicInteger(Integer.MAX_VALUE);
     // Always start at offset 0 unless overridden
     private AtomicInteger limitOffset = new AtomicInteger(0);
     private String fromEntity = "";
@@ -243,8 +244,9 @@ public class HQLStatementBuilder {
         return processQuery().stripTrailing();
     }
 
-    public Query getQuery(Session session) {
-        Query query = session.createQuery(processQuery());
+    public Query<INoarkEntity> getQuery(Session session) {
+        Query<INoarkEntity> query = (Query<INoarkEntity>)
+                session.createQuery(processQuery());
 
         for (Map.Entry<String, Object> entry :
                 parameters.entrySet()) {
@@ -311,5 +313,9 @@ public class HQLStatementBuilder {
     public void addPotentialTypeMapping(
             String entityName, String originalEntityName) {
         typeMappings.put(originalEntityName, entityName);
+    }
+
+    public String getFromEntity() {
+        return fromEntity;
     }
 }
