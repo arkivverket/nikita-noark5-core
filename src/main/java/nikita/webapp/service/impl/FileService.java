@@ -375,6 +375,20 @@ public class FileService
     }
 
     @Override
+    public KeywordHateoas getKeywordAssociatedWithFile(
+            @NotNull final UUID systemID) {
+        return keywordService.packKeywordsAsHateaos(copyOf(
+                getFileOrThrow(systemID).getReferenceKeyword()));
+    }
+
+    @Override
+    public StorageLocationHateoas getStorageLocationAssociatedWithFile(
+            @NotNull final UUID systemID) {
+        return storageLocationService.packStorageLocationsAsHateaos(copyOf(
+                getFileOrThrow(systemID).getReferenceStorageLocation()));
+    }
+
+    @Override
     public NationalIdentifierHateoas getNationalIdentifierAssociatedWithFile(
             @NotNull final String systemID) {
         NationalIdentifierHateoas niHateoas = new NationalIdentifierHateoas(

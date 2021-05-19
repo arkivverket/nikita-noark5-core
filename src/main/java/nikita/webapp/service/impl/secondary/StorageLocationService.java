@@ -5,6 +5,7 @@ import nikita.common.model.noark5.v5.Fonds;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.hateoas.secondary.StorageLocationHateoas;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.secondary.StorageLocation;
 import nikita.common.repository.n5v5.secondary.IStorageLocationRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
@@ -204,6 +205,16 @@ public class StorageLocationService
     }
 
     // All helper methods
+
+
+    public StorageLocationHateoas packStorageLocationsAsHateaos(
+            @NotNull List<INoarkEntity> storageLocations) {
+        StorageLocationHateoas storageLocationHateoas =
+                new StorageLocationHateoas(storageLocations);
+        storageLocationHateoasHandler.addLinks(
+                storageLocationHateoas, new Authorisation());
+        return storageLocationHateoas;
+    }
 
     /**
      * Internal helper method. Rather than having a find and try catch in

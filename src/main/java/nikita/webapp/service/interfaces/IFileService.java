@@ -116,6 +116,11 @@ public interface IFileService {
 
     PartHateoas getPartAssociatedWithFile(@NotNull final String systemID);
 
+    KeywordHateoas getKeywordAssociatedWithFile(@NotNull final UUID systemId);
+
+    StorageLocationHateoas getStorageLocationAssociatedWithFile(
+            @NotNull final UUID systemId);
+
     NationalIdentifierHateoas getNationalIdentifierAssociatedWithFile
             (@NotNull final String systemID);
 

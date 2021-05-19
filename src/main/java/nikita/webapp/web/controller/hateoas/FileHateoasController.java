@@ -934,6 +934,66 @@ public class FileHateoasController
                         .getScreeningMetadataAssociatedWithFile(systemID));
     }
 
+    // Retrieve all Keyword associated with a File
+    // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/noekkelord
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/noekkelord/
+    @Operation(summary = "Retrieves all Keyword associated with a File")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "Keyword returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + KEYWORD)
+    public ResponseEntity<KeywordHateoas> getKeywordAssociatedWithFile(
+            HttpServletRequest request,
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the file to retrieve keyword",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(fileService.getKeywordAssociatedWithFile(systemID));
+    }
+
+    // Retrieve all StorageLocation associated with a File
+    // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/oppbevaringssted
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/oppbevaringssted/
+    @Operation(summary = "Retrieves all StorageLocation associated with a File")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "StorageLocation returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + STORAGE_LOCATION)
+    public ResponseEntity<StorageLocationHateoas>
+    getStorageLocationAssociatedWithFile(
+            HttpServletRequest request,
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the file to retrieve " +
+                            "StorageLocation",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        return ResponseEntity.status(OK)
+                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
+                .body(fileService.getStorageLocationAssociatedWithFile(systemID));
+    }
+
     // Create a Keyword with default values
     // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-noekkelord
     // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-noekkelord/

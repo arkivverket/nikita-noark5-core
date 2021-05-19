@@ -5,9 +5,11 @@ import nikita.common.model.noark5.v5.Fonds;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.hateoas.secondary.StorageLocationHateoas;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.secondary.StorageLocation;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.util.UUID;
 
 public interface IStorageLocationService {
@@ -41,4 +43,7 @@ public interface IStorageLocationService {
 
     StorageLocationHateoas getDefaultStorageLocation(
             @NotNull final UUID systemId);
+
+    StorageLocationHateoas packStorageLocationsAsHateaos(
+            @NotNull final List<INoarkEntity> storageLocations);
 }

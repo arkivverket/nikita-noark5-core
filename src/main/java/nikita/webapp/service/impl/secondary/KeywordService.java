@@ -4,6 +4,7 @@ import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.hateoas.secondary.KeywordHateoas;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.secondary.Keyword;
 import nikita.common.repository.n5v5.secondary.IKeywordRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
@@ -168,6 +169,12 @@ public class KeywordService
     }
 
     // All helper methods
+
+    public KeywordHateoas packKeywordsAsHateaos(List<INoarkEntity> keywords) {
+        KeywordHateoas keywordHateoas = new KeywordHateoas(keywords);
+        keywordHateoasHandler.addLinks(keywordHateoas, new Authorisation());
+        return keywordHateoas;
+    }
 
     /**
      * Internal helper method. Rather than having a find and try catch in
