@@ -103,7 +103,7 @@ public interface IFileService {
 
     File getFileOrThrow(@NotNull UUID systemId);
 
-    List<File> findByOwnedBy(String ownedBy);
+    FileHateoas findByOwnedBy();
 
     ResponseEntity<ClassHateoas>
     findClassAssociatedWithFile(@NotNull final String systemId);

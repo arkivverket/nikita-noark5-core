@@ -1,5 +1,6 @@
 package nikita.webapp.service.impl;
 
+import nikita.common.model.nikita.NikitaPage;
 import nikita.common.model.nikita.PatchMerge;
 import nikita.common.model.nikita.PatchObjects;
 import nikita.common.model.noark5.bsm.BSMBase;
@@ -38,6 +39,10 @@ import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,6 +57,7 @@ import java.util.UUID;
 import static java.util.List.copyOf;
 import static java.util.UUID.fromString;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
+import static nikita.common.config.N5ResourceMappings.CREATED_DATE_ENG_OBJECT;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
 import static org.springframework.http.HttpStatus.OK;
@@ -336,9 +342,18 @@ public class FileService
         return caseFileService.generateDefaultExpandedCaseFile();
     }
 
-    public List<File> findByOwnedBy(String ownedBy) {
-        ownedBy = (ownedBy == null) ? getUser() : ownedBy;
-        return fileRepository.findByOwnedBy(ownedBy);
+    @Override
+    public FileHateoas findByOwnedBy() {
+        Pageable pageable = PageRequest.of(0, 10,
+                Sort.by(CREATED_DATE_ENG_OBJECT));
+        Page<File> pagedFile = fileRepository
+                .findByOwnedBy(getUser(), pageable);
+        NikitaPage page = new NikitaPage(
+                (List<INoarkEntity>) (List) pagedFile.getContent(),
+                pagedFile.getTotalElements());
+        FileHateoas fileHateoas = new FileHateoas(page);
+        fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
+        return fileHateoas;
     }
 
     @Override

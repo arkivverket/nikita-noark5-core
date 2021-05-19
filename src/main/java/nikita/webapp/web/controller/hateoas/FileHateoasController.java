@@ -34,7 +34,6 @@ import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -895,11 +894,7 @@ public class FileHateoasController
     @GetMapping
     public ResponseEntity<FileHateoas> findAllFiles(
             HttpServletRequest request) {
-        String ownedBy = SecurityContextHolder.getContext().
-                getAuthentication().getName();
-        FileHateoas fileHateoas = new
-                FileHateoas((List<INoarkEntity>) (List)
-                fileService.findByOwnedBy(ownedBy));
+        FileHateoas fileHateoas = fileService.findByOwnedBy();
         fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
         return ResponseEntity.status(OK)
                 .allow(getMethodsForRequestOrThrow(request.getServletPath()))
