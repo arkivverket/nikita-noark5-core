@@ -1,5 +1,6 @@
 package nikita.common.model.noark5.v5.hateoas;
 
+import nikita.common.model.nikita.NikitaPage;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 
 import java.util.List;
@@ -22,4 +23,8 @@ public interface IHateoasNoarkObject {
     boolean isSingleEntity();
 
     Long getEntityVersion();
+
+    NikitaPage getPage();
+
+    long getCount();
 }
