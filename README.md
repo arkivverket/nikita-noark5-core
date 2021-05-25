@@ -22,7 +22,7 @@ Read [INSTALL](docs/general/Install.md) to get started.
 ## Contributing
 
 You are encouraged to contribute. You can either hack on the code and send pull requests or join us on
-[Freenode IRC channel #nikita](http://webchat.freenode.net?randomnick=1&channels=%23nikita&uio=d4)
+[OFTC IRC channel #nikita](https://webchat.oftc.net/?randomnick=1&channels=%23nikita&uio=d4)
 for discussions. Feedback is greatly appreciated. The project has an open ethos and welcomes all forms of feedback. The
 project maintains a mailing list
 (https://lists.nuug.no/mailman/listinfo/nikita-noark) and issues can be raised 
