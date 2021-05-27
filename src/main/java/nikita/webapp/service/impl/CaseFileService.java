@@ -124,15 +124,12 @@ public class CaseFileService
     public CaseFileHateoas expandFileAsCaseFileHateoas(
             File file, PatchMerge patchMerge) {
         CaseFile caseFile = new CaseFile(file);
-
         CaseStatus caseStatus = getCaseStatus(patchMerge);
         caseFile.setCaseStatus(caseStatus);
-
         String caseResponsible = (String) patchMerge.getValue(CASE_RESPONSIBLE);
         if (null != caseResponsible && !caseResponsible.isEmpty()) {
             caseFile.setCaseResponsible(caseResponsible);
         }
-
         if (null != patchMerge.getValue(CASE_DATE)) {
             caseFile.setCaseDate((OffsetDateTime)
                     patchMerge.getValue(CASE_DATE));
