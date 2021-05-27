@@ -16,7 +16,6 @@ import nikita.common.repository.n5v5.IDocumentDescriptionRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.IScreeningMetadataHateoasHandler;
-import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.IBSMService;
 import nikita.webapp.service.interfaces.IDocumentDescriptionService;
@@ -385,8 +384,8 @@ public class DocumentDescriptionService
     public ScreeningMetadataHateoas packAsHateoas(NikitaPage page) {
         ScreeningMetadataHateoas screeningMetadataHateoas =
                 new ScreeningMetadataHateoas(page);
-        screeningMetadataHateoasHandler.addLinks(screeningMetadataHateoas,
-                new Authorisation());
+        applyLinksAndHeader(screeningMetadataHateoas,
+                screeningMetadataHateoasHandler);
         return screeningMetadataHateoas;
     }
 
