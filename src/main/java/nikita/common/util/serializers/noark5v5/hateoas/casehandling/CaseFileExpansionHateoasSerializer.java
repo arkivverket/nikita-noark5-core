@@ -3,7 +3,7 @@ package nikita.common.util.serializers.noark5v5.hateoas.casehandling;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import nikita.common.model.noark5.v5.casehandling.CaseFileExpansion;
+import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.util.serializers.noark5v5.hateoas.HateoasSerializer;
@@ -29,7 +29,7 @@ public class CaseFileExpansionHateoasSerializer
                                      HateoasNoarkObject caseFileHateoas,
                                      JsonGenerator jgen) throws IOException {
 
-        CaseFileExpansion caseFile = (CaseFileExpansion) noarkEntity;
+        CaseFile caseFile = (CaseFile) noarkEntity;
         jgen.writeStartObject();
         printCaseFileEntity(jgen, caseFile);
         printHateoasLinks(jgen, caseFileHateoas.getLinks(caseFile));

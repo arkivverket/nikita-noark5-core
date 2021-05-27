@@ -6,7 +6,6 @@ import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.admin.User;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
-import nikita.common.model.noark5.v5.casehandling.CaseFileExpansion;
 import nikita.common.model.noark5.v5.casehandling.RecordNote;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileExpansionHateoas;
@@ -444,14 +443,14 @@ public class CaseFileService
      */
     @Override
     public CaseFileExpansionHateoas generateDefaultExpandedCaseFile() {
-        CaseFileExpansion caseFileExpansion = new CaseFileExpansion();
+        CaseFile caseFile = new CaseFile();
         CaseStatus caseStatus = new CaseStatus(TEMPLATE_CASE_STATUS_CODE,
                 TEMPLATE_CASE_STATUS_NAME);
-        caseFileExpansion.setCaseStatus(caseStatus);
-        caseFileExpansion.setCaseResponsible(getUser());
-        caseFileExpansion.setCaseDate(now());
-        caseFileExpansion.setVersion(-1L, true);
-        return packAsHateoas(caseFileExpansion);
+        caseFile.setCaseStatus(caseStatus);
+        caseFile.setCaseResponsible(getUser());
+        caseFile.setCaseDate(now());
+        caseFile.setVersion(-1L, true);
+        return packAsCaseFileExpansionHateoas(caseFile);
     }
 
     /**
@@ -577,7 +576,8 @@ public class CaseFileService
         return caseFileHateoas;
     }
 
-    private CaseFileExpansionHateoas packAsHateoas(CaseFileExpansion caseFile) {
+    private CaseFileExpansionHateoas
+    packAsCaseFileExpansionHateoas(CaseFile caseFile) {
         CaseFileExpansionHateoas caseFileHateoas =
                 new CaseFileExpansionHateoas(caseFile);
         applyLinksAndHeader(caseFileHateoas, caseFileHateoasHandler);
