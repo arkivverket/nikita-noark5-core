@@ -15,7 +15,6 @@ import nikita.common.model.noark5.v5.hateoas.secondary.ScreeningMetadataHateoas;
 import nikita.common.model.noark5.v5.metadata.Metadata;
 import nikita.common.model.noark5.v5.secondary.CrossReference;
 import nikita.common.model.noark5.v5.secondary.Keyword;
-import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
@@ -23,70 +22,73 @@ import java.util.UUID;
 public interface IClassService {
 
 	// -- All CREATE operations
-    ClassHateoas save(Class klass);
+    ClassHateoas save(@NotNull final Class klass);
 
     ClassHateoas createClassAssociatedWithClass(
-            String classSystemId, Class klass);
+            @NotNull final UUID systemId, @NotNull final Class klass);
 
     FileHateoas createFileAssociatedWithClass(
-            String classSystemId, File file);
+            @NotNull final UUID systemId, @NotNull final File file);
 
     CaseFileHateoas createCaseFileAssociatedWithClass(
-            String classSystemId, CaseFile caseFile);
+            @NotNull final UUID systemId, @NotNull final CaseFile caseFile);
 
-    ResponseEntity<RecordHateoas> createRecordAssociatedWithClass(
-            String classSystemId, Record record);
+    ScreeningMetadataHateoas createScreeningMetadataAssociatedWithClass(
+            @NotNull final UUID systemId,
+            @NotNull final Metadata screeningMetadata);
+
+    RecordHateoas createRecordAssociatedWithClass(
+            @NotNull final UUID systemId, @NotNull final Record record);
 
     CrossReferenceHateoas createCrossReferenceAssociatedWithClass(
             @NotNull final UUID systemId,
-            @NotNull CrossReference crossReference);
+            @NotNull final CrossReference crossReference);
 
     KeywordHateoas createKeywordAssociatedWithClass(
             @NotNull final UUID systemId, @NotNull final Keyword keyword);
 
-    ClassHateoas generateDefaultSubClass(@NotNull String classSystemId);
+    ClassHateoas generateDefaultSubClass(@NotNull final UUID systemId);
+
+    ClassHateoas generateDefaultClass(@NotNull final UUID systemId);
 
     // -- All READ operations
-    ClassHateoas findAll(String ownedBy);
+    ClassHateoas findAll();
 
-    ClassHateoas findSingleClass(String classSystemId);
+    ClassHateoas findSingleClass(@NotNull final UUID systemId);
 
-    ClassHateoas findAllChildren(@NotNull String classSystemId);
+    ClassHateoas findAllChildren(@NotNull final UUID systemId);
 
-    ResponseEntity<ClassHateoas>
-    findClassAssociatedWithClass(@NotNull final String systemId);
+    ScreeningMetadataHateoas getScreeningMetadataAssociatedWithClass(
+            @NotNull final UUID systemId);
 
-    ResponseEntity<ClassificationSystemHateoas>
-    findClassificationSystemAssociatedWithClass(@NotNull final String systemId);
+    ClassHateoas findClassAssociatedWithClass(@NotNull final UUID systemId);
 
-    ResponseEntity<FileHateoas> findAllFileAssociatedWithClass(
-            @NotNull final String systemID);
+    ClassificationSystemHateoas findClassificationSystemAssociatedWithClass(
+            @NotNull final UUID systemId);
 
-    ResponseEntity<RecordHateoas> findAllRecordAssociatedWithClass(
-            @NotNull final String systemID);
+    FileHateoas findAllFileAssociatedWithClass(
+            @NotNull final UUID systemId);
+
+    RecordHateoas findAllRecordAssociatedWithClass(
+            @NotNull final UUID systemId);
 
     // All UPDATE operations
-    ClassHateoas handleUpdate(@NotNull final String systemId,
+    ClassHateoas handleUpdate(@NotNull final UUID systemId,
                               @NotNull final Long version,
                               @NotNull final Class klass);
 
     // All DELETE operations
-    void deleteEntity(@NotNull String systemId);
 
-    long deleteAllByOwnedBy();
+    void deleteEntity(@NotNull final UUID systemId);
 
-    ScreeningMetadataHateoas getScreeningMetadataAssociatedWithClass(
-            @NotNull final UUID systemID);
+    void deleteAllByOwnedBy();
 
-    ScreeningMetadataHateoas createScreeningMetadataAssociatedWithClass(
-            @NotNull final UUID systemID,
-            @NotNull final Metadata screeningMetadata);
+    // All TEMPLATE operations
 
     ScreeningMetadataHateoas getDefaultScreeningMetadata(
-            @NotNull final UUID systemID);
+            @NotNull final UUID systemId);
 
-    KeywordHateoas generateDefaultKeyword();
+    KeywordHateoas generateDefaultKeyword(@NotNull final UUID systemId);
 
-    CrossReferenceHateoas getDefaultCrossReference();
-
+    CrossReferenceHateoas getDefaultCrossReference(@NotNull final UUID systemId);
 }

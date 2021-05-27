@@ -22,7 +22,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RequestMapping(produces = NOARK5_V5_CONTENT_TYPE_JSON)
 public class ApplicationController {
 
-    private ApplicationService applicationService;
+    private final ApplicationService applicationService;
 
     public ApplicationController(ApplicationService applicationService) {
         this.applicationService = applicationService;

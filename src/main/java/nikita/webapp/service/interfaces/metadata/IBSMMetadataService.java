@@ -4,7 +4,6 @@ import nikita.common.model.nikita.PatchObjects;
 import nikita.common.model.noark5.v5.hateoas.metadata.BSMMetadataHateoas;
 import nikita.common.model.noark5.v5.md_other.BSMMetadata;
 import nikita.webapp.service.interfaces.INoarkService;
-import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
@@ -14,13 +13,13 @@ public interface IBSMMetadataService
 
     /**
      * Retrieve a BSMMetadata wrapped as a BSMMetadataHateoas object
-     * identified by the given systemID.
+     * identified by the given systemId.
      * <p>
      *
-     * @param systemID UUID of the BSMMetadata object to retrieve
+     * @param systemId UUID of the BSMMetadata object to retrieve
      * @return The BSMMetadataHateoas object
      */
-    ResponseEntity<BSMMetadataHateoas> find(@NotNull UUID systemID);
+    BSMMetadataHateoas find(@NotNull final UUID systemId);
 
     /**
      * Persist a BSMMetadata object to the database and wrap the
@@ -30,41 +29,43 @@ public interface IBSMMetadataService
      * @param bsmMetadata incoming BSMMetadata object
      * @return The persisted BSMMetadataHateoas object
      */
-    ResponseEntity<BSMMetadataHateoas> save(@NotNull BSMMetadata bsmMetadata);
+    BSMMetadataHateoas save(@NotNull final BSMMetadata bsmMetadata);
 
     /**
      * Undertake an update to an existing BSMMetadata object identified by
-     * the given systemID. The update is done using a PATCH request
+     * the given systemId. The update is done using a PATCH request
      * <p>
      *
-     * @param systemID     UUID of the BSMMetadata to update
+     * @param systemId     UUID of the BSMMetadata to update
      * @param patchObjects List of operations to undertake
      * @return The updated BSMMetadata object wrapped as a BSMMetadataHateoas
      */
-    ResponseEntity<BSMMetadataHateoas> handleUpdate(
-            @NotNull UUID systemID, @NotNull PatchObjects patchObjects);
+    BSMMetadataHateoas handleUpdate(
+            @NotNull final UUID systemId,
+            @NotNull final PatchObjects patchObjects);
 
     /**
      * Undertake an update to an existing BSMMetadata object identified by
-     * the given systemID.
+     * the given systemId.
      * <p>
      *
-     * @param systemID    UUID of the BSMMetadata to update
+     * @param systemId    UUID of the BSMMetadata to update
      * @param aLong
      * @param bsmMetadata incoming BSMMetadata object
      * @return The updated BSMMetadata object wrapped as a BSMMetadataHateoas
      */
-    ResponseEntity<BSMMetadataHateoas> handleUpdate(
-            @NotNull final UUID systemID,
-            Long aLong, @NotNull final BSMMetadata bsmMetadata);
+    BSMMetadataHateoas handleUpdate(
+            @NotNull final UUID systemId,
+            @NotNull final Long aLong,
+            @NotNull final BSMMetadata bsmMetadata);
 
     /**
-     * Delete the BSMMetadata object identified by the given systemID.
+     * Delete the BSMMetadata object identified by the given systemId.
      * <p>
      *
      * @param systemId UUID of the BSMMetadata to delete
      */
-    void deleteEntity(@NotNull UUID systemId);
+    void deleteEntity(@NotNull final UUID systemId);
 
     /**
      * Retrieve all BSMMetadata wrapped as a BSMMetadataHateoas object
@@ -72,5 +73,5 @@ public interface IBSMMetadataService
      *
      * @return The BSMMetadataHateoas object containing all BSMMetadata
      */
-    ResponseEntity<BSMMetadataHateoas> findAll();
+    BSMMetadataHateoas findAll();
 }

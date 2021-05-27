@@ -9,9 +9,6 @@ import nikita.common.util.serializers.noark5v5.hateoas.metadata.MetadataHateoasS
 
 import java.util.List;
 
-/**
- * Created by tsodring on 4/3/17.
- */
 @JsonSerialize(using = MetadataHateoasSerializer.class)
 public class MetadataHateoas
         extends HateoasNoarkObject

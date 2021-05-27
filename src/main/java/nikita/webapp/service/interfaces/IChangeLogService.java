@@ -1,23 +1,24 @@
 package nikita.webapp.service.interfaces;
 
-import nikita.common.model.noark5.v5.hateoas.ChangeLogHateoas;
 import nikita.common.model.noark5.v5.ChangeLog;
+import nikita.common.model.noark5.v5.hateoas.ChangeLogHateoas;
 
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 public interface IChangeLogService {
 
     ChangeLogHateoas generateDefaultChangeLog();
 
-    ChangeLogHateoas createNewChangeLog(ChangeLog changeLog);
+    ChangeLogHateoas createNewChangeLog(@NotNull final ChangeLog changeLog);
 
     ChangeLogHateoas findChangeLogByOwner();
 
-    ChangeLogHateoas findSingleChangeLog(String changeLogSystemId);
+    ChangeLogHateoas findSingleChangeLog(@NotNull final UUID systemId);
 
-    ChangeLogHateoas handleUpdate(@NotNull String systemId,
-                                  @NotNull Long version,
+    ChangeLogHateoas handleUpdate(@NotNull final UUID systemId,
+                                  @NotNull final Long version,
                                   @NotNull ChangeLog incomingChangeLog);
 
-    void deleteEntity(@NotNull String systemId);
+    void deleteEntity(@NotNull final UUID systemId);
 }

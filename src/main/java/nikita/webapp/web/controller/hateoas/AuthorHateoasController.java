@@ -12,11 +12,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
@@ -52,14 +52,12 @@ public class AuthorHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = AUTHOR + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<AuthorHateoas> findAuthorBySystemId(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the Author to retrieve",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemId) {
+            @PathVariable(SYSTEM_ID) final UUID systemId) {
         AuthorHateoas authorHateoas = authorService.findBySystemId(systemId);
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(authorHateoas);
     }
 
@@ -98,7 +96,7 @@ public class AuthorHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemId of Author to update",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID,
+            @PathVariable(SYSTEM_ID) final UUID systemID,
             @Parameter(name = "Author",
                     description = "Incoming Author object",
                     required = true)
@@ -107,7 +105,6 @@ public class AuthorHateoasController
             authorService.updateAuthorBySystemId
             (systemID, parseETAG(request.getHeader(ETAG)), author);
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(authorHateoas);
     }
 
@@ -132,7 +129,7 @@ public class AuthorHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the author to delete",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         authorService.deleteAuthorBySystemId(systemID);
         return ResponseEntity.status(NO_CONTENT)
                 .body(DELETE_RESPONSE);

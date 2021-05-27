@@ -27,7 +27,6 @@ import java.util.UUID;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.*;
 
@@ -71,12 +70,10 @@ public class DocumentObjectHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the documentObject to retrieve",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String documentObjectSystemId) {
+            @PathVariable(SYSTEM_ID) final UUID systemId) {
         DocumentObjectHateoas documentObjectHateoas =
-                documentObjectService.findBySystemId(documentObjectSystemId);
+                documentObjectService.findBySystemId(systemId);
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(documentObjectHateoas.getEntityVersion().toString())
                 .body(documentObjectHateoas);
     }
 
@@ -101,9 +98,8 @@ public class DocumentObjectHateoasController
     public ResponseEntity<DocumentObjectHateoas> findAllDocumentObject(
             HttpServletRequest request) {
         DocumentObjectHateoas documentObjectHateoas =
-                documentObjectService.findDocumentObjectByOwner();
+                documentObjectService.findAll();
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentObjectHateoas);
     }
 
@@ -131,10 +127,10 @@ public class DocumentObjectHateoasController
                     description = "systemID of the documentObject that has a file " +
                             "associated with it",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String documentObjectSystemId)
+            @PathVariable(SYSTEM_ID) final UUID systemId)
             throws IOException {
         Resource fileResource = documentObjectService.loadAsResource(
-                documentObjectSystemId, request, response);
+                systemId, request, response);
         try (InputStream filestream = fileResource.getInputStream()) {
             IOUtils.copyLarge(filestream,
                     response.getOutputStream());
@@ -169,9 +165,8 @@ public class DocumentObjectHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the documentObject",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentObjectService
                         .findAllConversionAssociatedWithDocumentObject(
                                 systemID));
@@ -201,12 +196,11 @@ public class DocumentObjectHateoasController
             HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID,
+            @PathVariable(SYSTEM_ID) final UUID systemID,
             @Parameter(name = "subSystemID",
                     required = true)
-            @PathVariable("subSystemID") final String subSystemID) {
+            @PathVariable("subSystemID") final UUID subSystemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentObjectService
                         .findConversionAssociatedWithDocumentObject
                                 (systemID, subSystemID));
@@ -235,9 +229,8 @@ public class DocumentObjectHateoasController
                     description = "systemId of documentObject to associate " +
                             "the conversion with.",
                     required = true)
-            @PathVariable String systemID) {
+            @PathVariable UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentObjectService
                         .generateDefaultConversion(systemID));
     }
@@ -284,7 +277,7 @@ public class DocumentObjectHateoasController
                     description = "systemId of documentObject to associate " +
                             "the conversion with.",
                     required = true)
-            @PathVariable String systemID,
+            @PathVariable UUID systemID,
             @Parameter(name = "conversion",
                     description = "Incoming documentObject object",
                     required = true)
@@ -294,8 +287,6 @@ public class DocumentObjectHateoasController
                 .createConversionAssociatedWithDocumentObject(
                         systemID, conversion);
         return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(conversionHateoas.getEntityVersion().toString())
                 .body(conversionHateoas);
     }
 
@@ -325,7 +316,7 @@ public class DocumentObjectHateoasController
                     description = "systemID of the documentObject you wish to" +
                             " associate a file with",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID)
+            @PathVariable(SYSTEM_ID) final UUID systemID)
             throws IOException {
         DocumentObjectHateoas documentObjectHateoas =
                 documentObjectService.handleIncomingFile(systemID, request);
@@ -354,10 +345,9 @@ public class DocumentObjectHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the documentObject to delete",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         documentObjectService.deleteEntity(systemID);
-        return ResponseEntity.
-                status(NO_CONTENT).
+        return ResponseEntity.status(NO_CONTENT).
                 body(DELETE_RESPONSE);
     }
 
@@ -390,8 +380,7 @@ public class DocumentObjectHateoasController
                     required = true)
             @PathVariable("subSystemID") final UUID subSystemID) {
         documentObjectService.deleteConversion(systemID, subSystemID);
-        return ResponseEntity.
-                status(NO_CONTENT).
+        return ResponseEntity.status(NO_CONTENT).
                 body(DELETE_RESPONSE);
     }
 
@@ -414,8 +403,8 @@ public class DocumentObjectHateoasController
     @DeleteMapping
     public ResponseEntity<String> deleteAllDocumentObject() {
         documentObjectService.deleteAll();
-        return ResponseEntity.status(NO_CONTENT).
-                body(DELETE_RESPONSE);
+        return ResponseEntity.status(NO_CONTENT)
+                .body(DELETE_RESPONSE);
     }
 
     // API - All PUT Requests (CRUD - UPDATE)
@@ -457,7 +446,7 @@ public class DocumentObjectHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemId of documentObject to update.",
                     required = true)
-            @PathVariable(SYSTEM_ID) String systemID,
+            @PathVariable(SYSTEM_ID) UUID systemID,
             @Parameter(name = "documentObject",
                     description = "Incoming documentObject object",
                     required = true)
@@ -468,8 +457,6 @@ public class DocumentObjectHateoasController
                         (systemID, parseETAG(
                                 request.getHeader(ETAG)), documentObject);
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(documentObjectHateoas.getEntityVersion().toString())
                 .body(documentObjectHateoas);
     }
 
@@ -509,11 +496,11 @@ public class DocumentObjectHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemId of conversion to update.",
                     required = true)
-            @PathVariable(SYSTEM_ID) String systemID,
+            @PathVariable(SYSTEM_ID) UUID systemID,
             @Parameter(name = "subSystemID",
                     description = "systemId of conversion to update.",
                     required = true)
-            @PathVariable("subSystemID") String subSystemID,
+            @PathVariable("subSystemID") UUID subSystemID,
             @Parameter(name = "conversion",
                     description = "Incoming conversion object",
                     required = true)

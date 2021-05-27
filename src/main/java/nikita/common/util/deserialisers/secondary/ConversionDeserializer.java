@@ -6,20 +6,21 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import nikita.common.model.noark5.v5.secondary.Conversion;
 import nikita.common.model.noark5.v5.metadata.Format;
+import nikita.common.model.noark5.v5.secondary.Conversion;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static nikita.common.config.ErrorMessagesConstants.MALFORMED_PAYLOAD;
 import static nikita.common.config.HATEOASConstants.LINKS;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 
 public class ConversionDeserializer
-        extends JsonDeserializer {
+        extends JsonDeserializer<Conversion> {
 
     private static final Logger logger =
             LoggerFactory.getLogger(ConversionDeserializer.class);
@@ -35,7 +36,7 @@ public class ConversionDeserializer
         ObjectNode objectNode = mapper.readTree(jsonParser);
 
         // Deserialize systemID
-        deserialiseNoarkSystemIdEntity(conversion, objectNode, errors);
+        deserialiseNoarkSystemIdEntity(conversion, objectNode);
         deserialiseNoarkCreateEntity(conversion, objectNode, errors);
         // Deserialize konvertertDato
         conversion.setConvertedDate(deserializeDateTime(
@@ -87,11 +88,8 @@ public class ConversionDeserializer
         // Check that there are no additional values left after processing the
         // tree. If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {
-            errors.append("The conversion you tried to create is malformed. The");
-            errors.append(" following fields are not recognised as conversion ");
-            errors.append(" fields [");
-            errors.append(checkNodeObjectEmpty(objectNode));
-            errors.append("]. ");
+            errors.append(String.format(MALFORMED_PAYLOAD,
+                    CONVERSION, checkNodeObjectEmpty(objectNode)));
         }
         if (0 < errors.length())
             throw new NikitaMalformedInputDataException(errors.toString());

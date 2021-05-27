@@ -50,11 +50,13 @@ public interface ISignOffEntity
     CorrespondencePart getReferenceSignedOffCorrespondencePart();
 
     void setReferenceSignedOffCorrespondencePart
-	(CorrespondencePart referenceSignedOffCorrespondencePart);
+            (CorrespondencePart referenceSignedOffCorrespondencePart);
 
-    Set<RegistryEntry> getReferenceRecord();
+    Set<RegistryEntry> getReferenceRegistryEntry();
 
-    void setReferenceRecord(Set<RegistryEntry> referenceRecord);
+    void setReferenceRegistryEntry(Set<RegistryEntry> referenceRegistryEntry);
 
     void addRecord(RegistryEntry record);
+
+    void removeRecord(RegistryEntry record);
 }

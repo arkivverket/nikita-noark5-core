@@ -25,11 +25,12 @@ public interface ICrossReferenceService {
 
     CrossReferenceHateoas findBySystemId(@NotNull final UUID systemId);
 
-    CrossReferenceHateoas findAllByOwner();
+    CrossReferenceHateoas findAll();
 
     void deleteCrossReferenceBySystemId(@NotNull final UUID systemId);
 
-    CrossReferenceHateoas getDefaultCrossReference();
+    CrossReferenceHateoas getDefaultCrossReference(
+            @NotNull final UUID systemId);
 
     CrossReferenceHateoas updateCrossReferenceBySystemId(
             @NotNull final UUID systemId,

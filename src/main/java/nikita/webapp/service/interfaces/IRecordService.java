@@ -16,22 +16,21 @@ import nikita.common.model.noark5.v5.hateoas.secondary.*;
 import nikita.common.model.noark5.v5.metadata.Metadata;
 import nikita.common.model.noark5.v5.nationalidentifier.*;
 import nikita.common.model.noark5.v5.secondary.*;
-import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
 import java.util.UUID;
 
 public interface IRecordService {
 
     // -- All CREATE operations
-    ResponseEntity<RecordHateoas> save(Record record);
+    RecordHateoas save(@NotNull final Record record);
 
     DocumentDescriptionHateoas createDocumentDescriptionAssociatedWithRecord(
-            String systemId, DocumentDescription documentDescription);
+            @NotNull final UUID systemId,
+            @NotNull final DocumentDescription documentDescription);
 
     CommentHateoas createCommentAssociatedWithRecord
-            (String systemId, Comment comment);
+            (@NotNull final UUID systemId, Comment comment);
 
     StorageLocationHateoas createStorageLocationAssociatedWithRecord(
             @NotNull final UUID systemId,
@@ -39,131 +38,144 @@ public interface IRecordService {
 
     CrossReferenceHateoas createCrossReferenceAssociatedWithRecord(
             @NotNull final UUID systemId,
-            @NotNull @NotNull CrossReference crossReference);
+            @NotNull final CrossReference crossReference);
 
-    RecordHateoas generateDefaultRecord();
+    RecordHateoas generateDefaultRecord(@NotNull final UUID systemId);
 
-    CommentHateoas generateDefaultComment();
+    CommentHateoas generateDefaultComment(@NotNull final UUID systemId);
 
     CorrespondencePartInternalHateoas generateDefaultCorrespondencePartInternal(
-            String recordSystemId);
+            @NotNull final UUID systemId);
 
     CorrespondencePartPersonHateoas generateDefaultCorrespondencePartPerson(
-            String recordSystemId);
+            @NotNull final UUID systemId);
 
     CorrespondencePartUnitHateoas generateDefaultCorrespondencePartUnit(
-            String recordSystemId);
+            @NotNull final UUID systemId);
 
-    CommentHateoas getCommentAssociatedWithRecord
-            (@NotNull final String systemId);
+    CommentHateoas getCommentAssociatedWithRecord(@NotNull final UUID systemId);
+
+    DocumentDescriptionHateoas getDocumentDescriptionAssociatedWithRecord(
+            @NotNull final UUID systemId);
 
     CorrespondencePartHateoas getCorrespondencePartAssociatedWithRecord(
-            final String systemId);
+            @NotNull final UUID systemId);
 
-    PartHateoas getPartAssociatedWithRecord(final String systemId);
+    PartHateoas getPartAssociatedWithRecord(@NotNull final UUID systemId);
 
-    NationalIdentifierHateoas getNationalIdentifierAssociatedWithRecord
-            (@NotNull final String systemId);
+    NationalIdentifierHateoas getNationalIdentifierAssociatedWithRecord(
+            @NotNull final UUID systemId);
 
-    PartPersonHateoas generateDefaultPartPerson(
-            String recordSystemId);
+    PartPersonHateoas generateDefaultPartPerson(@NotNull final UUID systemId);
 
-    PartUnitHateoas generateDefaultPartUnit(
-            String recordSystemId);
+    PartUnitHateoas generateDefaultPartUnit(@NotNull final UUID systemId);
 
     CorrespondencePartPersonHateoas
     createCorrespondencePartPersonAssociatedWithRecord(
-            String systemId, CorrespondencePartPerson correspondencePart);
+            @NotNull final UUID systemId,
+            @NotNull final CorrespondencePartPerson correspondencePart);
 
     CorrespondencePartUnitHateoas
     createCorrespondencePartUnitAssociatedWithRecord(
-            String systemId, CorrespondencePartUnit correspondencePart);
+            @NotNull final UUID systemId,
+            @NotNull final CorrespondencePartUnit correspondencePart);
 
     CorrespondencePartInternalHateoas
     createCorrespondencePartInternalAssociatedWithRecord(
-            String systemId, CorrespondencePartInternal correspondencePart);
+            @NotNull final UUID systemId,
+            @NotNull final CorrespondencePartInternal correspondencePart);
 
     PartPersonHateoas createPartPersonAssociatedWithRecord(
-            String systemId, PartPerson partPerson);
+            @NotNull final UUID systemId,
+            @NotNull final PartPerson partPerson);
 
     PartUnitHateoas createPartUnitAssociatedWithRecord(
-            String systemId, PartUnit partUnit);
+            @NotNull final UUID systemId,
+            @NotNull final PartUnit partUnit);
 
-    BuildingHateoas createBuildingAssociatedWithRecord
-            (@NotNull String systemId, @NotNull Building building);
+    BuildingHateoas createBuildingAssociatedWithRecord(
+            @NotNull final UUID systemId,
+            @NotNull final Building building);
 
-    CadastralUnitHateoas createCadastralUnitAssociatedWithRecord
-            (@NotNull String systemId, @NotNull CadastralUnit cadastralUnit);
+    CadastralUnitHateoas createCadastralUnitAssociatedWithRecord(
+            @NotNull final UUID systemId,
+            @NotNull final CadastralUnit cadastralUnit);
 
-    DNumberHateoas createDNumberAssociatedWithRecord
-            (@NotNull String systemId, @NotNull DNumber dNumber);
+    DNumberHateoas createDNumberAssociatedWithRecord(
+            @NotNull final UUID systemId,
+            @NotNull final DNumber dNumber);
 
-    PlanHateoas createPlanAssociatedWithRecord
-            (@NotNull String systemId, @NotNull Plan plan);
+    PlanHateoas createPlanAssociatedWithRecord(
+            @NotNull final UUID systemId,
+            @NotNull final Plan plan);
 
-    PositionHateoas createPositionAssociatedWithRecord
-            (@NotNull String systemId, @NotNull Position position);
+    PositionHateoas createPositionAssociatedWithRecord(
+            @NotNull final UUID systemId,
+            @NotNull final Position position);
 
-    SocialSecurityNumberHateoas createSocialSecurityNumberAssociatedWithRecord
-            (@NotNull String systemId,
-             @NotNull SocialSecurityNumber socialSecurityNumber);
+    SocialSecurityNumberHateoas createSocialSecurityNumberAssociatedWithRecord(
+            @NotNull final UUID systemId,
+            @NotNull final SocialSecurityNumber socialSecurityNumber);
 
-    UnitHateoas createUnitAssociatedWithRecord
-            (@NotNull String systemId, @NotNull Unit unit);
+    UnitHateoas createUnitAssociatedWithRecord(
+            @NotNull final UUID systemId, @NotNull final Unit unit);
 
     KeywordHateoas createKeywordAssociatedWithRecord(
             @NotNull final UUID systemId, @NotNull final Keyword keyword);
 
     // -- All READ operations
-    List<Record> findAll();
 
-    ResponseEntity<RecordHateoas>
-    findByReferenceDocumentDescription(@NotNull final String systemId);
+    FileHateoas
+    findFileAssociatedWithRecord(@NotNull final UUID systemId);
 
-    ResponseEntity<FileHateoas>
-    findFileAssociatedWithRecord(@NotNull final String systemId);
+    ClassHateoas
+    findClassAssociatedWithRecord(@NotNull final UUID systemId);
 
-    ResponseEntity<ClassHateoas>
-    findClassAssociatedWithRecord(@NotNull final String systemId);
+    SeriesHateoas
+    findSeriesAssociatedWithRecord(@NotNull final UUID systemId);
 
-    ResponseEntity<SeriesHateoas>
-    findSeriesAssociatedWithRecord(@NotNull final String systemId);
+    RecordHateoas findBySystemId(@NotNull final UUID systemId);
 
-    Record findBySystemId(String systemId);
+    RecordHateoas findAll();
 
-    List<Record> findByOwnedBy();
-
-    AuthorHateoas associateAuthorWithRecord(String systemId, Author author);
+    AuthorHateoas associateAuthorWithRecord(
+            @NotNull final UUID systemId,
+            @NotNull final Author author);
 
     // -- All UPDATE operations
-    Record handleUpdate(@NotNull String systemId,
-                        @NotNull Long version, @NotNull Record record);
+    RecordHateoas handleUpdate(@NotNull final UUID systemId,
+                               @NotNull final Long version,
+                               @NotNull final Record record);
 
     // -- All DELETE operations
-    void deleteRecord(@NotNull UUID systemId);
+    void deleteRecord(@NotNull final UUID systemId);
 
-    long deleteAllByOwnedBy();
+    void deleteAllByOwnedBy();
 
-    AuthorHateoas findAllAuthorWithRecordBySystemId(String systemId);
+    AuthorHateoas findAllAuthorWithRecordBySystemId(
+            @NotNull final UUID systemId);
 
-    AuthorHateoas generateDefaultAuthor(String systemId);
+    AuthorHateoas generateDefaultAuthor(@NotNull final UUID systemId);
 
-    BuildingHateoas generateDefaultBuilding();
+    BuildingHateoas generateDefaultBuilding(@NotNull final UUID systemId);
 
-    CadastralUnitHateoas generateDefaultCadastralUnit();
+    CadastralUnitHateoas generateDefaultCadastralUnit(
+            @NotNull final UUID systemId);
 
-    DNumberHateoas generateDefaultDNumber();
+    DNumberHateoas generateDefaultDNumber(@NotNull final UUID systemId);
 
-    PlanHateoas generateDefaultPlan();
+    PlanHateoas generateDefaultPlan(@NotNull final UUID systemId);
 
-    PositionHateoas generateDefaultPosition();
+    PositionHateoas generateDefaultPosition(@NotNull final UUID systemId);
 
-    SocialSecurityNumberHateoas generateDefaultSocialSecurityNumber();
+    SocialSecurityNumberHateoas generateDefaultSocialSecurityNumber(
+            @NotNull final UUID systemId);
 
-    UnitHateoas generateDefaultUnit();
+    UnitHateoas generateDefaultUnit(@NotNull final UUID systemId);
 
-    ResponseEntity<RecordHateoas> handleUpdate(
-            UUID systemId, PatchObjects patchObjects);
+    RecordHateoas handleUpdate(
+            @NotNull final UUID systemId,
+            @NotNull final PatchObjects patchObjects);
 
     ScreeningMetadataHateoas createScreeningMetadataAssociatedWithRecord(
             @NotNull final UUID systemId,
@@ -175,10 +187,10 @@ public interface IRecordService {
     ScreeningMetadataHateoas getDefaultScreeningMetadata(
             @NotNull final UUID systemId);
 
-    KeywordHateoas generateDefaultKeyword();
+    KeywordHateoas generateDefaultKeyword(@NotNull final UUID systemId);
 
     StorageLocationHateoas getDefaultStorageLocation(
-            @NotNull final UUID systemID);
+            @NotNull final UUID systemId);
 
-    CrossReferenceHateoas getDefaultCrossReference();
+    CrossReferenceHateoas getDefaultCrossReference(@NotNull final UUID systemId);
 }

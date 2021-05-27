@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 import static java.util.UUID.fromString;
+import static nikita.common.config.ErrorMessagesConstants.MALFORMED_PAYLOAD;
 import static nikita.common.config.HATEOASConstants.LINKS;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
@@ -36,7 +37,7 @@ public class CrossReferenceDeserializer
         ObjectNode objectNode = mapper.readTree(jsonParser);
 
         // deserialize systemID
-        deserialiseNoarkSystemIdEntity(crossReference, objectNode, errors);
+        deserialiseNoarkSystemIdEntity(crossReference, objectNode);
         deserialiseNoarkCreateEntity(crossReference, objectNode, errors);
 
         // deserialize fraSystemID
@@ -68,11 +69,8 @@ public class CrossReferenceDeserializer
         // Check that there are no additional values left after processing the
         // tree. If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {
-            errors.append("The crossReference you tried to create is malformed. The");
-            errors.append(" following fields are not recognised as crossReference ");
-            errors.append(" fields [");
-            errors.append(checkNodeObjectEmpty(objectNode));
-            errors.append("]. ");
+            errors.append(String.format(MALFORMED_PAYLOAD,
+                    CROSS_REFERENCE, checkNodeObjectEmpty(objectNode)));
         }
         if (0 < errors.length())
             throw new NikitaMalformedInputDataException(errors.toString());

@@ -1,12 +1,12 @@
 package nikita.webapp.service.impl;
 
+import nikita.common.model.nikita.NikitaPage;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.DocumentObject;
 import nikita.common.model.noark5.v5.hateoas.DocumentDescriptionHateoas;
 import nikita.common.model.noark5.v5.hateoas.DocumentObjectHateoas;
 import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.*;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.AssociatedWithRecordAs;
 import nikita.common.model.noark5.v5.metadata.DocumentStatus;
 import nikita.common.model.noark5.v5.metadata.DocumentType;
@@ -15,23 +15,18 @@ import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.repository.n5v5.IDocumentDescriptionRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
-import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
-import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
-import nikita.webapp.hateoas.interfaces.secondary.IAuthorHateoasHandler;
-import nikita.webapp.hateoas.interfaces.secondary.ICommentHateoasHandler;
-import nikita.webapp.hateoas.interfaces.secondary.IPartHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.IScreeningMetadataHateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.IBSMService;
 import nikita.webapp.service.interfaces.IDocumentDescriptionService;
+import nikita.webapp.service.interfaces.IDocumentObjectService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
+import nikita.webapp.service.interfaces.odata.IODataService;
 import nikita.webapp.service.interfaces.secondary.IAuthorService;
 import nikita.webapp.service.interfaces.secondary.ICommentService;
 import nikita.webapp.service.interfaces.secondary.IPartService;
 import nikita.webapp.service.interfaces.secondary.IScreeningMetadataService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,7 +35,6 @@ import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import static java.util.List.copyOf;
@@ -54,21 +48,13 @@ public class DocumentDescriptionService
         extends NoarkService
         implements IDocumentDescriptionService {
 
-    private static final Logger logger =
-            LoggerFactory.getLogger(DocumentDescriptionService.class);
-
-    private final DocumentObjectService documentObjectService;
+    private final IDocumentObjectService documentObjectService;
     private final IDocumentDescriptionRepository documentDescriptionRepository;
     private final IDocumentDescriptionHateoasHandler documentDescriptionHateoasHandler;
-    private final IDocumentObjectHateoasHandler documentObjectHateoasHandler;
-    private final IRecordHateoasHandler recordHateoasHandler;
     private final IAuthorService authorService;
     private final ICommentService commentService;
     private final IMetadataService metadataService;
     private final IPartService partService;
-    private final IPartHateoasHandler partHateoasHandler;
-    private final IAuthorHateoasHandler authorHateoasHandler;
-    private final ICommentHateoasHandler commentHateoasHandler;
     private final IBSMService bsmService;
     private final IScreeningMetadataService screeningMetadataService;
     private final IScreeningMetadataHateoasHandler screeningMetadataHateoasHandler;
@@ -76,37 +62,28 @@ public class DocumentDescriptionService
     public DocumentDescriptionService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IODataService odataService,
             IPatchService patchService,
-            DocumentObjectService documentObjectService,
+            IDocumentObjectService documentObjectService,
             IDocumentDescriptionRepository documentDescriptionRepository,
             IDocumentDescriptionHateoasHandler
                     documentDescriptionHateoasHandler,
-            IDocumentObjectHateoasHandler documentObjectHateoasHandler,
-            IRecordHateoasHandler recordHateoasHandler,
             IAuthorService authorService,
             ICommentService commentService,
             IMetadataService metadataService,
             IPartService partService,
-            IPartHateoasHandler partHateoasHandler,
-            IAuthorHateoasHandler authorHateoasHandler,
-            ICommentHateoasHandler commentHateoasHandler,
             IBSMService bsmService,
             IScreeningMetadataService screeningMetadataService,
             IScreeningMetadataHateoasHandler screeningMetadataHateoasHandler) {
-        super(entityManager, applicationEventPublisher, patchService);
+        super(entityManager, applicationEventPublisher, patchService, odataService);
         this.documentObjectService = documentObjectService;
         this.documentDescriptionRepository = documentDescriptionRepository;
         this.documentDescriptionHateoasHandler =
                 documentDescriptionHateoasHandler;
-        this.documentObjectHateoasHandler = documentObjectHateoasHandler;
-        this.recordHateoasHandler = recordHateoasHandler;
         this.authorService = authorService;
         this.commentService = commentService;
         this.metadataService = metadataService;
         this.partService = partService;
-        this.partHateoasHandler = partHateoasHandler;
-        this.authorHateoasHandler = authorHateoasHandler;
-        this.commentHateoasHandler = commentHateoasHandler;
         this.bsmService = bsmService;
         this.screeningMetadataService = screeningMetadataService;
         this.screeningMetadataHateoasHandler = screeningMetadataHateoasHandler;
@@ -117,22 +94,17 @@ public class DocumentDescriptionService
     @Transactional
     public DocumentObjectHateoas
     createDocumentObjectAssociatedWithDocumentDescription(
-            String documentDescriptionSystemId, DocumentObject documentObject) {
+            @NotNull final UUID systemId,
+            @NotNull final DocumentObject documentObject) {
         DocumentDescription documentDescription =
-                getDocumentDescriptionOrThrow(documentDescriptionSystemId);
+                getDocumentDescriptionOrThrow(systemId);
         documentObject.setReferenceDocumentDescription(documentDescription);
         List<DocumentObject> documentObjects = documentDescription
                 .getReferenceDocumentObject();
         documentObjects.add(documentObject);
         bsmService.validateBSMList(documentDescription.getReferenceBSMBase());
-        DocumentObjectHateoas documentObjectHateoas =
-                new DocumentObjectHateoas
-                        (documentObjectService.save(documentObject));
-        documentObjectHateoasHandler.addLinks
-                (documentObjectHateoas, new Authorisation());
-        return documentObjectHateoas;
+        return documentObjectService.save(documentObject);
     }
-
 
     @Override
     @Transactional
@@ -140,7 +112,7 @@ public class DocumentDescriptionService
     createScreeningMetadataAssociatedWithDocumentDescription(
             UUID systemId, Metadata screeningMetadata) {
         DocumentDescription documentDescription =
-                getDocumentDescriptionOrThrow(systemId.toString());
+                getDocumentDescriptionOrThrow(systemId);
         if (null == documentDescription.getReferenceScreening()) {
             throw new NoarkEntityNotFoundException(INFO_CANNOT_FIND_OBJECT +
                     " Screening, associated with DocumentDescription with systemId " +
@@ -153,34 +125,34 @@ public class DocumentDescriptionService
     @Override
     @Transactional
     public CommentHateoas createCommentAssociatedWithDocumentDescription
-            (String systemID, Comment comment) {
+            (@NotNull final UUID systemId, Comment comment) {
         return commentService.createNewComment
-                (comment, getDocumentDescriptionOrThrow(systemID));
+                (comment, getDocumentDescriptionOrThrow(systemId));
     }
 
     @Override
     @Transactional
     public PartPersonHateoas
     createPartPersonAssociatedWithDocumentDescription(
-            String systemID, PartPerson partPerson) {
+            UUID systemId, PartPerson partPerson) {
         return partService.
                 createNewPartPerson(partPerson,
-                        getDocumentDescriptionOrThrow(systemID));
+                        getDocumentDescriptionOrThrow(systemId));
     }
 
     @Override
     @Transactional
     public PartUnitHateoas
     createPartUnitAssociatedWithDocumentDescription(
-            String systemID, PartUnit partUnit) {
+            UUID systemId, PartUnit partUnit) {
         return partService.
                 createNewPartUnit(partUnit,
-                        getDocumentDescriptionOrThrow(systemID));
+                        getDocumentDescriptionOrThrow(systemId));
     }
 
     @Override
     @Transactional
-    public DocumentDescription save(DocumentDescription documentDescription) {
+    public DocumentDescriptionHateoas save(DocumentDescription documentDescription) {
         validateDocumentMedium(metadataService, documentDescription);
         validateDocumentStatus(documentDescription);
         validateDocumentType(documentDescription);
@@ -188,7 +160,8 @@ public class DocumentDescriptionService
         bsmService.validateBSMList(documentDescription.getReferenceBSMBase());
         documentDescription.setAssociationDate(OffsetDateTime.now());
         documentDescription.setAssociatedBy(getUser());
-        return documentDescriptionRepository.save(documentDescription);
+        return packAsHateoas(documentDescriptionRepository
+                .save(documentDescription));
     }
 
     /**
@@ -203,9 +176,9 @@ public class DocumentDescriptionService
     @Override
     @Transactional
     public AuthorHateoas associateAuthorWithDocumentDescription(
-            String systemId, Author author) {
+            UUID systemId, Author author) {
         return authorService.associateAuthorWithDocumentDescription
-            (author, getDocumentDescriptionOrThrow(systemId));
+                (author, getDocumentDescriptionOrThrow(systemId));
     }
 
     /**
@@ -219,164 +192,114 @@ public class DocumentDescriptionService
      * DocumentDescriptionHateoas object
      */
     @Override
-    public DocumentDescriptionHateoas
-    generateDefaultDocumentDescription() {
+    public DocumentDescriptionHateoas generateDefaultDocumentDescription(
+            @NotNull final UUID systemId) {
         DocumentDescription defaultDocumentDescription =
-            new DocumentDescription();
+                new DocumentDescription();
 
         AssociatedWithRecordAs associatedWithRecordAs = (AssociatedWithRecordAs)
-            metadataService.findValidMetadataByEntityTypeOrThrow
-                (ASSOCIATED_WITH_RECORD_AS, MAIN_DOCUMENT_CODE, null);
+                metadataService.findValidMetadataByEntityTypeOrThrow
+                        (ASSOCIATED_WITH_RECORD_AS, MAIN_DOCUMENT_CODE, null);
         defaultDocumentDescription
-            .setAssociatedWithRecordAs(associatedWithRecordAs);
+                .setAssociatedWithRecordAs(associatedWithRecordAs);
         DocumentType documentType = (DocumentType)
-            metadataService.findValidMetadataByEntityTypeOrThrow
-                (DOCUMENT_TYPE, LETTER_CODE, null);
+                metadataService.findValidMetadataByEntityTypeOrThrow
+                        (DOCUMENT_TYPE, LETTER_CODE, null);
         defaultDocumentDescription.setDocumentType(documentType);
         DocumentStatus documentStatus = (DocumentStatus)
-            metadataService.findValidMetadataByEntityTypeOrThrow
-                (DOCUMENT_STATUS, DOCUMENT_STATUS_FINALISED_CODE, null);
+                metadataService.findValidMetadataByEntityTypeOrThrow
+                        (DOCUMENT_STATUS, DOCUMENT_STATUS_FINALISED_CODE, null);
         defaultDocumentDescription.setDocumentStatus(documentStatus);
-
-        DocumentDescriptionHateoas documentDescriptionHateoas = new
-                DocumentDescriptionHateoas(defaultDocumentDescription);
-        documentDescriptionHateoasHandler.addLinksOnTemplate(
-                documentDescriptionHateoas, new Authorisation());
-        return documentDescriptionHateoas;
+        defaultDocumentDescription.setVersion(-1L, true);
+        return packAsHateoas(defaultDocumentDescription);
     }
 
     @Override
-    public CommentHateoas generateDefaultComment() {
-        return commentService.generateDefaultComment();
+    public CommentHateoas generateDefaultComment(@NotNull final UUID systemId) {
+        return commentService.generateDefaultComment(systemId);
     }
 
     @Override
-    public PartPersonHateoas generateDefaultPartPerson(String systemID) {
-        return partService.generateDefaultPartPerson(systemID);
+    public PartPersonHateoas generateDefaultPartPerson(
+            @NotNull final UUID systemId) {
+        return partService.generateDefaultPartPerson(systemId);
     }
 
     @Override
-    public PartUnitHateoas generateDefaultPartUnit(String systemID) {
-        return partService.generateDefaultPartUnit(systemID);
+    public PartUnitHateoas generateDefaultPartUnit(@NotNull final UUID systemId) {
+        return partService.generateDefaultPartUnit(systemId);
     }
 
     @Override
-    public AuthorHateoas generateDefaultAuthor(String systemID) {
-        return authorService.generateDefaultAuthor();
+    public AuthorHateoas generateDefaultAuthor(@NotNull final UUID systemId) {
+        return authorService.generateDefaultAuthor(systemId);
     }
 
     @Override
-    public ScreeningMetadataHateoas getDefaultScreeningMetadata(UUID systemId) {
+    public ScreeningMetadataHateoas getDefaultScreeningMetadata(
+            @NotNull final UUID systemId) {
         return screeningMetadataService.getDefaultScreeningMetadata(systemId);
     }
 
     @Override
-    public DocumentDescriptionHateoas
-    findBySystemId(String systemId) {
-        DocumentDescriptionHateoas documentDescriptionHateoas = new
-                DocumentDescriptionHateoas(
-                getDocumentDescriptionOrThrow(systemId));
-        documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas,
-                new Authorisation());
-        return documentDescriptionHateoas;
+    public DocumentDescriptionHateoas findBySystemId(
+            @NotNull final UUID systemId) {
+        return packAsHateoas(getDocumentDescriptionOrThrow(systemId));
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public AuthorHateoas findAllAuthorWithDocumentDescriptionBySystemId(
-            String systemId) {
-        DocumentDescription documentDescription =
-                getDocumentDescriptionOrThrow(systemId);
-        AuthorHateoas authorHateoas =
-                new AuthorHateoas((List<INoarkEntity>)
-                        (List) documentDescription.getReferenceAuthor());
-        authorHateoasHandler.addLinks(authorHateoas, new Authorisation());
-        setOutgoingRequestHeader(authorHateoas);
-        return authorHateoas;
+            UUID systemId) {
+        getDocumentDescriptionOrThrow(systemId);
+        return (AuthorHateoas) odataService.processODataQueryGet();
     }
 
     @Override
     public ScreeningMetadataHateoas
     getScreeningMetadataAssociatedWithDocumentDescription(
-            UUID documentDescriptionSystemId) {
-        Screening screening =
-                getDocumentDescriptionOrThrow(documentDescriptionSystemId
-                        .toString())
-                        .getReferenceScreening();
+            @NotNull final UUID systemId) {
+        Screening screening = getDocumentDescriptionOrThrow(systemId)
+                .getReferenceScreening();
         if (null == screening) {
             throw new NoarkEntityNotFoundException(
                     INFO_CANNOT_FIND_OBJECT + " Screening, using systemId " +
-                            documentDescriptionSystemId);
+                            systemId);
         }
-        Set<ScreeningMetadataLocal> screeningMetadata =
-                screening.getReferenceScreeningMetadata();
-        ScreeningMetadataHateoas screeningMetadataHateoas =
-                new ScreeningMetadataHateoas(copyOf(screeningMetadata));
-        screeningMetadataHateoasHandler.addLinks(screeningMetadataHateoas,
-                new Authorisation());
-        return screeningMetadataHateoas;
+        return packAsHateoas(new NikitaPage(copyOf(
+                screening.getReferenceScreeningMetadata())));
     }
 
     @Override
-    public DocumentDescription findDocumentDescriptionBySystemId(
-            String systemId) {
-        return getDocumentDescriptionOrThrow(systemId);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
     public DocumentDescriptionHateoas findAll() {
-        DocumentDescriptionHateoas documentDescriptionHateoas = new
-                DocumentDescriptionHateoas((List<INoarkEntity>)
-                (List) documentDescriptionRepository.findByOwnedBy(getUser()));
-        documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas,
-                new Authorisation());
-        return documentDescriptionHateoas;
+        return (DocumentDescriptionHateoas) odataService.processODataQueryGet();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public DocumentObjectHateoas
     findAllDocumentObjectWithDocumentDescriptionBySystemId(
-            @NotNull String systemId) {
-        DocumentObjectHateoas documentObjectHateoas = new
-                DocumentObjectHateoas((List<INoarkEntity>)
-                (List) getDocumentDescriptionOrThrow(systemId)
-                        .getReferenceDocumentObject());
-        documentObjectHateoasHandler.addLinks(documentObjectHateoas,
-                new Authorisation());
-        return documentObjectHateoas;
+            @NotNull final UUID systemId) {
+        getDocumentDescriptionOrThrow(systemId);
+        return (DocumentObjectHateoas) odataService.processODataQueryGet();
     }
 
     @Override
     public RecordHateoas
-    findAllRecordWithDocumentDescriptionBySystemId(@NotNull String systemId) {
-        RecordHateoas recordHateoas = new RecordHateoas(
-                List.copyOf(getDocumentDescriptionOrThrow(systemId)
-                        .getReferenceRecord()));
-        recordHateoasHandler.addLinks(recordHateoas,
-                new Authorisation());
-        return recordHateoas;
+    findAllRecordWithDocumentDescriptionBySystemId(
+            @NotNull final UUID systemId) {
+        getDocumentDescriptionOrThrow(systemId);
+        return (RecordHateoas) odataService.processODataQueryGet();
     }
 
     @Override
     public CommentHateoas getCommentAssociatedWithDocumentDescription(
-            @NotNull final String systemID) {
-        CommentHateoas commentHateoas = new CommentHateoas(
-                List.copyOf(getDocumentDescriptionOrThrow(systemID)
-                        .getReferenceComment()));
-        commentHateoasHandler.addLinks(commentHateoas, new Authorisation());
-        return commentHateoas;
+            @NotNull final UUID systemId) {
+        return (CommentHateoas) odataService.processODataQueryGet();
     }
 
     @Override
     public PartHateoas getPartAssociatedWithDocumentDescription(
-            @NotNull final String systemID) {
-        PartHateoas partHateoas = new PartHateoas(
-                List.copyOf(getDocumentDescriptionOrThrow(systemID)
-                        .getReferencePart()));
-        partHateoasHandler.addLinks(partHateoas, new Authorisation());
-        return partHateoas;
+            @NotNull final UUID systemId) {
+        return (PartHateoas) odataService.processODataQueryGet();
     }
 
     // -- All UPDATE operations
@@ -399,15 +322,15 @@ public class DocumentDescriptionService
      * when the call to DocumentDescription.setVersion() occurs.
      *
      * @param systemId                    systemId of the incoming documentDescription object
-     * @param version version of object, field is given by nikita
+     * @param version                     version of object, field is given by nikita
      * @param incomingDocumentDescription the incoming documentDescription
      * @return the updated documentDescription after it is persisted
      */
     @Override
     @Transactional
     public DocumentDescriptionHateoas handleUpdate(
-            @NotNull String systemId, @NotNull Long version,
-            @NotNull DocumentDescription incomingDocumentDescription) {
+            @NotNull final UUID systemId, @NotNull final Long version,
+            @NotNull final DocumentDescription incomingDocumentDescription) {
         DocumentDescription existingDocumentDescription =
                 getDocumentDescriptionOrThrow(systemId);
         // Note setVersion can potentially result in a NoarkConcurrencyException
@@ -432,21 +355,16 @@ public class DocumentDescriptionService
 
         existingDocumentDescription.setStorageLocation(
                 incomingDocumentDescription.getStorageLocation());
-
-        DocumentDescriptionHateoas documentDescriptionHateoas =
-                new DocumentDescriptionHateoas(existingDocumentDescription);
-        documentDescriptionHateoasHandler.addLinks(documentDescriptionHateoas,
-                new Authorisation());
-        return documentDescriptionHateoas;
+        return packAsHateoas(existingDocumentDescription);
     }
 
     // All DELETE operations
 
     @Override
     @Transactional
-    public void deleteEntity(@NotNull String documentDescriptionSystemId) {
+    public void deleteEntity(@NotNull final UUID systemId) {
         DocumentDescription documentDescription =
-                getDocumentDescriptionOrThrow(documentDescriptionSystemId);
+                getDocumentDescriptionOrThrow(systemId);
         // Disassociate any links between DocumentDescription and Record
         disassociateForeignKeys(documentDescription,
                 DELETE_FROM_RECORD_DOCUMENT_DESCRIPTION);
@@ -455,16 +373,31 @@ public class DocumentDescriptionService
 
     /**
      * Delete all objects belonging to the user identified by ownedBy
-     *
-     * @return the number of objects deleted
      */
     @Override
     @Transactional
-    public long deleteAllByOwnedBy() {
-        return documentDescriptionRepository.deleteByOwnedBy(getUser());
+    public void deleteAllByOwnedBy() {
+        documentDescriptionRepository.deleteByOwnedBy(getUser());
     }
 
     // All HELPER operations
+
+    public ScreeningMetadataHateoas packAsHateoas(NikitaPage page) {
+        ScreeningMetadataHateoas screeningMetadataHateoas =
+                new ScreeningMetadataHateoas(page);
+        screeningMetadataHateoasHandler.addLinks(screeningMetadataHateoas,
+                new Authorisation());
+        return screeningMetadataHateoas;
+    }
+
+    public DocumentDescriptionHateoas packAsHateoas(
+            @NotNull final DocumentDescription documentDescription) {
+        DocumentDescriptionHateoas documentDescriptionHateoas =
+                new DocumentDescriptionHateoas(documentDescription);
+        applyLinksAndHeader(documentDescriptionHateoas,
+                documentDescriptionHateoasHandler);
+        return documentDescriptionHateoas;
+    }
 
     private void updateDocumentDescription(
             @NotNull final DocumentDescription incomingDocumentDescription,
@@ -495,19 +428,18 @@ public class DocumentDescriptionService
      * that you will only ever get a valid DocumentDescription back. If there
      * is no valid DocumentDescription, an exception is thrown
      *
-     * @param documentDescriptionSystemId systemId of the documentDescription
+     * @param systemId systemId of the documentDescription
      * @return The documentDescription to be returned
      */
     protected DocumentDescription getDocumentDescriptionOrThrow(
-            @NotNull String documentDescriptionSystemId) {
+            @NotNull final UUID systemId) {
         DocumentDescription documentDescription =
                 documentDescriptionRepository.findBySystemId(
-                        UUID.fromString(documentDescriptionSystemId));
+                        systemId);
         if (documentDescription == null) {
             String error = INFO_CANNOT_FIND_OBJECT +
                     " DocumentDescription, using systemId " +
-                    documentDescriptionSystemId;
-            logger.info(error);
+                    systemId;
             throw new NoarkEntityNotFoundException(error);
         }
         return documentDescription;

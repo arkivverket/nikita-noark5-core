@@ -12,11 +12,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
@@ -56,7 +56,7 @@ public class DocumentFlowHateoasController
     @GetMapping()
     public ResponseEntity<DocumentFlowHateoas> findAllDocumentFlow() {
         DocumentFlowHateoas documentFlowHateoas =
-                documentFlowService.findAllByOwner();
+                documentFlowService.findAll();
         return ResponseEntity.status(OK)
                 .body(documentFlowHateoas);
     }
@@ -83,11 +83,10 @@ public class DocumentFlowHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the DocumentFlow to retrieve",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemId) {
+            @PathVariable(SYSTEM_ID) final UUID systemId) {
         DocumentFlowHateoas documentFlowHateoas =
                 documentFlowService.findBySystemId(systemId);
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentFlowHateoas);
     }
 
@@ -126,7 +125,7 @@ public class DocumentFlowHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of DocumentFlow to update",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID,
+            @PathVariable(SYSTEM_ID) final UUID systemID,
             @Parameter(name = "DocumentFlow",
                     description = "Incoming DocumentFlow object",
                     required = true)
@@ -137,7 +136,6 @@ public class DocumentFlowHateoasController
                                 parseETAG(request.getHeader(ETAG)),
                                 documentFlow);
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentFlowHateoas);
     }
 
@@ -162,7 +160,7 @@ public class DocumentFlowHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the documentFlow to delete",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         documentFlowService.deleteDocumentFlowBySystemId(systemID);
         return ResponseEntity.status(NO_CONTENT)
                 .body(DELETE_RESPONSE);

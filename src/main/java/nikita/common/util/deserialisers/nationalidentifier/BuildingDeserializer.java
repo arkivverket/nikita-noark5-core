@@ -13,14 +13,14 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static nikita.common.config.ErrorMessagesConstants.MALFORMED_PAYLOAD;
 import static nikita.common.config.HATEOASConstants.LINKS;
-import static nikita.common.config.N5ResourceMappings.BUILDING_CHANGE_NUMBER;
-import static nikita.common.config.N5ResourceMappings.BUILDING_NUMBER;
+import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 
 
 public class BuildingDeserializer
-        extends JsonDeserializer {
+        extends JsonDeserializer<Building> {
 
     private static final Logger logger =
             LoggerFactory.getLogger(BuildingDeserializer.class);
@@ -37,7 +37,7 @@ public class BuildingDeserializer
         ObjectNode objectNode = mapper.readTree(jsonParser);
 
         // Deserialize systemID
-        deserialiseNoarkSystemIdEntity(building, objectNode, errors);
+        deserialiseNoarkSystemIdEntity(building, objectNode);
 
         // Deserialize bygningsnummer
         building.setBuildingNumber
@@ -59,11 +59,8 @@ public class BuildingDeserializer
         // Check that there are no additional values left after processing the
         // tree. If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {
-            errors.append("The building you tried to create is malformed. The");
-            errors.append(" following fields are not recognised as building ");
-            errors.append(" fields [");
-            errors.append(checkNodeObjectEmpty(objectNode));
-            errors.append("]. ");
+            errors.append(String.format(MALFORMED_PAYLOAD,
+                    BUILDING, checkNodeObjectEmpty(objectNode)));
         }
         if (0 < errors.length())
             throw new NikitaMalformedInputDataException(errors.toString());

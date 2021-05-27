@@ -13,20 +13,23 @@ import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
+import nikita.webapp.service.interfaces.odata.IODataService;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.repository.core.support.DefaultRepositoryMetadata;
 import org.springframework.data.repository.support.Repositories;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Table;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -36,8 +39,8 @@ import java.util.regex.Pattern;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.ErrorMessagesConstants.*;
 import static nikita.common.config.MetadataConstants.METADATA_PACKAGE;
-import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
-import static org.springframework.http.HttpStatus.*;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestAsListOrThrow;
+import static org.springframework.http.HttpHeaders.ALLOW;
 
 /**
  * 'Super' class for all metadata entities to reduce the amount of
@@ -66,13 +69,14 @@ public class MetadataService
     public MetadataService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IODataService odataService,
             IPatchService patchService,
             IMetadataHateoasHandler metadataHateoasHandler,
             WebApplicationContext webAppContext)
             throws ClassNotFoundException, NoSuchMethodException,
             IllegalAccessException, InvocationTargetException,
             InstantiationException {
-        super(entityManager, applicationEventPublisher, patchService);
+        super(entityManager, applicationEventPublisher, patchService, odataService);
         this.metadataHateoasHandler = metadataHateoasHandler;
         buildMapping(webAppContext);
     }
@@ -91,7 +95,7 @@ public class MetadataService
      */
     @Override
     @Transactional
-    public ResponseEntity<MetadataHateoas> createNewMetadataEntity(
+    public MetadataHateoas createNewMetadataEntity(
             @NotNull final IMetadataEntity incomingMetadata)
             throws NoSuchMethodException, IllegalAccessException,
             InvocationTargetException, InstantiationException {
@@ -122,8 +126,8 @@ public class MetadataService
         metadata.setCode(incomingMetadata.getCode());
         metadata.setCodeName(incomingMetadata.getCodeName());
         metadata.setInactive(incomingMetadata.getInactive());
-        return packSingleResult((IMetadataEntity)
-                metadataRepository.save(metadata), CREATED);
+        return packAsHateoas(
+                (IMetadataEntity) metadataRepository.save(metadata));
     }
 
     // All UPDATE methods
@@ -141,7 +145,7 @@ public class MetadataService
      */
     @Override
     @Transactional
-    public ResponseEntity<MetadataHateoas> updateMetadataEntity(
+    public MetadataHateoas updateMetadataEntity(
             @NotNull final String code,
             @NotNull final Metadata incomingMetadata) {
         IMetadataEntity existingMetadata =
@@ -149,7 +153,7 @@ public class MetadataService
         existingMetadata.setCode(incomingMetadata.getCode());
         existingMetadata.setCodeName(incomingMetadata.getCodeName());
         existingMetadata.setInactive(incomingMetadata.getInactive());
-        return packSingleResult(existingMetadata, OK);
+        return packAsHateoas(existingMetadata);
     }
 
     // All READ methods
@@ -241,10 +245,10 @@ public class MetadataService
      * @return the metadata object packed as a MetadataHateoas object
      */
     @Override
-    public ResponseEntity<MetadataHateoas>
+    public MetadataHateoas
     findMetadataByCodeOrThrow(@NotNull final String code) {
-        return packSingleResult(
-                findMetadataByCodeOrThrow(getEntityTypeFromRequest(), code), OK);
+        return packAsHateoas(
+                findMetadataByCodeOrThrow(getEntityTypeFromRequest(), code));
     }
 
     /**
@@ -254,7 +258,7 @@ public class MetadataService
      * @return the list of metadata objects packed as a MetadataHateoas object
      */
     @Override
-    public ResponseEntity<MetadataHateoas> findAll() {
+    public MetadataHateoas findAll() {
         String entityType = getEntityTypeFromRequest();
         IMetadataRepository md = getMetadataRepository(
                 getEntityTypeFromRequest());
@@ -293,19 +297,16 @@ public class MetadataService
      */
     @Override
     @Transactional
-    public ResponseEntity<String> deleteMetadataEntity(
-            @NotNull final String code) {
+    public String deleteMetadataEntity(@NotNull final String code) {
         String entityType = getEntityTypeFromRequest();
         IMetadataRepository metadataRepository =
                 getMetadataRepositoryByEntityTypeOrThrow(entityType);
         Metadata metadata = (Metadata) metadataRepository.findByCode(code);
         if (metadata != null) {
             metadataRepository.delete(metadata);
-            return ResponseEntity.status(NO_CONTENT)
-                    .body(DELETE_RESPONSE);
+            return DELETE_RESPONSE;
         }
         String errorMessage = METADATA_ENTITY_MISSING + entityType;
-        logger.error(errorMessage);
         throw new NoarkEntityNotFoundException(errorMessage);
     }
 
@@ -321,10 +322,10 @@ public class MetadataService
      * @return an empty JSON object
      */
     @Override
-    public ResponseEntity<String> generateTemplateMetadata() {
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .body("{}");
+    public MetadataHateoas generateTemplateMetadata() {
+        Metadata metadata = new Metadata();
+        metadata.setVersion(-1L, true);
+        return packAsHateoas(metadata);
     }
 
     // All helper methods
@@ -334,18 +335,14 @@ public class MetadataService
      * object and to set ALLOWS and ETAG headers.
      *
      * @param entity The entity to pack
-     * @param status The HTTP status to use e.g. 200, 201
      * @return the entity packed as a MetadataHateoas object
      */
-    private ResponseEntity<MetadataHateoas> packSingleResult(
-            @NotNull final IMetadataEntity entity,
-            @NotNull final HttpStatus status) {
+    private MetadataHateoas packAsHateoas(
+            @NotNull final IMetadataEntity entity) {
         MetadataHateoas metadataHateoas =
                 new MetadataHateoas(entity);
-        metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
-        setOutgoingRequestHeader(metadataHateoas);
-        return ResponseEntity.status(status)
-                .body(metadataHateoas);
+        applyLinksAndHeader(metadataHateoas, metadataHateoasHandler);
+        return metadataHateoas;
     }
 
     /**
@@ -356,15 +353,14 @@ public class MetadataService
      * @param entityType The entity type
      * @return the entity packed as a MetadataHateoas object
      */
-    private ResponseEntity<MetadataHateoas> packListResult(
+    private MetadataHateoas packListResult(
             @NotNull final List<IMetadataEntity> list,
             @NotNull final String entityType) {
         MetadataHateoas metadataHateoas =
                 new MetadataHateoas(list, entityType);
         metadataHateoasHandler.addLinks(metadataHateoas, new Authorisation());
         setOutgoingRequestHeaderList();
-        return ResponseEntity.status(OK)
-                .body(metadataHateoas);
+        return metadataHateoas;
     }
 
     /**
@@ -427,6 +423,7 @@ public class MetadataService
      *                                   instantiation
      * @throws InstantiationException    Problem with instantiation
      */
+    @SuppressWarnings("rawtypes")
     private void buildMapping(
             @NotNull final WebApplicationContext webAppContext)
             throws ClassNotFoundException, NoSuchMethodException,
@@ -461,5 +458,21 @@ public class MetadataService
                         ERROR_MAPPING_METADATA);
             }
         }
+    }
+
+    /**
+     * Set the outgoing ALLOW header
+     */
+    protected void setOutgoingRequestHeaderList() {
+        HttpServletResponse response = ((ServletRequestAttributes)
+                Objects.requireNonNull(
+                        RequestContextHolder.getRequestAttributes()))
+                .getResponse();
+        HttpServletRequest request =
+                ((ServletRequestAttributes)
+                        RequestContextHolder
+                                .getRequestAttributes()).getRequest();
+        response.addHeader(ALLOW, getMethodsForRequestAsListOrThrow(
+                request.getServletPath()));
     }
 }

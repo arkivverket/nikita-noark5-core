@@ -4,14 +4,13 @@ import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.hateoas.secondary.KeywordHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.secondary.Keyword;
 import nikita.common.repository.n5v5.secondary.IKeywordRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.secondary.IKeywordHateoasHandler;
-import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.impl.NoarkService;
+import nikita.webapp.service.interfaces.odata.IODataService;
 import nikita.webapp.service.interfaces.secondary.IKeywordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
@@ -40,10 +38,11 @@ public class KeywordService
     public KeywordService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IODataService odataService,
             IPatchService patchService,
             IKeywordRepository keywordRepository,
             IKeywordHateoasHandler keywordHateoasHandler) {
-        super(entityManager, applicationEventPublisher, patchService);
+        super(entityManager, applicationEventPublisher, patchService, odataService);
         this.keywordRepository = keywordRepository;
         this.keywordHateoasHandler = keywordHateoasHandler;
     }
@@ -55,11 +54,7 @@ public class KeywordService
     public KeywordHateoas createKeywordAssociatedWithFile
             (Keyword keyword, File file) {
         keyword.addReferenceFile(file);
-        keyword = keywordRepository.save(keyword);
-        KeywordHateoas keywordHateoas = new KeywordHateoas(keyword);
-        keywordHateoasHandler.addLinks(keywordHateoas, new Authorisation());
-        setOutgoingRequestHeader(keywordHateoas);
-        return keywordHateoas;
+        return packAsHateoas(keywordRepository.save(keyword));
     }
 
     @Override
@@ -67,11 +62,7 @@ public class KeywordService
     public KeywordHateoas createKeywordAssociatedWithClass
             (Keyword keyword, Class klass) {
         keyword.addReferenceClass(klass);
-        keyword = keywordRepository.save(keyword);
-        KeywordHateoas keywordHateoas = new KeywordHateoas(keyword);
-        keywordHateoasHandler.addLinks(keywordHateoas, new Authorisation());
-        setOutgoingRequestHeader(keywordHateoas);
-        return keywordHateoas;
+        return packAsHateoas(keywordRepository.save(keyword));
     }
 
     @Override
@@ -79,56 +70,38 @@ public class KeywordService
     public KeywordHateoas createKeywordAssociatedWithRecord
             (Keyword keyword, Record record) {
         keyword.addReferenceRecord(record);
-        keyword = keywordRepository.save(keyword);
-        KeywordHateoas keywordHateoas = new KeywordHateoas(keyword);
-        keywordHateoasHandler.addLinks(keywordHateoas, new Authorisation());
-        setOutgoingRequestHeader(keywordHateoas);
-        return keywordHateoas;
+        return packAsHateoas(keywordRepository.save(keyword));
     }
 
     // All READ methods
 
     @Override
-    public KeywordHateoas findBySystemId(UUID systemId) {
-        KeywordHateoas keywordHateoas =
-                new KeywordHateoas(getKeywordOrThrow(systemId));
-        keywordHateoasHandler.addLinks(keywordHateoas, new Authorisation());
-        setOutgoingRequestHeader(keywordHateoas);
-        return keywordHateoas;
+    public KeywordHateoas findBySystemId(@NotNull final UUID systemId) {
+        return packAsHateoas(getKeywordOrThrow(systemId));
     }
 
     @Override
-    public KeywordHateoas findAllByOwner() {
-        KeywordHateoas keywordHateoas =
-                new KeywordHateoas(List.copyOf(
-                        keywordRepository.findByOwnedBy(getUser())));
-        keywordHateoasHandler.addLinks(keywordHateoas,
-                new Authorisation());
-        setOutgoingRequestHeader(keywordHateoas);
-        return keywordHateoas;
+    public KeywordHateoas findAll() {
+        return (KeywordHateoas) odataService.processODataQueryGet();
     }
 
     // All UPDATE methods
 
     @Override
     @Transactional
-    public KeywordHateoas updateKeywordBySystemId(UUID systemId, Long version,
+    public KeywordHateoas updateKeywordBySystemId(@NotNull final UUID systemId, Long version,
                                                   Keyword incomingKeyword) {
         Keyword existingKeyword = getKeywordOrThrow(systemId);
         existingKeyword.setKeyword(incomingKeyword.getKeyword());
         existingKeyword.setVersion(version);
-        KeywordHateoas keywordHateoas =
-                new KeywordHateoas(keywordRepository.save(existingKeyword));
-        keywordHateoasHandler.addLinks(keywordHateoas, new Authorisation());
-        setOutgoingRequestHeader(keywordHateoas);
-        return keywordHateoas;
+        return packAsHateoas(existingKeyword);
     }
 
     // All DELETE methods
 
     @Override
     @Transactional
-    public void deleteKeywordBySystemId(UUID systemId) {
+    public void deleteKeywordBySystemId(@NotNull final UUID systemId) {
         Keyword keyword = getKeywordOrThrow(systemId);
         // Remove any associations between a Class and the given Keyword
         for (Class klass : keyword.getReferenceClass()) {
@@ -161,18 +134,17 @@ public class KeywordService
 
     // All template methods
 
-    public KeywordHateoas generateDefaultKeyword() {
+    public KeywordHateoas generateDefaultKeyword(@NotNull final UUID systemId) {
         Keyword suggestedKeyword = new Keyword();
-        KeywordHateoas partHateoas = new KeywordHateoas(suggestedKeyword);
-        keywordHateoasHandler.addLinksOnTemplate(partHateoas, new Authorisation());
-        return partHateoas;
+        suggestedKeyword.setVersion(-1L, true);
+        return packAsHateoas(suggestedKeyword);
     }
 
     // All helper methods
 
-    public KeywordHateoas packKeywordsAsHateaos(List<INoarkEntity> keywords) {
-        KeywordHateoas keywordHateoas = new KeywordHateoas(keywords);
-        keywordHateoasHandler.addLinks(keywordHateoas, new Authorisation());
+    public KeywordHateoas packAsHateoas(@NotNull final Keyword keyword) {
+        KeywordHateoas keywordHateoas = new KeywordHateoas(keyword);
+        applyLinksAndHeader(keywordHateoas, keywordHateoasHandler);
         return keywordHateoas;
     }
 
@@ -182,11 +154,11 @@ public class KeywordService
      * will only ever get a valid Keyword back. If there is no valid
      * Keyword, an exception is thrown
      *
-     * @param keywordSystemId systemID of the Keyword object to retrieve
+     * @param keywordSystemId systemId of the Keyword object to retrieve
      * @return the Keyword object
      */
     protected Keyword getKeywordOrThrow(
-            @NotNull UUID keywordSystemId) {
+            @NotNull final UUID keywordSystemId) {
         Keyword keyword = keywordRepository.
                 findBySystemId(keywordSystemId);
         if (keyword == null) {

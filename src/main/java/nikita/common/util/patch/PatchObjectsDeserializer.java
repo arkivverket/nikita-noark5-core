@@ -12,12 +12,13 @@ import java.io.IOException;
 import static com.fasterxml.jackson.databind.DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY;
 
 public class PatchObjectsDeserializer
-        extends JsonDeserializer {
+        extends JsonDeserializer<PatchObjects> {
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
     @Override
-    public PatchObjects deserialize(JsonParser jsonParser, DeserializationContext dc)
+    public PatchObjects deserialize(JsonParser jsonParser,
+                                    DeserializationContext dc)
             throws IOException {
         mapper.configure(ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
         PatchObjects patchObjects = new PatchObjects();

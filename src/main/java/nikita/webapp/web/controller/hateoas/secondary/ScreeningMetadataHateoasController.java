@@ -18,7 +18,6 @@ import java.util.UUID;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
@@ -58,7 +57,7 @@ public class ScreeningMetadataHateoasController
     @GetMapping()
     public ResponseEntity<ScreeningMetadataHateoas> findAllScreeningMetadata() {
         ScreeningMetadataHateoas screeningMetadataHateoas =
-                screeningMetadataService.findAllByOwner();
+                screeningMetadataService.findAll();
         return ResponseEntity.status(OK)
                 .body(screeningMetadataHateoas);
     }
@@ -90,8 +89,6 @@ public class ScreeningMetadataHateoasController
         ScreeningMetadataHateoas screeningMetadataHateoas =
                 screeningMetadataService.findBySystemId(systemID);
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(screeningMetadataHateoas.getEntityVersion().toString())
                 .body(screeningMetadataHateoas);
     }
 
@@ -143,8 +140,6 @@ public class ScreeningMetadataHateoasController
                         systemID, parseETAG(request.getHeader(ETAG)),
                         screeningMetadata);
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(screeningMetadataHateoas.getEntityVersion().toString())
                 .body(screeningMetadataHateoas);
     }
 

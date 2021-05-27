@@ -1,47 +1,43 @@
 package nikita.webapp.service.interfaces.casehandling;
 
-import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.casehandling.RecordNote;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RecordNoteHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.DocumentFlowHateoas;
 import nikita.common.model.noark5.v5.secondary.DocumentFlow;
-import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 public interface IRecordNoteService {
 
     // All save methods
-    ResponseEntity<RecordNoteHateoas> save(
-            @NotNull final RecordNote recordNote);
+    RecordNoteHateoas save(@NotNull final RecordNote recordNote);
 
     // All find methods
-    ResponseEntity<RecordNoteHateoas> findBySystemId(
-            @NotNull final String systemId);
+    RecordNoteHateoas findBySystemId(@NotNull final UUID systemId);
 
-    ResponseEntity<RecordNoteHateoas> findAllByOwner();
+    RecordNoteHateoas findAll();
 
-    ResponseEntity<RecordNoteHateoas> findAllRecordNoteByCaseFile(
-            CaseFile caseFile);
+    DocumentFlowHateoas findAllDocumentFlowWithRecordNoteBySystemId(
+            @NotNull final UUID systemId);
 
-    DocumentFlowHateoas findAllDocumentFlowWithRecordNoteBySystemId
-        (String systemID);
-
-    DocumentFlowHateoas associateDocumentFlowWithRecordNote
-        (String systemId, DocumentFlow documentFlow);
+    DocumentFlowHateoas associateDocumentFlowWithRecordNote(
+            @NotNull final UUID systemId,
+            @NotNull final DocumentFlow documentFlow);
 
     // All UPDATE operations
-    ResponseEntity<RecordNoteHateoas> handleUpdate(
-            @NotNull final String systemId,
+    RecordNoteHateoas handleUpdate(
+            @NotNull final UUID systemId,
             @NotNull final RecordNote incomingRecordNote);
 
     // All DELETE operations
-    ResponseEntity<String> deleteEntity(@NotNull final String systemId);
+    String deleteEntity(@NotNull final UUID systemId);
 
-    ResponseEntity<String> deleteAllByOwnedBy();
+    String deleteAllByOwnedBy();
 
-    ResponseEntity<RecordNoteHateoas> generateDefaultRecordNote(
-            @NotNull final String caseFilSystemId);
+    RecordNoteHateoas generateDefaultRecordNote(
+            @NotNull final UUID systemId);
 
-    DocumentFlowHateoas generateDefaultDocumentFlow(String systemId);
+    DocumentFlowHateoas generateDefaultDocumentFlow(
+            @NotNull final UUID systemId);
 }

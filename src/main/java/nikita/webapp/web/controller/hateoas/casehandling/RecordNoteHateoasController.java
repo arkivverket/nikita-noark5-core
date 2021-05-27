@@ -15,13 +15,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping(value = HREF_BASE_RECORD_NOTE + SLASH,
@@ -38,7 +37,7 @@ public class RecordNoteHateoasController
 
     // API - All POST Requests (CRUD - CREATE)
 
-    // POST [contextPath][api]/casehandling/arkivnotat/{systemId}/ny-dokumentflyt
+    // POST [contextPath][api]/sakarkiv/arkivnotat/{systemId}/ny-dokumentflyt
     // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/ny-dokumentflyt/
     @Operation(summary = "Create a new DocumentFlow and associate it with " +
             "the given RecordNote systemId",
@@ -76,10 +75,10 @@ public class RecordNoteHateoasController
     public ResponseEntity<DocumentFlowHateoas>
     createDocumentFlowAssociatedWithRecordNote(
             @Parameter(name = SYSTEM_ID,
-                    description = "systemID of registry entry to associate " +
+                    description = "systemID of record note to associate " +
                             "the document flow with.",
                     required = true)
-            @PathVariable String systemID,
+            @PathVariable UUID systemID,
             @Parameter(name = "documentFlow",
                     description = "Incoming documentFlow object",
                     required = true)
@@ -91,7 +90,8 @@ public class RecordNoteHateoasController
     }
 
     // Retrieve a single recordNote identified by systemId
-    // GET [contextPath][api]/casehandling/arkivnotat/{systemID}
+    // GET [contextPath][api]/sakarkiv/arkivnotat/{systemID}
+    // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/arkivnotat/
     @Operation(summary = "Retrieves a single RecordNote entity given a " +
             "systemId")
     @ApiResponses(value = {
@@ -112,12 +112,13 @@ public class RecordNoteHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the recordNote to retrieve",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String recordNoteSystemId) {
-        return recordNoteService.findBySystemId(recordNoteSystemId);
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        return ResponseEntity.status(OK)
+                .body(recordNoteService.findBySystemId(systemID));
     }
 
     // Get all recordNote
-    // GET [contextPath][api]/casehandling/arkivnotat/
+    // GET [contextPath][api]/sakarkiv/arkivnotat/
     // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/arkivnotat/
     @Operation(summary = "Retrieves multiple RecordNote entities limited by " +
             "ownership rights")
@@ -136,10 +137,11 @@ public class RecordNoteHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping()
     public ResponseEntity<RecordNoteHateoas> findAllRecordNote() {
-        return recordNoteService.findAllByOwner();
+        return ResponseEntity.status(OK)
+                .body(recordNoteService.findAll());
     }
 
-    // GET [contextPath][api]/casehandling/journalpost/{systemId}/dokumentflyt
+    // GET [contextPath][api]/sakarkiv/arkivnotat/{systemId}/dokumentflyt
     // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/dokumentflyt/
     @Operation(summary = "Retrieve all DocumentFlow associated with a " +
             "RecordNote identified by systemId")
@@ -163,7 +165,7 @@ public class RecordNoteHateoasController
                     description = "systemID of the file to retrieve " +
                             "associated RecordNote",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity
                 .status(OK)
                 .body(recordNoteService.
@@ -171,8 +173,8 @@ public class RecordNoteHateoasController
     }
 
 
-    // GET [contextPath][api]/arkivstruktur/arkivnotat/{systemId}/ny-dokumentflyt
-    //  https://rel.arkivverket.no/noark5/v5/api/sakarkiv/ny-dokumentflyt/
+    // GET [contextPath][api]/sakarkiv/arkivnotat/{systemId}/ny-dokumentflyt
+    // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/ny-dokumentflyt/
     @Operation(summary = "Create a DocumentFlow with default values")
     @ApiResponses(value = {
             @ApiResponse(
@@ -194,15 +196,14 @@ public class RecordNoteHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the recordNote",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(recordNoteService.
                         generateDefaultDocumentFlow(systemID));
     }
 
     // Delete a Record identified by systemID
-    // DELETE [contextPath][api]/casehandling/arkivnotat/{systemId}/
+    // DELETE [contextPath][api]/sakarkiv/arkivnotat/{systemId}/
     @Operation(summary = "Deletes a single RecordNote entity identified by " +
             SYSTEM_ID)
     @ApiResponses(value = {
@@ -223,12 +224,13 @@ public class RecordNoteHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the recordNote to delete",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
-        return recordNoteService.deleteEntity(systemID);
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        return ResponseEntity.status(NO_CONTENT)
+                .body(recordNoteService.deleteEntity(systemID));
     }
 
     // Delete all RecordNote
-    // DELETE [contextPath][api]/arkivstruktur/arkivnotat/
+    // DELETE [contextPath][api]/sakarkiv/arkivnotat/
     @Operation(summary = "Deletes all RecordNote belonging to the logged in " +
             "user")
     @ApiResponses(value = {
@@ -246,11 +248,13 @@ public class RecordNoteHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @DeleteMapping
     public ResponseEntity<String> deleteAllRecordNote() {
-        return recordNoteService.deleteAllByOwnedBy();
+        return ResponseEntity.status(NO_CONTENT)
+                .body(recordNoteService.deleteAllByOwnedBy());
     }
 
     // Update a RecordNote with given values
-    // PUT [contextPath][api]/casehandling/arkivnotat/{systemId}
+    // PUT [contextPath][api]/sakarkiv/arkivnotat/{systemId}
+    // https://rel.arkivverket.no/noark5/v5/api/sakarkiv/arkivnotat/
     @Operation(summary = "Updates a RecordNote identified by a given systemId",
             description = "Returns the newly updated recordNote")
     @ApiResponses(value = {
@@ -276,12 +280,13 @@ public class RecordNoteHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of recordNote to update",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID,
+            @PathVariable(SYSTEM_ID) final UUID systemID,
             @Parameter(name = "RecordNote",
                     description = "Incoming recordNote object",
                     required = true)
             @RequestBody RecordNote recordNote) throws NikitaException {
         validateForUpdate(recordNote);
-        return recordNoteService.handleUpdate(systemID, recordNote);
+        return ResponseEntity.status(OK)
+                .body(recordNoteService.handleUpdate(systemID, recordNote));
     }
 }

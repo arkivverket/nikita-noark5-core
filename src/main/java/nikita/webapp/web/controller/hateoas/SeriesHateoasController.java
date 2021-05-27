@@ -17,15 +17,8 @@ import nikita.common.model.noark5.v5.hateoas.secondary.StorageLocationHateoas;
 import nikita.common.model.noark5.v5.metadata.Metadata;
 import nikita.common.model.noark5.v5.secondary.StorageLocation;
 import nikita.common.util.exceptions.NikitaException;
-import nikita.webapp.hateoas.interfaces.ICaseFileHateoasHandler;
-import nikita.webapp.hateoas.interfaces.IFileHateoasHandler;
-import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
-import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.*;
 import nikita.webapp.util.error.ApiError;
-import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
-import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +28,6 @@ import java.util.UUID;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.*;
 
@@ -57,30 +49,18 @@ public class SeriesHateoasController
     private final ICaseFileService caseFileService;
     private final IFileService fileService;
     private final IRecordService recordService;
-    private final ISeriesHateoasHandler seriesHateoasHandler;
-    private final ICaseFileHateoasHandler caseFileHateoasHandler;
-    private final IFileHateoasHandler fileHateoasHandler;
-    private final ApplicationEventPublisher applicationEventPublisher;
 
     public SeriesHateoasController(
             IClassificationSystemService classificationSystemService,
             ISeriesService seriesService,
             ICaseFileService caseFileService,
-            ISeriesHateoasHandler seriesHateoasHandler,
-            ICaseFileHateoasHandler caseFileHateoasHandler,
-            IFileHateoasHandler fileHateoasHandler,
             IFileService fileService,
-            IRecordService recordService,
-            ApplicationEventPublisher applicationEventPublisher) {
+            IRecordService recordService) {
         this.classificationSystemService = classificationSystemService;
         this.seriesService = seriesService;
         this.caseFileService = caseFileService;
-        this.seriesHateoasHandler = seriesHateoasHandler;
-        this.caseFileHateoasHandler = caseFileHateoasHandler;
-        this.fileHateoasHandler = fileHateoasHandler;
         this.fileService = fileService;
         this.recordService = recordService;
-        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     // API - All POST Requests (CRUD - CREATE)
@@ -120,12 +100,11 @@ public class SeriesHateoasController
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<ClassificationSystemHateoas>
     createClassificationSystemAssociatedWithSeries(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of series to associate the " +
                             "ClassificationSystem with",
                     required = true)
-            @PathVariable String systemID,
+            @PathVariable UUID systemID,
             @Parameter(name = "ClassificationSystem",
                     description = "Incoming ClassificationSystem object",
                     required = true)
@@ -135,10 +114,7 @@ public class SeriesHateoasController
         ClassificationSystemHateoas classificationSystemHateoas =
                 seriesService.createClassificationSystem(systemID,
                         classificationSystem);
-        return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(classificationSystemHateoas.getEntityVersion().toString())
-                .body(classificationSystemHateoas);
+        return ResponseEntity.status(CREATED).body(classificationSystemHateoas);
     }
 
     // Create a new file
@@ -173,24 +149,19 @@ public class SeriesHateoasController
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_FILE,
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<FileHateoas> createFileAssociatedWithSeries(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
-                    description = "systemID of series to associate the caseFile with",
+                    description = "systemID of series to associate the " +
+                            "caseFile with",
                     required = true)
-            @PathVariable String systemID,
+            @PathVariable UUID systemID,
             @Parameter(name = "File",
                     description = "Incoming file object",
                     required = true)
             @RequestBody File file) throws NikitaException {
         validateForCreate(file);
-        File createdFile = seriesService.createFileAssociatedWithSeries(systemID, file);
-        FileHateoas fileHateoas = new FileHateoas(createdFile);
-        fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, createdFile));
         return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(createdFile.getVersion().toString())
-                .body(fileHateoas);
+                .body(seriesService
+                        .createFileAssociatedWithSeries(systemID, file));
     }
 
     // Create a new casefile
@@ -228,25 +199,19 @@ public class SeriesHateoasController
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CASE_FILE,
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<CaseFileHateoas> createCaseFileAssociatedWithSeries(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of series to associate the " +
                             "caseFile with",
                     required = true)
-            @PathVariable String systemID,
+            @PathVariable UUID systemID,
             @Parameter(name = "caseFile",
                     description = "Incoming caseFile object",
                     required = true)
             @RequestBody CaseFile caseFile) throws NikitaException {
         validateForCreate(caseFile);
-        CaseFile createdCaseFile = seriesService.createCaseFileAssociatedWithSeries(systemID, caseFile);
-        CaseFileHateoas caseFileHateoas = new CaseFileHateoas(createdCaseFile);
-        caseFileHateoasHandler.addLinks(caseFileHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(new AfterNoarkEntityCreatedEvent(this, createdCaseFile));
         return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(createdCaseFile.getVersion().toString())
-                .body(caseFileHateoas);
+                .body(seriesService
+                        .createCaseFileAssociatedWithSeries(systemID, caseFile));
     }
 
     // Create a new record
@@ -286,7 +251,7 @@ public class SeriesHateoasController
                     description = "systemID of series to associate the record" +
                             " with",
                     required = true)
-            @PathVariable String systemID,
+            @PathVariable UUID systemID,
             @Parameter(name = "Record",
                     description = "Incoming record object",
                     required = true)
@@ -313,7 +278,6 @@ public class SeriesHateoasController
     @PostMapping(value =
             SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_STORAGE_LOCATION)
     public ResponseEntity<StorageLocationHateoas> createStorageLocation(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the series",
                     required = true)
@@ -323,7 +287,6 @@ public class SeriesHateoasController
                     required = true)
             @RequestBody StorageLocation storageLocation) throws NikitaException {
         return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(seriesService
                         .createStorageLocationAssociatedWithSeries(
                                 systemID, storageLocation));
@@ -366,7 +329,7 @@ public class SeriesHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the Series",
                     required = true)
-            @PathVariable String classificationSystemSuccessorSystemId,
+            @PathVariable String systemID,
             @Parameter(name = "id",
                     description = "Address of the ClassificationSystem to associate",
                     required = true)
@@ -409,7 +372,6 @@ public class SeriesHateoasController
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<ScreeningMetadataHateoas>
     createScreeningMetadataBySystemId(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemId of File to associate " +
                             "ScreeningMetadata with",
@@ -424,7 +386,6 @@ public class SeriesHateoasController
                 seriesService.createScreeningMetadataAssociatedWithSeries(
                         systemID, screeningMetadata);
         return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(screeningMetadataHateoas);
     }
 
@@ -466,20 +427,16 @@ public class SeriesHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of fonds to update.",
                     required = true)
-            @PathVariable(SYSTEM_ID) String systemID,
+            @PathVariable(SYSTEM_ID) UUID systemID,
             @Parameter(name = "series",
                     description = "Incoming series object",
                     required = true)
             @RequestBody Series series) throws NikitaException {
         validateForUpdate(series);
-        Series updatedSeries = seriesService.handleUpdate(systemID, parseETAG(request.getHeader(ETAG)), series);
-        SeriesHateoas seriesHateoas = new SeriesHateoas(updatedSeries);
-        seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(new AfterNoarkEntityUpdatedEvent(this, updatedSeries));
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(updatedSeries.getVersion().toString())
-                .body(seriesHateoas);
+                .body(seriesService
+                        .handleUpdate(systemID, parseETAG(
+                                request.getHeader(ETAG)), series));
     }
     // API - All GET Requests (CRUD - READ)
 
@@ -505,8 +462,9 @@ public class SeriesHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the series to retrieve",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
-        return seriesService.findBySystemId(systemID);
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        return ResponseEntity.status(OK)
+                .body(seriesService.findBySystemId(systemID));
     }
 
 
@@ -531,14 +489,12 @@ public class SeriesHateoasController
             SLASH + SYSTEM_ID_PARAMETER + SLASH + SCREENING_METADATA)
     public ResponseEntity<ScreeningMetadataHateoas>
     getScreeningMetadataAssociatedWithSeries(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the series to retrieve " +
                             "screening metadata",
                     required = true)
             @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(seriesService
                         .getScreeningMetadataAssociatedWithSeries(systemID));
     }
@@ -560,10 +516,9 @@ public class SeriesHateoasController
                     responseCode = INTERNAL_SERVER_ERROR_VAL,
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CLASSIFICATION_SYSTEM)
-    public ResponseEntity<ClassificationSystemHateoas> createClassificationSystem(
-            HttpServletRequest request) {
+    public ResponseEntity<ClassificationSystemHateoas>
+    createClassificationSystem() {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(classificationSystemService.generateDefaultClassificationSystem());
     }
 
@@ -588,13 +543,11 @@ public class SeriesHateoasController
             SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_SCREENING_METADATA)
     public ResponseEntity<ScreeningMetadataHateoas>
     getDefaultScreeningMetadata(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the series",
                     required = true)
             @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(seriesService.getDefaultScreeningMetadata(systemID));
     }
 
@@ -618,13 +571,11 @@ public class SeriesHateoasController
             SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_STORAGE_LOCATION)
     public ResponseEntity<StorageLocationHateoas>
     getDefaultStorageLocation(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the series",
                     required = true)
             @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(seriesService.getDefaultStorageLocation(systemID));
     }
 
@@ -646,10 +597,13 @@ public class SeriesHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_FILE)
     public ResponseEntity<FileHateoas> createDefaultFile(
-            HttpServletRequest request) {
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of Series to create default File " +
+                            "for",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(fileService.generateDefaultFile());
+                .body(fileService.generateDefaultFile(systemID));
     }
 
     // Create a CaseFile object with default values
@@ -669,16 +623,9 @@ public class SeriesHateoasController
                     responseCode = INTERNAL_SERVER_ERROR_VAL,
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CASE_FILE)
-    public ResponseEntity<CaseFileHateoas> createDefaultCaseFile(
-            HttpServletRequest request) {
-
-
-        CaseFileHateoas caseFileHateoas =
-                caseFileService.generateDefaultCaseFile();
-
+    public ResponseEntity<CaseFileHateoas> createDefaultCaseFile() {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(caseFileHateoas);
+                .body(caseFileService.generateDefaultCaseFile());
     }
 
     // Create a Record with default values
@@ -699,10 +646,13 @@ public class SeriesHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_RECORD)
     public ResponseEntity<RecordHateoas> createDefaultRecord(
-            HttpServletRequest request) {
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of Series to create default " +
+                            "Record for",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(recordService.generateDefaultRecord());
+                .body(recordService.generateDefaultRecord(systemID));
     }
 
     // Retrieve all Series (paginated)
@@ -723,7 +673,8 @@ public class SeriesHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping
     public ResponseEntity<SeriesHateoas> findAllSeries() {
-        return seriesService.findAll();
+        return ResponseEntity.status(OK)
+                .body(seriesService.findAll());
     }
 
     // Retrieve all Records associated with a Series (paginated)
@@ -747,8 +698,9 @@ public class SeriesHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the series to find associated records",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
-        return seriesService.findAllRecordAssociatedWithSeries(systemID);
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        return ResponseEntity.status(OK)
+                .body(seriesService.findAllRecordAssociatedWithSeries(systemID));
     }
 
     // Retrieve all Files associated with a Series (paginated)
@@ -771,8 +723,9 @@ public class SeriesHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the series to retrieve",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
-        return seriesService.findAllFileAssociatedWithSeries(systemID);
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        return ResponseEntity.status(OK)
+                .body(seriesService.findAllFileAssociatedWithSeries(systemID));
     }
 
     // Retrieve all ClassificationSystem associated with Series identified by a
@@ -800,9 +753,10 @@ public class SeriesHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the Series ",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
-        return seriesService.findClassificationSystemAssociatedWithSeries(
-                systemID);
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        return ResponseEntity.status(OK)
+                .body(seriesService
+                        .findClassificationSystemAssociatedWithSeries(systemID));
     }
 
     // Retrieve the Fonds associated with the Series identified by the given
@@ -829,8 +783,9 @@ public class SeriesHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the Series ",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
-        return seriesService.findFondsAssociatedWithSeries(systemID);
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        return ResponseEntity.status(OK)
+                .body(seriesService.findFondsAssociatedWithSeries(systemID));
     }
 
 
@@ -855,8 +810,9 @@ public class SeriesHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the series to retrieve",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
-        return seriesService.findCaseFilesBySeries(systemID);
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        return ResponseEntity.status(OK)
+                .body(seriesService.findCaseFilesBySeries(systemID));
     }
 
     // API - All DELETE Requests (CRUD - DELETE)
@@ -883,7 +839,7 @@ public class SeriesHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the series to delete",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         seriesService.deleteEntity(systemID);
         return ResponseEntity.status(NO_CONTENT).
                 body(DELETE_RESPONSE);

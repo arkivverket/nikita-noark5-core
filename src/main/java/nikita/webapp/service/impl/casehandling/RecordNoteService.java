@@ -1,39 +1,31 @@
 package nikita.webapp.service.impl.casehandling;
 
-import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.casehandling.RecordNote;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RecordNoteHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.DocumentFlowHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.secondary.DocumentFlow;
 import nikita.common.repository.n5v5.casehandling.IRecordNoteRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IRecordNoteHateoasHandler;
-import nikita.webapp.hateoas.interfaces.secondary.IDocumentFlowHateoasHandler;
-import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.casehandling.IRecordNoteService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
+import nikita.webapp.service.interfaces.odata.IODataService;
 import nikita.webapp.service.interfaces.secondary.IDocumentFlowService;
 import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
-import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
-import static org.springframework.http.HttpStatus.*;
 
 @Service
 public class RecordNoteService
@@ -47,95 +39,49 @@ public class RecordNoteService
     private final IDocumentFlowService documentFlowService;
     private final IMetadataService metadataService;
     private final IRecordNoteHateoasHandler recordNoteHateoasHandler;
-    private final IDocumentFlowHateoasHandler documentFlowHateoasHandler;
 
     public RecordNoteService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IODataService odataService,
             IPatchService patchService,
             IRecordNoteRepository recordNoteRepository,
             IDocumentFlowService documentFlowService,
             IMetadataService metadataService,
-            IRecordNoteHateoasHandler recordNoteHateoasHandler,
-            IDocumentFlowHateoasHandler documentFlowHateoasHandler) {
-        super(entityManager, applicationEventPublisher, patchService);
+            IRecordNoteHateoasHandler recordNoteHateoasHandler) {
+        super(entityManager, applicationEventPublisher, patchService, odataService);
         this.recordNoteRepository = recordNoteRepository;
         this.documentFlowService = documentFlowService;
         this.metadataService = metadataService;
         this.recordNoteHateoasHandler = recordNoteHateoasHandler;
-        this.documentFlowHateoasHandler = documentFlowHateoasHandler;
     }
 
     // All CREATE methods
 
     @Override
     @Transactional
-    public ResponseEntity<RecordNoteHateoas> save(
-            @NotNull final RecordNote recordNote) {
+    public RecordNoteHateoas save(@NotNull final RecordNote recordNote) {
         validateDocumentMedium(metadataService, recordNote);
-        RecordNoteHateoas recordNoteHateoas = new
-                RecordNoteHateoas(recordNoteRepository.save(recordNote));
-        recordNoteHateoasHandler.addLinks(recordNoteHateoas,
-                new Authorisation());
-        return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(recordNoteHateoas.getEntityVersion().toString())
-                .body(recordNoteHateoas);
+        return packAsHateoas(recordNoteRepository.save(recordNote));
     }
 
     // All READ methods
 
     @Override
-    public ResponseEntity<RecordNoteHateoas> findBySystemId(String systemId) {
-        RecordNoteHateoas recordNoteHateoas = new
-                RecordNoteHateoas(getRecordNoteOrThrow(systemId));
-        recordNoteHateoasHandler.addLinks(recordNoteHateoas, new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(recordNoteHateoas.getEntityVersion().toString())
-                .body(recordNoteHateoas);
+    public RecordNoteHateoas findBySystemId(@NotNull final UUID systemId) {
+        return packAsHateoas(getRecordNoteOrThrow(systemId));
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public ResponseEntity<RecordNoteHateoas> findAllRecordNoteByCaseFile(
-            CaseFile caseFile) {
-        RecordNoteHateoas recordNoteHateoas = new RecordNoteHateoas(
-                (List<INoarkEntity>)
-                        (List) recordNoteRepository.
-                                findByReferenceFile(caseFile));
-        recordNoteHateoasHandler.addLinks(recordNoteHateoas,
-                new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .body(recordNoteHateoas);
+    public RecordNoteHateoas findAll() {
+        return (RecordNoteHateoas) odataService.processODataQueryGet();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public ResponseEntity<RecordNoteHateoas> findAllByOwner() {
-        RecordNoteHateoas recordNoteHateoas = new
-                RecordNoteHateoas((List<INoarkEntity>) (List)
-                recordNoteRepository.findByOwnedBy(getUser()));
-        recordNoteHateoasHandler.addLinks(recordNoteHateoas,
-                new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(recordNoteHateoas.getEntityVersion().toString())
-                .body(recordNoteHateoas);
-    }
-
-    @Override
-    public DocumentFlowHateoas findAllDocumentFlowWithRecordNoteBySystemId
-            (String systemID) {
-        RecordNote recordNote = getRecordNoteOrThrow(systemID);
-        DocumentFlowHateoas documentFlowHateoas =
-                new DocumentFlowHateoas((List<INoarkEntity>)
-                        (List) recordNote.getReferenceDocumentFlow());
-        documentFlowHateoasHandler.addLinks(documentFlowHateoas,
-                new Authorisation());
-        setOutgoingRequestHeader(documentFlowHateoas);
-        return documentFlowHateoas;
+    public DocumentFlowHateoas findAllDocumentFlowWithRecordNoteBySystemId(
+            @NotNull final UUID systemId) {
+        getRecordNoteOrThrow(systemId);
+        return (DocumentFlowHateoas) odataService.processODataQueryGet();
     }
 
     // All UPDATE operations
@@ -143,9 +89,9 @@ public class RecordNoteService
     @Override
     @Transactional
     public DocumentFlowHateoas associateDocumentFlowWithRecordNote(
-            String systemId, DocumentFlow documentFlow) {
-        return documentFlowService.associateDocumentFlowWithRecordNote
-                (documentFlow, getRecordNoteOrThrow(systemId));
+            UUID systemId, DocumentFlow documentFlow) {
+        return documentFlowService.associateDocumentFlowWithRecordNote(
+                documentFlow, getRecordNoteOrThrow(systemId));
     }
 
     /**
@@ -178,12 +124,12 @@ public class RecordNoteService
      *                           copied from this object. This object is
      *                           not persisted.
      * @return the updated recordNote after being persisted to the database
-     * wrapped first as RecordNoteHateoas object and then as a ResponseEntity
+     * wrapped as RecordNoteHateoas object
      */
     @Override
     @Transactional
-    public ResponseEntity<RecordNoteHateoas> handleUpdate(
-            @NotNull final String systemId,
+    public RecordNoteHateoas handleUpdate(
+            @NotNull final UUID systemId,
             @NotNull final RecordNote incomingRecordNote) {
 
         Long version = getETag();
@@ -217,18 +163,7 @@ public class RecordNoteService
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
         existingRecordNote.setVersion(version);
-        recordNoteRepository.save(existingRecordNote);
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityUpdatedEvent(this, existingRecordNote));
-        RecordNoteHateoas recordNoteHateoas = new
-                RecordNoteHateoas(recordNoteRepository.save(
-                existingRecordNote));
-        recordNoteHateoasHandler.addLinks(recordNoteHateoas,
-                new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(recordNoteHateoas.getEntityVersion().toString())
-                .body(recordNoteHateoas);
+        return packAsHateoas(existingRecordNote);
     }
 
     // All DELETE operations
@@ -243,8 +178,8 @@ public class RecordNoteService
      */
     @Override
     @Transactional
-    public ResponseEntity<String> deleteEntity(
-            @NotNull final String recordNoteSystemId) {
+    public String deleteEntity(
+            @NotNull final UUID recordNoteSystemId) {
         RecordNote recordNote = getRecordNoteOrThrow(recordNoteSystemId);
         for (DocumentFlow documentFlow : recordNote
                 .getReferenceDocumentFlow()) {
@@ -255,51 +190,48 @@ public class RecordNoteService
                 new AfterNoarkEntityDeletedEvent(this, recordNote));
         // If the delete failed an exception should have been thrown. Getting
         // this far means it went OK
-        return ResponseEntity.status(NO_CONTENT).
-                body(DELETE_RESPONSE);
+        return DELETE_RESPONSE;
     }
 
     /**
      * Delete all RecordNote objects belonging to the user identified by ownedBy
-     *
-     * @return the number of objects deleted
      */
     @Override
     @Transactional
-    public ResponseEntity<String> deleteAllByOwnedBy() {
+    public String deleteAllByOwnedBy() {
         String user = getUser();
         long count = recordNoteRepository.countByOwnedBy(user);
         recordNoteRepository.deleteByOwnedBy(user);
         logger.info("Deleted [" + count + "] RecordNote objects belonging to " +
                 "[" + user + "]");
-        return ResponseEntity.status(NO_CONTENT).
-                body(DELETE_RESPONSE);
+        return DELETE_RESPONSE;
     }
 
     // All template methods
 
     @Override
-    public ResponseEntity<RecordNoteHateoas> generateDefaultRecordNote(
-            @NotNull String caseFileSystemId) {
+    public RecordNoteHateoas generateDefaultRecordNote(
+            @NotNull final UUID caseFileSystemId) {
         RecordNote defaultRecordNote = new RecordNote();
         defaultRecordNote.setTitle(DEFAULT_TITLE + "RecordNote");
         defaultRecordNote.setDescription(DEFAULT_DESCRIPTION + "a CaseFile " +
                 "with systemId [" + caseFileSystemId + "]");
-        RecordNoteHateoas recordNoteHateoas = new
-                RecordNoteHateoas(defaultRecordNote);
-        recordNoteHateoasHandler.addLinksOnTemplate(recordNoteHateoas,
-                new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .body(recordNoteHateoas);
+        defaultRecordNote.setVersion(-1L, true);
+        return packAsHateoas(defaultRecordNote);
     }
 
     @Override
-    public DocumentFlowHateoas generateDefaultDocumentFlow(String systemID) {
+    public DocumentFlowHateoas generateDefaultDocumentFlow(@NotNull final UUID systemId) {
         return documentFlowService.generateDefaultDocumentFlow();
     }
 
     // All helper methods
+
+    public RecordNoteHateoas packAsHateoas(@NotNull final RecordNote recordNote) {
+        RecordNoteHateoas recordNoteHateoas = new RecordNoteHateoas(recordNote);
+        applyLinksAndHeader(recordNoteHateoas, recordNoteHateoasHandler);
+        return recordNoteHateoas;
+    }
 
     /**
      * Internal helper method. Rather than having a find and try catch in
@@ -310,9 +242,9 @@ public class RecordNoteService
      * @param systemId systemId of the recordNote to find.
      * @return the recordNote
      */
-    protected RecordNote getRecordNoteOrThrow(@NotNull String systemId) {
+    protected RecordNote getRecordNoteOrThrow(@NotNull final UUID systemId) {
         RecordNote recordNote =
-                recordNoteRepository.findBySystemId(UUID.fromString(systemId));
+                recordNoteRepository.findBySystemId(systemId);
         if (recordNote == null) {
             String error = INFO_CANNOT_FIND_OBJECT +
                     " RecordNote, using systemId " + systemId;

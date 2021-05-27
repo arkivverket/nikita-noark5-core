@@ -20,7 +20,7 @@ import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserializeDate
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserializeDateTime;
 
 public class PatchMergeDeserializer
-        extends JsonDeserializer {
+        extends JsonDeserializer<PatchMerge> {
 
     private static final ObjectMapper mapper = new ObjectMapper();
 

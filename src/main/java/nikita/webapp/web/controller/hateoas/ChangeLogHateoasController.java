@@ -13,11 +13,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -52,12 +52,10 @@ public class ChangeLogHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)
     })
     @GetMapping(CHANGE_LOG)
-    public ResponseEntity<ChangeLogHateoas> findAllChangeLog(
-            HttpServletRequest request) {
+    public ResponseEntity<ChangeLogHateoas> findAllChangeLog() {
         ChangeLogHateoas changeLogHateoas = changeLogService.
                 findChangeLogByOwner();
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(changeLogHateoas);
     }
 
@@ -78,16 +76,13 @@ public class ChangeLogHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = CHANGE_LOG + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<ChangeLogHateoas> findOne(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemId of changeLog to retrieve.",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         ChangeLogHateoas changeLogHateoas =
-            changeLogService.findSingleChangeLog(systemID);
+                changeLogService.findSingleChangeLog(systemID);
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(changeLogHateoas.getEntityVersion().toString())
                 .body(changeLogHateoas);
     }
 
@@ -128,7 +123,7 @@ public class ChangeLogHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemId of changeLog to update.",
                     required = true)
-            @PathVariable(SYSTEM_ID) String systemID,
+            @PathVariable(SYSTEM_ID) UUID systemID,
             @Parameter(name = "changeLog",
                     description = "Incoming changeLog object",
                     required = true)
@@ -136,10 +131,7 @@ public class ChangeLogHateoasController
         ChangeLogHateoas changeLogHateoas =
                 changeLogService.handleUpdate(systemID,
                         parseETAG(request.getHeader(ETAG)), changeLog);
-
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(changeLogHateoas.getEntityVersion().toString())
                 .body(changeLogHateoas);
     }
 
@@ -165,7 +157,7 @@ public class ChangeLogHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the changeLog to delete",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         changeLogService.deleteEntity(systemID);
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .body(DELETE_RESPONSE);

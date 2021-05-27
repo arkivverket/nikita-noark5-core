@@ -25,12 +25,26 @@ public class HibernateEntityReflections {
     private static final Logger logger =
             LoggerFactory.getLogger(HibernateEntityReflections.class);
 
-
     protected String getForeignKey(String fromClassName, String toClassName) {
 
+        // This is a specific case that we have to deal with and perhaps is
+        // applicable to others. The relationship is actually between File and
+        // Record rather than CaseFile and RegistryEntry
+        if (toClassName.equalsIgnoreCase("CaseFile") &&
+                fromClassName.equalsIgnoreCase("RegistryEntry")) {
+            fromClassName = "Record";
+            toClassName = "File";
+        }
+        if (toClassName.equalsIgnoreCase("CaseFile") &&
+                fromClassName.equalsIgnoreCase("RecordNote")) {
+            fromClassName = "Record";
+            toClassName = "File";
+        }
+
+        String finalFromClassName = fromClassName;
         Class<?> klass = Optional.ofNullable(entityMap.get(fromClassName))
                 .orElseThrow(() -> new BadRequestException(
-                        "Unsupported Entity class: " + fromClassName));
+                        "Unsupported Entity class: " + finalFromClassName));
 
         String foreignKeyName = "";
         Field[] allFields = FieldUtils.getAllFields(klass);

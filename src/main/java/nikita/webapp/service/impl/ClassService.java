@@ -1,5 +1,6 @@
 package nikita.webapp.service.impl;
 
+import nikita.common.model.nikita.NikitaPage;
 import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Record;
@@ -12,55 +13,41 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.CrossReferenceHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.KeywordHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.ScreeningMetadataHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.Metadata;
 import nikita.common.model.noark5.v5.secondary.CrossReference;
 import nikita.common.model.noark5.v5.secondary.Keyword;
 import nikita.common.model.noark5.v5.secondary.Screening;
-import nikita.common.model.noark5.v5.secondary.ScreeningMetadataLocal;
 import nikita.common.repository.n5v5.IClassRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IClassHateoasHandler;
-import nikita.webapp.hateoas.interfaces.IClassificationSystemHateoasHandler;
-import nikita.webapp.hateoas.interfaces.IFileHateoasHandler;
-import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
-import nikita.webapp.hateoas.interfaces.secondary.IScreeningMetadataHateoasHandler;
-import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.ICaseFileService;
 import nikita.webapp.service.interfaces.IClassService;
 import nikita.webapp.service.interfaces.IFileService;
 import nikita.webapp.service.interfaces.IRecordService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
+import nikita.webapp.service.interfaces.odata.IODataService;
 import nikita.webapp.service.interfaces.secondary.ICrossReferenceService;
 import nikita.webapp.service.interfaces.secondary.IKeywordService;
 import nikita.webapp.service.interfaces.secondary.IScreeningMetadataService;
-import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 import static java.util.List.copyOf;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
-import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setFinaliseEntityValues;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateScreening;
-import static org.springframework.http.HttpStatus.OK;
 
 /**
  * Service class for Class
  * <p>
- * Provides basic CRUD functionality for Class using systemID.
+ * Provides basic CRUD functionality for Class using systemId.
  * <p>
  * Also supports CREATE for a (Noark Classification Class) Class.
  * <p>
@@ -71,8 +58,6 @@ public class ClassService
         extends NoarkService
         implements IClassService {
 
-    private static final Logger logger =
-            LoggerFactory.getLogger(ClassService.class);
     private final IClassRepository classRepository;
     private final IFileService fileService;
     private final ICaseFileService caseFileService;
@@ -80,16 +65,12 @@ public class ClassService
     private final ICrossReferenceService crossReferenceService;
     private final IKeywordService keywordService;
     private final IClassHateoasHandler classHateoasHandler;
-    private final IClassificationSystemHateoasHandler
-            classificationSystemHateoasHandler;
     private final IMetadataService metadataService;
-    private final IFileHateoasHandler fileHateoasHandler;
-    private final IRecordHateoasHandler recordHateoasHandler;
     private final IScreeningMetadataService screeningMetadataService;
-    private final IScreeningMetadataHateoasHandler screeningMetadataHateoasHandler;
 
     public ClassService(EntityManager entityManager,
                         ApplicationEventPublisher applicationEventPublisher,
+                        IODataService odataService,
                         IPatchService patchService,
                         IClassRepository classRepository,
                         IFileService fileService,
@@ -98,15 +79,9 @@ public class ClassService
                         ICrossReferenceService crossReferenceService,
                         IKeywordService keywordService,
                         IClassHateoasHandler classHateoasHandler,
-                        IClassificationSystemHateoasHandler
-                                classificationSystemHateoasHandler,
                         IMetadataService metadataService,
-                        IFileHateoasHandler fileHateoasHandler,
-                        IRecordHateoasHandler recordHateoasHandler,
-                        IScreeningMetadataService screeningMetadataService,
-                        IScreeningMetadataHateoasHandler
-                                screeningMetadataHateoasHandler) {
-        super(entityManager, applicationEventPublisher, patchService);
+                        IScreeningMetadataService screeningMetadataService) {
+        super(entityManager, applicationEventPublisher, patchService, odataService);
         this.classRepository = classRepository;
         this.fileService = fileService;
         this.keywordService = keywordService;
@@ -114,13 +89,8 @@ public class ClassService
         this.caseFileService = caseFileService;
         this.recordService = recordService;
         this.classHateoasHandler = classHateoasHandler;
-        this.classificationSystemHateoasHandler =
-                classificationSystemHateoasHandler;
         this.metadataService = metadataService;
-        this.fileHateoasHandler = fileHateoasHandler;
-        this.recordHateoasHandler = recordHateoasHandler;
         this.screeningMetadataService = screeningMetadataService;
-        this.screeningMetadataHateoasHandler = screeningMetadataHateoasHandler;
     }
 
     // All CREATE operations
@@ -135,16 +105,10 @@ public class ClassService
      */
     @Override
     @Transactional
-    public ClassHateoas save(Class klass) {
+    public ClassHateoas save(@NotNull final Class klass) {
         setFinaliseEntityValues(klass);
         validateScreening(metadataService, klass);
-        ClassHateoas classHateoas = new
-                ClassHateoas(classRepository.save(klass));
-        classHateoasHandler.addLinks(classHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityCreatedEvent(
-                        this, klass));
-        return classHateoas;
+        return packAsHateoas(classRepository.save(klass));
     }
 
     /**
@@ -153,16 +117,17 @@ public class ClassService
      * (e.g. title) while some are set by the core.  owner, createdBy,
      * createdDate are automatically set by the core.
      *
-     * @param parentClassSystemId systemId of the parent object to connect this
-     *                            class as a child to
-     * @param klass               The class object object with some values set
+     * @param systemId systemId of the parent object to connect this
+     *                 class as a child to
+     * @param klass    The class object object with some values set
      * @return the newly persisted class object wrapped as a classHateaos object
      */
     @Override
     @Transactional
     public ClassHateoas createClassAssociatedWithClass(
-            String parentClassSystemId, Class klass) {
-        klass.setReferenceParentClass(getClassOrThrow(parentClassSystemId));
+            @NotNull final UUID systemId,
+            @NotNull final Class klass) {
+        klass.setReferenceParentClass(getClassOrThrow(systemId));
         return save(klass);
     }
 
@@ -172,16 +137,17 @@ public class ClassService
      * payload (e.g. title) while some are set by the core.  owner, createdBy,
      * createdDate are automatically set by the core.
      *
-     * @param classSystemId systemId of the Class object to associate this
-     *                      File object to
-     * @param file          The File object object with some values set
+     * @param systemId systemId of the Class object to associate this
+     *                 File object to
+     * @param file     The File object object with some values set
      * @return the newly persisted File object wrapped as a FileHateaos object
      */
     @Override
     @Transactional
     public FileHateoas createFileAssociatedWithClass(
-            String classSystemId, File file) {
-        file.setReferenceClass(getClassOrThrow(classSystemId));
+            @NotNull final UUID systemId,
+            @NotNull final File file) {
+        file.setReferenceClass(getClassOrThrow(systemId));
         return fileService.save(file);
     }
 
@@ -191,24 +157,26 @@ public class ClassService
      * payload (e.g. title) while some are set by the core.  owner, createdBy,
      * createdDate are automatically set by the core.
      *
-     * @param classSystemId systemId of the Class object to associate this
-     *                      CaseFile object to
-     * @param caseFile      The CaseFile object object with some values set
+     * @param systemId systemId of the Class object to associate this
+     *                 CaseFile object to
+     * @param caseFile The CaseFile object object with some values set
      * @return the newly persisted CaseFile object wrapped as a CaseFileHateaos
      * object
      */
     @Override
     @Transactional
     public CaseFileHateoas createCaseFileAssociatedWithClass(
-            String classSystemId, CaseFile caseFile) {
-        caseFile.setReferenceClass(getClassOrThrow(classSystemId));
-        return caseFileService.saveHateoas(caseFile);
+            @NotNull final UUID systemId,
+            @NotNull final CaseFile caseFile) {
+        caseFile.setReferenceClass(getClassOrThrow(systemId));
+        return caseFileService.save(caseFile);
     }
 
     @Override
     public ScreeningMetadataHateoas createScreeningMetadataAssociatedWithClass(
-            UUID systemId, Metadata screeningMetadata) {
-        Class klass = getClassOrThrow(systemId.toString());
+            @NotNull final UUID systemId,
+            @NotNull final Metadata screeningMetadata) {
+        Class klass = getClassOrThrow(systemId);
         if (null == klass.getReferenceScreening()) {
             throw new NoarkEntityNotFoundException(INFO_CANNOT_FIND_OBJECT +
                     " Screening, associated with Class with systemId " +
@@ -219,18 +187,20 @@ public class ClassService
     }
 
     @Override
-    public ScreeningMetadataHateoas getDefaultScreeningMetadata(UUID systemId) {
+    public ScreeningMetadataHateoas getDefaultScreeningMetadata(
+            @NotNull final UUID systemId) {
         return screeningMetadataService.getDefaultScreeningMetadata(systemId);
     }
 
     @Override
-    public KeywordHateoas generateDefaultKeyword() {
-        return keywordService.generateDefaultKeyword();
+    public KeywordHateoas generateDefaultKeyword(@NotNull final UUID systemId) {
+        return keywordService.generateDefaultKeyword(systemId);
     }
 
     @Override
-    public CrossReferenceHateoas getDefaultCrossReference() {
-        return crossReferenceService.getDefaultCrossReference();
+    public CrossReferenceHateoas getDefaultCrossReference(
+            @NotNull final UUID systemId) {
+        return crossReferenceService.getDefaultCrossReference(systemId);
     }
 
     /**
@@ -241,18 +211,22 @@ public class ClassService
      * user and the business area they are working with. A generic Noark core
      * like this does not have scope for that kind of functionality.
      *
-     * @param classSystemId The systemId of the class object you wish to
-     *                      generate a default class for
+     * @param systemId The systemId of the class object you wish to
+     *                 generate a default class for
      * @return the Class object wrapped as a ClassHateoas object
      */
     @Override
-    public ClassHateoas generateDefaultSubClass(
-            @NotNull String classSystemId) {
+    public ClassHateoas generateDefaultSubClass(@NotNull final UUID systemId) {
+        Class klass = new Class();
+        klass.setVersion(-1L, true);
+        return packAsHateoas(klass);
+    }
 
-        Class defaultClass = new Class();
-        ClassHateoas classHateoas = new ClassHateoas(defaultClass);
-        classHateoasHandler.addLinksOnTemplate(classHateoas, new Authorisation());
-        return classHateoas;
+    @Override
+    public ClassHateoas generateDefaultClass(@NotNull final UUID systemId) {
+        Class klass = new Class();
+        klass.setVersion(-1L, true);
+        return packAsHateoas(klass);
     }
 
     /**
@@ -261,33 +235,34 @@ public class ClassService
      * payload (e.g. title) while some are set by the core.  owner, createdBy,
      * createdDate are automatically set by the core.
      *
-     * @param classSystemId systemId of the Class object to associate this
-     *                      Record object to
-     * @param record        The Record object object with some values set
+     * @param systemId systemId of the Class object to associate this
+     *                 Record object to
+     * @param record   The Record object object with some values set
      * @return the newly persisted Record object wrapped as a RecordHateaos
      * object
      */
     @Override
     @Transactional
-    public ResponseEntity<RecordHateoas> createRecordAssociatedWithClass(
-            String classSystemId, Record record) {
-        record.setReferenceClass(getClassOrThrow(classSystemId));
+    public RecordHateoas createRecordAssociatedWithClass(
+            @NotNull final UUID systemId,
+            @NotNull final Record record) {
+        record.setReferenceClass(getClassOrThrow(systemId));
         return recordService.save(record);
     }
 
     @Override
     public CrossReferenceHateoas createCrossReferenceAssociatedWithClass(
             @NotNull final UUID systemId,
-            final CrossReference crossReference) {
+            @NotNull final CrossReference crossReference) {
         return crossReferenceService.createCrossReferenceAssociatedWithClass(
-                crossReference, getClassOrThrow(systemId.toString()));
+                crossReference, getClassOrThrow(systemId));
     }
 
     @Override
     public KeywordHateoas createKeywordAssociatedWithClass(
-            UUID systemId, Keyword keyword) {
+            @NotNull final UUID systemId, @NotNull final Keyword keyword) {
         return keywordService.createKeywordAssociatedWithClass(
-                keyword, getClassOrThrow(systemId.toString()));
+                keyword, getClassOrThrow(systemId));
     }
 
     // All READ operations
@@ -295,17 +270,11 @@ public class ClassService
     /**
      * Retrieve all class objects the user owns.
      *
-     * @param ownedBy identifier og logged-in user
      * @return ClassHateoas object containing a list of Class objects
      */
     @Override
-    @SuppressWarnings("unchecked")
-    public ClassHateoas findAll(@NotNull String ownedBy) {
-        ClassHateoas classHateoas = new
-                ClassHateoas((List<INoarkEntity>)
-                (List) classRepository.findByOwnedBy(ownedBy));
-        classHateoasHandler.addLinks(classHateoas, new Authorisation());
-        return classHateoas;
+    public ClassHateoas findAll() {
+        return (ClassHateoas) odataService.processODataQueryGet();
     }
 
     /**
@@ -313,52 +282,42 @@ public class ClassService
      * <p>
      * Note: This method can never return a null value.
      *
-     * @param classSystemId The systemId of the Class object to retrieve
+     * @param systemId The systemId of the Class object to retrieve
      * @return A ClassHateoas object containing the class
      */
     @Override
-    public ClassHateoas findSingleClass(@NotNull String classSystemId) {
-        ClassHateoas classHateoas = new
-                ClassHateoas(getClassOrThrow(classSystemId));
-        classHateoasHandler.addLinks(classHateoas, new Authorisation());
-        return classHateoas;
+    public ClassHateoas findSingleClass(@NotNull final UUID systemId) {
+        return packAsHateoas(getClassOrThrow(systemId));
     }
 
     @Override
     public ScreeningMetadataHateoas
-    getScreeningMetadataAssociatedWithClass(UUID classSystemId) {
-        Screening screening = getClassOrThrow(classSystemId.toString())
+    getScreeningMetadataAssociatedWithClass(@NotNull final UUID systemId) {
+        Screening screening = getClassOrThrow(systemId)
                 .getReferenceScreening();
         if (null == screening) {
             throw new NoarkEntityNotFoundException(
                     INFO_CANNOT_FIND_OBJECT + " Screening, using systemId " +
-                            classSystemId);
+                            systemId);
         }
-        Set<ScreeningMetadataLocal> screeningMetadata =
-                screening.getReferenceScreeningMetadata();
-        ScreeningMetadataHateoas screeningMetadataHateoas =
-                new ScreeningMetadataHateoas(copyOf(screeningMetadata));
-        screeningMetadataHateoasHandler.addLinks(screeningMetadataHateoas,
-                new Authorisation());
-        return screeningMetadataHateoas;
+        NikitaPage page = new
+                NikitaPage(copyOf(screening.getReferenceScreeningMetadata()));
+        return new ScreeningMetadataHateoas(page);
     }
 
     /**
      * Retrieve a list of children class belonging to the class object
      * identified by systemId
      *
-     * @param classSystemId The systemId of the Class object to retrieve its
-     *                      children
+     * @param systemId The systemId of the Class object to retrieve its
+     *                 children
      * @return A ClassHateoas object containing the children class's
      */
     @Override
-    @SuppressWarnings("unchecked")
-    public ClassHateoas findAllChildren(@NotNull String classSystemId) {
-        ClassHateoas classHateoas = new
-                ClassHateoas((List<INoarkEntity>)
-                (List) getClassOrThrow(classSystemId).getReferenceChildClass());
-        classHateoasHandler.addLinks(classHateoas, new Authorisation());
-        return classHateoas;
+    public ClassHateoas findAllChildren(@NotNull final UUID systemId) {
+        // Make sure class exists
+        getClassOrThrow(systemId);
+        return (ClassHateoas) odataService.processODataQueryGet();
     }
 
     /**
@@ -367,18 +326,14 @@ public class ClassService
      *
      * @param systemId The systemId of the Class object to retrieve its parent
      *                 Class
-     * @return A ClassHateoas object packed as a ResponseEntity
+     * @return A ClassHateoasList of Class objects
      */
     @Override
-    public ResponseEntity<ClassHateoas>
-    findClassAssociatedWithClass(@NotNull final String systemId) {
-        ClassHateoas classHateoas = new ClassHateoas(
-                getClassOrThrow(systemId).getReferenceParentClass());
-        classHateoasHandler.addLinks(classHateoas, new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(classHateoas.getEntityVersion().toString())
-                .body(classHateoas);
+    public ClassHateoas
+    findClassAssociatedWithClass(@NotNull final UUID systemId) {
+        // Make sure class exists
+        getClassOrThrow(systemId);
+        return (ClassHateoas) odataService.processODataQueryGet();
     }
 
 
@@ -388,49 +343,29 @@ public class ClassService
      *
      * @param systemId The systemId of the Class object to retrieve the
      *                 associated ClassificationSystemHateoas
-     * @return A ClassificationSystemHateoas object packed as a ResponseEntity
+     * @return A ClassificationSystemHateoas
      */
     @Override
-    public ResponseEntity<ClassificationSystemHateoas>
-    findClassificationSystemAssociatedWithClass(@NotNull final String systemId) {
-        ClassificationSystemHateoas classificationSystemHateoas =
-                new ClassificationSystemHateoas(
-                        getClassOrThrow(systemId).getReferenceClassificationSystem());
-        classificationSystemHateoasHandler.addLinks(classificationSystemHateoas,
-                new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(classificationSystemHateoas.getEntityVersion().toString())
-                .body(classificationSystemHateoas);
+    public ClassificationSystemHateoas
+    findClassificationSystemAssociatedWithClass(@NotNull final UUID systemId) {
+        // Make sure class exists
+        getClassOrThrow(systemId);
+        return (ClassificationSystemHateoas) odataService.processODataQueryGet();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public ResponseEntity<FileHateoas>
-    findAllFileAssociatedWithClass(@NotNull final String systemId) {
-        Class existingClass = getClassOrThrow(systemId);
-        FileHateoas fileHateoas =
-            new FileHateoas(
-                (List<INoarkEntity>)(List)  existingClass.getReferenceFile()
-                              );
-        fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .body(fileHateoas);
+    public FileHateoas findAllFileAssociatedWithClass(
+            @NotNull final UUID systemId) {
+        getClassOrThrow(systemId);
+        return (FileHateoas) odataService.processODataQueryGet();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public ResponseEntity<RecordHateoas>
-    findAllRecordAssociatedWithClass(@NotNull final String systemId) {
-        Class existingClass = getClassOrThrow(systemId);
-        RecordHateoas recordHateoas =
-                new RecordHateoas(
-                        (List<INoarkEntity>) (List) existingClass.getReferenceRecord());
-        recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .body(recordHateoas);
+    public RecordHateoas findAllRecordAssociatedWithClass(
+            @NotNull final UUID systemId) {
+        // Make sure class exists
+        getClassOrThrow(systemId);
+        return (RecordHateoas) odataService.processODataQueryGet();
     }
 
     // All UPDATE operations
@@ -461,55 +396,50 @@ public class ClassService
     @Override
     @Transactional
     public ClassHateoas handleUpdate(
-            @NotNull final String systemId, @NotNull final Long version,
+            @NotNull final UUID systemId, @NotNull final Long version,
             @NotNull final Class incomingClass) {
         Class existingClass = getClassOrThrow(systemId);
         // Copy all the values you are allowed to copy ....
         updateTitleAndDescription(incomingClass, existingClass);
-        classRepository.save(existingClass);
-
-        ClassHateoas classHateoas = new
-                ClassHateoas(classRepository.save(
-                classRepository.save(existingClass)));
-        classHateoasHandler.addLinks(classHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityCreatedEvent(
-                        this, existingClass));
-        return classHateoas;
+        return packAsHateoas(existingClass);
     }
 
     // All DELETE operations
 
     /**
-     * delete a Class entity with given classSystemId
-     *
+     * delete a Class entity with given systemId
+     * <p>
      * Note: When deleting, observe the following behaviour if there are
      * multiple parents. If a Class object has both a Class and
      * ClassificationSystem object as parent, return the object at the
      * closest level. In this case it is Class.
-     *
+     * <p>
      * Note: This method can return null! But it is unlikely that it will
      *
-     * @param classSystemId systemId of the Class object to delete
+     * @param systemId systemId of the Class object to delete
      */
     @Override
     @Transactional
-    public void deleteEntity(@NotNull String classSystemId) {
-        deleteEntity(getClassOrThrow(classSystemId));
+    public void deleteEntity(@NotNull final UUID systemId) {
+        deleteEntity(getClassOrThrow(systemId));
     }
 
     /**
      * Delete all objects belonging to the user identified by ownedBy
-     *
-     * @return the number of objects deleted
      */
     @Override
     @Transactional
-    public long deleteAllByOwnedBy() {
-        return classRepository.deleteByOwnedBy(getUser());
+    public void deleteAllByOwnedBy() {
+        classRepository.deleteByOwnedBy(getUser());
     }
 
     // All HELPER operations
+
+    public ClassHateoas packAsHateoas(@NotNull final Class klass) {
+        ClassHateoas classHateoas = new ClassHateoas(klass);
+        applyLinksAndHeader(classHateoas, classHateoasHandler);
+        return classHateoas;
+    }
 
     /**
      * Internal helper method. Rather than having a find and try catch in
@@ -517,16 +447,14 @@ public class ClassService
      * that you will only ever get a valid Class back. If there is no valid
      * Class, an exception is thrown
      *
-     * @param classSystemId systemId of the class object you are looking for
+     * @param systemId systemId of the class object you are looking for
      * @return the newly found class object or null if it does not exist
      */
-    protected Class getClassOrThrow(@NotNull String classSystemId) {
-        Optional<Class> klass = classRepository.findBySystemId(
-                UUID.fromString(classSystemId));
+    protected Class getClassOrThrow(@NotNull final UUID systemId) {
+        Optional<Class> klass = classRepository.findBySystemId(systemId);
         if (klass.isEmpty()) {
             String error = INFO_CANNOT_FIND_OBJECT + " Class, using systemId " +
-                    classSystemId;
-            logger.error(error);
+                    systemId;
             throw new NoarkEntityNotFoundException(error);
         }
         return klass.get();

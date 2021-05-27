@@ -21,8 +21,7 @@ import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping(value = HREF_BASE_METADATA,
@@ -59,7 +58,8 @@ public class BSMMetadataController
     @PostMapping(SLASH + NEW_BSM_DEF)
     public ResponseEntity<BSMMetadataHateoas> createBSMMetadata(
             @RequestBody BSMMetadata bsmMetadata) {
-        return bsmMetadataService.save(bsmMetadata);
+        return ResponseEntity.status(CREATED)
+                .body(bsmMetadataService.save(bsmMetadata));
     }
 
     // API - All GET Requests (CRUD - READ)
@@ -79,7 +79,8 @@ public class BSMMetadataController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(SLASH + BSM_DEF)
     public ResponseEntity<BSMMetadataHateoas> findAll() {
-        return bsmMetadataService.findAll();
+        return ResponseEntity.status(OK)
+                .body(bsmMetadataService.findAll());
     }
 
     // Create a suggested fondsStatus(like a template) with default values
@@ -129,7 +130,8 @@ public class BSMMetadataController
                     required = true)
             @PathVariable(SYSTEM_ID) final UUID systemID)
             throws NikitaException {
-        return bsmMetadataService.find(systemID);
+        return ResponseEntity.status(OK)
+                .body(bsmMetadataService.find(systemID));
     }
 
     // Update a BSMMetadata identified by a UUID
@@ -161,8 +163,10 @@ public class BSMMetadataController
                     description = "Incoming merge payload",
                     required = true)
             @RequestBody PatchMerge patchMerge) throws NikitaException {
-        return (ResponseEntity<BSMMetadataHateoas>)
-                bsmMetadataService.handleUpdateRfc7396(systemID, patchMerge);
+        return ResponseEntity.status(OK)
+                .body((BSMMetadataHateoas)
+                        bsmMetadataService.handleUpdateRfc7396(
+                                systemID, patchMerge));
     }
 
     // Update a BSMMetadata identified by a UUID
@@ -195,8 +199,9 @@ public class BSMMetadataController
                     description = "Incoming BSMMetadata payload",
                     required = true)
             @RequestBody BSMMetadata bsmMetadata) throws NikitaException {
-        return bsmMetadataService.handleUpdate(systemID,
-                parseETAG(request.getHeader(ETAG)), bsmMetadata);
+        return ResponseEntity.status(OK)
+                .body(bsmMetadataService.handleUpdate(systemID,
+                        parseETAG(request.getHeader(ETAG)), bsmMetadata));
     }
 
     // API - All DELETE Requests (CRUD - DELETE)

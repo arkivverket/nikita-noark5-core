@@ -4,9 +4,13 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.bsm.BSMBase;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.SystemIdEntity;
+import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.ICorrespondencePartEntity;
 import nikita.common.model.noark5.v5.metadata.CorrespondencePartType;
 import nikita.common.util.deserialisers.casehandling.CorrespondencePartUnitDeserializer;
+import nikita.webapp.hateoas.casehandling.CorrespondencePartHateoasHandler;
+import nikita.webapp.util.annotation.HateoasObject;
+import nikita.webapp.util.annotation.HateoasPacker;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
@@ -22,6 +26,8 @@ import static nikita.common.config.N5ResourceMappings.*;
 @Entity
 @Table(name = TABLE_CORRESPONDENCE_PART)
 @JsonDeserialize(using = CorrespondencePartUnitDeserializer.class)
+@HateoasPacker(using = CorrespondencePartHateoasHandler.class)
+@HateoasObject(using = CorrespondencePartHateoas.class)
 @Audited
 public class CorrespondencePart
         extends SystemIdEntity
@@ -50,7 +56,7 @@ public class CorrespondencePart
     // Links to businessSpecificMetadata (virksomhetsspesifikkeMetadata)
     @OneToMany(mappedBy = REFERENCE_CORRESPONDENCE_PART,
             cascade = {PERSIST, MERGE, REMOVE})
-    private List<BSMBase> referenceBSMBase = new ArrayList<>();
+    private final List<BSMBase> referenceBSMBase = new ArrayList<>();
 
     @Override
     public CorrespondencePartType getCorrespondencePartType() {

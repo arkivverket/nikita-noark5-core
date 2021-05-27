@@ -423,12 +423,12 @@ public class RegistryEntry
     @Override
     public void addSignOff(SignOff signOff) {
         this.referenceSignOff.add(signOff);
-        signOff.getReferenceRecord().add(this);
+        signOff.getReferenceRegistryEntry().add(this);
     }
 
     public void removeSignOff(SignOff signOff) {
         this.referenceSignOff.remove(signOff);
-        signOff.getReferenceRecord().remove(this);
+        signOff.getReferenceRegistryEntry().remove(this);
     }
 
     @Override

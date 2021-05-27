@@ -13,6 +13,7 @@ import nikita.webapp.hateoas.HateoasHandler;
 import nikita.webapp.security.Authorisation;
 import nikita.webapp.util.annotation.HateoasObject;
 import nikita.webapp.util.annotation.HateoasPacker;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -77,7 +78,10 @@ public class HateoasSerializer
                     HateoasNoarkObject noarkObject;
                     try {
 
-                        Class<? extends INoarkEntity> cls = entity.getClass();
+                        Class<? extends INoarkEntity> cls =
+                                (Class<? extends INoarkEntity>)
+                                        Hibernate.unproxy(entity.getClass());
+
                         HateoasPacker packer = cls.getAnnotation(
                                 HateoasPacker.class);
                         HateoasObject individualHateoasObject =

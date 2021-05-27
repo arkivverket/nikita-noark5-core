@@ -14,17 +14,17 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static nikita.common.config.ErrorMessagesConstants.MALFORMED_PAYLOAD;
 import static nikita.common.config.HATEOASConstants.LINKS;
 import static nikita.common.config.N5ResourceMappings.BSM_DEF;
+import static nikita.common.config.N5ResourceMappings.PART_PERSON;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 
 /**
- * Created by tsodring on 11/07/18.
- * <p>
  * Deserialise an incoming PartPerson JSON object.
  */
 public class PartPersonDeserializer
-        extends JsonDeserializer {
+        extends JsonDeserializer<PartPerson> {
 
     private static final Logger logger =
             LoggerFactory.getLogger(PartPersonDeserializer.class);
@@ -40,7 +40,7 @@ public class PartPersonDeserializer
         PartPerson part = new PartPerson();
         ObjectNode objectNode = mapper.readTree(jsonParser);
 
-        deserialiseNoarkSystemIdEntity(part, objectNode, errors);
+        deserialiseNoarkSystemIdEntity(part, objectNode);
         deserialisePartPersonEntity(part, objectNode, errors);
 
         // Deserialize businessSpecificMetadata (virksomhetsspesifikkeMetadata)
@@ -61,10 +61,8 @@ public class PartPersonDeserializer
         // Check that there are no additional values left after processing
         // If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {
-            errors.append("The partperson you tried to create is malformed. " +
-                          "The following fields are not recognised as " +
-                          "partperson fields " +
-                          "[" + checkNodeObjectEmpty(objectNode) + "]. ");
+            errors.append(String.format(MALFORMED_PAYLOAD,
+                    PART_PERSON, checkNodeObjectEmpty(objectNode)));
         }
 
         if (0 < errors.length())

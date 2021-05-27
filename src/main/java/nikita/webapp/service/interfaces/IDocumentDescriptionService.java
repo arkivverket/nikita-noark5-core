@@ -18,72 +18,77 @@ import java.util.UUID;
 public interface IDocumentDescriptionService {
 
     // -- All CREATE operations
-    DocumentDescription save(DocumentDescription documentDescription);
+    DocumentDescriptionHateoas save(
+            @NotNull final DocumentDescription documentDescription);
 
     DocumentObjectHateoas
     createDocumentObjectAssociatedWithDocumentDescription(
-            String documentDescriptionSystemId,
-            DocumentObject documentObject);
+            @NotNull final UUID systemId,
+            @NotNull final DocumentObject documentObject);
 
-    CommentHateoas createCommentAssociatedWithDocumentDescription
-	(String systemID, Comment comment);
+    CommentHateoas createCommentAssociatedWithDocumentDescription(
+            @NotNull final UUID systemId,
+            @NotNull final Comment comment);
 
     PartPersonHateoas createPartPersonAssociatedWithDocumentDescription(
-            String systemID, PartPerson partPerson);
+            @NotNull final UUID systemId,
+            @NotNull final PartPerson partPerson);
 
     PartUnitHateoas createPartUnitAssociatedWithDocumentDescription(
-            String systemID, PartUnit partUnit);
+            @NotNull final UUID systemId,
+            @NotNull final PartUnit partUnit);
 
     // -- All READ operations
 
     AuthorHateoas associateAuthorWithDocumentDescription(
-            String systemId, Author author);
+            @NotNull final UUID systemId,
+            @NotNull final Author author);
 
-    DocumentDescriptionHateoas generateDefaultDocumentDescription();
+    DocumentDescriptionHateoas generateDefaultDocumentDescription(
+            @NotNull final UUID systemId);
 
-    CommentHateoas generateDefaultComment();
+    CommentHateoas generateDefaultComment(@NotNull final UUID systemId);
 
-    PartPersonHateoas generateDefaultPartPerson(String systemID);
+    PartPersonHateoas generateDefaultPartPerson(@NotNull final UUID systemId);
 
-    PartUnitHateoas generateDefaultPartUnit(String systemID);
+    PartUnitHateoas generateDefaultPartUnit(@NotNull final UUID systemId);
 
     DocumentDescriptionHateoas findAll();
 
-    DocumentDescriptionHateoas findBySystemId(@NotNull String systemId);
+    DocumentDescriptionHateoas findBySystemId(@NotNull final UUID systemId);
 
     RecordHateoas
-    findAllRecordWithDocumentDescriptionBySystemId(@NotNull String systemId);
+    findAllRecordWithDocumentDescriptionBySystemId(
+            @NotNull final UUID systemId);
 
     DocumentObjectHateoas
     findAllDocumentObjectWithDocumentDescriptionBySystemId(
-            @NotNull String systemId);
-
-    DocumentDescription findDocumentDescriptionBySystemId(
-            @NotNull String systemId);
+            @NotNull final UUID systemId);
 
     CommentHateoas getCommentAssociatedWithDocumentDescription
-	(@NotNull final String systemID);
+            (@NotNull final UUID systemId);
 
     PartHateoas getPartAssociatedWithDocumentDescription(
-            @NotNull final String systemID);
+            @NotNull final UUID systemId);
     // -- All UPDATE operations
 
     DocumentDescriptionHateoas handleUpdate
-        (@NotNull final String systemId, @NotNull final Long version,
-         @NotNull final DocumentDescription documentDescription);
+            (@NotNull final UUID systemId, @NotNull final Long version,
+             @NotNull final DocumentDescription documentDescription);
 
     // -- All DELETE operations
-    void deleteEntity(@NotNull String systemId);
+    void deleteEntity(@NotNull final UUID systemId);
 
-    long deleteAllByOwnedBy();
+    void deleteAllByOwnedBy();
 
     AuthorHateoas
-    findAllAuthorWithDocumentDescriptionBySystemId(String systemID);
+    findAllAuthorWithDocumentDescriptionBySystemId(
+            @NotNull final UUID systemId);
 
-    AuthorHateoas generateDefaultAuthor(String systemID);
+    AuthorHateoas generateDefaultAuthor(@NotNull final UUID systemId);
 
     ScreeningMetadataHateoas getDefaultScreeningMetadata(
-            @NotNull final UUID systemID);
+            @NotNull final UUID systemId);
 
     ScreeningMetadataHateoas
     createScreeningMetadataAssociatedWithDocumentDescription(

@@ -5,20 +5,22 @@ import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.hateoas.EventLogHateoas;
 
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 public interface IEventLogService {
 
-    EventLogHateoas generateDefaultEventLog(SystemIdEntity entity);
+    EventLogHateoas generateDefaultEventLog(@NotNull final SystemIdEntity entity);
 
-    EventLogHateoas createNewEventLog(EventLog eventLog, SystemIdEntity entity);
+    EventLogHateoas createNewEventLog(@NotNull final EventLog eventLog,
+                                      @NotNull final SystemIdEntity entity);
 
     EventLogHateoas findEventLogByOwner();
 
-    EventLogHateoas findSingleEventLog(String eventLogSystemId);
+    EventLogHateoas findSingleEventLog(@NotNull final UUID systemId);
 
-    EventLogHateoas handleUpdate(@NotNull String systemId,
-                                 @NotNull Long version,
-                                 @NotNull EventLog incomingEventLog);
+    EventLogHateoas handleUpdate(@NotNull final UUID systemId,
+                                 @NotNull final Long version,
+                                 @NotNull final EventLog incomingEventLog);
 
-    void deleteEntity(@NotNull String systemId);
+    void deleteEntity(@NotNull final UUID systemId);
 }

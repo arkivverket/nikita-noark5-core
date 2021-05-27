@@ -17,7 +17,6 @@ import java.util.UUID;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
@@ -51,7 +50,6 @@ public class CommentHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = COMMENT + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<CommentHateoas> findOne(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemId of comment to retrieve.",
                     required = true)
@@ -59,8 +57,6 @@ public class CommentHateoasController
         CommentHateoas commentHateoas =
                 commentService.findSingleComment(systemID);
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(commentHateoas.getEntityVersion().toString())
                 .body(commentHateoas);
     }
 
@@ -110,8 +106,6 @@ public class CommentHateoasController
                 commentService.handleUpdate(systemID,
                         parseETAG(request.getHeader(ETAG)), comment);
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(commentHateoas.getEntityVersion().toString())
                 .body(commentHateoas);
     }
 

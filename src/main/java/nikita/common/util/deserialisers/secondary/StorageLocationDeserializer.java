@@ -35,7 +35,7 @@ public class StorageLocationDeserializer
         ObjectNode objectNode = mapper.readTree(jsonParser);
 
         // Deserialize systemID
-        deserialiseNoarkSystemIdEntity(storageLocation, objectNode, errors);
+        deserialiseNoarkSystemIdEntity(storageLocation, objectNode);
         deserialiseNoarkCreateEntity(storageLocation, objectNode, errors);
 
         // Deserialize oppbevaringssted

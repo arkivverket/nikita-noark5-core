@@ -3,7 +3,6 @@ package nikita.webapp.service.impl;
 import nikita.common.model.nikita.PatchMerge;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Record;
-import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.admin.User;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
@@ -15,7 +14,6 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RecordNoteHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.PrecedenceHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.CaseStatus;
 import nikita.common.model.noark5.v5.secondary.Precedence;
 import nikita.common.repository.n5v5.ICaseFileRepository;
@@ -23,8 +21,6 @@ import nikita.common.repository.nikita.IUserRepository;
 import nikita.common.util.exceptions.NoarkAdministrativeUnitMemberException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.ICaseFileHateoasHandler;
-import nikita.webapp.hateoas.interfaces.secondary.IPrecedenceHateoasHandler;
-import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.ICaseFileService;
 import nikita.webapp.service.interfaces.IRegistryEntryService;
@@ -32,28 +28,28 @@ import nikita.webapp.service.interfaces.ISequenceNumberGeneratorService;
 import nikita.webapp.service.interfaces.admin.IAdministrativeUnitService;
 import nikita.webapp.service.interfaces.casehandling.IRecordNoteService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
+import nikita.webapp.service.interfaces.odata.IODataService;
 import nikita.webapp.service.interfaces.secondary.IPrecedenceService;
 import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
-import java.util.*;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 import static java.time.OffsetDateTime.now;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
 
 @Service
 public class CaseFileService
@@ -71,12 +67,12 @@ public class CaseFileService
     private final IPrecedenceService precedenceService;
     private final IUserRepository userRepository;
     private final IMetadataService metadataService;
-    private final IPrecedenceHateoasHandler precedenceHateoasHandler;
     private final ICaseFileHateoasHandler caseFileHateoasHandler;
 
     public CaseFileService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IODataService odataService,
             IPatchService patchService,
             IRegistryEntryService registryEntryService,
             IRecordNoteService recordNoteService,
@@ -86,9 +82,9 @@ public class CaseFileService
             IPrecedenceService precedenceService,
             IUserRepository userRepository,
             IMetadataService metadataService,
-            IPrecedenceHateoasHandler precedenceHateoasHandler,
             ICaseFileHateoasHandler caseFileHateoasHandler) {
-        super(entityManager, applicationEventPublisher, patchService);
+        super(entityManager, applicationEventPublisher, patchService,
+                odataService);
         this.registryEntryService = registryEntryService;
         this.recordNoteService = recordNoteService;
         this.caseFileRepository = caseFileRepository;
@@ -97,15 +93,14 @@ public class CaseFileService
         this.precedenceService = precedenceService;
         this.userRepository = userRepository;
         this.metadataService = metadataService;
-        this.precedenceHateoasHandler = precedenceHateoasHandler;
         this.caseFileHateoasHandler = caseFileHateoasHandler;
     }
 
     @Override
     @Transactional
-    public CaseFile save(CaseFile caseFile) {
+    public CaseFileHateoas save(CaseFile caseFile) {
         processCaseFileBeforeSave(caseFile);
-        return caseFileRepository.save(caseFile);
+        return packAsHateoas(caseFileRepository.save(caseFile));
     }
 
     /**
@@ -174,50 +169,37 @@ public class CaseFileService
         return packAsHateoas(caseFile);
     }
 
-    @Override
-    @Transactional
-    public CaseFileHateoas saveHateoas(CaseFile caseFile) {
-        CaseFile caseFileNew = save(caseFile);
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityCreatedEvent(this, caseFileNew));
-        return packAsHateoas(caseFile);
-    }
-
-    public CaseFile findBySystemId(String systemId) {
-        return getCaseFileOrThrow(systemId);
+    public CaseFileHateoas findBySystemId(@NotNull final UUID systemId) {
+        return packAsHateoas(getCaseFileOrThrow(systemId));
     }
 
     @Override
     public PrecedenceHateoas findAllPrecedenceForCaseFile(
-            @NotNull final String systemID) {
-        CaseFile caseFile = getCaseFileOrThrow(systemID);
-        PrecedenceHateoas precedenceHateoas = new PrecedenceHateoas(
-                List.copyOf(caseFile.getReferencePrecedence()));
-        precedenceHateoasHandler
-                .addLinks(precedenceHateoas, new Authorisation());
-        setOutgoingRequestHeader(precedenceHateoas);
-        return precedenceHateoas;
+            @NotNull final UUID systemId) {
+        getCaseFileOrThrow(systemId);
+        return (PrecedenceHateoas) odataService.processODataQueryGet();
     }
 
     @Override
-    public ResponseEntity<RecordNoteHateoas> findAllRecordNoteToCaseFile(
-            @NotNull final String caseFileSystemId) {
-        return recordNoteService.findAllRecordNoteByCaseFile(
-                getCaseFileOrThrow(caseFileSystemId));
+    public RecordNoteHateoas findAllRecordNoteToCaseFile(
+            @NotNull final UUID systemId) {
+        getCaseFileOrThrow(systemId);
+        return (RecordNoteHateoas) odataService.processODataQueryGet();
     }
 
     @Override
-    public ResponseEntity<RegistryEntryHateoas> findAllRegistryEntryToCaseFile(
-            @NotNull final String caseFileSystemId) {
-        return registryEntryService.findAllRegistryEntryByCaseFile(
-                getCaseFileOrThrow(caseFileSystemId));
+    public RegistryEntryHateoas findAllRegistryEntryToCaseFile(
+            @NotNull final UUID systemId) {
+        getCaseFileOrThrow(systemId);
+        return (RegistryEntryHateoas) odataService.processODataQueryGet();
     }
 
     @Override
     @Transactional
     public PrecedenceHateoas createPrecedenceAssociatedWithFile(
-            String caseFileSystemID, Precedence precedence) {
-        CaseFile caseFile = getCaseFileOrThrow(caseFileSystemID);
+            @NotNull final UUID systemId,
+            @NotNull final Precedence precedence) {
+        CaseFile caseFile = getCaseFileOrThrow(systemId);
         caseFile.addPrecedence(precedence);
         return precedenceService.createNewPrecedence(precedence);
     }
@@ -229,17 +211,16 @@ public class CaseFileService
      * them before calling the RegistryEntryService save, which will add all
      * required values.
      *
-     * @param fileSystemId  systemID of the caseFile
+     * @param systemId      systemId of the caseFile
      * @param registryEntry the incoming RegistryEntry object
-     * @return he registryEntry object wrapped as a Hateoas object, further
-     * wrapped as a ResponseEntity
+     * @return he registryEntry object wrapped as a Hateoas object
      */
     @Override
     @Transactional
-    public RegistryEntry createRegistryEntryAssociatedWithCaseFile(
-            @NotNull String fileSystemId,
-            @NotNull RegistryEntry registryEntry) {
-        CaseFile caseFile = getCaseFileOrThrow(fileSystemId);
+    public RegistryEntryHateoas createRegistryEntryAssociatedWithCaseFile(
+            @NotNull final UUID systemId,
+            @NotNull final RegistryEntry registryEntry) {
+        CaseFile caseFile = getCaseFileOrThrow(systemId);
         registryEntry.setReferenceFile(caseFile);
         caseFile.getReferenceRecord().add(registryEntry);
         return registryEntryService.save(registryEntry);
@@ -251,25 +232,20 @@ public class CaseFileService
      * First find the parent caseFile to associate with, add all required
      * values to the child case file and set the references between them.
      *
-     * @param parentSystemId systemID of the parent caseFile
+     * @param parentSystemId systemId of the parent caseFile
      * @param caseFile       the incoming CaseFile object
-     * @return the caseFile object wrapped as a Hateoas object, further
-     * wrapped as a ResponseEntity
+     * @return the caseFile object wrapped as a Hateoas object
      */
     @Override
     @Transactional
-    public ResponseEntity<CaseFileHateoas> createCaseFileToCaseFile(
-            @NotNull String parentSystemId,
-            @NotNull CaseFile caseFile) {
+    public CaseFileHateoas createCaseFileToCaseFile(
+            @NotNull final UUID parentSystemId,
+            @NotNull final CaseFile caseFile) {
         CaseFile parentCaseFile = getCaseFileOrThrow(parentSystemId);
         processCaseFileBeforeSave(caseFile);
         parentCaseFile.addFile(caseFile);
         caseFileRepository.save(caseFile);
-        CaseFileHateoas caseFileHateoas = new CaseFileHateoas(caseFile);
-        caseFileHateoasHandler.addLinks(caseFileHateoas, new Authorisation());
-        return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .body(caseFileHateoas);
+        return packAsHateoas(caseFile);
     }
 
     /**
@@ -279,17 +255,16 @@ public class CaseFileService
      * them before calling the RecordNoteService save, which will add all
      * required values.
      *
-     * @param fileSystemId systemID of the caseFile
-     * @param recordNote   the incoming RecordNote object
-     * @return the recordNote object wrapped as a Hateoas object, further
-     * wrapped as a ResponseEntity
+     * @param systemId   systemId of the caseFile
+     * @param recordNote the incoming RecordNote object
+     * @return the recordNote object wrapped as a Hateoas object
      */
     @Override
     @Transactional
-    public ResponseEntity<RecordNoteHateoas> createRecordNoteToCaseFile(
-            @NotNull String fileSystemId,
-            @NotNull RecordNote recordNote) {
-        CaseFile caseFile = getCaseFileOrThrow(fileSystemId);
+    public RecordNoteHateoas createRecordNoteToCaseFile(
+            @NotNull final UUID systemId,
+            @NotNull final RecordNote recordNote) {
+        CaseFile caseFile = getCaseFileOrThrow(systemId);
         recordNote.setReferenceFile(caseFile);
         caseFile.getReferenceRecord().add(recordNote);
         return recordNoteService.save(recordNote);
@@ -303,14 +278,14 @@ public class CaseFileService
      * user and the business area they are working with. A generic Noark core
      * like this does not have scope for that kind of functionality.
      *
-     * @param caseFileSystemId The systemId of the CaseFile object you wish to
-     *                         generate a default RecordNote for
+     * @param systemId The systemId of the CaseFile object you wish to
+     *                 generate a default RecordNote for
      * @return the RecordNote object wrapped as a RecordNoteHateoas object
      */
     @Override
-    public ResponseEntity<RecordNoteHateoas> generateDefaultRecordNote(
-            @NotNull String caseFileSystemId) {
-        return recordNoteService.generateDefaultRecordNote(caseFileSystemId);
+    public RecordNoteHateoas generateDefaultRecordNote(
+            @NotNull final UUID systemId) {
+        return recordNoteService.generateDefaultRecordNote(systemId);
     }
 
     /**
@@ -321,39 +296,28 @@ public class CaseFileService
      * user and the business area they are working with. A generic Noark core
      * like this does not have scope for that kind of functionality.
      *
-     * @param caseFileSystemId The systemId of the CaseFile object you wish to
-     *                         generate a default RegistryEntry for
+     * @param systemId The systemId of the CaseFile object you wish to
+     *                 generate a default RegistryEntry for
      * @return the RegistryEntry object wrapped as a RegistryEntryHateoas
-     * object, further wrapped as a ResponseEntity object
+     * object
      */
     @Override
-    public ResponseEntity<RegistryEntryHateoas> generateDefaultRegistryEntry(
-            @NotNull String caseFileSystemId) {
+    public RegistryEntryHateoas generateDefaultRegistryEntry(
+            @NotNull final UUID systemId) {
         return registryEntryService.generateDefaultRegistryEntry(
-                caseFileSystemId);
+                systemId);
     }
 
     @Override
-    public PrecedenceHateoas generateDefaultPrecedence(String systemID) {
+    public PrecedenceHateoas generateDefaultPrecedence(
+            @NotNull final UUID systemId) {
         return precedenceService.generateDefaultPrecedence();
     }
 
     // All READ operations
     @Override
-    public List<CaseFile> findAllCaseFile() {
-        return caseFileRepository.findByOwnedBy(getUser());
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public ResponseEntity<CaseFileHateoas> findAllCaseFileBySeries(Series series) {
-        CaseFileHateoas caseFileHateoas = new CaseFileHateoas(
-                (List<INoarkEntity>)
-                        (List) caseFileRepository.findByReferenceSeries(series));
-        caseFileHateoasHandler.addLinks(caseFileHateoas, new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .body(caseFileHateoas);
+    public CaseFileHateoas findAll() {
+        return (CaseFileHateoas) odataService.processODataQueryGet();
     }
 
     // All UPDATE operations
@@ -382,9 +346,10 @@ public class CaseFileService
      */
     @Override
     @Transactional
-    public CaseFile handleUpdate(@NotNull final String systemId,
-                                 @NotNull final Long version,
-                                 @NotNull final CaseFile incomingCaseFile) {
+    public CaseFileHateoas handleUpdate(
+            @NotNull final UUID systemId,
+            @NotNull final Long version,
+            @NotNull final CaseFile incomingCaseFile) {
         CaseFile existingCaseFile = getCaseFileOrThrow(systemId);
         // Copy all the values you are allowed to copy ....
         updateTitleAndDescription(incomingCaseFile, existingCaseFile);
@@ -392,14 +357,14 @@ public class CaseFileService
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
         existingCaseFile.setVersion(version);
-        return caseFileRepository.save(existingCaseFile);
+        return packAsHateoas(existingCaseFile);
     }
 
     // All DELETE operations
     @Override
     @Transactional
-    public void deleteEntity(@NotNull String caseFileSystemId) {
-        CaseFile caseFile = getCaseFileOrThrow(caseFileSystemId);
+    public void deleteEntity(@NotNull final UUID systemId) {
+        CaseFile caseFile = getCaseFileOrThrow(systemId);
         // Delete all precedence associated with the CaseFile. If the
         // precedence is associated with another RegistryEntry or CaseFile
         // the precedence object cannot be deleted. This event is logged.
@@ -417,13 +382,11 @@ public class CaseFileService
 
     /**
      * Delete all objects belonging to the user identified by ownedBy
-     *
-     * @return the number of objects deleted
      */
     @Override
     @Transactional
-    public long deleteAllByOwnedBy() {
-        return caseFileRepository.deleteByOwnedBy(getUser());
+    public void deleteAllByOwnedBy() {
+        caseFileRepository.deleteByOwnedBy(getUser());
     }
     // All HELPER operations
 
@@ -436,9 +399,9 @@ public class CaseFileService
      * @param systemId systemId of caseFile to retrieve
      * @return the caseFile
      */
-    protected CaseFile getCaseFileOrThrow(@NotNull String systemId) {
+    protected CaseFile getCaseFileOrThrow(@NotNull final UUID systemId) {
         CaseFile caseFile = caseFileRepository.
-                findBySystemId(UUID.fromString(systemId));
+                findBySystemId(systemId);
         if (caseFile == null) {
             String info = INFO_CANNOT_FIND_OBJECT +
                     " CaseFile, using systemId " + systemId;
@@ -458,23 +421,20 @@ public class CaseFileService
     @Transactional
     protected Integer getNextSequenceNumber(AdministrativeUnit
                                                     administrativeUnit) {
-        return numberGeneratorService.getNextCaseFileSequenceNumber(administrativeUnit);
+        return numberGeneratorService
+                .getNextCaseFileSequenceNumber(administrativeUnit);
     }
 
     public CaseFileHateoas generateDefaultCaseFile() {
         CaseFile defaultCaseFile = new CaseFile();
         defaultCaseFile.setCaseResponsible(getUser());
         defaultCaseFile.setCaseDate(now());
+        defaultCaseFile.setVersion(-1L, true);
         CaseStatus caseStatus = (CaseStatus)
                 metadataService.findValidMetadataByEntityTypeOrThrow
                         (CASE_STATUS, DEFAULT_CASE_STATUS_CODE, null);
         defaultCaseFile.setCaseStatus(caseStatus);
-
-        CaseFileHateoas caseFileHateoas = new
-                CaseFileHateoas(defaultCaseFile);
-        caseFileHateoasHandler.addLinksOnTemplate(caseFileHateoas,
-                new Authorisation());
-        return caseFileHateoas;
+        return packAsHateoas(defaultCaseFile);
     }
 
     /**
@@ -493,11 +453,8 @@ public class CaseFileService
         caseFileExpansion.setCaseStatus(caseStatus);
         caseFileExpansion.setCaseResponsible(getUser());
         caseFileExpansion.setCaseDate(now());
-        CaseFileExpansionHateoas caseFileExpansionHateoas =
-                new CaseFileExpansionHateoas(caseFileExpansion);
-        caseFileHateoasHandler.addLinksOnTemplate(caseFileExpansionHateoas,
-                new Authorisation());
-        return caseFileExpansionHateoas;
+        caseFileExpansion.setVersion(-1L, true);
+        return packAsHateoas(caseFileExpansion);
     }
 
     /**
@@ -527,7 +484,7 @@ public class CaseFileService
             checkOwnerMemberAdministrativeUnit(user, administrativeUnit);
         } else {
             throw new NoarkEntityNotFoundException(
-                    "Could not find user with systemID [" +
+                    "Could not find user with systemId [" +
                             caseFile.getOwnedBy() + "]");
         }
 
@@ -539,7 +496,7 @@ public class CaseFileService
                     administrativeUnit);
         } else {
             throw new NoarkEntityNotFoundException(
-                    "Could not find user with systemID [" +
+                    "Could not find user with systemId [" +
                             caseFile.getCaseResponsible() + "]");
         }
         return administrativeUnit;
@@ -553,7 +510,7 @@ public class CaseFileService
         if (!users.contains(user)) {
             throw new NoarkAdministrativeUnitMemberException(
                     "User [" + user.getUsername() + "] is not a member " +
-                            "of the administrativeUnit with systemID [" +
+                            "of the administrativeUnit with systemId [" +
                             administrativeUnit.getSystemId() + "] when " +
                             "assigning ownership field.");
         }
@@ -567,7 +524,7 @@ public class CaseFileService
             throw new NoarkAdministrativeUnitMemberException(
                     "User [" + user.getSystemId() + "] is " +
                             "not a member  of the administrativeUnit " +
-                            "with systemID [" +
+                            "with systemId [" +
                             administrativeUnit.getSystemId() + "] when " +
                             "assigning caseFile responsible field.");
         }
@@ -619,8 +576,14 @@ public class CaseFileService
 
     private CaseFileHateoas packAsHateoas(CaseFile caseFile) {
         CaseFileHateoas caseFileHateoas = new CaseFileHateoas(caseFile);
-        caseFileHateoasHandler.addLinks(caseFileHateoas, new Authorisation());
-        setOutgoingRequestHeader(caseFileHateoas);
+        applyLinksAndHeader(caseFileHateoas, caseFileHateoasHandler);
+        return caseFileHateoas;
+    }
+
+    private CaseFileExpansionHateoas packAsHateoas(CaseFileExpansion caseFile) {
+        CaseFileExpansionHateoas caseFileHateoas =
+                new CaseFileExpansionHateoas(caseFile);
+        applyLinksAndHeader(caseFileHateoas, caseFileHateoasHandler);
         return caseFileHateoas;
     }
 
@@ -649,7 +612,7 @@ public class CaseFileService
         caseFile.setCaseYear(currentYear);
         caseFile.setCaseSequenceNumber(getNextSequenceNumber(
                 administrativeUnit));
-        caseFile.setFileId(currentYear.toString() + "/" +
+        caseFile.setFileId(currentYear + "/" +
                 caseFile.getCaseSequenceNumber());
     }
 

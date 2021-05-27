@@ -10,59 +10,67 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartHate
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInternalHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
-import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 public interface ICorrespondencePartService {
 
-    CorrespondencePartPerson updateCorrespondencePartPerson(
-            @NotNull String systemId, @NotNull Long version,
-            @NotNull CorrespondencePartPerson incomingCorrespondencePart);
+    CorrespondencePartPersonHateoas updateCorrespondencePartPerson(
+            @NotNull final UUID systemId, @NotNull final Long version,
+            @NotNull final CorrespondencePartPerson incomingCorrespondencePart);
 
-    CorrespondencePartUnit updateCorrespondencePartUnit(
-            @NotNull String systemId, @NotNull Long version,
-            @NotNull CorrespondencePartUnit incomingCorrespondencePart);
+    CorrespondencePartUnitHateoas updateCorrespondencePartUnit(
+            @NotNull final UUID systemId, @NotNull final Long version,
+            @NotNull final CorrespondencePartUnit incomingCorrespondencePart);
 
-    CorrespondencePartInternal updateCorrespondencePartInternal(
-            @NotNull String systemId, @NotNull Long version,
-            @NotNull CorrespondencePartInternal incomingCorrespondencePart);
+    CorrespondencePartInternalHateoas updateCorrespondencePartInternal(
+            @NotNull final UUID systemId, @NotNull final Long version,
+            @NotNull final CorrespondencePartInternal incomingCorrespondencePart);
 
     CorrespondencePartUnitHateoas createNewCorrespondencePartUnit(
-            @NotNull CorrespondencePartUnit correspondencePartUnit,
-            @NotNull Record record);
+            @NotNull final CorrespondencePartUnit correspondencePartUnit,
+            @NotNull final Record record);
 
     CorrespondencePartInternalHateoas createNewCorrespondencePartInternal(
-            @NotNull CorrespondencePartInternal correspondencePartUnit,
-            @NotNull Record record);
+            @NotNull final CorrespondencePartInternal correspondencePartUnit,
+            @NotNull final Record record);
 
     CorrespondencePartPersonHateoas createNewCorrespondencePartPerson(
-            @NotNull CorrespondencePartPerson correspondencePartPerson,
-            @NotNull Record record);
+            @NotNull final CorrespondencePartPerson correspondencePartPerson,
+            @NotNull final Record record);
 
-    CorrespondencePart findBySystemId(@NotNull String systemID);
+    CorrespondencePart findBySystemId(@NotNull final UUID systemId);
+
+    CorrespondencePartInternalHateoas
+    findCorrespondencePartInternalBySystemId(@NotNull final UUID systemId);
+
+    CorrespondencePartPersonHateoas
+    findCorrespondencePartPersonBySystemId(@NotNull final UUID systemId);
+
+    CorrespondencePartUnitHateoas
+    findCorrespondencePartUnitBySystemId(@NotNull final UUID systemId);
 
     // All DELETE operations
-    long deleteAllByOwnedBy();
+    void deleteAllByOwnedBy();
 
-    void deleteCorrespondencePartUnit(@NotNull String systemID);
+    void deleteCorrespondencePartUnit(@NotNull final UUID systemId);
 
-    void deleteCorrespondencePartPerson(@NotNull String systemID);
+    void deleteCorrespondencePartPerson(@NotNull final UUID systemId);
 
-    void deleteCorrespondencePartInternal(@NotNull String systemID);
+    void deleteCorrespondencePartInternal(@NotNull final UUID systemId);
 
     // All template operations
     CorrespondencePartUnitHateoas generateDefaultCorrespondencePartUnit(
-            String recordSystemId);
+            @NotNull final UUID recordSystemId);
 
     CorrespondencePartPersonHateoas generateDefaultCorrespondencePartPerson(
-            String recordSystemId);
+            @NotNull final UUID recordSystemId);
 
     CorrespondencePartInternalHateoas generateDefaultCorrespondencePartInternal(
-            String recordSystemId);
+            @NotNull final UUID recordSystemId);
 
-
-    ResponseEntity<CorrespondencePartHateoas> handleUpdate(
-            UUID systemID, PatchObjects patchObjects);
+    CorrespondencePartHateoas handleUpdate(
+            @NotNull final UUID systemId,
+            @NotNull final PatchObjects patchObjects);
 }

@@ -120,11 +120,15 @@ public class MetadataHateoasHandler
     public void addCode(
             INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {
         String code = ((IMetadataEntity) entity).getCode();
-        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_METADATA + SLASH + entity.getBaseTypeName() + SLASH +
-                code + SLASH,
-                REL_METADATA + entity.getBaseTypeName() + SLASH));
+        // When generating a templated/efault code, code is null
+        if (null != code) {
+            hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                    HREF_BASE_METADATA + SLASH + entity.getBaseTypeName() + SLASH +
+                    code + SLASH,
+                    REL_METADATA + entity.getBaseTypeName() + SLASH));
+        }
     }
+
     @Override
     public void addNewCode(
             INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject) {

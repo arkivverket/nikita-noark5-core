@@ -3,6 +3,7 @@ package nikita.webapp.util;
 import org.springframework.stereotype.Component;
 
 import static nikita.common.config.Constants.DM_OWNED_BY;
+import static nikita.common.config.Constants.SUB_FILE;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.WebUtils.addNorToEnglishNameMap;
 
@@ -36,6 +37,10 @@ public class InternalNameTranslator {
                 ("eier", "owned_by", DM_OWNED_BY);
 
         // Add entity name mappings
+        addNorToEnglishNameMap
+                (ADMINISTRATIVE_UNIT,
+                        ADMINISTRATIVE_UNIT_ENG,
+                        ADMINISTRATIVE_UNIT_OBJECT);
         addNorToEnglishNameMap
                 (ADMINISTRATIVE_UNIT_FIELD,
                         ADMINISTRATIVE_UNIT_FIELD_ENG,
@@ -103,7 +108,7 @@ public class InternalNameTranslator {
         addNorToEnglishNameMap
                 (DOCUMENT_FLOW,
                         DOCUMENT_FLOW_ENG,
-                        DOCUMENT_FLOW_ENG_OBJECT);
+                        DOCUMENT_FLOW_OBJECT);
         addNorToEnglishNameMap
                 (DOCUMENT_MEDIUM,
                         DOCUMENT_MEDIUM_ENG,
@@ -322,6 +327,10 @@ public class InternalNameTranslator {
                 (CASE_YEAR,
                         CASE_YEAR_ENG,
                         CASE_YEAR_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (CHANGE_LOG,
+                        CHANGE_LOG_ENG,
+                        CHANGE_LOG_OBJECT);
         addNorToEnglishNameMap
                 (CHANGED_BY,
                         CHANGED_BY_ENG,
@@ -558,6 +567,10 @@ public class InternalNameTranslator {
                         DOCUMENT_DESCRIPTION_EXTERNAL_REFERENCE_ENG,
                         DOCUMENT_DESCRIPTION_EXTERNAL_REFERENCE_ENG_OBJECT);
         addNorToEnglishNameMap
+                (DOCUMENT_FLOW,
+                        DOCUMENT_FLOW_ENG,
+                        DOCUMENT_FLOW_OBJECT);
+        addNorToEnglishNameMap
                 (DOCUMENT_FLOW_FLOW_COMMENT,
                         DOCUMENT_FLOW_FLOW_COMMENT_ENG,
                         DOCUMENT_FLOW_FLOW_COMMENT_ENG_OBJECT);
@@ -682,6 +695,10 @@ public class InternalNameTranslator {
                         EMAIL_ADDRESS_ENG,
                         EMAIL_ADDRESS_ENG_OBJECT);
         addNorToEnglishNameMap
+                (EVENT_LOG,
+                        EVENT_LOG_ENG,
+                        EVENT_LOG_OBJECT);
+        addNorToEnglishNameMap
                 (FILE_ID,
                         FILE_ID_ENG,
                         FILE_ID_ENG_OBJECT);
@@ -761,6 +778,10 @@ public class InternalNameTranslator {
                 (NAME,
                         NAME_ENG,
                         NAME_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (NATIONAL_IDENTIFIER,
+                        NATIONAL_IDENTIFIER_ENG,
+                        NATIONAL_IDENTIFIER_OBJECT);
         addNorToEnglishNameMap
                 (NEW_VALUE,
                         NEW_VALUE_ENG,
@@ -852,6 +873,10 @@ public class InternalNameTranslator {
                 (RECORD_ARCHIVED_DATE,
                         RECORD_ARCHIVED_DATE_ENG,
                         RECORD_ARCHIVED_DATE_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (RECORD_NOTE,
+                        RECORD_NOTE_ENG,
+                        RECORD_NOTE_OBJECT);
         addNorToEnglishNameMap
                 (REFERENCE_ADMINISTRATIVE_UNIT,
                         REFERENCE_ADMINISTRATIVE_UNIT_ENG,
@@ -1025,6 +1050,14 @@ public class InternalNameTranslator {
                         SUB_CLASS_ENG,
                         SUB_CLASS_ENG_OBJECT);
         addNorToEnglishNameMap
+                (SUB_FILE,
+                        SUB_FILE_ENG,
+                        SUB_FILE_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (SUB_FONDS,
+                        SUB_FONDS_ENG,
+                        SUB_FONDS_ENG_OBJECT);
+        addNorToEnglishNameMap
                 (SUB_HOLDING_NUMBER,
                         SUB_HOLDING_NUMBER_ENG,
                         SUB_HOLDING_NUMBER_ENG_OBJECT);
@@ -1048,6 +1081,10 @@ public class InternalNameTranslator {
                 (USER_NAME,
                         USER_NAME_ENG,
                         USER_NAME_ENG_OBJECT);
+        addNorToEnglishNameMap
+                (USER,
+                        USER_ENG,
+                        USER_ENG_OBJECT);
         addNorToEnglishNameMap
                 (UNIT_IDENTIFIER,
                         UNIT_IDENTIFIER_ENG,

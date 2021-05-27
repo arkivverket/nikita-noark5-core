@@ -2,62 +2,60 @@ package nikita.webapp.service.impl;
 
 import nikita.common.model.noark5.v5.Fonds;
 import nikita.common.model.noark5.v5.FondsCreator;
+import nikita.common.model.noark5.v5.hateoas.FondsCreatorHateoas;
 import nikita.common.model.noark5.v5.hateoas.FondsHateoas;
 import nikita.common.model.noark5.v5.metadata.FondsStatus;
 import nikita.common.repository.n5v5.IFondsCreatorRepository;
 import nikita.common.repository.n5v5.IFondsRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
+import nikita.webapp.hateoas.interfaces.IFondsCreatorHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IFondsHateoasHandler;
-import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.IFondsCreatorService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import nikita.webapp.service.interfaces.odata.IODataService;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.DatabaseConstants.DELETE_FROM_FONDS_CREATOR_FONDS;
 import static nikita.common.config.N5ResourceMappings.FONDS_STATUS;
 import static nikita.common.config.N5ResourceMappings.FONDS_STATUS_OPEN_CODE;
-import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setFinaliseEntityValues;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
-import static org.springframework.http.HttpStatus.OK;
 
 @Service
 public class FondsCreatorService
         extends NoarkService
         implements IFondsCreatorService {
 
-    private static final Logger logger = LoggerFactory.
-            getLogger(FondsCreatorService.class);
-
     private final IFondsCreatorRepository fondsCreatorRepository;
     private final IFondsRepository fondsRepository;
     private final IMetadataService metadataService;
+    private final IFondsCreatorHateoasHandler fondsCreatorHateoasHandler;
     private final IFondsHateoasHandler fondsHateoasHandler;
 
     public FondsCreatorService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IODataService odataService,
             IPatchService patchService,
             IFondsCreatorRepository fondsCreatorRepository,
             IFondsRepository fondsRepository,
             IMetadataService metadataService,
+            IFondsCreatorHateoasHandler fondsCreatorHateoasHandler,
             IFondsHateoasHandler fondsHateoasHandler) {
-        super(entityManager, applicationEventPublisher, patchService);
+        super(entityManager, applicationEventPublisher, patchService,
+                odataService);
         this.fondsCreatorRepository = fondsCreatorRepository;
         this.fondsRepository = fondsRepository;
         this.metadataService = metadataService;
+        this.fondsCreatorHateoasHandler = fondsCreatorHateoasHandler;
         this.fondsHateoasHandler = fondsHateoasHandler;
     }
 
@@ -73,41 +71,35 @@ public class FondsCreatorService
      */
     @Override
     @Transactional
-    public FondsCreator createNewFondsCreator(FondsCreator fondsCreator) {
-        return fondsCreatorRepository.save(fondsCreator);
+    public FondsCreatorHateoas createNewFondsCreator(FondsCreator fondsCreator) {
+        return packAsHateoas(fondsCreatorRepository.save(fondsCreator));
     }
 
     @Override
     @Transactional
-    public Fonds createFondsAssociatedWithFondsCreator(
-            String fondsCreatorSystemId, Fonds fonds) {
+    public FondsHateoas createFondsAssociatedWithFondsCreator(
+            UUID systemId, Fonds fonds) {
         FondsCreator fondsCreator =
-                getFondsCreatorOrThrow(fondsCreatorSystemId);
+                getFondsCreatorOrThrow(systemId);
         validateDocumentMedium(metadataService, fonds);
         FondsStatus fondsStatus = (FondsStatus)
-            metadataService.findValidMetadataByEntityTypeOrThrow
-                (FONDS_STATUS, FONDS_STATUS_OPEN_CODE, null);
+                metadataService.findValidMetadataByEntityTypeOrThrow
+                        (FONDS_STATUS, FONDS_STATUS_OPEN_CODE, null);
         fonds.setFondsStatus(fondsStatus);
         setFinaliseEntityValues(fonds);
-        fonds.getReferenceFondsCreator().add(fondsCreator);
-        fondsCreator.getReferenceFonds().add(fonds);
-        fondsRepository.save(fonds);
-        return fonds;
+        fonds.addFondsCreator(fondsCreator);
+        fondsCreator.addFonds(fonds);
+        return packFondsAsHateoas(fondsRepository.save(fonds));
     }
 
     @Override
-    public Iterable<FondsCreator> findAll() {
-        return fondsCreatorRepository.findAll();
+    public FondsCreatorHateoas findAll() {
+        return (FondsCreatorHateoas) odataService.processODataQueryGet();
     }
 
     @Override
-    public List<FondsCreator> findByOwnedBy(String ownedBy) {
-        return fondsCreatorRepository.findByOwnedBy(ownedBy);
-    }
-
-    @Override
-    public FondsCreator findBySystemId(String systemId) {
-        return getFondsCreatorOrThrow(systemId);
+    public FondsCreatorHateoas findBySystemId(@NotNull final UUID systemId) {
+        return packAsHateoas(getFondsCreatorOrThrow(systemId));
     }
 
     /**
@@ -116,20 +108,12 @@ public class FondsCreatorService
      *
      * @param systemId The systemId of the FondsCreator object to retrieve the
      *                 associated FondsHateoas
-     * @return A FondsHateoas list packed as a ResponseEntity
+     * @return A FondsHateoas list
      */
     @Override
-    public ResponseEntity<FondsHateoas> findFondsAssociatedWithFondsCreator(
-            @NotNull final String systemId) {
-        FondsHateoas fondsHateoas = new FondsHateoas(
-                List.copyOf(getFondsCreatorOrThrow(systemId)
-                        .getReferenceFonds()));
-        fondsHateoasHandler.addLinks(fondsHateoas,
-                new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(fondsHateoas.getEntityVersion().toString())
-                .body(fondsHateoas);
+    public FondsHateoas findFondsAssociatedWithFondsCreator(
+            @NotNull final UUID systemId) {
+        return (FondsHateoas) odataService.processODataQueryGet();
     }
 
     // All UPDATE operations
@@ -160,10 +144,10 @@ public class FondsCreatorService
      */
     @Override
     @Transactional
-    public FondsCreator handleUpdate(@NotNull final String systemId,
-                                     @NotNull final Long version,
-                                     @NotNull final FondsCreator
-                                             incomingFondsCreator) {
+    public FondsCreatorHateoas handleUpdate(@NotNull final UUID systemId,
+                                            @NotNull final Long version,
+                                            @NotNull final FondsCreator
+                                                    incomingFondsCreator) {
         FondsCreator existingFondsCreator = getFondsCreatorOrThrow(systemId);
         // Here copy all the values you are allowed to copy ....
         existingFondsCreator.setDescription(
@@ -179,16 +163,15 @@ public class FondsCreatorService
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
         existingFondsCreator.setVersion(version);
-        fondsCreatorRepository.save(existingFondsCreator);
-        return existingFondsCreator;
+        return packAsHateoas(existingFondsCreator);
     }
 
     // All DELETE operations
     @Override
     @Transactional
-    public void deleteEntity(@NotNull String fondsCreatorSystemId) {
+    public void deleteEntity(@NotNull final UUID systemId) {
         FondsCreator fondsCreator =
-                getFondsCreatorOrThrow(fondsCreatorSystemId);
+                getFondsCreatorOrThrow(systemId);
         disassociateForeignKeys(fondsCreator,
                 DELETE_FROM_FONDS_CREATOR_FONDS);
         deleteEntity(fondsCreator);
@@ -196,35 +179,62 @@ public class FondsCreatorService
 
     /**
      * Delete all objects belonging to the user identified by ownedBy
-     *
-     * @return the number of objects deleted
      */
     @Override
     @Transactional
-    public long deleteAllByOwnedBy() {
-        return fondsCreatorRepository.deleteByOwnedBy(getUser());
+    public void deleteAllByOwnedBy() {
+        fondsCreatorRepository.deleteByOwnedBy(getUser());
+    }
+
+    @Override
+    public FondsCreatorHateoas generateDefaultFondsCreator() {
+        FondsCreator fondsCreator = new FondsCreator();
+        fondsCreator.setVersion(-1L, true);
+        return packAsHateoas(fondsCreator);
+    }
+
+    public FondsCreatorHateoas packAsHateoas(FondsCreator fondsCreator) {
+        FondsCreatorHateoas fondsCreatorHateoas =
+                new FondsCreatorHateoas(fondsCreator);
+        applyLinksAndHeader(fondsCreatorHateoas, fondsCreatorHateoasHandler);
+        return fondsCreatorHateoas;
+    }
+
+    /**
+     * Create a FondsHateoas object from a Fonds object and apply outgoing links
+     * and header values.
+     * Note: The method is required in this class so that we can avoid a
+     * circular dependency on service classes (Fonds->FondsCreator->Fonds)
+     *
+     * @param fonds the fonds object
+     * @return a FondsHateoas object
+     */
+    public FondsHateoas packFondsAsHateoas(Fonds fonds) {
+        FondsHateoas fondsHateoas =
+                new FondsHateoas(fonds);
+        applyLinksAndHeader(fondsHateoas, fondsHateoasHandler);
+        return fondsHateoas;
     }
 
     // All HELPER operations
+
     /**
      * Internal helper method. Rather than having a find and try catch in
      * multiple methods, we have it here once. Note. If you call this,  you
      * will only ever get a valid FondsCreator back. If there is no valid
      * FondsCreator, an exception is thrown
      *
-     * @param fondsCreatorSystemId systemID of the fondsCreator object to
-     *                             retrive
+     * @param systemId systemId of the fondsCreator object to retrieve
      * @return the fondsCreator object
      */
     protected FondsCreator getFondsCreatorOrThrow(
-            @NotNull String fondsCreatorSystemId) {
+            @NotNull final UUID systemId) {
         FondsCreator fondsCreator = fondsCreatorRepository.
-                findBySystemId(UUID.fromString(fondsCreatorSystemId));
+                findBySystemId(systemId);
         if (fondsCreator == null) {
-            String info = INFO_CANNOT_FIND_OBJECT +
-                    " FondsCreator, using systemId " + fondsCreatorSystemId;
-            logger.info(info);
-            throw new NoarkEntityNotFoundException(info);
+            String error = INFO_CANNOT_FIND_OBJECT +
+                    " FondsCreator, using systemId " + systemId;
+            throw new NoarkEntityNotFoundException(error);
         }
         return fondsCreator;
     }

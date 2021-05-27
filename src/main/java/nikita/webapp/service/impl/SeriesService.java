@@ -1,5 +1,6 @@
 package nikita.webapp.service.impl;
 
+import nikita.common.model.nikita.NikitaPage;
 import nikita.common.model.noark5.v5.ClassificationSystem;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Series;
@@ -8,47 +9,40 @@ import nikita.common.model.noark5.v5.hateoas.*;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.ScreeningMetadataHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.StorageLocationHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
+import nikita.common.model.noark5.v5.metadata.DocumentMedium;
 import nikita.common.model.noark5.v5.metadata.Metadata;
 import nikita.common.model.noark5.v5.metadata.SeriesStatus;
 import nikita.common.model.noark5.v5.secondary.Screening;
-import nikita.common.model.noark5.v5.secondary.ScreeningMetadataLocal;
 import nikita.common.model.noark5.v5.secondary.StorageLocation;
 import nikita.common.repository.n5v5.ISeriesRepository;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import nikita.common.util.exceptions.NoarkEntityEditWhenClosedException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
-import nikita.webapp.hateoas.interfaces.*;
-import nikita.webapp.hateoas.interfaces.secondary.IScreeningMetadataHateoasHandler;
-import nikita.webapp.security.Authorisation;
+import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
 import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.ICaseFileService;
 import nikita.webapp.service.interfaces.IClassificationSystemService;
 import nikita.webapp.service.interfaces.IFileService;
 import nikita.webapp.service.interfaces.ISeriesService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
+import nikita.webapp.service.interfaces.odata.IODataService;
 import nikita.webapp.service.interfaces.secondary.IScreeningMetadataService;
 import nikita.webapp.service.interfaces.secondary.IStorageLocationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
-import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import static java.util.List.copyOf;
 import static nikita.common.config.Constants.INFO_CANNOT_ASSOCIATE_WITH_CLOSED_OBJECT;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
-import static nikita.common.config.N5ResourceMappings.SERIES_STATUS_CLOSED_CODE;
-import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
+import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
-import static org.springframework.http.HttpStatus.OK;
 
 @Service
 public class SeriesService
@@ -64,19 +58,13 @@ public class SeriesService
     private final IClassificationSystemService classificationSystemService;
     private final ISeriesRepository seriesRepository;
     private final ISeriesHateoasHandler seriesHateoasHandler;
-    private final IRecordHateoasHandler recordHateoasHandler;
-    private final IFileHateoasHandler fileHateoasHandler;
-    private final IFondsHateoasHandler fondsHateoasHandler;
-    private final IClassificationSystemHateoasHandler
-            classificationSystemHateoasHandler;
     private final IScreeningMetadataService screeningMetadataService;
     private final IStorageLocationService storageLocationService;
-    private final IScreeningMetadataHateoasHandler screeningMetadataHateoasHandler;
-
 
     public SeriesService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IODataService odataService,
             IPatchService patchService,
             IClassificationSystemService classificationSystemService,
             IFileService fileService,
@@ -84,37 +72,26 @@ public class SeriesService
             IMetadataService metadataService,
             ISeriesRepository seriesRepository,
             ISeriesHateoasHandler seriesHateoasHandler,
-            IRecordHateoasHandler recordHateoasHandler,
-            IFileHateoasHandler fileHateoasHandler,
-            IFondsHateoasHandler fondsHateoasHandler,
-            IClassificationSystemHateoasHandler
-                    classificationSystemHateoasHandler,
             IScreeningMetadataService screeningMetadataService,
-            IStorageLocationService storageLocationService,
-            IScreeningMetadataHateoasHandler screeningMetadataHateoasHandler) {
-        super(entityManager, applicationEventPublisher, patchService);
+            IStorageLocationService storageLocationService) {
+        super(entityManager, applicationEventPublisher, patchService, odataService);
         this.metadataService = metadataService;
         this.fileService = fileService;
         this.caseFileService = caseFileService;
         this.seriesRepository = seriesRepository;
         this.classificationSystemService = classificationSystemService;
         this.seriesHateoasHandler = seriesHateoasHandler;
-        this.recordHateoasHandler = recordHateoasHandler;
-        this.fileHateoasHandler = fileHateoasHandler;
-        this.fondsHateoasHandler = fondsHateoasHandler;
-        this.classificationSystemHateoasHandler =
-                classificationSystemHateoasHandler;
         this.screeningMetadataService = screeningMetadataService;
         this.storageLocationService = storageLocationService;
-        this.screeningMetadataHateoasHandler = screeningMetadataHateoasHandler;
     }
 
     // All CREATE operations
     @Override
     @Transactional
-    public CaseFile createCaseFileAssociatedWithSeries(String seriesSystemId,
-                                                       CaseFile caseFile) {
-        Series series = getSeriesOrThrow(seriesSystemId);
+    public CaseFileHateoas createCaseFileAssociatedWithSeries(
+            @NotNull final UUID systemId,
+            @NotNull final CaseFile caseFile) {
+        Series series = getSeriesOrThrow(systemId);
         checkOpenOrThrow(series);
         caseFile.setReferenceSeries(series);
         return caseFileService.save(caseFile);
@@ -124,7 +101,7 @@ public class SeriesService
     @Transactional
     public StorageLocationHateoas createStorageLocationAssociatedWithSeries(
             UUID systemId, StorageLocation storageLocation) {
-        Series series = getSeriesOrThrow(systemId.toString());
+        Series series = getSeriesOrThrow(systemId);
         checkOpenOrThrow(series);
         return storageLocationService
                 .createStorageLocationAssociatedWithSeries(
@@ -133,9 +110,10 @@ public class SeriesService
 
     @Override
     @Transactional
-    public File createFileAssociatedWithSeries(String seriesSystemId,
-                                               File file) {
-        Series series = getSeriesOrThrow(seriesSystemId);
+    public FileHateoas createFileAssociatedWithSeries(
+            @NotNull final UUID systemId,
+            @NotNull final File file) {
+        Series series = getSeriesOrThrow(systemId);
         checkOpenOrThrow(series);
         file.setReferenceSeries(series);
         return fileService.createFile(file);
@@ -143,20 +121,20 @@ public class SeriesService
 
     @Override
     @Transactional
-    public Series save(Series series) {
+    public SeriesHateoas save(Series series) {
         validateDocumentMedium(metadataService, series);
         validateDeletion(series.getReferenceDeletion());
         validateScreening(metadataService, series);
         if (null == series.getSeriesStatus()) {
             checkSeriesStatusUponCreation(series);
         }
-        return seriesRepository.save(series);
+        return packAsHateoas(seriesRepository.save(series));
     }
 
     @Override
     @Transactional
     public ClassificationSystemHateoas createClassificationSystem(
-            String systemId, ClassificationSystem classificationSystem) {
+            UUID systemId, ClassificationSystem classificationSystem) {
         Series series = getSeriesOrThrow(systemId);
         series.addClassificationSystem(classificationSystem);
         return classificationSystemService.save(classificationSystem);
@@ -165,7 +143,7 @@ public class SeriesService
     @Override
     public ScreeningMetadataHateoas createScreeningMetadataAssociatedWithSeries(
             UUID systemId, Metadata screeningMetadata) {
-        Series series = getSeriesOrThrow(systemId.toString());
+        Series series = getSeriesOrThrow(systemId);
         if (null == series.getReferenceScreening()) {
             throw new NoarkEntityNotFoundException(INFO_CANNOT_FIND_OBJECT +
                     " Screening, associated with Series with systemId " +
@@ -177,48 +155,32 @@ public class SeriesService
 
     // All READ operations
     @Override
-    @SuppressWarnings("unchecked")
-    public ResponseEntity<SeriesHateoas> findAll() {
-        SeriesHateoas seriesHateoas = new
-                SeriesHateoas((List<INoarkEntity>) (List)
-                seriesRepository.findByOwnedBy(getUser()));
-        seriesHateoasHandler.addLinksOnRead(seriesHateoas, new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .body(seriesHateoas);
+    public SeriesHateoas findAll() {
+        return (SeriesHateoas) odataService.processODataQueryGet();
     }
 
     @Override
-    public ResponseEntity<CaseFileHateoas> findCaseFilesBySeries(
-            @NotNull String systemId) {
-        return caseFileService.findAllCaseFileBySeries(
-                getSeriesOrThrow(systemId));
+    public CaseFileHateoas findCaseFilesBySeries(
+            @NotNull final UUID systemId) {
+        // Make sure Series exists
+        getSeriesOrThrow(systemId);
+        return (CaseFileHateoas) odataService.processODataQueryGet();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public ResponseEntity<RecordHateoas> findAllRecordAssociatedWithSeries(
-            String systemId) {
-        RecordHateoas recordHateoas = new RecordHateoas(
-                (List<INoarkEntity>) (List)
-                        getSeriesOrThrow(systemId).getReferenceRecord());
-        recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .body(recordHateoas);
+    public RecordHateoas findAllRecordAssociatedWithSeries(
+            @NotNull final UUID systemId) {
+        // Make sure Series exists
+        getSeriesOrThrow(systemId);
+        return (RecordHateoas) odataService.processODataQueryGet();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public ResponseEntity<FileHateoas> findAllFileAssociatedWithSeries(
-            String systemId) {
-        FileHateoas fileHateoas = new FileHateoas(
-                (List<INoarkEntity>) (List)
-                        getSeriesOrThrow(systemId).getReferenceFile());
-        fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .body(fileHateoas);
+    public FileHateoas findAllFileAssociatedWithSeries(
+            @NotNull final UUID systemId) {
+        // Make sure Series exists
+        getSeriesOrThrow(systemId);
+        return (FileHateoas) odataService.processODataQueryGet();
     }
 
     /**
@@ -227,21 +189,15 @@ public class SeriesService
      *
      * @param systemId The systemId of the Series object to retrieve the
      *                 associated ClassificationSystemHateoas
-     * @return A ClassificationSystemHateoas list packed as a ResponseEntity
+     * @return A ClassificationSystemHateoas list
      */
     @Override
-    public ResponseEntity<ClassificationSystemHateoas>
+    public ClassificationSystemHateoas
     findClassificationSystemAssociatedWithSeries(
-            @NotNull final String systemId) {
-        ClassificationSystemHateoas classificationSystemHateoas =
-                new ClassificationSystemHateoas(
-                        List.copyOf(getSeriesOrThrow(systemId)
-                                .getReferenceClassificationSystem()));
-        classificationSystemHateoasHandler.addLinks(classificationSystemHateoas,
-                new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .body(classificationSystemHateoas);
+            @NotNull final UUID systemId) {
+        // Make sure Series exists
+        getSeriesOrThrow(systemId);
+        return (ClassificationSystemHateoas) odataService.processODataQueryGet();
     }
 
     /**
@@ -250,53 +206,35 @@ public class SeriesService
      *
      * @param systemId The systemId of the Series object to retrieve the
      *                 associated FondsHateoas
-     * @return A FondsHateoas list packed as a ResponseEntity
+     * @return A FondsHateoas list
      */
     @Override
-    public ResponseEntity<FondsHateoas> findFondsAssociatedWithSeries(
-            @NotNull final String systemId) {
-        FondsHateoas fondsHateoas =
-                new FondsHateoas(
-                        getSeriesOrThrow(systemId).
-                                getReferenceFonds());
-        fondsHateoasHandler.addLinks(fondsHateoas,
-                new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(fondsHateoas.getEntityVersion().toString())
-                .body(fondsHateoas);
+    public FondsHateoas findFondsAssociatedWithSeries(
+            @NotNull final UUID systemId) {
+        getSeriesOrThrow(systemId);
+        return (FondsHateoas) odataService.processODataQueryGet();
     }
 
     // systemId
     @Override
-    public ResponseEntity<SeriesHateoas> findBySystemId(String systemId) {
-        SeriesHateoas seriesHateoas =
-                new SeriesHateoas(getSeriesOrThrow(systemId));
-        seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(seriesHateoas.getEntityVersion().toString())
-                .body(seriesHateoas);
+    public SeriesHateoas findBySystemId(@NotNull final UUID systemId) {
+        return packAsHateoas(getSeriesOrThrow(systemId));
     }
 
 
     @Override
     public ScreeningMetadataHateoas
-    getScreeningMetadataAssociatedWithSeries(UUID seriesSystemId) {
-        Screening screening = getSeriesOrThrow(seriesSystemId.toString())
+    getScreeningMetadataAssociatedWithSeries(@NotNull final UUID systemId) {
+        Screening screening = getSeriesOrThrow(systemId)
                 .getReferenceScreening();
         if (null == screening) {
             throw new NoarkEntityNotFoundException(
                     INFO_CANNOT_FIND_OBJECT + " Screening, using systemId " +
-                            seriesSystemId);
+                            systemId);
         }
-        Set<ScreeningMetadataLocal> screeningMetadata =
-                screening.getReferenceScreeningMetadata();
-        ScreeningMetadataHateoas screeningMetadataHateoas =
-                new ScreeningMetadataHateoas(copyOf(screeningMetadata));
-        screeningMetadataHateoasHandler.addLinks(screeningMetadataHateoas,
-                new Authorisation());
-        return screeningMetadataHateoas;
+        NikitaPage page = new
+                NikitaPage(copyOf(screening.getReferenceScreeningMetadata()));
+        return new ScreeningMetadataHateoas(page);
     }
 
     // All UPDATE operations
@@ -313,9 +251,9 @@ public class SeriesService
      */
     @Override
     @Transactional
-    public Series handleUpdate(@NotNull final String systemId,
-                               @NotNull final Long version,
-                               @NotNull final Series incomingSeries) {
+    public SeriesHateoas handleUpdate(@NotNull final UUID systemId,
+                                      @NotNull final Long version,
+                                      @NotNull final Series incomingSeries) {
         Series existingSeries = getSeriesOrThrow(systemId);
         // Here copy all the values you are allowed to copy ....
         updateDeletion(incomingSeries, existingSeries);
@@ -327,16 +265,15 @@ public class SeriesService
         existingSeries.setSeriesStatus(incomingSeries.getSeriesStatus());
 
         existingSeries.setReferencePrecursorSystemID
-            (incomingSeries.getReferencePrecursorSystemID());
+                (incomingSeries.getReferencePrecursorSystemID());
         existingSeries.setReferenceSuccessorSystemID
-            (incomingSeries.getReferenceSuccessorSystemID());
+                (incomingSeries.getReferenceSuccessorSystemID());
         updateSeriesReferences(existingSeries);
 
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
         existingSeries.setVersion(version);
-        seriesRepository.save(existingSeries);
-        return existingSeries;
+        return packAsHateoas(existingSeries);
     }
 
     @Override
@@ -344,7 +281,7 @@ public class SeriesService
     public void updateSeriesReferences(Series series) {
         if (null != series.getReferencePrecursorSystemID()) {
             Series referenceSeries = seriesRepository.
-                findBySystemId(series.getReferencePrecursorSystemID());
+                    findBySystemId(series.getReferencePrecursorSystemID());
             if (null != referenceSeries) {
                 if (null != referenceSeries.getReferenceSuccessorSystemID()) {
                     String info = "not allowed to set precursor to series with existing successor";
@@ -362,7 +299,7 @@ public class SeriesService
 
         if (null != series.getReferenceSuccessorSystemID()) {
             Series referenceSeries = seriesRepository.
-                findBySystemId(series.getReferenceSuccessorSystemID());
+                    findBySystemId(series.getReferenceSuccessorSystemID());
             if (null != referenceSeries) {
                 if (null != referenceSeries.getReferencePrecursorSystemID()) {
                     String info = "not allowed to set successor to series with existing precursor";
@@ -382,35 +319,52 @@ public class SeriesService
     // All DELETE operations
     @Override
     @Transactional
-    public void deleteEntity(@NotNull String seriesSystemId) {
-        deleteEntity(getSeriesOrThrow(seriesSystemId));
+    public void deleteEntity(@NotNull final UUID systemId) {
+        deleteEntity(getSeriesOrThrow(systemId));
     }
 
     /**
      * Delete all objects belonging to the user identified by ownedBy
-     *
-     * @return the number of objects deleted
      */
     @Override
     @Transactional
-    public long deleteAllByOwnedBy() {
-        long count = seriesRepository.count();
-        seriesRepository.deleteAll();
-        logger.info("Deleted [" + count + "] Series objects");
-        return count;
+    public void deleteAllByOwnedBy() {
+        seriesRepository.deleteByOwnedBy(getUser());
+    }
+
+    public SeriesHateoas generateDefaultSeries(@NotNull final UUID systemId) {
+        Series defaultSeries = new Series();
+        SeriesStatus seriesStatus = (SeriesStatus)
+                metadataService.findValidMetadataByEntityTypeOrThrow
+                        (SERIES_STATUS, SERIES_STATUS_ACTIVE_CODE, null);
+        defaultSeries.setSeriesStatus(seriesStatus);
+        DocumentMedium documentMedium = (DocumentMedium)
+                metadataService.findValidMetadataByEntityTypeOrThrow
+                        (DOCUMENT_MEDIUM, DOCUMENT_MEDIUM_ELECTRONIC_CODE, null);
+        defaultSeries.setDocumentMedium(documentMedium);
+        defaultSeries.setVersion(-1L, true);
+        return packAsHateoas(defaultSeries);
     }
 
     @Override
-    public ScreeningMetadataHateoas getDefaultScreeningMetadata(UUID systemId) {
+    public ScreeningMetadataHateoas getDefaultScreeningMetadata(
+            @NotNull final UUID systemId) {
         return screeningMetadataService.getDefaultScreeningMetadata(systemId);
     }
 
     @Override
-    public StorageLocationHateoas getDefaultStorageLocation(UUID systemId) {
+    public StorageLocationHateoas getDefaultStorageLocation(
+            @NotNull final UUID systemId) {
         return storageLocationService.getDefaultStorageLocation(systemId);
     }
 
     // Helper methods
+
+    public SeriesHateoas packAsHateoas(@NotNull final Series series) {
+        SeriesHateoas seriesHateoas = new SeriesHateoas(series);
+        applyLinksAndHeader(seriesHateoas, seriesHateoasHandler);
+        return seriesHateoas;
+    }
 
     /**
      * Internal helper method. Check that the status of the CaseFile is set to
@@ -435,17 +389,16 @@ public class SeriesService
      * that you will only ever get a valid Series back. If there is no valid
      * Series, an exception is thrown
      *
-     * @param seriesSystemId systemId of the series object to retrieve
+     * @param systemId systemId of the series object to retrieve
      * @return the Series object
      */
-    private Series getSeriesOrThrow(@NotNull String seriesSystemId) {
+    private Series getSeriesOrThrow(@NotNull final UUID systemId) {
         Series series = seriesRepository.
-                findBySystemId(UUID.fromString(seriesSystemId));
+                findBySystemId(systemId);
         if (series == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " Series, using systemId "
-                    + seriesSystemId;
-            logger.info(info);
-            throw new NoarkEntityNotFoundException(info);
+            throw new NoarkEntityNotFoundException(
+                    INFO_CANNOT_FIND_OBJECT + " Series, using systemId "
+                            + systemId);
         }
         return series;
     }

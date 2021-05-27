@@ -13,13 +13,15 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static nikita.common.config.Constants.UNIT;
+import static nikita.common.config.ErrorMessagesConstants.MALFORMED_PAYLOAD;
 import static nikita.common.config.HATEOASConstants.LINKS;
 import static nikita.common.config.N5ResourceMappings.ORGANISATION_NUMBER;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.checkNodeObjectEmpty;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserialiseNoarkSystemIdEntity;
 
 public class UnitDeserializer
-        extends JsonDeserializer {
+        extends JsonDeserializer<Unit> {
 
     private static final Logger logger =
             LoggerFactory.getLogger(UnitDeserializer.class);
@@ -36,7 +38,7 @@ public class UnitDeserializer
         ObjectNode objectNode = mapper.readTree(jsonParser);
 
         // Deserialize systemID
-        deserialiseNoarkSystemIdEntity(Unit, objectNode, errors);
+        deserialiseNoarkSystemIdEntity(Unit, objectNode);
 
         // Deserialize organisasjonsnummer
         JsonNode currentNode = objectNode.get(ORGANISATION_NUMBER);
@@ -55,11 +57,8 @@ public class UnitDeserializer
         // Check that there are no additional values left after processing the
         // tree. If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {
-            errors.append("The Unit you tried to create is malformed. The");
-            errors.append(" following fields are not recognised as Unit ");
-            errors.append(" fields [");
-            errors.append(checkNodeObjectEmpty(objectNode));
-            errors.append("]. ");
+            errors.append(String.format(MALFORMED_PAYLOAD,
+                    UNIT, checkNodeObjectEmpty(objectNode)));
         }
         if (0 < errors.length())
             throw new NikitaMalformedInputDataException(errors.toString());

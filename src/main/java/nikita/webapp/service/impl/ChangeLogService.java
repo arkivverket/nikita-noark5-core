@@ -2,15 +2,12 @@ package nikita.webapp.service.impl;
 
 import nikita.common.model.noark5.v5.ChangeLog;
 import nikita.common.model.noark5.v5.hateoas.ChangeLogHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.repository.n5v5.IChangeLogRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IChangeLogHateoasHandler;
-import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.IChangeLogService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import nikita.webapp.service.interfaces.odata.IODataService;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
@@ -28,19 +24,17 @@ public class ChangeLogService
         extends NoarkService
         implements IChangeLogService {
 
-    private static final Logger logger =
-            LoggerFactory.getLogger(ChangeLogService.class);
-
     private final IChangeLogRepository changeLogRepository;
     private final IChangeLogHateoasHandler changeLogHateoasHandler;
 
     public ChangeLogService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IODataService odataService,
             IPatchService patchService,
             IChangeLogRepository changeLogRepository,
             IChangeLogHateoasHandler changeLogHateoasHandler) {
-        super(entityManager, applicationEventPublisher, patchService);
+        super(entityManager, applicationEventPublisher, patchService, odataService);
         this.changeLogRepository = changeLogRepository;
         this.changeLogHateoasHandler = changeLogHateoasHandler;
     }
@@ -48,14 +42,10 @@ public class ChangeLogService
     @Override
     public ChangeLogHateoas generateDefaultChangeLog() {
         ChangeLog defaultChangeLog = new ChangeLog();
-
         defaultChangeLog.setChangedDate(OffsetDateTime.now());
         defaultChangeLog.setChangedBy(getUser());
-        ChangeLogHateoas changeLogHateoas =
-	    new ChangeLogHateoas(defaultChangeLog);
-        changeLogHateoasHandler
-	    .addLinksOnTemplate(changeLogHateoas, new Authorisation());
-        return changeLogHateoas;
+        defaultChangeLog.setVersion(-1L, true);
+        return packAsHateoas(defaultChangeLog);
     }
 
     @Override
@@ -63,39 +53,25 @@ public class ChangeLogService
     public ChangeLogHateoas createNewChangeLog(ChangeLog changeLog) {
         if (null == changeLog.getChangedDate())
             changeLog.setChangedDate(OffsetDateTime.now());
-        changeLog = changeLogRepository.save(changeLog);
-        ChangeLogHateoas changeLogHateoas = new ChangeLogHateoas(changeLog);
-        changeLogHateoasHandler.addLinks(changeLogHateoas, new Authorisation());
-        return changeLogHateoas;
+        return packAsHateoas(changeLogRepository.save(changeLog));
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public ChangeLogHateoas findChangeLogByOwner() {
-        ChangeLogHateoas changeLogHateoas = new
-                ChangeLogHateoas((List<INoarkEntity>) (List)
-                changeLogRepository.findByOwnedBy(getUser()));
-        changeLogHateoasHandler
-            .addLinksOnRead(changeLogHateoas, new Authorisation());
-        return changeLogHateoas;
+        return (ChangeLogHateoas) odataService.processODataQueryGet();
     }
 
     @Override
-    public ChangeLogHateoas findSingleChangeLog(String changeLogSystemId) {
-        ChangeLog existingChangeLog = getChangeLogOrThrow(changeLogSystemId);
-
-        ChangeLogHateoas changeLogHateoas =
-            new ChangeLogHateoas(changeLogRepository.save(existingChangeLog));
-        changeLogHateoasHandler.addLinks(changeLogHateoas, new Authorisation());
-        return changeLogHateoas;
+    public ChangeLogHateoas findSingleChangeLog(@NotNull final UUID systemId) {
+        return packAsHateoas(getChangeLogOrThrow(systemId));
     }
 
     @Override
     @Transactional
-    public ChangeLogHateoas handleUpdate(@NotNull String changeLogSystemId,
-                                       @NotNull Long version,
-                                       @NotNull ChangeLog incomingChangeLog) {
-        ChangeLog existingChangeLog = getChangeLogOrThrow(changeLogSystemId);
+    public ChangeLogHateoas handleUpdate(@NotNull final UUID systemId,
+                                         @NotNull final Long version,
+                                         @NotNull ChangeLog incomingChangeLog) {
+        ChangeLog existingChangeLog = getChangeLogOrThrow(systemId);
 	/*
         // Copy all the values you are allowed to copy ....
         existingChangeLog.setChangeLogText(incomingChangeLog.getChangeLogText());
@@ -107,25 +83,27 @@ public class ChangeLogService
         // NoarkConcurrencyException exception as it checks the ETAG
         // value
         existingChangeLog.setVersion(version);
-
-        ChangeLogHateoas changeLogHateoas =
-            new ChangeLogHateoas(changeLogRepository.save(existingChangeLog));
-        changeLogHateoasHandler.addLinks(changeLogHateoas, new Authorisation());
-        return changeLogHateoas;
+        return packAsHateoas(existingChangeLog);
     }
 
     @Transactional
-    public void deleteEntity(String systemID) {
-        deleteEntity(getChangeLogOrThrow(systemID));
+    public void deleteEntity(@NotNull final UUID systemId) {
+        deleteEntity(getChangeLogOrThrow(systemId));
     }
 
-    protected ChangeLog getChangeLogOrThrow(@NotNull String changeLogSystemId) {
+
+    public ChangeLogHateoas packAsHateoas(@NotNull final ChangeLog changeLog) {
+        ChangeLogHateoas changeLogHateoas = new ChangeLogHateoas(changeLog);
+        applyLinksAndHeader(changeLogHateoas, changeLogHateoasHandler);
+        return changeLogHateoas;
+    }
+
+    protected ChangeLog getChangeLogOrThrow(@NotNull final UUID systemId) {
         ChangeLog changeLog = changeLogRepository.
-                findBySystemId(UUID.fromString(changeLogSystemId));
+                findBySystemId(systemId);
         if (changeLog == null) {
             String info = INFO_CANNOT_FIND_OBJECT +
-                    " ChangeLog, using systemId " + changeLogSystemId;
-            logger.info(info);
+                    " ChangeLog, using systemId " + systemId;
             throw new NoarkEntityNotFoundException(info);
         }
         return changeLog;

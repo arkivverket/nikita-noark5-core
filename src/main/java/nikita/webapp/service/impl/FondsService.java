@@ -7,46 +7,37 @@ import nikita.common.model.noark5.v5.hateoas.FondsCreatorHateoas;
 import nikita.common.model.noark5.v5.hateoas.FondsHateoas;
 import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.StorageLocationHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.DocumentMedium;
 import nikita.common.model.noark5.v5.metadata.FondsStatus;
-import nikita.common.model.noark5.v5.metadata.SeriesStatus;
 import nikita.common.model.noark5.v5.secondary.StorageLocation;
 import nikita.common.repository.n5v5.IFondsRepository;
 import nikita.common.util.exceptions.NoarkEntityEditWhenClosedException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.common.util.exceptions.NoarkInvalidStructureException;
-import nikita.webapp.hateoas.interfaces.IFondsCreatorHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IFondsHateoasHandler;
-import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
-import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.IFondsCreatorService;
 import nikita.webapp.service.interfaces.IFondsService;
+import nikita.webapp.service.interfaces.ISeriesService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
+import nikita.webapp.service.interfaces.odata.IODataService;
 import nikita.webapp.service.interfaces.secondary.IStorageLocationService;
-import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
-import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.DatabaseConstants.DELETE_FONDS_STORAGE_LOCATION;
 import static nikita.common.config.DatabaseConstants.DELETE_FROM_FONDS_FONDS_CREATOR;
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.setFinaliseEntityValues;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
-import static org.springframework.http.HttpStatus.OK;
 
 @Service
 public class FondsService
@@ -57,35 +48,29 @@ public class FondsService
             LoggerFactory.getLogger(FondsService.class);
 
     private final IFondsRepository fondsRepository;
-    private final SeriesService seriesService;
+    private final ISeriesService seriesService;
     private final IMetadataService metadataService;
     private final IFondsCreatorService fondsCreatorService;
     private final IFondsHateoasHandler fondsHateoasHandler;
-    private final ISeriesHateoasHandler seriesHateoasHandler;
-    private final IFondsCreatorHateoasHandler fondsCreatorHateoasHandler;
     private final IStorageLocationService storageLocationService;
 
     public FondsService(EntityManager entityManager,
                         ApplicationEventPublisher applicationEventPublisher,
+                        IODataService odataService,
                         IPatchService patchService,
                         IFondsRepository fondsRepository,
-                        SeriesService seriesService,
+                        ISeriesService seriesService,
                         IMetadataService metadataService,
                         IFondsCreatorService fondsCreatorService,
                         IFondsHateoasHandler fondsHateoasHandler,
-                        ISeriesHateoasHandler seriesHateoasHandler,
-                        IFondsCreatorHateoasHandler
-                                fondsCreatorHateoasHandler,
                         IStorageLocationService storageLocationService) {
-        super(entityManager, applicationEventPublisher, patchService);
+        super(entityManager, applicationEventPublisher, patchService,
+                odataService);
         this.fondsRepository = fondsRepository;
         this.seriesService = seriesService;
         this.metadataService = metadataService;
         this.fondsCreatorService = fondsCreatorService;
-        this.entityManager = entityManager;
         this.fondsHateoasHandler = fondsHateoasHandler;
-        this.seriesHateoasHandler = seriesHateoasHandler;
-        this.fondsCreatorHateoasHandler = fondsCreatorHateoasHandler;
         this.storageLocationService = storageLocationService;
     }
 
@@ -105,17 +90,13 @@ public class FondsService
         validateDocumentMedium(metadataService, fonds);
         if (null == fonds.getFondsStatus()) {
             FondsStatus fondsStatus = (FondsStatus)
-                metadataService.findValidMetadataByEntityTypeOrThrow
-                    (FONDS_STATUS, FONDS_STATUS_OPEN_CODE, null);
+                    metadataService.findValidMetadataByEntityTypeOrThrow
+                            (FONDS_STATUS, FONDS_STATUS_OPEN_CODE, null);
             fonds.setFondsStatus(fondsStatus);
         }
         checkFondsStatusUponCreation(fonds);
         setFinaliseEntityValues(fonds);
-        FondsHateoas fondsHateoas = new FondsHateoas(fondsRepository.save(fonds));
-        fondsHateoasHandler.addLinks(fondsHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(new
-                AfterNoarkEntityCreatedEvent(this, fonds));
-        return fondsHateoas;
+        return packAsHateoas(fondsRepository.save(fonds));
     }
 
     /**
@@ -134,9 +115,8 @@ public class FondsService
     @Override
     @Transactional
     public FondsHateoas createFondsAssociatedWithFonds(
-            @NotNull String parentFondsSystemId,
-            @NotNull Fonds childFonds) {
-
+            @NotNull final UUID parentFondsSystemId,
+            @NotNull final Fonds childFonds) {
         Fonds parentFonds = getFondsOrThrow(parentFondsSystemId);
         checkFondsDoesNotContainSeries(parentFonds);
         childFonds.setReferenceParentFonds(parentFonds);
@@ -154,32 +134,24 @@ public class FondsService
      * does an NoarkInvalidStructureException exception is thrown. After that
      * we check that the Fonds object is not already closed.
      *
-     * @param fondsSystemId The systemId of the fonds object to associate a
-     *                      Series with
-     * @param series        The incoming Series object
+     * @param systemId The systemId of the fonds object to associate a
+     *                 Series with
+     * @param series   The incoming Series object
      * @return the newly persisted series object wrapped as a SeriesHateoas
      * object
      */
     @Override
     @Transactional
     public SeriesHateoas createSeriesAssociatedWithFonds(
-            @NotNull String fondsSystemId,
-            @NotNull Series series) {
-
-        Fonds fonds = getFondsOrThrow(fondsSystemId);
-
+            @NotNull final UUID systemId,
+            @NotNull final Series series) {
+        Fonds fonds = getFondsOrThrow(systemId);
         seriesService.updateSeriesReferences(series);
         seriesService.checkSeriesStatusUponCreation(series);
         checkFondsNotClosed(fonds);
         checkFondsDoesNotContainSubFonds(fonds);
-
         series.setReferenceFonds(fonds);
-        SeriesHateoas seriesHateoas = new SeriesHateoas(seriesService.save
-                (series));
-        seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(new
-                AfterNoarkEntityCreatedEvent(this, fonds));
-        return seriesHateoas;
+        return seriesService.save(series);
     }
 
     /**
@@ -191,41 +163,28 @@ public class FondsService
      * the fonds does not exist a NoarkEntityNotFoundException exception is
      * thrown. After that we check that the Fonds object is not already closed.
      *
-     * @param fondsSystemId The systemId of the fonds object you wish to
-     *                      associate the fondsCreator object with
-     * @param fondsCreator  incoming fondsCreator object with some values set
+     * @param systemId     The systemId of the fonds object you wish to
+     *                     associate the fondsCreator object with
+     * @param fondsCreator incoming fondsCreator object with some values set
      * @return the newly persisted fondsCreator object wrapped as a
      * FondsCreatorHateoas object
      */
     @Override
     @Transactional
     public FondsCreatorHateoas createFondsCreatorAssociatedWithFonds(
-            @NotNull String fondsSystemId,
-            @NotNull FondsCreator fondsCreator) {
-
-        Fonds fonds = getFondsOrThrow(fondsSystemId);
+            @NotNull final UUID systemId,
+            @NotNull final FondsCreator fondsCreator) {
+        Fonds fonds = getFondsOrThrow(systemId);
         checkFondsNotClosed(fonds);
-
-        fondsCreatorService.createNewFondsCreator(fondsCreator);
-
-        // add references to objects in both directions
-        fondsCreator.addFonds(fonds);
-        fonds.getReferenceFondsCreator().add(fondsCreator);
-
-        // create the hateoas object with links
-        FondsCreatorHateoas fondsCreatorHateoas = new FondsCreatorHateoas
-                (fondsCreator);
-        fondsCreatorHateoasHandler.addLinks(fondsCreatorHateoas, new
-                Authorisation());
-
-        return fondsCreatorHateoas;
+        fonds.addFondsCreator(fondsCreator);
+        return fondsCreatorService.createNewFondsCreator(fondsCreator);
     }
 
     @Override
     @Transactional
     public StorageLocationHateoas createStorageLocationAssociatedWithFonds(
             UUID systemId, StorageLocation storageLocation) {
-        Fonds fonds = getFondsOrThrow(systemId.toString());
+        Fonds fonds = getFondsOrThrow(systemId);
         return storageLocationService
                 .createStorageLocationAssociatedWithFonds(
                         storageLocation, fonds);
@@ -242,40 +201,26 @@ public class FondsService
      * If any Series objects exist, they are wrapped in a SeriesHateoas
      * object and returned to the caller.
      *
-     * @param fondsSystemId The systemId of the Fonds object that you want to
-     *                      retrieve associated Series objects
+     * @param systemId The systemId of the Fonds object that you want to
+     *                 retrieve associated Series objects
      * @return the list of Series objects wrapped as a SeriesHateoas object
-     *
      */
     @Override
-    @SuppressWarnings("unchecked")
     public SeriesHateoas findSeriesAssociatedWithFonds(
-            @NotNull String fondsSystemId) {
-
-        Fonds fonds = getFondsOrThrow(fondsSystemId);
-        SeriesHateoas seriesHateoas = new
-                SeriesHateoas((List<INoarkEntity>)
-                (List) fonds.getReferenceSeries());
-
-        seriesHateoasHandler.addLinks(seriesHateoas,
-                new Authorisation());
-        return seriesHateoas;
+            @NotNull final UUID systemId) {
+        return (SeriesHateoas) odataService.processODataQueryGet();
     }
 
     /**
      * Retrieve a single Fonds objects from the database.
      *
-     * @param fondsSystemId The systemId of the Fonds object you wish to
-     *                      retrieve
+     * @param systemId The systemId of the Fonds object you wish to
+     *                 retrieve
      * @return the Fonds object wrapped as a FondsHateoas object
      */
     @Override
-    public FondsHateoas findSingleFonds(String fondsSystemId) {
-        Fonds existingFonds = getFondsOrThrow(fondsSystemId);
-        FondsHateoas fondsHateoas = new FondsHateoas(fondsRepository.
-                save(existingFonds));
-        fondsHateoasHandler.addLinks(fondsHateoas, new Authorisation());
-        return fondsHateoas;
+    public FondsHateoas findSingleFonds(@NotNull final UUID systemId) {
+        return packAsHateoas(getFondsOrThrow(systemId));
     }
 
     /**
@@ -284,13 +229,8 @@ public class FondsService
      * @return the list of Fonds object wrapped as a FondsHateoas object
      */
     @Override
-    @SuppressWarnings("unchecked")
     public FondsHateoas findAllFonds() {
-        FondsHateoas fondsHateoas = new
-                FondsHateoas((List<INoarkEntity>)
-                (List) fondsRepository.findByOwnedBy(getUser()));
-        fondsHateoasHandler.addLinks(fondsHateoas, new Authorisation());
-        return fondsHateoas;
+        return (FondsHateoas) odataService.processODataQueryGet();
     }
 
     /**
@@ -301,13 +241,9 @@ public class FondsService
      * @return A FondsHateoas object containing the children fonds's
      */
     @Override
-    @SuppressWarnings("unchecked")
-    public FondsHateoas findAllChildren(@NotNull String systemId) {
-        FondsHateoas fondsHateoas = new
-                FondsHateoas((List<INoarkEntity>)
-                (List) getFondsOrThrow(systemId).getReferenceChildFonds());
-        fondsHateoasHandler.addLinks(fondsHateoas, new Authorisation());
-        return fondsHateoas;
+    public FondsHateoas findAllChildren(@NotNull final UUID systemId) {
+        getFondsOrThrow(systemId);
+        return (FondsHateoas) odataService.processODataQueryGet();
     }
 
     /**
@@ -324,16 +260,9 @@ public class FondsService
      * @return the fondsCreator objects wrapped as a FondsCreatorHateoas object
      */
     @Override
-    public ResponseEntity<FondsCreatorHateoas>
-    findFondsCreatorAssociatedWithFonds(@NotNull final String systemId) {
-        FondsCreatorHateoas fondsCreatorHateoas =
-                new FondsCreatorHateoas(List.copyOf(getFondsOrThrow(systemId)
-                        .getReferenceFondsCreator()));
-        fondsCreatorHateoasHandler.addLinks(fondsCreatorHateoas,
-                new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .body(fondsCreatorHateoas);
+    public FondsCreatorHateoas findFondsCreatorAssociatedWithFonds(
+            @NotNull final UUID systemId) {
+        return (FondsCreatorHateoas) odataService.processODataQueryGet();
     }
 
     /**
@@ -344,55 +273,43 @@ public class FondsService
      * user and the business area they are working with. A generic Noark core
      * like this does not have scope for that kind of functionality.
      *
-     * @param fondsSystemId The systemId of the Fonds object you wish to
-     *                      generate a default Series for
+     * @param systemId The systemId of the Fonds object you wish to
+     *                 generate a default Series for
      * @return the Series object wrapped as a SeriesHateoas object
      */
     @Override
-    public SeriesHateoas generateDefaultSeries(@NotNull String fondsSystemId) {
-        Series defaultSeries = new Series();
-        SeriesStatus seriesStatus = (SeriesStatus)
-            metadataService.findValidMetadataByEntityTypeOrThrow
-                (SERIES_STATUS, SERIES_STATUS_ACTIVE_CODE, null);
-        defaultSeries.setSeriesStatus(seriesStatus);
-        DocumentMedium documentMedium = (DocumentMedium)
-            metadataService.findValidMetadataByEntityTypeOrThrow
-                (DOCUMENT_MEDIUM, DOCUMENT_MEDIUM_ELECTRONIC_CODE, null);
-        defaultSeries.setDocumentMedium(documentMedium);
-        SeriesHateoas seriesHateoas = new
-                SeriesHateoas(defaultSeries);
-        seriesHateoasHandler.addLinksOnTemplate(seriesHateoas, new Authorisation());
-        return seriesHateoas;
+    public SeriesHateoas generateDefaultSeries(@NotNull final UUID systemId) {
+        return seriesService.generateDefaultSeries(systemId);
     }
 
     /**
      * Generate a Default Fonds object that can be associated with the
-     * identified Fonds. If fondsSystemId has a value, it is assumed you wish
+     * identified Fonds. If systemId has a value, it is assumed you wish
      * to generate a sub-fonds.
      * <br>
      * Note. Ideally this method would be configurable based on the logged in
      * user and the business area they are working with. A generic Noark core
      * like this does not have scope for that kind of functionality.
      *
-     * @param fondsSystemId The systemId of the Fonds object you wish to
-     *                      generate a default sub-fonds. Null if the Fonds
-     *                      is not a sub-fonds.
+     * @param systemId The systemId of the Fonds object you wish to
+     *                 generate a default sub-fonds. Null if the Fonds
+     *                 is not a sub-fonds.
      * @return the Fonds object wrapped as a FondsHateoas object
      */
     @Override
-    public FondsHateoas generateDefaultFonds(String fondsSystemId) {
+    public FondsHateoas generateDefaultFonds(@NotNull final UUID systemId) {
         Fonds defaultFonds = new Fonds();
         DocumentMedium documentMedium = (DocumentMedium)
                 metadataService.findValidMetadataByEntityTypeOrThrow
                         (DOCUMENT_MEDIUM, DOCUMENT_MEDIUM_ELECTRONIC_CODE, null);
         defaultFonds.setDocumentMedium(documentMedium);
-        FondsHateoas fondsHateoas = new FondsHateoas(defaultFonds);
-        fondsHateoasHandler.addLinksOnTemplate(fondsHateoas, new Authorisation());
-        return fondsHateoas;
+        defaultFonds.setVersion(-1L, true);
+        return packAsHateoas(defaultFonds);
     }
 
     @Override
-    public StorageLocationHateoas getDefaultStorageLocation(UUID systemId) {
+    public StorageLocationHateoas getDefaultStorageLocation(
+            @NotNull final UUID systemId) {
         return storageLocationService.getDefaultStorageLocation(systemId);
     }
 
@@ -415,35 +332,29 @@ public class FondsService
      * the database a NoarkConcurrencyException is thrown. Note. This happens
      * when the call to Fonds.setVersion() occurs.
      *
-     * @param fondsSystemId The systemId of the fonds object to retrieve
+     * @param systemId      The systemId of the fonds object to retrieve
      * @param version       The last known version number (derived from an ETAG)
      * @param incomingFonds The incoming fonds object
      */
     @Override
     @Transactional
-    public FondsHateoas handleUpdate(@NotNull String fondsSystemId,
-                                     @NotNull Long version,
+    public FondsHateoas handleUpdate(@NotNull final UUID systemId,
+                                     @NotNull final Long version,
                                      @NotNull Fonds incomingFonds) {
 
-        Fonds existingFonds = getFondsOrThrow(fondsSystemId);
+        Fonds existingFonds = getFondsOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
         updateTitleAndDescription(incomingFonds, existingFonds);
         if (null != incomingFonds.getDocumentMedium()) {
             existingFonds.setDocumentMedium(
-                incomingFonds.getDocumentMedium());
+                    incomingFonds.getDocumentMedium());
         }
         existingFonds.setFondsStatus(incomingFonds.getFondsStatus());
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
         existingFonds.setVersion(version);
-
-        FondsHateoas fondsHateoas = new FondsHateoas(fondsRepository.
-                save(existingFonds));
-        fondsHateoasHandler.addLinks(fondsHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityUpdatedEvent(this, existingFonds));
-        return fondsHateoas;
+        return packAsHateoas(existingFonds);
     }
 
     // All DELETE operations
@@ -465,12 +376,12 @@ public class FondsService
      * The approach is is discussed in a nikita gitlab issue
      * https://gitlab.com/OsloMet-ABI/nikita-noark5-core/issues/82
      *
-     * @param fondsSystemId The systemId of the fonds object to retrieve
+     * @param systemId The systemId of the fonds object to retrieve
      */
     @Override
     @Transactional
-    public void deleteEntity(@NotNull String fondsSystemId) {
-        Fonds fonds = getFondsOrThrow(fondsSystemId);
+    public void deleteEntity(@NotNull final UUID systemId) {
+        Fonds fonds = getFondsOrThrow(systemId);
         // Disassociate any links between Fonds and FondsCreator
         disassociateForeignKeys(fonds, DELETE_FROM_FONDS_FONDS_CREATOR);
         // Disassociate any links between Fonds and StorageLocation
@@ -480,16 +391,20 @@ public class FondsService
 
     /**
      * Delete all objects belonging to the user identified by ownedBy
-     *
-     * @return the number of objects deleted
      */
     @Override
     @Transactional
-    public long deleteAllByOwnedBy() {
-        return fondsRepository.deleteByOwnedBy(getUser());
+    public void deleteAllByOwnedBy() {
+        fondsRepository.deleteByOwnedBy(getUser());
     }
 
     // All HELPER operations
+
+    public FondsHateoas packAsHateoas(Fonds fonds) {
+        FondsHateoas fondsHateoas = new FondsHateoas(fonds);
+        applyLinksAndHeader(fondsHateoas, fondsHateoasHandler);
+        return fondsHateoas;
+    }
 
     /**
      * Internal helper method. Rather than having a find and try catch in
@@ -497,16 +412,14 @@ public class FondsService
      * that you will only ever get a valid Fonds back. If there is no valid
      * Fonds, a NoarkEntityNotFoundException exception is thrown
      *
-     * @param fondsSystemId The systemId of the fonds object to retrieve
+     * @param systemId The systemId of the fonds object to retrieve
      * @return the fonds object
      */
-    private Fonds getFondsOrThrow(@NotNull String fondsSystemId) {
-        Fonds fonds = fondsRepository.findBySystemId(UUID.fromString(fondsSystemId));
+    private Fonds getFondsOrThrow(@NotNull final UUID systemId) {
+        Fonds fonds = fondsRepository.findBySystemId(systemId);
         if (fonds == null) {
-            String info = INFO_CANNOT_FIND_OBJECT + " Fonds, using systemId " +
-                    fondsSystemId;
-            logger.info(info);
-            throw new NoarkEntityNotFoundException(info);
+            throw new NoarkEntityNotFoundException(INFO_CANNOT_FIND_OBJECT +
+                    " Fonds, using systemId " + systemId);
         }
         return fonds;
     }
@@ -524,7 +437,7 @@ public class FondsService
                 FONDS_STATUS_CLOSED_CODE.equals(
                         fonds.getFondsStatus().getCode())) {
             String info = INFO_CANNOT_ASSOCIATE_WITH_CLOSED_OBJECT +
-                    ". Fonds with fondsSystemId " + fonds.getSystemId() +
+                    ". Fonds with systemId " + fonds.getSystemId() +
                     " has status code " + FONDS_STATUS_CLOSED_CODE;
             logger.info(info);
             throw new NoarkEntityEditWhenClosedException(info);

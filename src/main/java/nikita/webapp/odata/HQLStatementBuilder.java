@@ -28,7 +28,7 @@ public class HQLStatementBuilder {
     private final StringBuilder orderBy = new StringBuilder();
     private final Set<String> entityList = new TreeSet<>();
 
-    public Map<String, StringBuilder> bsmParameters = new HashMap<>();
+    public final Map<String, StringBuilder> bsmParameters = new HashMap<>();
     // Setting a hard limit of 1000 unless overridden
     private AtomicInteger limitHowMany = new AtomicInteger(Integer.MAX_VALUE);
     // Always start at offset 0 unless overridden
@@ -37,7 +37,7 @@ public class HQLStatementBuilder {
     private String fromEntityAlias = "";
     private Boolean selectCount = false;
 
-    Pattern uuidPattern = Pattern.compile(
+    private final Pattern uuidPattern = Pattern.compile(
             "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}");
 
     public HQLStatementBuilder() {
@@ -237,6 +237,18 @@ public class HQLStatementBuilder {
             query += orderBy.toString();
         }
 
+        /*
+         When refactoring code so that we can use OData for sub-queries
+         e.g., arkiv/systemID/arkivdel it was noticed that " and" is
+         appearing at the end of the query and causing a problem with the HQL.
+         Prior to this, nikita only allowed sub-queries with a filter clause
+         and in that case the " and" was required. A simple fix is to remove
+         this now, but the ideal solution would be to revisit the code and
+         only add an " and" if it is necessary.
+         */
+        if (query.endsWith(" and ")) {
+            query = query.substring(0, query.length() - 5);
+        }
         return query.stripTrailing().stripLeading();
     }
 

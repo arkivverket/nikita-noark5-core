@@ -5,7 +5,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 @Repository
@@ -15,6 +14,4 @@ public interface ICrossReferenceRepository
 
     Optional<CrossReference> findByFromSystemIdAndToSystemId(
             UUID fromSystemId, UUID toSystemId);
-
-    Set<CrossReference> findByOwnedBy(String user);
 }

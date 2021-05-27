@@ -6,6 +6,7 @@ import nikita.common.repository.n5v5.other.IBSMMetadataRepository;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.IBSMService;
+import nikita.webapp.service.interfaces.odata.IODataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -33,9 +34,10 @@ public class BSMService
 
     public BSMService(EntityManager entityManager,
                       ApplicationEventPublisher applicationEventPublisher,
+                      IODataService odataService,
                       IPatchService patchService,
                       IBSMMetadataRepository metadataRepository) {
-        super(entityManager, applicationEventPublisher, patchService);
+        super(entityManager, applicationEventPublisher, patchService, odataService);
         this.metadataRepository = metadataRepository;
     }
 

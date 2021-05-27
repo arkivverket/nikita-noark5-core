@@ -2368,6 +2368,52 @@ public class TestOData {
     }
 
     /**
+     * Check that it is possible to do a JOIN query with StorageLocation
+     * Entity:  mappe, oppbevaringssted
+     * Attribute: oppbevaringssted
+     * <p>
+     * ODATA Input:
+     * mappe?$filter=oppbevaringssted eq 'Archive Room XVI'
+     * <p>
+     * Expected HQL:
+     * SELECT file_1 FROM File AS file_1
+     * JOIN
+     * file_1.referenceStorageLocation AS storagelocation_1
+     * WHERE
+     * storagelocation_1.storageLocation = :parameter_0
+     * <p>
+     * Additionally parameter_0 should be
+     * Archive Room XVI
+     */
+    @Test
+    @Transactional
+    public void shouldReturnValidHQLStorageLocationJoin() {
+        ///noark5v5/odata/api/arkivstruktur/mappe?$filter=oppbevaringssted/oppbevaringssted eq 'Archive Room XVI'
+        String compareValue = "Archive Room XVI";
+        String odata = FILE + "?$filter=" + STORAGE_LOCATION + "/" +
+                STORAGE_LOCATION + " eq '" + compareValue + "')";
+        String hql = "SELECT file_1 FROM File AS file_1" +
+                " JOIN" +
+                " file_1.referenceStorageLocation AS storagelocation_1" +
+                " WHERE" +
+                " storagelocation_1.storageLocation = :parameter_0";
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
+                compareValue);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
+    }
+
+    @Test
+    @Transactional
+    public void shouldReturnValidHQLQueryNoFilter() {
+        ///noark5v5/odata/api/arkivstruktur/mappe?$filter=oppbevaringssted/oppbevaringssted eq 'Archive Room XVI'
+        String odata = FILE;
+        String hql = "SELECT file_1 FROM File AS file_1";
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
+    }
+
+    /**
      * Check that a space between date and time of a dateTime object results in
      * the throwing of an exception
      * Note:

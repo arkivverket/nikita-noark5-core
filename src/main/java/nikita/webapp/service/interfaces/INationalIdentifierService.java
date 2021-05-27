@@ -2,142 +2,146 @@ package nikita.webapp.service.interfaces;
 
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Record;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.BuildingHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.CadastralUnitHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.DNumberHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.PlanHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.PositionHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.SocialSecurityNumberHateoas;
-import nikita.common.model.noark5.v5.hateoas.nationalidentifier.UnitHateoas;
-import nikita.common.model.noark5.v5.nationalidentifier.Building;
-import nikita.common.model.noark5.v5.nationalidentifier.CadastralUnit;
-import nikita.common.model.noark5.v5.nationalidentifier.DNumber;
-import nikita.common.model.noark5.v5.nationalidentifier.Plan;
-import nikita.common.model.noark5.v5.nationalidentifier.NationalIdentifier;
-import nikita.common.model.noark5.v5.nationalidentifier.Position;
-import nikita.common.model.noark5.v5.nationalidentifier.SocialSecurityNumber;
-import nikita.common.model.noark5.v5.nationalidentifier.Unit;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
+import nikita.common.model.noark5.v5.nationalidentifier.*;
 
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 public interface INationalIdentifierService {
 
     BuildingHateoas createNewBuilding(
-            @NotNull Building id,
-            @NotNull Record record);
+            @NotNull final Building building,
+            @NotNull final Record record);
 
     BuildingHateoas createNewBuilding(
-            @NotNull Building id,
-            @NotNull File file);
+            @NotNull final Building building,
+            @NotNull final File file);
 
     CadastralUnitHateoas createNewCadastralUnit(
-            @NotNull CadastralUnit id,
-            @NotNull Record record);
+            @NotNull final CadastralUnit unit,
+            @NotNull final Record record);
 
     CadastralUnitHateoas createNewCadastralUnit(
-            @NotNull CadastralUnit id,
-            @NotNull File file);
+            @NotNull final CadastralUnit unit,
+            @NotNull final File file);
 
     DNumberHateoas createNewDNumber(
-            @NotNull DNumber id,
-            @NotNull Record record);
+            @NotNull final DNumber dNumber,
+            @NotNull final Record record);
 
     DNumberHateoas createNewDNumber(
-            @NotNull DNumber id,
-            @NotNull File file);
+            @NotNull final DNumber dNumber,
+            @NotNull final File file);
 
     PlanHateoas createNewPlan(
-            @NotNull Plan id,
-            @NotNull Record record);
+            @NotNull final Plan plan,
+            @NotNull final Record record);
 
     PlanHateoas createNewPlan(
-            @NotNull Plan id,
-            @NotNull File file);
+            @NotNull final Plan plan,
+            @NotNull final File file);
 
     PositionHateoas createNewPosition(
-            @NotNull Position id,
-            @NotNull Record record);
+            @NotNull final Position position,
+            @NotNull final Record record);
 
     PositionHateoas createNewPosition(
-            @NotNull Position id,
-            @NotNull File file);
+            @NotNull final Position position,
+            @NotNull final File file);
 
     SocialSecurityNumberHateoas createNewSocialSecurityNumber(
-            @NotNull SocialSecurityNumber id,
-            @NotNull Record record);
+            @NotNull final SocialSecurityNumber socialSecurityNumber,
+            @NotNull final Record record);
 
     SocialSecurityNumberHateoas createNewSocialSecurityNumber(
-            @NotNull SocialSecurityNumber id,
-            @NotNull File file);
+            @NotNull final SocialSecurityNumber socialSecurityNumber,
+            @NotNull final File file);
 
     UnitHateoas createNewUnit(
-            @NotNull Unit id,
-            @NotNull Record record);
+            @NotNull final Unit unit,
+            @NotNull final Record record);
 
     UnitHateoas createNewUnit(
-            @NotNull Unit id,
-            @NotNull File file);
+            @NotNull final Unit unit,
+            @NotNull final File file);
 
-    NationalIdentifier findBySystemId(@NotNull String systemID);
+    BuildingHateoas findBuildingBySystemId(@NotNull final UUID systemId);
+
+    UnitHateoas findUnitBySystemId(@NotNull final UUID systemId);
+
+    PositionHateoas findPositionBySystemId(@NotNull final UUID systemId);
+
+    PlanHateoas findPlanBySystemId(@NotNull final UUID systemId);
+
+    SocialSecurityNumberHateoas findSocialSecurityNumberBySystemId(
+            @NotNull final UUID systemId);
+
+    DNumberHateoas findDNumberBySystemId(@NotNull final UUID systemId);
+
+    CadastralUnitHateoas findCadastralUnitBySystemId(
+            @NotNull final UUID systemId);
 
     // All PUT/UPDATE operations
 
-    public Building updateBuilding(
-            @NotNull String systemId, @NotNull Long version,
-            @NotNull Building incomingBuilding);
+    BuildingHateoas updateBuilding(
+            @NotNull final UUID systemId, @NotNull final Long version,
+            @NotNull final Building incomingBuilding);
 
-    public CadastralUnit updateCadastralUnit(
-            @NotNull String systemId, @NotNull Long version,
-            @NotNull CadastralUnit incomingCadastralUnit);
+    CadastralUnitHateoas updateCadastralUnit(
+            @NotNull final UUID systemId, @NotNull final Long version,
+            @NotNull final CadastralUnit incomingCadastralUnit);
 
-    public DNumber updateDNumber(
-            @NotNull String systemId, @NotNull Long version,
-            @NotNull DNumber incomingDNumber);
+    DNumberHateoas updateDNumber(
+            @NotNull final UUID systemId, @NotNull final Long version,
+            @NotNull final DNumber incomingDNumber);
 
-    public Plan updatePlan(
-            @NotNull String systemId, @NotNull Long version,
-            @NotNull Plan incomingPlan);
+    PlanHateoas updatePlan(
+            @NotNull final UUID systemId, @NotNull final Long version,
+            @NotNull final Plan incomingPlan);
 
-    public Position updatePosition(
-            @NotNull String systemId, @NotNull Long version,
-            @NotNull Position incomingPosition);
+    PositionHateoas updatePosition(
+            @NotNull final UUID systemId, @NotNull final Long version,
+            @NotNull final Position incomingPosition);
 
-    public SocialSecurityNumber updateSocialSecurityNumber(
-            @NotNull String systemId, @NotNull Long version,
-            @NotNull SocialSecurityNumber incomingSocialSecurityNumber);
+    SocialSecurityNumberHateoas updateSocialSecurityNumber(
+            @NotNull final UUID systemId, @NotNull final Long version,
+            @NotNull final SocialSecurityNumber incomingSocialSecurityNumber);
 
-    public Unit updateUnit(
-            @NotNull String systemId, @NotNull Long version,
-            @NotNull Unit incomingUnit);
+    UnitHateoas updateUnit(
+            @NotNull final UUID systemId, @NotNull final Long version,
+            @NotNull final Unit incomingUnit);
 
     // All DELETE operations
 
-    void deleteBuilding(@NotNull String systemID);
+    void deleteBuilding(@NotNull final UUID systemId);
 
-    void deleteCadastralUnit(@NotNull String systemID);
+    void deleteCadastralUnit(@NotNull final UUID systemId);
 
-    void deleteDNumber(@NotNull String systemID);
+    void deleteDNumber(@NotNull final UUID systemId);
 
-    void deletePlan(@NotNull String systemID);
+    void deletePlan(@NotNull final UUID systemId);
 
-    void deletePosition(@NotNull String systemID);
+    void deletePosition(@NotNull final UUID systemId);
 
-    void deleteSocialSecurityNumber(@NotNull String systemID);
+    void deleteSocialSecurityNumber(@NotNull final UUID systemId);
 
-    void deleteUnit(@NotNull String systemID);
+    void deleteUnit(@NotNull final UUID systemId);
 
     // All template operations
-    BuildingHateoas generateDefaultBuilding();
+    BuildingHateoas generateDefaultBuilding(@NotNull final UUID systemId);
 
-    CadastralUnitHateoas generateDefaultCadastralUnit();
+    CadastralUnitHateoas generateDefaultCadastralUnit(
+            @NotNull final UUID systemId);
 
-    DNumberHateoas generateDefaultDNumber();
+    DNumberHateoas generateDefaultDNumber(@NotNull final UUID systemId);
 
-    PlanHateoas generateDefaultPlan();
+    PlanHateoas generateDefaultPlan(@NotNull final UUID systemId);
 
-    PositionHateoas generateDefaultPosition();
+    PositionHateoas generateDefaultPosition(@NotNull final UUID systemId);
 
-    SocialSecurityNumberHateoas generateDefaultSocialSecurityNumber();
+    SocialSecurityNumberHateoas generateDefaultSocialSecurityNumber(
+            @NotNull final UUID systemId);
 
-    UnitHateoas generateDefaultUnit();
+    UnitHateoas generateDefaultUnit(@NotNull final UUID systemId);
 }

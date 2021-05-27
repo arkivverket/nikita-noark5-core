@@ -2,7 +2,6 @@ package nikita.webapp.service.interfaces;
 
 import nikita.common.model.nikita.PatchMerge;
 import nikita.common.model.noark5.v5.File;
-import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.casehandling.RecordNote;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
@@ -12,68 +11,70 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.RecordNoteHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.PrecedenceHateoas;
 import nikita.common.model.noark5.v5.secondary.Precedence;
-import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
+import java.util.UUID;
 
 
 public interface ICaseFileService {
 
-    CaseFile save(@NotNull CaseFile caseFile);
-
-    CaseFileHateoas saveHateoas(@NotNull CaseFile caseFile);
+    CaseFileHateoas save(@NotNull final CaseFile caseFile);
 
     CaseFileHateoas expandFileAsCaseFileHateoas(
-            @NotNull File file, PatchMerge patchMerge);
+            @NotNull final File file,
+            @NotNull final PatchMerge patchMerge);
 
     PrecedenceHateoas createPrecedenceAssociatedWithFile(
-            String caseFileSystemID, Precedence precedence);
+            @NotNull final UUID systemId,
+            @NotNull final Precedence precedence);
 
-    RegistryEntry createRegistryEntryAssociatedWithCaseFile(
-            @NotNull String fileSystemId, @NotNull RegistryEntry registryEntry);
+    RegistryEntryHateoas createRegistryEntryAssociatedWithCaseFile(
+            @NotNull final UUID systemId,
+            @NotNull final RegistryEntry registryEntry);
 
-    ResponseEntity<RecordNoteHateoas> createRecordNoteToCaseFile(
-            @NotNull String fileSystemId, @NotNull RecordNote RecordNote);
+    RecordNoteHateoas createRecordNoteToCaseFile(
+            @NotNull final UUID systemId,
+            @NotNull final RecordNote RecordNote);
 
-    ResponseEntity<CaseFileHateoas> findAllCaseFileBySeries(@NotNull Series series);
+    CaseFileHateoas findBySystemId(@NotNull final UUID systemId);
 
-    CaseFile findBySystemId(@NotNull String systemId);
-
-    List<CaseFile> findAllCaseFile();
+    CaseFileHateoas findAll();
 
     PrecedenceHateoas findAllPrecedenceForCaseFile(
-            @NotNull final String systemID);
+            @NotNull final UUID systemId);
 
-    ResponseEntity<RecordNoteHateoas> findAllRecordNoteToCaseFile(
-            @NotNull final String caseFileSystemId);
+    RecordNoteHateoas findAllRecordNoteToCaseFile(
+            @NotNull final UUID systemId);
 
-    ResponseEntity<RegistryEntryHateoas> findAllRegistryEntryToCaseFile(
-            @NotNull final String caseFileSystemId);
+    RegistryEntryHateoas findAllRegistryEntryToCaseFile(
+            @NotNull final UUID systemId);
 
     // All UPDATE operations
-    CaseFile handleUpdate(@NotNull final String systemId,
-                          @NotNull final Long version,
-                          @NotNull final CaseFile incomingCaseFile);
+    CaseFileHateoas handleUpdate(
+            @NotNull final UUID systemId,
+            @NotNull final Long version,
+            @NotNull final CaseFile incomingCaseFile);
 
     CaseFileHateoas generateDefaultCaseFile();
 
-    ResponseEntity<RecordNoteHateoas> generateDefaultRecordNote(
-            @NotNull final String caseFileSystemId);
+    RecordNoteHateoas generateDefaultRecordNote(
+            @NotNull final UUID systemId);
 
-    ResponseEntity<RegistryEntryHateoas> generateDefaultRegistryEntry(
-            @NotNull final String caseFileSystemId);
+    RegistryEntryHateoas generateDefaultRegistryEntry(
+            @NotNull final UUID caseFileSystemId);
 
-    PrecedenceHateoas generateDefaultPrecedence(String systemID);
+    PrecedenceHateoas generateDefaultPrecedence(
+            @NotNull final UUID systemId);
 
     CaseFileExpansionHateoas generateDefaultExpandedCaseFile();
 
     // All DELETE operations
 
-    void deleteEntity(@NotNull String systemId);
+    void deleteEntity(@NotNull final UUID systemId);
 
-    long deleteAllByOwnedBy();
+    void deleteAllByOwnedBy();
 
-    ResponseEntity<CaseFileHateoas> createCaseFileToCaseFile(
-            String systemID, CaseFile caseFile);
+    CaseFileHateoas createCaseFileToCaseFile(
+            @NotNull final UUID systemId,
+            @NotNull final CaseFile caseFile);
 }

@@ -2,21 +2,25 @@ package nikita.webapp.service.impl.admin;
 
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.admin.User;
+import nikita.common.model.noark5.v5.hateoas.admin.AdministrativeUnitHateoas;
 import nikita.common.repository.n5v5.admin.IAdministrativeUnitRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
+import nikita.webapp.hateoas.interfaces.admin.IAdministrativeUnitHateoasHandler;
 import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.ISequenceNumberGeneratorService;
 import nikita.webapp.service.interfaces.admin.IAdministrativeUnitService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import nikita.webapp.service.interfaces.odata.IODataService;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 
@@ -31,21 +35,26 @@ public class AdministrativeUnitService
         extends NoarkService
         implements IAdministrativeUnitService {
 
-    private static final Logger logger =
-            LoggerFactory.getLogger(AdministrativeUnitService.class);
-
     private final IAdministrativeUnitRepository administrativeUnitRepository;
     private final ISequenceNumberGeneratorService numberGeneratorService;
+    private final IAdministrativeUnitHateoasHandler
+            administrativeUnitHateoasHandler;
 
     public AdministrativeUnitService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IODataService odataService,
             IPatchService patchService,
             IAdministrativeUnitRepository administrativeUnitRepository,
-            ISequenceNumberGeneratorService numberGeneratorService) {
-        super(entityManager, applicationEventPublisher, patchService);
+            ISequenceNumberGeneratorService numberGeneratorService,
+            IAdministrativeUnitHateoasHandler
+                    administrativeUnitHateoasHandler) {
+        super(entityManager, applicationEventPublisher, patchService,
+                odataService);
         this.administrativeUnitRepository = administrativeUnitRepository;
         this.numberGeneratorService = numberGeneratorService;
+        this.administrativeUnitHateoasHandler =
+                administrativeUnitHateoasHandler;
     }
 
     // All CREATE operations
@@ -62,10 +71,11 @@ public class AdministrativeUnitService
      */
     @Override
     @Transactional
-    public AdministrativeUnit
+    public AdministrativeUnitHateoas
     createNewAdministrativeUnitBySystem(AdministrativeUnit administrativeUnit) {
         createSequenceNumberGenerator(administrativeUnit);
-        return administrativeUnitRepository.save(administrativeUnit);
+        return packAsHateoas(administrativeUnitRepository
+                .save(administrativeUnit));
     }
 
     /**
@@ -74,26 +84,20 @@ public class AdministrativeUnitService
      * administrative unit with the given name does not exist. If it does exist
      * do nothing. This code should really only be called when creating some
      * basic data i nikita to make it operational for demo purposes.
-     * <p>
-     * Note administrativeUnit is saved within the transactional boundary of
-     * createSequenceNumberGenerator
      *
      * @param administrativeUnit administrativeUnit object with values set
      * @return the newly persisted administrativeUnit object
      */
     @Override
     @Transactional
-    public AdministrativeUnit
-    createNewAdministrativeUnitBySystemNoDuplicate(
+    public void createNewAdministrativeUnitBySystemNoDuplicate(
             AdministrativeUnit administrativeUnit) {
         List<AdministrativeUnit> administrativeUnitList =
                 administrativeUnitRepository.findByAdministrativeUnitName(
                         administrativeUnit.getAdministrativeUnitName());
         if (administrativeUnitList.size() == 0) {
             createSequenceNumberGenerator(administrativeUnit);
-            return administrativeUnitRepository.save(administrativeUnit);
-        } else {
-            return null;
+            administrativeUnitRepository.save(administrativeUnit);
         }
     }
 
@@ -110,14 +114,15 @@ public class AdministrativeUnitService
 
     @Override
     @Transactional
-    public AdministrativeUnit
+    public AdministrativeUnitHateoas
     createNewAdministrativeUnitByUser(
             AdministrativeUnit administrativeUnit,
             User user) {
         administrativeUnit.setCreatedBy(user.getCreatedBy());
         administrativeUnit.setOwnedBy(user.getCreatedBy());
         createSequenceNumberGenerator(administrativeUnit);
-        return administrativeUnitRepository.save(administrativeUnit);
+        return packAsHateoas(
+                administrativeUnitRepository.save(administrativeUnit));
     }
 
     // All READ methods
@@ -128,11 +133,9 @@ public class AdministrativeUnitService
      * @return list of all administrativeUnit
      */
     @Override
-    public List<AdministrativeUnit> findAll() {
-        return administrativeUnitRepository.findAll();
+    public AdministrativeUnitHateoas findAll() {
+        return (AdministrativeUnitHateoas) odataService.processODataQueryGet();
     }
-
-    // find by systemId
 
     /**
      * Retrieve a single administrativeUnit identified by systemId
@@ -141,8 +144,8 @@ public class AdministrativeUnitService
      * @return the administrativeUnit
      */
     @Override
-    public AdministrativeUnit findBySystemId(UUID systemId) {
-        return administrativeUnitRepository.findBySystemId(systemId);
+    public AdministrativeUnitHateoas findBySystemId(@NotNull final UUID systemId) {
+        return packAsHateoas(administrativeUnitRepository.findBySystemId(systemId));
     }
 
     /**
@@ -153,8 +156,8 @@ public class AdministrativeUnitService
      */
     @Override
     @Transactional
-    public AdministrativeUnit update(
-            String systemId, Long version,
+    public AdministrativeUnitHateoas update(
+            UUID systemId, Long version,
             AdministrativeUnit incomingAdministrativeUnit) {
         AdministrativeUnit existingAdministrativeUnit =
                 getAdministrativeUnitOrThrow(systemId);
@@ -170,34 +173,43 @@ public class AdministrativeUnitService
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
         existingAdministrativeUnit.setVersion(version);
-        return administrativeUnitRepository.save(incomingAdministrativeUnit);
+        return packAsHateoas(incomingAdministrativeUnit);
     }
 
     /**
-     * Delete a administrativeUnit identified by the given systemID from the database.
+     * Delete a administrativeUnit identified by the given systemId from the database.
      *
      * @param systemId systemId of the administrativeUnit to delete
      */
     @Override
     @Transactional
-    public void deleteEntity(@NotNull String systemId) {
+    public void deleteEntity(@NotNull final UUID systemId) {
         deleteEntity(getAdministrativeUnitOrThrow(systemId));
     }
 
     /**
      * Delete all objects belonging to the user identified by ownedBy
-     *
-     * @return the number of objects deleted
      */
     @Override
     @Transactional
-    public long deleteAllByOwnedBy() {
-        return administrativeUnitRepository.deleteByOwnedBy(getUser());
+    public void deleteAllByOwnedBy() {
+        administrativeUnitRepository.deleteByOwnedBy(getUser());
     }
 
     @Override
-    public Optional<AdministrativeUnit> findFirst() {
-        return administrativeUnitRepository.findFirstByOrderByCreatedDateAsc();
+    public AdministrativeUnitHateoas generateDefaultAdministrativeUnit() {
+        AdministrativeUnit administrativeUnit = new AdministrativeUnit();
+        administrativeUnit.setShortName("kortnavn på administrativtenhet");
+        administrativeUnit.setAdministrativeUnitName(
+                "Formell navn på administrativtenhet");
+        administrativeUnit.setVersion(-1L, true);
+        return packAsHateoas(administrativeUnit);
+    }
+
+    @Override
+    public AdministrativeUnit findFirst() {
+        return administrativeUnitRepository
+                .findFirstByOrderByCreatedDateAsc();
     }
 
     /**
@@ -212,23 +224,28 @@ public class AdministrativeUnitService
     public AdministrativeUnit getAdministrativeUnitOrThrow(User user) {
         Set<User> users = new HashSet<>();
         users.add(user);
-        Optional<AdministrativeUnit> administrativeUnit =
+        AdministrativeUnit administrativeUnit =
                 administrativeUnitRepository.
                         findByUsersInAndDefaultAdministrativeUnit(
                                 users, true);
-        if (administrativeUnit.isPresent()) {
-            return administrativeUnit.get();
+        if (null != administrativeUnit) {
+            return administrativeUnit;
         } else {
-            String info =
-                    INFO_CANNOT_FIND_OBJECT +
-                            " AdministrativeUnit associated with user " +
-                            user.toString();
-            logger.warn(info);
-            throw new NoarkEntityNotFoundException(info);
+            throw new NoarkEntityNotFoundException(INFO_CANNOT_FIND_OBJECT +
+                    " AdministrativeUnit associated with user " +
+                    user.toString());
         }
     }
 
     // All HELPER methods
+
+    public AdministrativeUnitHateoas packAsHateoas(
+            @NotNull final AdministrativeUnit administrativeUnit) {
+        AdministrativeUnitHateoas administrativeUnitHateoas =
+                new AdministrativeUnitHateoas(administrativeUnit);
+        applyLinksAndHeader(administrativeUnitHateoas, administrativeUnitHateoasHandler);
+        return administrativeUnitHateoas;
+    }
 
     /**
      * Internal helper method. Rather than having a find and try catch in
@@ -236,22 +253,20 @@ public class AdministrativeUnitService
      * that you will only ever get a valid AdministrativeUnit back. If there is
      * no valid AdministrativeUnit, an exception is thrown
      *
-     * @param administrativeUnitSystemId systemId of the administrativeUnit
-     *                                   to find
+     * @param systemId systemId of the administrativeUnit
+     *                 to find
      * @return the administrativeUnit
      */
     protected AdministrativeUnit
-    getAdministrativeUnitOrThrow(@NotNull String administrativeUnitSystemId) {
+    getAdministrativeUnitOrThrow(@NotNull final UUID systemId) {
         AdministrativeUnit administrativeUnit =
                 administrativeUnitRepository
-                        .findBySystemId(
-                                UUID.fromString(administrativeUnitSystemId));
+                        .findBySystemId(systemId);
         if (administrativeUnit == null) {
-            String info = INFO_CANNOT_FIND_OBJECT +
+            String error = INFO_CANNOT_FIND_OBJECT +
                     " AdministrativeUnit, using systemId " +
-                    administrativeUnitSystemId;
-            logger.info(info);
-            throw new NoarkEntityNotFoundException(info);
+                    systemId;
+            throw new NoarkEntityNotFoundException(error);
         }
         return administrativeUnit;
     }
@@ -264,9 +279,9 @@ public class AdministrativeUnitService
      * @param administrativeUnit The administrativeUnit you want a
      *                           SequenceNumberGenerator for
      */
-    private AdministrativeUnit createSequenceNumberGenerator(
+    private void createSequenceNumberGenerator(
             AdministrativeUnit administrativeUnit) {
-        return numberGeneratorService.
+        numberGeneratorService.
                 createSequenceNumberGenerator(administrativeUnit).
                 getReferenceAdministrativeUnit();
     }

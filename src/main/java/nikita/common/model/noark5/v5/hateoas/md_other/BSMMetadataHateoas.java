@@ -1,13 +1,13 @@
 package nikita.common.model.noark5.v5.hateoas.md_other;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import nikita.common.config.N5ResourceMappings;
+import nikita.common.model.nikita.NikitaPage;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.util.serializers.noark5v5.hateoas.metadata.BSMMetadataHateoasSerializer;
 
-import java.util.List;
+import static nikita.common.config.Constants.REL_METADATA_BSM;
 
 @JsonSerialize(using = BSMMetadataHateoasSerializer.class)
 public class BSMMetadataHateoas
@@ -18,7 +18,7 @@ public class BSMMetadataHateoas
         super(entity);
     }
 
-    public BSMMetadataHateoas(List<INoarkEntity> entityList) {
-        super(entityList, N5ResourceMappings.FILE);
+    public BSMMetadataHateoas(NikitaPage page) {
+        super(page, REL_METADATA_BSM);
     }
 }

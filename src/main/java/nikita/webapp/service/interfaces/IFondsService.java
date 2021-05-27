@@ -9,57 +9,59 @@ import nikita.common.model.noark5.v5.hateoas.FondsHateoas;
 import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.StorageLocationHateoas;
 import nikita.common.model.noark5.v5.secondary.StorageLocation;
-import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
-public interface IFondsService  {
+public interface IFondsService {
 
     // -- All CREATE operations
-    FondsHateoas createNewFonds(Fonds fonds);
+    FondsHateoas createNewFonds(@NotNull final Fonds fonds);
 
-    SeriesHateoas createSeriesAssociatedWithFonds(String fondsSystemId, Series
-            series);
+    SeriesHateoas createSeriesAssociatedWithFonds(
+            @NotNull final UUID systemId,
+            @NotNull final Series series);
 
-    FondsHateoas createFondsAssociatedWithFonds(String parentFondsSystemId,
-                                                Fonds childFonds);
+    FondsHateoas createFondsAssociatedWithFonds(
+            @NotNull final UUID systemId,
+            @NotNull final Fonds childFonds);
 
-    FondsCreatorHateoas createFondsCreatorAssociatedWithFonds(String fondsSystemId,
-                                                              FondsCreator fondsCreator);
+    FondsCreatorHateoas createFondsCreatorAssociatedWithFonds(
+            @NotNull final UUID systemId,
+            @NotNull final FondsCreator fondsCreator);
 
     StorageLocationHateoas createStorageLocationAssociatedWithFonds(
             @NotNull final UUID systemId,
             @NotNull final StorageLocation storageLocation);
 
     // -- All READ operations
-    // TODO: Finish implementing this. I think StorageLocation is not an own
-    // but rather an embedded object
-    //StorageLocationHateoas findStorageLocationAssociatedWithFonds(String systemId);
-    FondsHateoas findSingleFonds(String fondsSystemId);
+
+    FondsHateoas findSingleFonds(@NotNull final UUID systemId);
 
     FondsHateoas findAllFonds();
 
-    FondsHateoas findAllChildren(@NotNull String systemId);
+    FondsHateoas findAllChildren(@NotNull final UUID systemId);
 
-    SeriesHateoas findSeriesAssociatedWithFonds(String fondsSystemId);
+    SeriesHateoas findSeriesAssociatedWithFonds(
+            @NotNull final UUID systemId);
 
-    ResponseEntity<FondsCreatorHateoas>
-    findFondsCreatorAssociatedWithFonds(@NotNull final String systemId);
+    FondsCreatorHateoas findFondsCreatorAssociatedWithFonds(
+            @NotNull final UUID systemId);
 
-    SeriesHateoas generateDefaultSeries(String fondsSystemId);
+    SeriesHateoas generateDefaultSeries(@NotNull final UUID systemId);
 
-    FondsHateoas generateDefaultFonds(String fondsSystemId);
+    FondsHateoas generateDefaultFonds(@NotNull final UUID systemId);
 
     // All UPDATE operations
-    FondsHateoas handleUpdate(@NotNull String systemId, @NotNull Long version,
-                              @NotNull Fonds incomingFonds);
+    FondsHateoas handleUpdate(@NotNull final UUID systemId,
+                              @NotNull final Long version,
+                              @NotNull final Fonds incomingFonds);
 
     // All DELETE operations
-    void deleteEntity(@NotNull String systemId);
+    void deleteEntity(@NotNull final UUID systemId);
 
-    long deleteAllByOwnedBy();
+    void deleteAllByOwnedBy();
 
     StorageLocationHateoas getDefaultStorageLocation(
-            @NotNull final UUID systemID);
+            @NotNull final UUID systemId);
 }

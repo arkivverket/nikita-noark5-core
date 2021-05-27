@@ -6,14 +6,13 @@ import nikita.common.model.noark5.v5.admin.AuthorityName;
 import nikita.common.model.noark5.v5.admin.User;
 import nikita.common.repository.nikita.AuthorityRepository;
 import nikita.common.util.exceptions.NikitaMisconfigurationException;
+import nikita.webapp.service.IUserService;
 import nikita.webapp.service.impl.admin.AdministrativeUnitService;
 import nikita.webapp.service.impl.admin.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 import static nikita.common.config.Constants.TEST_ADMINISTRATIVE_UNIT;
 import static nikita.common.model.noark5.v5.admin.AuthorityName.*;
@@ -26,7 +25,7 @@ import static nikita.common.model.noark5.v5.admin.AuthorityName.*;
 @Component
 public class UserStartupImport {
 
-    private final UserService userService;
+    private final IUserService userService;
     private final AuthorityRepository authorityRepository;
     private final AdministrativeUnitService administrativeUnitService;
 
@@ -79,7 +78,7 @@ public class UserStartupImport {
         admin.addAuthority(authorityRepository
                 .findByAuthorityName(RECORDS_MANAGER));
         administrativeUnit.addUser(admin);
-        userService.createNewUser(admin);
+        userService.createNewUserDuringStartup(admin);
     }
 
     @Transactional
@@ -98,14 +97,14 @@ public class UserStartupImport {
         recordKeeper.addAuthority(authorityRepository
                 .findByAuthorityName(RECORDS_KEEPER));
         administrativeUnit.addUser(recordKeeper);
-        userService.createNewUser(recordKeeper);
+        userService.createNewUserDuringStartup(recordKeeper);
     }
 
     private AdministrativeUnit getAdministrativeUnitOrThrow() {
-        Optional<AdministrativeUnit> administrativeUnitOptional =
+        AdministrativeUnit administrativeUnit =
                 administrativeUnitService.findFirst();
-        if (administrativeUnitOptional.isPresent()) {
-            return administrativeUnitOptional.get();
+        if (null != administrativeUnit) {
+            return administrativeUnit;
         } else {
             throw new NikitaMisconfigurationException("Could not find default" +
                     " administrativeUnit for demo users");

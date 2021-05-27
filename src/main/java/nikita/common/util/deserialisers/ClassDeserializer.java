@@ -50,7 +50,7 @@ public class ClassDeserializer
             objectNode.remove(CLASS_ID);
         }
 
-        deserialiseKeyword(klass, objectNode, errors);
+        deserialiseKeyword(klass, objectNode);
         klass.setReferenceDisposal(
                 deserialiseDisposal(
                         objectNode, errors));

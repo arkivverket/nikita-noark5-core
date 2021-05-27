@@ -1,5 +1,6 @@
 package nikita.webapp.service.impl.metadata;
 
+import nikita.common.model.nikita.NikitaPage;
 import nikita.common.model.nikita.PatchMerge;
 import nikita.common.model.nikita.PatchObjects;
 import nikita.common.model.noark5.v5.hateoas.metadata.BSMMetadataHateoas;
@@ -8,30 +9,32 @@ import nikita.common.model.noark5.v5.md_other.BSMMetadata;
 import nikita.common.repository.n5v5.other.IBSMMetadataRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.metadata.IBSMMetadataHateoasHandler;
-import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.IBSMMetadataService;
-import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
-import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
+import nikita.webapp.service.interfaces.odata.IODataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.persistence.EntityManager;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+import static java.util.List.copyOf;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.N5ResourceMappings.BSM_DEF;
-import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
+import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestAsListOrThrow;
+import static org.springframework.http.HttpHeaders.ALLOW;
 
 /**
  * Service class for BSMMetadata. Note this is the actual class that is used to
@@ -52,10 +55,11 @@ public class BSMMetadataService
     public BSMMetadataService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IODataService odataService,
             IPatchService patchService,
             IBSMMetadataHateoasHandler hateoasHandler,
             IBSMMetadataRepository metadataRepository) {
-        super(entityManager, applicationEventPublisher, patchService);
+        super(entityManager, applicationEventPublisher, patchService, odataService);
         this.hateoasHandler = hateoasHandler;
         this.metadataRepository = metadataRepository;
     }
@@ -64,53 +68,34 @@ public class BSMMetadataService
 
     @Override
     @Transactional
-    public ResponseEntity<BSMMetadataHateoas> save(
-            @NotNull BSMMetadata bsmMetadata) {
-        BSMMetadataHateoas bsmMetadataHateoas =
-                new BSMMetadataHateoas(metadataRepository.save(bsmMetadata));
-        hateoasHandler.addLinks(bsmMetadataHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityCreatedEvent(this, bsmMetadata));
-        return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(bsmMetadataHateoas.getEntityVersion().toString())
-                .body(bsmMetadataHateoas);
+    public BSMMetadataHateoas save(@NotNull final BSMMetadata bsmMetadata) {
+        return packAsHateoas(metadataRepository.save(bsmMetadata));
     }
 
     // All READ methods
 
     @Override
-    public ResponseEntity<BSMMetadataHateoas> find(UUID systemID) {
-        BSMMetadata bsmMetadata = getBSMMetadataOrThrow(systemID);
-        BSMMetadataHateoas bsmMetadataHateoas = new BSMMetadataHateoas(bsmMetadata);
-        hateoasHandler.addLinks(bsmMetadataHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityUpdatedEvent(this, bsmMetadata));
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(bsmMetadataHateoas.getEntityVersion().toString())
-                .body(bsmMetadataHateoas);
+    public BSMMetadataHateoas find(@NotNull final UUID systemId) {
+        return packAsHateoas(getBSMMetadataOrThrow(systemId));
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public ResponseEntity<BSMMetadataHateoas> findAll() {
-        BSMMetadataHateoas bsmMetadataHateoas =
-                new BSMMetadataHateoas(
-                        (List<INoarkEntity>) (List)
-                                metadataRepository.findAll(), BSM_DEF);
-        hateoasHandler.addLinks(bsmMetadataHateoas, new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(bsmMetadataHateoas.getEntityVersion().toString())
-                .body(bsmMetadataHateoas);
+    public BSMMetadataHateoas findAll() {
+        NikitaPage page = new
+                NikitaPage(copyOf((List<INoarkEntity>) (List)
+                metadataRepository.findAll()));
+        setOutgoingRequestHeaderList();
+        return new BSMMetadataHateoas(page, BSM_DEF);
     }
     // All UPDATE methods
 
 
     @Override
-    public ResponseEntity<BSMMetadataHateoas>
-    handleUpdate(UUID systemId, Long version, BSMMetadata incomingBsmMetadata) {
+    public BSMMetadataHateoas handleUpdate(
+            @NotNull final UUID systemId,
+            @NotNull final Long version,
+            @NotNull final BSMMetadata incomingBsmMetadata) {
         BSMMetadata bsmMetadata = getBSMMetadataOrThrow(systemId);
         bsmMetadata.setDescription(incomingBsmMetadata.getDescription());
         bsmMetadata.setName(incomingBsmMetadata.getName());
@@ -118,60 +103,59 @@ public class BSMMetadataService
         bsmMetadata.setSource(incomingBsmMetadata.getSource());
         bsmMetadata.setType(incomingBsmMetadata.getType());
         bsmMetadata.setVersion(version);
-        BSMMetadataHateoas bsmMetadataHateoas =
-                new BSMMetadataHateoas(bsmMetadata);
-        hateoasHandler.addLinks(bsmMetadataHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityUpdatedEvent(this, bsmMetadata));
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(bsmMetadataHateoas.getEntityVersion().toString())
-                .body(bsmMetadataHateoas);
+        return packAsHateoas(bsmMetadata);
     }
 
     @Override
     @Transactional
-    public ResponseEntity<BSMMetadataHateoas> handleUpdate(
-            @NotNull UUID systemID, @NotNull PatchObjects patchObjects) {
-        BSMMetadata bsmMetadata =
-                (BSMMetadata) handlePatch(systemID, patchObjects);
-        BSMMetadataHateoas bsmMetadataHateoas =
-                new BSMMetadataHateoas(bsmMetadata);
-        hateoasHandler.addLinks(bsmMetadataHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityUpdatedEvent(this, bsmMetadata));
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(bsmMetadataHateoas.getEntityVersion().toString())
-                .body(bsmMetadataHateoas);
+    public BSMMetadataHateoas handleUpdate(
+            @NotNull final UUID systemId,
+            @NotNull final PatchObjects patchObjects) {
+        return packAsHateoas((BSMMetadata) handlePatch(systemId, patchObjects));
     }
 
     @Override
     @Transactional
     public Object handleUpdateRfc7396(
-            @NotNull UUID systemID, @NotNull PatchMerge patchMerge) {
-        BSMMetadata bsmMetadata = getBSMMetadataOrThrow(systemID);
+            @NotNull final UUID systemId, @NotNull PatchMerge patchMerge) {
+        BSMMetadata bsmMetadata = getBSMMetadataOrThrow(systemId);
         handlePatchMerge(bsmMetadata, patchMerge);
-        BSMMetadataHateoas bsmMetadataHateoas =
-                new BSMMetadataHateoas(bsmMetadata);
-        hateoasHandler.addLinks(bsmMetadataHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityUpdatedEvent(this, bsmMetadata));
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(bsmMetadataHateoas.getEntityVersion().toString())
-                .body(bsmMetadataHateoas);
+        return packAsHateoas(bsmMetadata);
     }
 
     // All DELETE methods
 
     @Override
     @Transactional
-    public void deleteEntity(@NotNull UUID systemId) {
+    public void deleteEntity(@NotNull final UUID systemId) {
         deleteEntity(getBSMMetadataOrThrow(systemId));
     }
 
     // All helper methods
+
+    /**
+     * Set the outgoing ALLOW header
+     */
+    protected void setOutgoingRequestHeaderList() {
+        HttpServletResponse response = ((ServletRequestAttributes)
+                Objects.requireNonNull(
+                        RequestContextHolder.getRequestAttributes()))
+                .getResponse();
+        HttpServletRequest request =
+                ((ServletRequestAttributes)
+                        RequestContextHolder
+                                .getRequestAttributes()).getRequest();
+        response.addHeader(ALLOW, getMethodsForRequestAsListOrThrow(
+                request.getServletPath()));
+    }
+
+    public BSMMetadataHateoas packAsHateoas(
+            @NotNull final BSMMetadata bsmMetadata) {
+        BSMMetadataHateoas bsmMetadataHateoas =
+                new BSMMetadataHateoas(bsmMetadata);
+        applyLinksAndHeader(bsmMetadataHateoas, hateoasHandler);
+        return bsmMetadataHateoas;
+    }
 
     /**
      * Internal helper method. Rather than having a find and try catch in
@@ -182,7 +166,7 @@ public class BSMMetadataService
      * @param systemId systemId of the bsmMetadata object you are looking for
      * @return the newly found bsmMetadata object or null if it does not exist
      */
-    public BSMMetadata getBSMMetadataOrThrow(@NotNull UUID systemId) {
+    public BSMMetadata getBSMMetadataOrThrow(@NotNull final UUID systemId) {
         Optional<BSMMetadata> bsmMetadata =
                 metadataRepository.findById(systemId);
         if (bsmMetadata.isEmpty()) {

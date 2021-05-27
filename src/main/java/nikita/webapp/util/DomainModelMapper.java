@@ -17,7 +17,7 @@ public class DomainModelMapper {
             String simpleName = klass.getSimpleName();
             addClassToMap(simpleName, klass);
             if (klass.isAnnotationPresent(ANationalIdentifier.class)) {
-                addClassToNatIdentMap(simpleName, klass,
+                addClassToNatIdentMap(klass,
                         klass.getAnnotation(ANationalIdentifier.class));
             }
         }

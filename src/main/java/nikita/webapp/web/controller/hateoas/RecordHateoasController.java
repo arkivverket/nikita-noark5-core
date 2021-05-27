@@ -18,30 +18,22 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPers
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
 import nikita.common.model.noark5.v5.hateoas.secondary.*;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.Metadata;
 import nikita.common.model.noark5.v5.nationalidentifier.*;
 import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.exceptions.NikitaException;
-import nikita.webapp.hateoas.interfaces.IDocumentDescriptionHateoasHandler;
-import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
-import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IDocumentDescriptionService;
 import nikita.webapp.service.interfaces.IRecordService;
 import nikita.webapp.util.error.ApiError;
-import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.*;
 
@@ -53,23 +45,12 @@ public class RecordHateoasController
 
     private final IDocumentDescriptionService documentDescriptionService;
     private final IRecordService recordService;
-    private final IDocumentDescriptionHateoasHandler
-            documentDescriptionHateoasHandler;
-    private final IRecordHateoasHandler recordHateoasHandler;
-    private final ApplicationEventPublisher applicationEventPublisher;
 
     public RecordHateoasController(
             IDocumentDescriptionService documentDescriptionService,
-            IRecordService recordService,
-            IDocumentDescriptionHateoasHandler
-                    documentDescriptionHateoasHandler,
-            IRecordHateoasHandler recordHateoasHandler,
-            ApplicationEventPublisher applicationEventPublisher) {
+            IRecordService recordService) {
         this.documentDescriptionService = documentDescriptionService;
         this.recordService = recordService;
-        this.documentDescriptionHateoasHandler = documentDescriptionHateoasHandler;
-        this.recordHateoasHandler = recordHateoasHandler;
-        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     // API - All POST Requests (CRUD - CREATE)
@@ -112,12 +93,11 @@ public class RecordHateoasController
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<DocumentDescriptionHateoas>
     createDocumentDescriptionAssociatedWithRecord(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of record to associate the " +
                             "documentDescription with.",
                     required = true)
-            @PathVariable String systemID,
+            @PathVariable UUID systemID,
             @Parameter(name = "documentDescription",
                     description = "Incoming documentDescription object",
                     required = true)
@@ -129,8 +109,6 @@ public class RecordHateoasController
                         createDocumentDescriptionAssociatedWithRecord(
                                 systemID, documentDescription);
         return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(documentDescriptionHateoas.getEntityVersion().toString())
                 .body(documentDescriptionHateoas);
     }
 
@@ -169,7 +147,6 @@ public class RecordHateoasController
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<ScreeningMetadataHateoas>
     createScreeningMetadataBySystemId(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemId of File to associate " +
                             "ScreeningMetadata with",
@@ -184,7 +161,6 @@ public class RecordHateoasController
                 recordService.createScreeningMetadataAssociatedWithRecord(
                         systemID, screeningMetadata);
         return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(screeningMetadataHateoas);
     }
 
@@ -207,7 +183,6 @@ public class RecordHateoasController
     @PostMapping(value =
             SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_STORAGE_LOCATION)
     public ResponseEntity<StorageLocationHateoas> createStorageLocation(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the record",
                     required = true)
@@ -218,7 +193,6 @@ public class RecordHateoasController
             @RequestBody StorageLocation storageLocation)
             throws NikitaException {
         return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(recordService
                         .createStorageLocationAssociatedWithRecord(
                                 systemID, storageLocation));
@@ -243,14 +217,12 @@ public class RecordHateoasController
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + PART)
     public ResponseEntity<PartHateoas>
     findAllPartAssociatedWithRecord(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the file to retrieve " +
                             "associated Record",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(recordService.getPartAssociatedWithRecord(systemID));
     }
 
@@ -276,14 +248,12 @@ public class RecordHateoasController
             SLASH + SYSTEM_ID_PARAMETER + SLASH + SCREENING_METADATA)
     public ResponseEntity<ScreeningMetadataHateoas>
     getScreeningMetadataAssociatedWithRecord(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the record to retrieve " +
                             "screening metadata",
                     required = true)
             @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(recordService
                         .getScreeningMetadataAssociatedWithRecord(systemID));
     }
@@ -312,7 +282,7 @@ public class RecordHateoasController
                     description = "systemID of the Record to retrieve " +
                             "associated Authors",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity
                 .status(OK)
                 .body(recordService.
@@ -343,14 +313,12 @@ public class RecordHateoasController
             CORRESPONDENCE_PART)
     public ResponseEntity<CorrespondencePartHateoas>
     findAllCorrespondencePartUnitAssociatedWithRecord(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the file to retrieve " +
                             "associated Record",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(recordService.getCorrespondencePartAssociatedWithRecord(
                         systemID));
     }
@@ -376,14 +344,12 @@ public class RecordHateoasController
             NATIONAL_IDENTIFIER)
     public ResponseEntity<NationalIdentifierHateoas>
     findAllNIAssociatedWithFile(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the file to retrieve " +
                             "associated File",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(recordService
                         .getNationalIdentifierAssociatedWithRecord(systemID));
     }
@@ -428,7 +394,7 @@ public class RecordHateoasController
                     description = "systemID of Record to associate the " +
                             "secondary Series with",
                     required = true)
-            @PathVariable String systemID,
+            @PathVariable UUID systemID,
             @Parameter(name = "Series",
                     description = "series",
                     required = true)
@@ -474,7 +440,7 @@ public class RecordHateoasController
                     description = "systemID of the record to associate the " +
                             "author with.",
                     required = true)
-            @PathVariable String systemID,
+            @PathVariable UUID systemID,
             @Parameter(name = "author",
                     description = "Incoming author object",
                     required = true)
@@ -519,7 +485,6 @@ public class RecordHateoasController
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_KEYWORD,
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<KeywordHateoas> addKeywordAssociatedWithRecord(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the record to associate the " +
                             "keyword with.",
@@ -533,8 +498,6 @@ public class RecordHateoasController
         KeywordHateoas keywordHateoas = recordService
                 .createKeywordAssociatedWithRecord(systemID, keyword);
         return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(keywordHateoas.getEntityVersion().toString())
                 .body(keywordHateoas);
     }
 
@@ -563,14 +526,12 @@ public class RecordHateoasController
             NEW_CORRESPONDENCE_PART_PERSON)
     public ResponseEntity<CorrespondencePartPersonHateoas>
     getCorrespondencePartPersonTemplate(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the file to retrieve " +
                             "associated Record",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(recordService.
                         generateDefaultCorrespondencePartPerson(systemID));
     }
@@ -596,13 +557,11 @@ public class RecordHateoasController
             SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_SCREENING_METADATA)
     public ResponseEntity<ScreeningMetadataHateoas>
     getDefaultScreeningMetadata(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the documentDescription",
                     required = true)
             @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(recordService.getDefaultScreeningMetadata(systemID));
     }
 
@@ -631,14 +590,12 @@ public class RecordHateoasController
             NEW_CORRESPONDENCE_PART_UNIT)
     public ResponseEntity<CorrespondencePartUnitHateoas>
     getCorrespondencePartUnitTemplate(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the file to retrieve " +
                             "associated Record",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(recordService.
                         generateDefaultCorrespondencePartUnit(systemID));
     }
@@ -665,14 +622,12 @@ public class RecordHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_PART_UNIT)
     public ResponseEntity<PartUnitHateoas> getPartUnitTemplate(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of record to associate the " +
                             "PartPerson with.",
                     required = true)
-            @PathVariable(SYSTEM_ID) String systemID) throws NikitaException {
+            @PathVariable(SYSTEM_ID) UUID systemID) throws NikitaException {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(recordService.
                         generateDefaultPartUnit(systemID));
     }
@@ -699,15 +654,13 @@ public class RecordHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_PART_PERSON)
     public ResponseEntity<PartPersonHateoas> getPartPersonTemplate(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of record to associate the " +
                             "PartPerson with.",
                     required = true)
-            @PathVariable(SYSTEM_ID) String systemID)
+            @PathVariable(SYSTEM_ID) UUID systemID)
             throws NikitaException {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(recordService.
                         generateDefaultPartPerson(systemID));
     }
@@ -732,13 +685,11 @@ public class RecordHateoasController
             SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_STORAGE_LOCATION)
     public ResponseEntity<StorageLocationHateoas>
     getDefaultStorageLocation(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the record",
                     required = true)
             @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(recordService.getDefaultStorageLocation(systemID));
     }
 
@@ -764,14 +715,12 @@ public class RecordHateoasController
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_AUTHOR)
     public ResponseEntity<AuthorHateoas>
     getAuthorTemplate(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the record to retrieve " +
                             "associated Author",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(recordService.
                         generateDefaultAuthor(systemID));
     }
@@ -793,10 +742,13 @@ public class RecordHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_COMMENT)
     public ResponseEntity<CommentHateoas> createDefaultComment(
-            HttpServletRequest request) {
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the Record to generate default" +
+                            " Comment for",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(recordService.generateDefaultComment());
+                .body(recordService.generateDefaultComment(systemID));
     }
 
     // Create a Keyword with default values
@@ -818,10 +770,13 @@ public class RecordHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_KEYWORD)
     public ResponseEntity<KeywordHateoas> createDefaultKeyword(
-            HttpServletRequest request) {
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the file to retrieve " +
+                            "associated Record",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(recordService.generateDefaultKeyword());
+                .body(recordService.generateDefaultKeyword(systemID));
     }
 
     // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/merknad
@@ -843,14 +798,12 @@ public class RecordHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + COMMENT)
     public ResponseEntity<CommentHateoas> findAllCommentsAssociatedWithRecord(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the record to retrieve " +
                             "comments for",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(recordService.getCommentAssociatedWithRecord(systemID));
     }
 
@@ -885,12 +838,11 @@ public class RecordHateoasController
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_COMMENT,
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<CommentHateoas> addCommentToRecord(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of Record to associate the " +
                             "Comment with",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID,
+            @PathVariable(SYSTEM_ID) final UUID systemID,
             @Parameter(name = "Comment",
                     description = "comment",
                     required = true)
@@ -898,8 +850,6 @@ public class RecordHateoasController
         CommentHateoas commentHateoas = recordService
                 .createCommentAssociatedWithRecord(systemID, comment);
         return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(commentHateoas.getEntityVersion().toString())
                 .body(commentHateoas);
     }
 
@@ -941,26 +891,20 @@ public class RecordHateoasController
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<CorrespondencePartPersonHateoas>
     createCorrespondencePartPersonAssociatedWithRecord(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of record to associate the " +
                             "CorrespondencePartPerson with.",
                     required = true)
-            @PathVariable(SYSTEM_ID) String systemID,
+            @PathVariable(SYSTEM_ID) UUID systemID,
             @Parameter(name = "CorrespondencePartPerson",
                     description = "Incoming CorrespondencePartPerson object",
                     required = true)
             @RequestBody CorrespondencePartPerson correspondencePartPerson)
             throws NikitaException {
-        CorrespondencePartPersonHateoas createdCorrespondencePartPerson =
-                recordService.
-                        createCorrespondencePartPersonAssociatedWithRecord(
-                                systemID, correspondencePartPerson);
         return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(createdCorrespondencePartPerson
-                        .getEntityVersion().toString())
-                .body(createdCorrespondencePartPerson);
+                .body(recordService.
+                        createCorrespondencePartPersonAssociatedWithRecord(
+                                systemID, correspondencePartPerson));
     }
 
     // Create a new Part and associate it with the given journalpost
@@ -1001,12 +945,11 @@ public class RecordHateoasController
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<PartPersonHateoas>
     createPartPersonAssociatedWithRecord(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of record to associate the Part " +
                             "with.",
                     required = true)
-            @PathVariable(SYSTEM_ID) String systemID,
+            @PathVariable(SYSTEM_ID) UUID systemID,
             @Parameter(name = "Part",
                     description = "Incoming Part object",
                     required = true)
@@ -1017,8 +960,6 @@ public class RecordHateoasController
                         createPartPersonAssociatedWithRecord(
                                 systemID, partPerson);
         return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(partPersonHateoas.getEntityVersion().toString())
                 .body(partPersonHateoas);
     }
 
@@ -1059,12 +1000,11 @@ public class RecordHateoasController
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<PartUnitHateoas>
     createPartUnitAssociatedWithRecord(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of record to associate the Part " +
                             "with.",
                     required = true)
-            @PathVariable(SYSTEM_ID) String systemID,
+            @PathVariable(SYSTEM_ID) UUID systemID,
             @Parameter(name = "Part",
                     description = "Incoming Part object",
                     required = true)
@@ -1075,8 +1015,6 @@ public class RecordHateoasController
                         createPartUnitAssociatedWithRecord(
                                 systemID, partUnit);
         return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(partUnitHateoas.getEntityVersion().toString())
                 .body(partUnitHateoas);
     }
 
@@ -1124,7 +1062,7 @@ public class RecordHateoasController
                     description = "systemID of record to associate the " +
                             "CorrespondencePartInternal with.",
                     required = true)
-            @PathVariable(SYSTEM_ID) String systemID,
+            @PathVariable(SYSTEM_ID) UUID systemID,
             @Parameter(name = "CorrespondencePartInternal",
                     description = "Incoming CorrespondencePartInternal object",
                     required = true)
@@ -1171,12 +1109,11 @@ public class RecordHateoasController
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<CorrespondencePartUnitHateoas>
     createCorrespondencePartUnitAssociatedWithRecord(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of record to associate the " +
                             "CorrespondencePartUnit with.",
                     required = true)
-            @PathVariable(SYSTEM_ID) String systemID,
+            @PathVariable(SYSTEM_ID) UUID systemID,
             @Parameter(name = "CorrespondencePartUnit",
                     description = "Incoming CorrespondencePartUnit object",
                     required = true)
@@ -1187,9 +1124,6 @@ public class RecordHateoasController
                         createCorrespondencePartUnitAssociatedWithRecord(
                                 systemID, correspondencePartUnit);
         return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(correspondencePartUnitHateoas
-                        .getEntityVersion().toString())
                 .body(correspondencePartUnitHateoas);
     }
 
@@ -1223,12 +1157,11 @@ public class RecordHateoasController
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_BUILDING,
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<BuildingHateoas> addNIBuildingToRecord(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of Record to associate the " +
                             "Building with",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID,
+            @PathVariable(SYSTEM_ID) final UUID systemID,
             @Parameter(name = "Building",
                     description = "building",
                     required = true)
@@ -1238,8 +1171,6 @@ public class RecordHateoasController
                 recordService.createBuildingAssociatedWithRecord(
                         systemID, building);
         return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(buildingHateoas.getEntityVersion().toString())
                 .body(buildingHateoas);
     }
 
@@ -1274,12 +1205,11 @@ public class RecordHateoasController
             NEW_CADASTRAL_UNIT,
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<CadastralUnitHateoas> addNICadastralUnitToRecord(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of Record to associate the " +
                             "CadastralUnit with",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID,
+            @PathVariable(SYSTEM_ID) final UUID systemID,
             @Parameter(name = "CadastralUnit",
                     description = "CadastralUnit",
                     required = true)
@@ -1288,8 +1218,6 @@ public class RecordHateoasController
                 recordService.createCadastralUnitAssociatedWithRecord(
                         systemID, cadastralUnit);
         return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(cadastralUnitHateoas.getEntityVersion().toString())
                 .body(cadastralUnitHateoas);
     }
 
@@ -1323,12 +1251,11 @@ public class RecordHateoasController
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_D_NUMBER,
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<DNumberHateoas> addNIDNumberToRecord(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of Record to associate the " +
                             "DNumber with",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID,
+            @PathVariable(SYSTEM_ID) final UUID systemID,
             @Parameter(name = "dNumber",
                     description = "DNumber",
                     required = true)
@@ -1337,8 +1264,6 @@ public class RecordHateoasController
                 recordService.createDNumberAssociatedWithRecord(
                         systemID, dNumber);
         return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(dNumberHateoas.getEntityVersion().toString())
                 .body(dNumberHateoas);
     }
 
@@ -1371,12 +1296,11 @@ public class RecordHateoasController
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_PLAN,
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<PlanHateoas> addNIPlanToRecord(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of Record to associate the Plan " +
                             "with",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID,
+            @PathVariable(SYSTEM_ID) final UUID systemID,
             @Parameter(name = "plan",
                     description = "Plan",
                     required = true)
@@ -1384,8 +1308,6 @@ public class RecordHateoasController
         PlanHateoas planHateoas =
                 recordService.createPlanAssociatedWithRecord(systemID, plan);
         return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(planHateoas.getEntityVersion().toString())
                 .body(planHateoas);
     }
 
@@ -1419,12 +1341,11 @@ public class RecordHateoasController
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_POSITION,
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<PositionHateoas> addNIPositionToRecord(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of Record to associate the " +
                             "Position with",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID,
+            @PathVariable(SYSTEM_ID) final UUID systemID,
             @Parameter(name = "Position",
                     description = "position",
                     required = true)
@@ -1434,8 +1355,6 @@ public class RecordHateoasController
                 recordService.createPositionAssociatedWithRecord(
                         systemID, position);
         return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(positionHateoas.getEntityVersion().toString())
                 .body(positionHateoas);
     }
 
@@ -1471,12 +1390,11 @@ public class RecordHateoasController
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<SocialSecurityNumberHateoas>
     addNISocialSecurityNumberToRecord(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of Record to associate the " +
                             "SocialSecurityNumber with",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID,
+            @PathVariable(SYSTEM_ID) final UUID systemID,
             @Parameter(name = "SocialSecurityNumber",
                     description = "socialSecurityNumber",
                     required = true)
@@ -1486,8 +1404,6 @@ public class RecordHateoasController
                 recordService.createSocialSecurityNumberAssociatedWithRecord(
                         systemID, socialSecurityNumber);
         return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(socialSecurityNumberHateoas.getEntityVersion().toString())
                 .body(socialSecurityNumberHateoas);
     }
 
@@ -1520,12 +1436,11 @@ public class RecordHateoasController
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_NI_UNIT,
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<UnitHateoas> addNIUnitToRecord(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of Record to associate the " +
                             "Unit with",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID,
+            @PathVariable(SYSTEM_ID) final UUID systemID,
             @Parameter(name = "Unit",
                     description = "unit",
                     required = true)
@@ -1535,8 +1450,6 @@ public class RecordHateoasController
                 recordService.createUnitAssociatedWithRecord(
                         systemID, unit);
         return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(unitHateoas.getEntityVersion().toString())
                 .body(unitHateoas);
     }
 
@@ -1576,7 +1489,6 @@ public class RecordHateoasController
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<CrossReferenceHateoas>
     createCrossReferenceBySystemId(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemId of File to associate " +
                             "CrossReference with",
@@ -1588,7 +1500,6 @@ public class RecordHateoasController
             @RequestBody CrossReference crossReference)
             throws NikitaException {
         return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(recordService
                         .createCrossReferenceAssociatedWithRecord(
                                 systemID, crossReference));
@@ -1638,18 +1549,12 @@ public class RecordHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<RecordHateoas> findOneRecordbySystemId(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the record to retrieve",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
-        Record record = recordService.findBySystemId(systemID);
-        RecordHateoas recordHateoas = new RecordHateoas(record);
-        recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(record.getVersion().toString())
-                .body(recordHateoas);
+                .body(recordService.findBySystemId(systemID));
     }
 
     // Retrieve all File associated with Record identified by a systemId
@@ -1674,8 +1579,9 @@ public class RecordHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the file to retrieve",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
-        return recordService.findFileAssociatedWithRecord(systemID);
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        return ResponseEntity.status(OK)
+                .body(recordService.findFileAssociatedWithRecord(systemID));
     }
 
     // Retrieve the parent Series associated with the Record identified by the
@@ -1701,8 +1607,9 @@ public class RecordHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the series to retrieve",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
-        return recordService.findSeriesAssociatedWithRecord(systemID);
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        return ResponseEntity.status(OK)
+                .body(recordService.findSeriesAssociatedWithRecord(systemID));
     }
 
     // Retrieve the parent Class associated with the Record identified by the
@@ -1728,8 +1635,9 @@ public class RecordHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the class to retrieve",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
-        return recordService.findClassAssociatedWithRecord(systemID);
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        return ResponseEntity.status(OK)
+                .body(recordService.findClassAssociatedWithRecord(systemID));
     }
 
     // Retrieve all Records
@@ -1751,15 +1659,9 @@ public class RecordHateoasController
                     responseCode = INTERNAL_SERVER_ERROR_VAL,
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping
-    public ResponseEntity<RecordHateoas> findAllRecord(
-            HttpServletRequest request) {
-        RecordHateoas recordHateoas = new RecordHateoas(
-                (List<INoarkEntity>) (List)
-                        recordService.findByOwnedBy());
-        recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
+    public ResponseEntity<RecordHateoas> findAllRecord() {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(recordHateoas);
+                .body(recordService.findAll());
     }
 
     // Retrieve all secondary Series associated with a Record
@@ -1787,7 +1689,7 @@ public class RecordHateoasController
                     description = "systemID of the Record to retrieve " +
                             "secondary Class for",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
     }
 
@@ -1810,11 +1712,14 @@ public class RecordHateoasController
             NEW_DOCUMENT_DESCRIPTION)
     public ResponseEntity<DocumentDescriptionHateoas>
     createDefaultDocumentDescription(
-            HttpServletRequest request) {
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the file to retrieve " +
+                            "associated Record",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(documentDescriptionService.
-                        generateDefaultDocumentDescription());
+                        generateDefaultDocumentDescription(systemID));
     }
 
     // Retrieve all DocumentDescriptions associated with a Record identified by systemId
@@ -1838,21 +1743,14 @@ public class RecordHateoasController
             DOCUMENT_DESCRIPTION)
     public ResponseEntity<DocumentDescriptionHateoas>
     findAllDocumentDescriptionAssociatedWithRecord(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the file to retrieve " +
                             "associated Record",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
-        Record record = recordService.findBySystemId(systemID);
-        DocumentDescriptionHateoas documentDescriptionHateoas = new
-                DocumentDescriptionHateoas(List.copyOf(
-                record.getReferenceDocumentDescription()));
-        documentDescriptionHateoasHandler.addLinks(
-                documentDescriptionHateoas, new Authorisation());
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(documentDescriptionHateoas);
+                .body(recordService
+                        .getDocumentDescriptionAssociatedWithRecord(systemID));
     }
 
     // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-bygning
@@ -1877,16 +1775,14 @@ public class RecordHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_BUILDING)
     public ResponseEntity<BuildingHateoas> getNIBuildingToRecordTemplate(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of Record to associate the " +
                             "Building with",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID)
+            @PathVariable(SYSTEM_ID) final UUID systemID)
             throws NikitaException {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(recordService.generateDefaultBuilding());
+                .body(recordService.generateDefaultBuilding(systemID));
     }
 
     // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-matrikkel
@@ -1913,16 +1809,14 @@ public class RecordHateoasController
             NEW_CADASTRAL_UNIT)
     public ResponseEntity<CadastralUnitHateoas>
     getNICadastralUnitToRecordTemplate(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of Record to associate the " +
                             "CadastralUnit with",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID)
+            @PathVariable(SYSTEM_ID) final UUID systemID)
             throws NikitaException {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(recordService.generateDefaultCadastralUnit());
+                .body(recordService.generateDefaultCadastralUnit(systemID));
     }
 
     // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-dnummer
@@ -1947,16 +1841,14 @@ public class RecordHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_D_NUMBER)
     public ResponseEntity<DNumberHateoas> getNIDNumberToRecordTemplate(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of Record to associate the " +
                             "DNumber with",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID)
+            @PathVariable(SYSTEM_ID) final UUID systemID)
             throws NikitaException {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(recordService.generateDefaultDNumber());
+                .body(recordService.generateDefaultDNumber(systemID));
     }
 
     // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-plan
@@ -1980,16 +1872,14 @@ public class RecordHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_PLAN)
     public ResponseEntity<PlanHateoas> getNIPlanToRecordTemplate(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of Record to associate the Plan " +
                             "with",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID)
+            @PathVariable(SYSTEM_ID) final UUID systemID)
             throws NikitaException {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(recordService.generateDefaultPlan());
+                .body(recordService.generateDefaultPlan(systemID));
     }
 
 
@@ -2012,10 +1902,13 @@ public class RecordHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CROSS_REFERENCE)
     public ResponseEntity<CrossReferenceHateoas> getDefaultCrossReference(
-            HttpServletRequest request) {
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the file to retrieve " +
+                            "associated Record",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(recordService.getDefaultCrossReference());
+                .body(recordService.getDefaultCrossReference(systemID));
     }
 
     // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-posisjon
@@ -2040,16 +1933,14 @@ public class RecordHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_POSITION)
     public ResponseEntity<PositionHateoas> getNIPositionToRecordTemplate(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of Record to associate the " +
                             "Position with",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID)
+            @PathVariable(SYSTEM_ID) final UUID systemID)
             throws NikitaException {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(recordService.generateDefaultPosition());
+                .body(recordService.generateDefaultPosition(systemID));
     }
 
     // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-foedselsnummer
@@ -2076,16 +1967,15 @@ public class RecordHateoasController
             NEW_SOCIAL_SECURITY_NUMBER)
     public ResponseEntity<SocialSecurityNumberHateoas>
     getNISocialSecurityNumberToRecordTemplate(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of Record to associate the " +
                             "SocialSecurityNumber with",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID)
+            @PathVariable(SYSTEM_ID) final UUID systemID)
             throws NikitaException {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(recordService.generateDefaultSocialSecurityNumber());
+                .body(recordService
+                        .generateDefaultSocialSecurityNumber(systemID));
     }
 
     // Add a Unit to a Record
@@ -2110,16 +2000,14 @@ public class RecordHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_NI_UNIT)
     public ResponseEntity<UnitHateoas> getNIUnitToRecordTemplate(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of Record to associate the " +
                             "Unit with",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID)
+            @PathVariable(SYSTEM_ID) final UUID systemID)
             throws NikitaException {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(recordService.generateDefaultUnit());
+                .body(recordService.generateDefaultUnit(systemID));
     }
 
     // Delete a Record identified by systemID
@@ -2188,22 +2076,15 @@ public class RecordHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of record to update",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID,
+            @PathVariable(SYSTEM_ID) final UUID systemID,
             @Parameter(name = "Record",
                     description = "Incoming record object",
                     required = true)
             @RequestBody Record record) throws NikitaException {
         validateForUpdate(record);
-        Record updatedRecord = recordService.handleUpdate(
-                systemID, parseETAG(request.getHeader(ETAG)), record);
-        RecordHateoas recordHateoas = new RecordHateoas(updatedRecord);
-        recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityUpdatedEvent(this, updatedRecord));
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(updatedRecord.getVersion().toString())
-                .body(recordHateoas);
+                .body(recordService.handleUpdate(
+                        systemID, parseETAG(request.getHeader(ETAG)), record));
     }
 
     // Update a Record with given values
@@ -2241,6 +2122,7 @@ public class RecordHateoasController
                     description = "Incoming record object",
                     required = true)
             @RequestBody PatchObjects patchObjects) throws NikitaException {
-        return recordService.handleUpdate(systemID, patchObjects);
+        return ResponseEntity.status(OK)
+                .body(recordService.handleUpdate(systemID, patchObjects));
     }
 }

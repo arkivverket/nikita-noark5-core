@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.UUID;
 
+import static nikita.common.config.ErrorMessagesConstants.MALFORMED_PAYLOAD;
 import static nikita.common.config.HATEOASConstants.LINKS;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
@@ -44,8 +45,8 @@ public class FileDeserializer
         // Deserialise general properties
         deserialiseNoarkGeneralEntity(file, objectNode, errors);
         deserialiseDocumentMedium(file, objectNode, errors);
-        deserialiseStorageLocation(file, objectNode, errors);
-        deserialiseKeyword(file, objectNode, errors);
+        deserialiseStorageLocation(file, objectNode);
+        deserialiseKeyword(file, objectNode);
 
         // Deserialize fileId
         JsonNode currentNode = objectNode.get(FILE_ID);
@@ -94,11 +95,8 @@ public class FileDeserializer
         // Check that there are no additional values left after processing the tree
         // If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {
-            errors.append("The mappe/file object you tried to create is ");
-            errors.append("malformed. The following fields are not ");
-            errors.append("recognised as mappe fields  [");
-            errors.append(checkNodeObjectEmpty(objectNode));
-            errors.append("]. ");
+            errors.append(String.format(MALFORMED_PAYLOAD,
+                    FILE, checkNodeObjectEmpty(objectNode)));
         }
 
         if (0 < errors.length())

@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.UUID;
 
+import static nikita.common.config.ErrorMessagesConstants.MALFORMED_PAYLOAD;
 import static nikita.common.config.HATEOASConstants.LINKS;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
@@ -27,7 +28,7 @@ import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
  * - Missing obligatory property values in the JSON will trigger an exception
  */
 public class SeriesDeserializer
-        extends JsonDeserializer {
+        extends JsonDeserializer<Series> {
 
     private static final Logger logger =
             LoggerFactory.getLogger(SeriesDeserializer.class);
@@ -39,11 +40,10 @@ public class SeriesDeserializer
         StringBuilder errors = new StringBuilder();
         Series series = new Series();
         ObjectNode objectNode = mapper.readTree(jsonParser);
-
         // Deserialise general properties
         deserialiseNoarkGeneralEntity(series, objectNode, errors);
         deserialiseDocumentMedium(series, objectNode, errors);
-        deserialiseStorageLocation(series, objectNode, errors);
+        deserialiseStorageLocation(series, objectNode);
         // Deserialize seriesStatus
         SeriesStatus seriesStatus = (SeriesStatus)
                 deserialiseMetadataValue(objectNode, SERIES_STATUS,
@@ -76,27 +76,20 @@ public class SeriesDeserializer
         series.setReferenceScreening(deserialiseScreening(objectNode, errors));
         series.setReferenceClassified(
                 deserialiseClassified(objectNode, errors));
-
         currentNode = objectNode.get(LINKS);
         if (null != currentNode) {
             logger.debug("Payload contains " + LINKS + ". " +
                     "This value is being ignored.");
             objectNode.remove(LINKS);
         }
-
         // Check that there are no additional values left after processing the tree
         // If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {
-            errors.append("The arkivdel you tried to create is malformed. ");
-            errors.append("The following fields are not recognised as ");
-            errors.append(" arkivdel fields [");
-            errors.append(checkNodeObjectEmpty(objectNode));
-            errors.append("]. ");
+            errors.append(String.format(MALFORMED_PAYLOAD,
+                    SERIES, checkNodeObjectEmpty(objectNode)));
         }
-
         if (0 < errors.length())
             throw new NikitaMalformedInputDataException(errors.toString());
-
         return series;
     }
 }

@@ -3,36 +3,42 @@ package nikita.webapp.service.interfaces.admin;
 
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.admin.User;
+import nikita.common.model.noark5.v5.hateoas.admin.AdministrativeUnitHateoas;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public interface IAdministrativeUnitService {
 
-    AdministrativeUnit update(String systemId, Long version,
-                              AdministrativeUnit incomingAdministrativeUnit);
+    AdministrativeUnitHateoas update(
+            @NotNull final UUID systemId,
+            @NotNull final Long version,
+            @NotNull final AdministrativeUnit incomingAdministrativeUnit);
 
-    AdministrativeUnit createNewAdministrativeUnitByUser(
-            AdministrativeUnit entity, User user);
+    AdministrativeUnitHateoas createNewAdministrativeUnitByUser(
+            @NotNull final AdministrativeUnit administrativeUnit,
+            @NotNull final User user);
 
-    AdministrativeUnit createNewAdministrativeUnitBySystem(
-            AdministrativeUnit entity);
+    AdministrativeUnitHateoas createNewAdministrativeUnitBySystem(
+            @NotNull final AdministrativeUnit administrativeUnit);
 
-    AdministrativeUnit createNewAdministrativeUnitBySystemNoDuplicate(
-            AdministrativeUnit entity);
+    void createNewAdministrativeUnitBySystemNoDuplicate(
+            @NotNull final AdministrativeUnit administrativeUnit);
 
-    AdministrativeUnit findBySystemId(UUID administrativeUnitSystemId);
+    AdministrativeUnitHateoas findBySystemId(
+            @NotNull final UUID administrativeUnitSystemId);
 
-    List<AdministrativeUnit> findAll();
+    AdministrativeUnitHateoas findAll();
 
-    Optional<AdministrativeUnit> findFirst();
+    AdministrativeUnit findFirst();
 
-    AdministrativeUnit getAdministrativeUnitOrThrow(User user);
+    AdministrativeUnit getAdministrativeUnitOrThrow(
+            @NotNull final User user);
 
     // All DELETE operations
-    void deleteEntity(@NotNull String systemId);
+    void deleteEntity(@NotNull final UUID systemId);
 
-    long deleteAllByOwnedBy();
+    void deleteAllByOwnedBy();
+
+    AdministrativeUnitHateoas generateDefaultAdministrativeUnit();
 }

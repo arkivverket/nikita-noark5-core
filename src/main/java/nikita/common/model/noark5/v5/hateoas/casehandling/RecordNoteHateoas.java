@@ -1,17 +1,14 @@
 package nikita.common.model.noark5.v5.hateoas.casehandling;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import nikita.common.config.N5ResourceMappings;
+import nikita.common.model.nikita.NikitaPage;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.util.serializers.noark5v5.hateoas.casehandling.RecordNoteHateoasSerializer;
 
-import java.util.List;
+import static nikita.common.config.N5ResourceMappings.REGISTRY_ENTRY;
 
-/**
- * Created by tsodring on 29/05/19.
- */
 @JsonSerialize(using = RecordNoteHateoasSerializer.class)
 public class RecordNoteHateoas
         extends HateoasNoarkObject
@@ -21,8 +18,8 @@ public class RecordNoteHateoas
         super(entity);
     }
 
-    public RecordNoteHateoas(List<INoarkEntity> entityList) {
-        super(entityList, N5ResourceMappings.REGISTRY_ENTRY);
+    public RecordNoteHateoas(NikitaPage page) {
+        super(page, REGISTRY_ENTRY);
     }
 
 }

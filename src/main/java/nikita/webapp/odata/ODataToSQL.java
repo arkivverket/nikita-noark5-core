@@ -23,8 +23,8 @@ public class ODataToSQL {
     private static final Logger logger =
             LoggerFactory.getLogger(ODataToSQL.class);
 
-    private SQLStatementBuilder sqlStatementBuilder;
-    private Map<String, String> comparatorMap;
+    private final SQLStatementBuilder sqlStatementBuilder;
+    private final Map<String, String> comparatorMap;
 
     public ODataToSQL() {
         comparatorMap = new HashMap<>();
@@ -65,7 +65,8 @@ public class ODataToSQL {
 
 
     public void processNikitaObjects(
-            String parentResource, String resource, String systemId, String loggedInUser) {
+            String parentResource, String resource, String systemId,
+            String loggedInUser) {
         logger.error("processNikitaObjects SQL not implemented");
     }
 

@@ -7,14 +7,11 @@ import nikita.common.model.noark5.v5.metadata.CoordinateSystem;
 import nikita.common.model.noark5.v5.nationalidentifier.*;
 import nikita.common.repository.n5v5.INationalIdentifierRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
-import nikita.webapp.hateoas.interfaces.nationalidentifier.INationalIdentifierHateoasHandler;
-import nikita.webapp.hateoas.interfaces.nationalidentifier.IPositionHateoasHandler;
-import nikita.webapp.security.Authorisation;
+import nikita.webapp.hateoas.interfaces.nationalidentifier.*;
 import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.INationalIdentifierService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import nikita.webapp.service.interfaces.odata.IODataService;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,330 +28,323 @@ public class NationalIdentifierService
         extends NoarkService
         implements INationalIdentifierService {
 
-    private static final Logger logger =
-            LoggerFactory.getLogger(NationalIdentifierService.class);
-
     private final INationalIdentifierRepository nationalIdentifierRepository;
-    private final INationalIdentifierHateoasHandler
-            nationalIdentifierHateoasHandler;
-    private final IMetadataService metadataService;
+    private final IBuildingHateoasHandler buildingHateoasHandler;
+    private final ICadastralUnitHateoasHandler cadastralUnitHateoasHandler;
+    private final IDNumberHateoasHandler dNumberHateoasHandler;
+    private final IPlanHateoasHandler planHateoasHandler;
     private final IPositionHateoasHandler positionHateoasHandler;
+    private final ISocialSecurityNumberHateoasHandler
+            socialSecurityNumberHateoasHandler;
+    private final IUnitHateoasHandler unitHateoasHandler;
+    private final IMetadataService metadataService;
 
     public NationalIdentifierService
             (EntityManager entityManager,
              ApplicationEventPublisher applicationEventPublisher,
+             IODataService odataService,
              IPatchService patchService,
              INationalIdentifierRepository nationalIdentifierRepository,
-             INationalIdentifierHateoasHandler nationalIdentifierHateoasHandler,
-             IMetadataService metadataService,
-             IPositionHateoasHandler positionHateoasHandler) {
-        super(entityManager, applicationEventPublisher, patchService);
+             IBuildingHateoasHandler buildingHateoasHandler,
+             ICadastralUnitHateoasHandler cadastralUnitHateoasHandler,
+             IDNumberHateoasHandler dNumberHateoasHandler,
+             IPlanHateoasHandler planHateoasHandler,
+             IPositionHateoasHandler positionHateoasHandler,
+             ISocialSecurityNumberHateoasHandler
+                     socialSecurityNumberHateoasHandler,
+             IUnitHateoasHandler unitHateoasHandler,
+             IMetadataService metadataService) {
+        super(entityManager, applicationEventPublisher, patchService, odataService);
         this.nationalIdentifierRepository = nationalIdentifierRepository;
-        this.nationalIdentifierHateoasHandler =
-                nationalIdentifierHateoasHandler;
-        this.metadataService = metadataService;
+        this.buildingHateoasHandler = buildingHateoasHandler;
+        this.cadastralUnitHateoasHandler = cadastralUnitHateoasHandler;
+        this.dNumberHateoasHandler = dNumberHateoasHandler;
+        this.planHateoasHandler = planHateoasHandler;
         this.positionHateoasHandler = positionHateoasHandler;
+        this.socialSecurityNumberHateoasHandler = socialSecurityNumberHateoasHandler;
+        this.unitHateoasHandler = unitHateoasHandler;
+        this.metadataService = metadataService;
     }
 
     // All CREATE methods
 
     @Override
     @Transactional
-    public BuildingHateoas createNewBuilding
-            (@NotNull Building building, @NotNull Record record) {
+    public BuildingHateoas createNewBuilding(
+            @NotNull final Building building, @NotNull final Record record) {
         record.addNationalIdentifier(building);
         building.setReferenceRecord(record);
-        nationalIdentifierRepository.save(building);
-        BuildingHateoas buildingHateoas = new BuildingHateoas(building);
-        nationalIdentifierHateoasHandler
-            .addLinks(buildingHateoas, new Authorisation());
-        return buildingHateoas;
+        return packAsHateoas(nationalIdentifierRepository.save(building));
     }
 
     @Override
     @Transactional
-    public BuildingHateoas createNewBuilding
-            (@NotNull Building building, @NotNull File file) {
+    public BuildingHateoas createNewBuilding(
+            @NotNull final Building building, @NotNull final File file) {
         file.addNationalIdentifier(building);
         building.setReferenceFile(file);
-        BuildingHateoas buildingHateoas =
-                new BuildingHateoas(
-                        nationalIdentifierRepository.save(building));
-        nationalIdentifierHateoasHandler.addLinks(
-                buildingHateoas, new Authorisation());
-        return buildingHateoas;
+        return packAsHateoas(nationalIdentifierRepository.save(building));
     }
 
     @Override
     @Transactional
     public CadastralUnitHateoas createNewCadastralUnit
-            (@NotNull CadastralUnit cadastralUnit, @NotNull Record record) {
+            (@NotNull final CadastralUnit cadastralUnit,
+             @NotNull final Record record) {
         record.addNationalIdentifier(cadastralUnit);
         cadastralUnit.setReferenceRecord(record);
-        nationalIdentifierRepository.save(cadastralUnit);
-        CadastralUnitHateoas cadastralUnitHateoas =
-            new CadastralUnitHateoas(cadastralUnit);
-        nationalIdentifierHateoasHandler
-            .addLinks(cadastralUnitHateoas, new Authorisation());
-        return cadastralUnitHateoas;
+        return packAsHateoas(nationalIdentifierRepository.save(cadastralUnit));
     }
 
     @Override
     @Transactional
-    public CadastralUnitHateoas createNewCadastralUnit
-            (@NotNull CadastralUnit cadastralUnit, @NotNull File file) {
+    public CadastralUnitHateoas createNewCadastralUnit(
+            @NotNull final CadastralUnit cadastralUnit,
+            @NotNull final File file) {
         file.addNationalIdentifier(cadastralUnit);
         cadastralUnit.setReferenceFile(file);
-        nationalIdentifierRepository.save(cadastralUnit);
-        CadastralUnitHateoas cadastralUnitHateoas =
-            new CadastralUnitHateoas(cadastralUnit);
-        nationalIdentifierHateoasHandler
-            .addLinks(cadastralUnitHateoas, new Authorisation());
-        return cadastralUnitHateoas;
+        return packAsHateoas(nationalIdentifierRepository.save(cadastralUnit));
     }
 
     @Override
     @Transactional
-    public DNumberHateoas createNewDNumber
-            (@NotNull DNumber dNumber, @NotNull Record record) {
+    public DNumberHateoas createNewDNumber(
+            @NotNull final DNumber dNumber, @NotNull final Record record) {
         record.addNationalIdentifier(dNumber);
         dNumber.setReferenceRecord(record);
-        nationalIdentifierRepository.save(dNumber);
-        DNumberHateoas dNumberHateoas = new DNumberHateoas(dNumber);
-        nationalIdentifierHateoasHandler
-            .addLinks(dNumberHateoas, new Authorisation());
-        return dNumberHateoas;
+        return packAsHateoas(nationalIdentifierRepository.save(dNumber));
     }
 
     @Override
     @Transactional
-    public DNumberHateoas createNewDNumber
-            (@NotNull DNumber dNumber, @NotNull File file) {
+    public DNumberHateoas createNewDNumber(
+            @NotNull final DNumber dNumber, @NotNull final File file) {
         file.addNationalIdentifier(dNumber);
         dNumber.setReferenceFile(file);
-        nationalIdentifierRepository.save(dNumber);
-        DNumberHateoas dNumberHateoas = new DNumberHateoas(dNumber);
-        nationalIdentifierHateoasHandler
-            .addLinks(dNumberHateoas, new Authorisation());
-        return dNumberHateoas;
+        return packAsHateoas(nationalIdentifierRepository.save(dNumber));
     }
 
     @Override
     @Transactional
-    public PlanHateoas createNewPlan
-            (@NotNull Plan plan, @NotNull Record record) {
+    public PlanHateoas createNewPlan(
+            @NotNull final Plan plan, @NotNull final Record record) {
         record.addNationalIdentifier(plan);
         plan.setReferenceRecord(record);
-        nationalIdentifierRepository.save(plan);
-        PlanHateoas planHateoas = new PlanHateoas(plan);
-        nationalIdentifierHateoasHandler
-            .addLinks(planHateoas, new Authorisation());
-        return planHateoas;
+        return packAsHateoas(nationalIdentifierRepository.save(plan));
     }
 
     @Override
     @Transactional
-    public PlanHateoas createNewPlan
-            (@NotNull Plan plan, @NotNull File file) {
+    public PlanHateoas createNewPlan(
+            @NotNull final Plan plan, @NotNull final File file) {
         file.addNationalIdentifier(plan);
         plan.setReferenceFile(file);
-        nationalIdentifierRepository.save(plan);
-        PlanHateoas planHateoas = new PlanHateoas(plan);
-        nationalIdentifierHateoasHandler
-            .addLinks(planHateoas, new Authorisation());
-        return planHateoas;
+        return packAsHateoas(nationalIdentifierRepository.save(plan));
     }
 
     @Override
     @Transactional
-    public PositionHateoas createNewPosition
-            (@NotNull Position position, @NotNull Record record) {
+    public PositionHateoas createNewPosition(
+            @NotNull Position position, @NotNull Record record) {
         record.addNationalIdentifier(position);
-        nationalIdentifierRepository.save(position);
-        PositionHateoas positionHateoas = new PositionHateoas(position);
-        positionHateoasHandler.addLinks(positionHateoas, new Authorisation());
-        return positionHateoas;
+        return packAsHateoas(nationalIdentifierRepository.save(position));
     }
 
     @Override
     @Transactional
-    public PositionHateoas createNewPosition
-            (@NotNull Position position, @NotNull File file) {
+    public PositionHateoas createNewPosition(
+            @NotNull Position position, @NotNull File file) {
         file.addNationalIdentifier(position);
-        nationalIdentifierRepository.save(position);
-        PositionHateoas positionHateoas = new PositionHateoas(position);
-        positionHateoasHandler.addLinks(positionHateoas, new Authorisation());
-        return positionHateoas;
+        return packAsHateoas(nationalIdentifierRepository.save(position));
     }
 
     @Override
     @Transactional
-    public SocialSecurityNumberHateoas createNewSocialSecurityNumber
-            (@NotNull SocialSecurityNumber socialSecurityNumber, @NotNull Record record) {
+    public SocialSecurityNumberHateoas createNewSocialSecurityNumber(
+            @NotNull final SocialSecurityNumber socialSecurityNumber,
+            @NotNull final Record record) {
         record.addNationalIdentifier(socialSecurityNumber);
         socialSecurityNumber.setReferenceRecord(record);
-        nationalIdentifierRepository.save(socialSecurityNumber);
-        SocialSecurityNumberHateoas socialSecurityNumberHateoas =
-            new SocialSecurityNumberHateoas(socialSecurityNumber);
-        nationalIdentifierHateoasHandler
-            .addLinks(socialSecurityNumberHateoas, new Authorisation());
-        return socialSecurityNumberHateoas;
+        return packAsHateoas(
+                nationalIdentifierRepository.save(socialSecurityNumber));
     }
 
     @Override
     @Transactional
-    public SocialSecurityNumberHateoas createNewSocialSecurityNumber
-            (@NotNull SocialSecurityNumber socialSecurityNumber, @NotNull File file) {
+    public SocialSecurityNumberHateoas createNewSocialSecurityNumber(
+            @NotNull final SocialSecurityNumber socialSecurityNumber,
+            @NotNull final File file) {
         file.addNationalIdentifier(socialSecurityNumber);
         socialSecurityNumber.setReferenceFile(file);
-        nationalIdentifierRepository.save(socialSecurityNumber);
-        SocialSecurityNumberHateoas socialSecurityNumberHateoas =
-            new SocialSecurityNumberHateoas(socialSecurityNumber);
-        nationalIdentifierHateoasHandler.addLinks(
-                socialSecurityNumberHateoas, new Authorisation());
-        return socialSecurityNumberHateoas;
+        return packAsHateoas(nationalIdentifierRepository
+                .save(socialSecurityNumber));
     }
 
     @Override
     @Transactional
-    public UnitHateoas createNewUnit
-            (@NotNull Unit unit, @NotNull Record record) {
+    public UnitHateoas createNewUnit(
+            @NotNull final Unit unit, @NotNull final Record record) {
         record.addNationalIdentifier(unit);
-        nationalIdentifierRepository.save(unit);
-        UnitHateoas unitHateoas = new UnitHateoas(unit);
-        nationalIdentifierHateoasHandler
-            .addLinks(unitHateoas, new Authorisation());
-        return unitHateoas;
+        return packAsHateoas(nationalIdentifierRepository.save(unit));
     }
 
     @Override
     @Transactional
-    public UnitHateoas createNewUnit
-            (@NotNull Unit unit, @NotNull File file) {
+    public UnitHateoas createNewUnit(
+            @NotNull final Unit unit, @NotNull final File file) {
         file.addNationalIdentifier(unit);
-        nationalIdentifierRepository.save(unit);
-        UnitHateoas unitHateoas = new UnitHateoas(unit);
-        nationalIdentifierHateoasHandler
-                .addLinks(unitHateoas, new Authorisation());
-        return unitHateoas;
+        return packAsHateoas(nationalIdentifierRepository.save(unit));
     }
 
     // All READ methods
 
     @Override
-    public NationalIdentifier findBySystemId(@NotNull String systemId) {
-        return getNationalIdentifierOrThrow(systemId);
+    public BuildingHateoas findBuildingBySystemId(
+            @NotNull final UUID systemId) {
+        return packAsHateoas((Building) getNationalIdentifierOrThrow(systemId));
+    }
+
+    @Override
+    public UnitHateoas findUnitBySystemId(
+            @NotNull final UUID systemId) {
+        return packAsHateoas((Unit) getNationalIdentifierOrThrow(systemId));
+    }
+
+    @Override
+    public CadastralUnitHateoas findCadastralUnitBySystemId(
+            @NotNull final UUID systemId) {
+        return packAsHateoas((CadastralUnit) getNationalIdentifierOrThrow(systemId));
+    }
+
+    @Override
+    public PositionHateoas findPositionBySystemId(
+            @NotNull final UUID systemId) {
+        return packAsHateoas((Position) getNationalIdentifierOrThrow(systemId));
+    }
+
+    @Override
+    public PlanHateoas findPlanBySystemId(
+            @NotNull final UUID systemId) {
+        return packAsHateoas((Plan) getNationalIdentifierOrThrow(systemId));
+    }
+
+    @Override
+    public SocialSecurityNumberHateoas findSocialSecurityNumberBySystemId(
+            @NotNull final UUID systemId) {
+        return packAsHateoas((SocialSecurityNumber) getNationalIdentifierOrThrow(systemId));
+    }
+
+    @Override
+    public DNumberHateoas findDNumberBySystemId(
+            @NotNull final UUID systemId) {
+        return packAsHateoas((DNumber) getNationalIdentifierOrThrow(systemId));
     }
 
     // All UPDATE methods
 
     @Override
     @Transactional
-    public Building updateBuilding(
-            @NotNull String systemId, @NotNull Long version,
-            @NotNull Building incomingBuilding) {
+    public BuildingHateoas updateBuilding(
+            @NotNull final UUID systemId, @NotNull final Long version,
+            @NotNull final Building incomingBuilding) {
         Building existingBuilding =
                 (Building) getNationalIdentifierOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
         // First the values
         existingBuilding.setBuildingNumber
-            (incomingBuilding.getBuildingNumber());
+                (incomingBuilding.getBuildingNumber());
         existingBuilding.setRunningChangeNumber
-            (incomingBuilding.getRunningChangeNumber());
+                (incomingBuilding.getRunningChangeNumber());
 
         // Note setVersion can potentially result in a
         // NoarkConcurrencyException exception as it checks the ETAG
         // value
         existingBuilding.setVersion(version);
-        nationalIdentifierRepository.save(existingBuilding);
-        return existingBuilding;
+        return packAsHateoas(existingBuilding);
     }
 
     @Override
     @Transactional
-    public CadastralUnit updateCadastralUnit(
-            @NotNull String systemId, @NotNull Long version,
-            @NotNull CadastralUnit incomingCadastralUnit) {
+    public CadastralUnitHateoas updateCadastralUnit(
+            @NotNull final UUID systemId, @NotNull final Long version,
+            @NotNull final CadastralUnit incomingCadastralUnit) {
         CadastralUnit existingCadastralUnit =
-            (CadastralUnit) getNationalIdentifierOrThrow(systemId);
+                (CadastralUnit) getNationalIdentifierOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
         // First the values
         existingCadastralUnit.setMunicipalityNumber
-            (incomingCadastralUnit.getMunicipalityNumber());
+                (incomingCadastralUnit.getMunicipalityNumber());
         existingCadastralUnit.setHoldingNumber
-            (incomingCadastralUnit.getHoldingNumber());
+                (incomingCadastralUnit.getHoldingNumber());
         existingCadastralUnit.setSubHoldingNumber
-            (incomingCadastralUnit.getSubHoldingNumber());
+                (incomingCadastralUnit.getSubHoldingNumber());
         existingCadastralUnit.setLeaseNumber
-            (incomingCadastralUnit.getLeaseNumber());
+                (incomingCadastralUnit.getLeaseNumber());
         existingCadastralUnit.setSectionNumber
-            (incomingCadastralUnit.getSectionNumber());
+                (incomingCadastralUnit.getSectionNumber());
 
         // Note setVersion can potentially result in a
         // NoarkConcurrencyException exception as it checks the ETAG
         // value
         existingCadastralUnit.setVersion(version);
-        nationalIdentifierRepository.save(existingCadastralUnit);
-        return existingCadastralUnit;
+        return packAsHateoas(existingCadastralUnit);
     }
 
     @Override
     @Transactional
-    public DNumber updateDNumber(
-            @NotNull String systemId, @NotNull Long version,
-            @NotNull DNumber incomingDNumber) {
+    public DNumberHateoas updateDNumber(
+            @NotNull final UUID systemId, @NotNull final Long version,
+            @NotNull final DNumber incomingDNumber) {
         DNumber existingDNumber =
-            (DNumber) getNationalIdentifierOrThrow(systemId);
+                (DNumber) getNationalIdentifierOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
         // First the values
         existingDNumber.setdNumber
-            (incomingDNumber.getdNumber());
+                (incomingDNumber.getdNumber());
 
         // Note setVersion can potentially result in a
         // NoarkConcurrencyException exception as it checks the ETAG
         // value
         existingDNumber.setVersion(version);
-        nationalIdentifierRepository.save(existingDNumber);
-        return existingDNumber;
+        return packAsHateoas(existingDNumber);
     }
 
     @Override
     @Transactional
-    public Plan updatePlan(
-            @NotNull String systemId, @NotNull Long version,
-            @NotNull Plan incomingPlan) {
+    public PlanHateoas updatePlan(
+            @NotNull final UUID systemId, @NotNull final Long version,
+            @NotNull final Plan incomingPlan) {
         Plan existingPlan =
-            (Plan) getNationalIdentifierOrThrow(systemId);
+                (Plan) getNationalIdentifierOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
         // First the values
         existingPlan.setMunicipalityNumber
-            (incomingPlan.getMunicipalityNumber());
+                (incomingPlan.getMunicipalityNumber());
         existingPlan.setCountyNumber
-            (incomingPlan.getCountyNumber());
+                (incomingPlan.getCountyNumber());
         existingPlan.setCountry
-            (incomingPlan.getCountry());
+                (incomingPlan.getCountry());
         existingPlan.setPlanIdentification
-            (incomingPlan.getPlanIdentification());
+                (incomingPlan.getPlanIdentification());
 
         // Note setVersion can potentially result in a
         // NoarkConcurrencyException exception as it checks the ETAG
         // value
         existingPlan.setVersion(version);
-        nationalIdentifierRepository.save(existingPlan);
-        return existingPlan;
+        return packAsHateoas(existingPlan);
     }
 
     @Override
     @Transactional
-    public Position updatePosition(
-            @NotNull String systemId, @NotNull Long version,
-            @NotNull Position incomingPosition) {
+    public PositionHateoas updatePosition(
+            @NotNull final UUID systemId, @NotNull final Long version,
+            @NotNull final Position incomingPosition) {
         Position existingPosition =
-            (Position) getNationalIdentifierOrThrow(systemId);
+                (Position) getNationalIdentifierOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
         // First the values
@@ -362,44 +352,42 @@ public class NationalIdentifierService
         existingPosition.setY(incomingPosition.getY());
         existingPosition.setZ(incomingPosition.getZ());
         existingPosition.setCoordinateSystem
-            (incomingPosition.getCoordinateSystem());
+                (incomingPosition.getCoordinateSystem());
 
         // Note setVersion can potentially result in a
         // NoarkConcurrencyException exception as it checks the ETAG
         // value
         existingPosition.setVersion(version);
-        nationalIdentifierRepository.save(existingPosition);
-        return existingPosition;
+        return packAsHateoas(existingPosition);
     }
 
     @Override
     @Transactional
-    public SocialSecurityNumber updateSocialSecurityNumber(
-            @NotNull String systemId, @NotNull Long version,
-            @NotNull SocialSecurityNumber incomingSocialSecurityNumber) {
+    public SocialSecurityNumberHateoas updateSocialSecurityNumber(
+            @NotNull final UUID systemId, @NotNull final Long version,
+            @NotNull final SocialSecurityNumber incomingSocialSecurityNumber) {
         SocialSecurityNumber existingSocialSecurityNumber =
-            (SocialSecurityNumber) getNationalIdentifierOrThrow(systemId);
+                (SocialSecurityNumber) getNationalIdentifierOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
         // First the values
         existingSocialSecurityNumber.setSocialSecurityNumber
-            (incomingSocialSecurityNumber.getSocialSecurityNumber());
+                (incomingSocialSecurityNumber.getSocialSecurityNumber());
 
         // Note setVersion can potentially result in a
         // NoarkConcurrencyException exception as it checks the ETAG
         // value
         existingSocialSecurityNumber.setVersion(version);
-        nationalIdentifierRepository.save(existingSocialSecurityNumber);
-        return existingSocialSecurityNumber;
+        return packAsHateoas(existingSocialSecurityNumber);
     }
 
     @Override
     @Transactional
-    public Unit updateUnit(
-            @NotNull String systemId, @NotNull Long version,
-            @NotNull Unit incomingUnit) {
+    public UnitHateoas updateUnit(
+            @NotNull final UUID systemId, @NotNull final Long version,
+            @NotNull final Unit incomingUnit) {
         Unit existingUnit =
-            (Unit) getNationalIdentifierOrThrow(systemId);
+                (Unit) getNationalIdentifierOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
         // First the values
@@ -410,51 +398,50 @@ public class NationalIdentifierService
         // NoarkConcurrencyException exception as it checks the ETAG
         // value
         existingUnit.setVersion(version);
-        nationalIdentifierRepository.save(existingUnit);
-        return existingUnit;
+        return packAsHateoas(existingUnit);
     }
 
     // All DELETE methods
 
     @Override
     @Transactional
-    public void deleteBuilding(@NotNull String systemId) {
+    public void deleteBuilding(@NotNull final UUID systemId) {
         deleteEntity(getNationalIdentifierOrThrow(systemId));
     }
 
     @Override
     @Transactional
-    public void deleteCadastralUnit(@NotNull String systemId) {
+    public void deleteCadastralUnit(@NotNull final UUID systemId) {
         deleteEntity(getNationalIdentifierOrThrow(systemId));
     }
 
     @Override
     @Transactional
-    public void deleteDNumber(@NotNull String systemId) {
+    public void deleteDNumber(@NotNull final UUID systemId) {
         deleteEntity(getNationalIdentifierOrThrow(systemId));
     }
 
     @Override
     @Transactional
-    public void deletePlan(@NotNull String systemId) {
+    public void deletePlan(@NotNull final UUID systemId) {
         deleteEntity(getNationalIdentifierOrThrow(systemId));
     }
 
     @Override
     @Transactional
-    public void deletePosition(@NotNull String systemId) {
+    public void deletePosition(@NotNull final UUID systemId) {
         deleteEntity(getNationalIdentifierOrThrow(systemId));
     }
 
     @Override
     @Transactional
-    public void deleteSocialSecurityNumber(@NotNull String systemId) {
+    public void deleteSocialSecurityNumber(@NotNull final UUID systemId) {
         deleteEntity(getNationalIdentifierOrThrow(systemId));
     }
 
     @Override
     @Transactional
-    public void deleteUnit(@NotNull String systemId) {
+    public void deleteUnit(@NotNull final UUID systemId) {
         deleteEntity(getNationalIdentifierOrThrow(systemId));
     }
 
@@ -466,13 +453,11 @@ public class NationalIdentifierService
      * @return the Building object wrapped as a BuildingHateoas object
      */
     @Override
-    public BuildingHateoas generateDefaultBuilding() {
+    public BuildingHateoas generateDefaultBuilding(
+            @NotNull final UUID systemId) {
         Building building = new Building();
-        BuildingHateoas buildingHateoas =
-                new BuildingHateoas(building);
-        nationalIdentifierHateoasHandler
-                .addLinksOnTemplate(buildingHateoas, new Authorisation());
-        return buildingHateoas;
+        building.setVersion(-1L, true);
+        return packAsHateoas(building);
     }
 
     /**
@@ -481,13 +466,11 @@ public class NationalIdentifierService
      * @return the CadastralUnit object wrapped as a CadastralUnitHateoas object
      */
     @Override
-    public CadastralUnitHateoas generateDefaultCadastralUnit() {
+    public CadastralUnitHateoas generateDefaultCadastralUnit(
+            @NotNull final UUID systemId) {
         CadastralUnit cadastralUnit = new CadastralUnit();
-        CadastralUnitHateoas cadastralUnitHateoas =
-                new CadastralUnitHateoas(cadastralUnit);
-        nationalIdentifierHateoasHandler
-                .addLinksOnTemplate(cadastralUnitHateoas, new Authorisation());
-        return cadastralUnitHateoas;
+        cadastralUnit.setVersion(-1L, true);
+        return packAsHateoas(cadastralUnit);
     }
 
     /**
@@ -496,13 +479,10 @@ public class NationalIdentifierService
      * @return the DNumber object wrapped as a DNumberHateoas object
      */
     @Override
-    public DNumberHateoas generateDefaultDNumber() {
+    public DNumberHateoas generateDefaultDNumber(@NotNull final UUID systemId) {
         DNumber dNumber = new DNumber();
-        DNumberHateoas dNumberHateoas =
-                new DNumberHateoas(dNumber);
-        nationalIdentifierHateoasHandler
-                .addLinksOnTemplate(dNumberHateoas, new Authorisation());
-        return dNumberHateoas;
+        dNumber.setVersion(-1L, true);
+        return packAsHateoas(dNumber);
     }
 
     /**
@@ -511,13 +491,10 @@ public class NationalIdentifierService
      * @return the Plan object wrapped as a PlanHateoas object
      */
     @Override
-    public PlanHateoas generateDefaultPlan() {
+    public PlanHateoas generateDefaultPlan(@NotNull final UUID systemId) {
         Plan plan = new Plan();
-        PlanHateoas planHateoas =
-                new PlanHateoas(plan);
-        nationalIdentifierHateoasHandler
-                .addLinksOnTemplate(planHateoas, new Authorisation());
-        return planHateoas;
+        plan.setVersion(-1L, true);
+        return packAsHateoas(plan);
     }
 
     /**
@@ -526,17 +503,15 @@ public class NationalIdentifierService
      * @return the Position object wrapped as a PositionHateoas object
      */
     @Override
-    public PositionHateoas generateDefaultPosition() {
+    public PositionHateoas generateDefaultPosition(
+            @NotNull final UUID systemId) {
         Position position = new Position();
         CoordinateSystem coordinateSystem = (CoordinateSystem)
-            metadataService.findValidMetadataByEntityTypeOrThrow
-            (COORDINATE_SYSTEM, "EPSG:4326", "WGS84");
+                metadataService.findValidMetadataByEntityTypeOrThrow
+                        (COORDINATE_SYSTEM, "EPSG:4326", "WGS84");
         position.setCoordinateSystem(coordinateSystem);
-        PositionHateoas positionHateoas =
-                new PositionHateoas(position);
-        positionHateoasHandler
-            .addLinksOnTemplate(positionHateoas, new Authorisation());
-        return positionHateoas;
+        position.setVersion(-1L, true);
+        return packAsHateoas(position);
     }
 
     /**
@@ -545,13 +520,11 @@ public class NationalIdentifierService
      * @return the SocialSecurityNumber object wrapped as a SocialSecurityNumberHateoas object
      */
     @Override
-    public SocialSecurityNumberHateoas generateDefaultSocialSecurityNumber() {
+    public SocialSecurityNumberHateoas generateDefaultSocialSecurityNumber(
+            @NotNull final UUID systemId) {
         SocialSecurityNumber socialSecurityNumber = new SocialSecurityNumber();
-        SocialSecurityNumberHateoas socialSecurityNumberHateoas =
-                new SocialSecurityNumberHateoas(socialSecurityNumber);
-        nationalIdentifierHateoasHandler
-                .addLinksOnTemplate(socialSecurityNumberHateoas, new Authorisation());
-        return socialSecurityNumberHateoas;
+        socialSecurityNumber.setVersion(-1L, true);
+        return packAsHateoas(socialSecurityNumber);
     }
 
     /**
@@ -560,15 +533,61 @@ public class NationalIdentifierService
      * @return the Unit object wrapped as a UnitHateoas object
      */
     @Override
-    public UnitHateoas generateDefaultUnit() {
+    public UnitHateoas generateDefaultUnit(@NotNull final UUID systemId) {
         Unit unit = new Unit();
-        UnitHateoas unitHateoas = new UnitHateoas(unit);
-        nationalIdentifierHateoasHandler
-                .addLinksOnTemplate(unitHateoas, new Authorisation());
-        return unitHateoas;
+        unit.setVersion(-1L, true);
+        return packAsHateoas(unit);
     }
 
     // All helper methods
+
+    public SocialSecurityNumberHateoas packAsHateoas(
+            @NotNull final SocialSecurityNumber socialSecurityNumber) {
+        SocialSecurityNumberHateoas socialSecurityNumberHateoas =
+                new SocialSecurityNumberHateoas(socialSecurityNumber);
+        applyLinksAndHeader(socialSecurityNumberHateoas,
+                socialSecurityNumberHateoasHandler);
+        return socialSecurityNumberHateoas;
+    }
+
+    public UnitHateoas packAsHateoas(@NotNull final Unit unit) {
+        UnitHateoas unitHateoas = new UnitHateoas(unit);
+        applyLinksAndHeader(unitHateoas, unitHateoasHandler);
+        return unitHateoas;
+    }
+
+    public PositionHateoas packAsHateoas(@NotNull final Position position) {
+        PositionHateoas positionHateoas = new PositionHateoas(position);
+        applyLinksAndHeader(positionHateoas, positionHateoasHandler);
+        return positionHateoas;
+    }
+
+    public PlanHateoas packAsHateoas(@NotNull final Plan plan) {
+        PlanHateoas planHateoas = new PlanHateoas(plan);
+        applyLinksAndHeader(planHateoas, planHateoasHandler);
+        return planHateoas;
+    }
+
+    public DNumberHateoas packAsHateoas(@NotNull final DNumber dNumber) {
+        DNumberHateoas dNumberHateoas = new DNumberHateoas(dNumber);
+        applyLinksAndHeader(dNumberHateoas, dNumberHateoasHandler);
+        return dNumberHateoas;
+    }
+
+    public CadastralUnitHateoas packAsHateoas(
+            @NotNull final CadastralUnit cadastralUnit) {
+        CadastralUnitHateoas cadastralUnitHateoas =
+                new CadastralUnitHateoas(cadastralUnit);
+        applyLinksAndHeader(cadastralUnitHateoas, cadastralUnitHateoasHandler);
+        return cadastralUnitHateoas;
+    }
+
+    public BuildingHateoas packAsHateoas(@NotNull final Building building) {
+        BuildingHateoas buildingHateoas = new BuildingHateoas(building);
+        applyLinksAndHeader(buildingHateoas, buildingHateoasHandler);
+        return buildingHateoas;
+    }
+
 
     /**
      * Internal helper method. Rather than having a find and try catch
@@ -581,13 +600,12 @@ public class NationalIdentifierService
      * @return the retrieved NationalIdentifier
      */
     private NationalIdentifier getNationalIdentifierOrThrow(
-            @NotNull String systemId) {
-        NationalIdentifier id = nationalIdentifierRepository.findBySystemId(
-                UUID.fromString(systemId));
+            @NotNull final UUID systemId) {
+        NationalIdentifier id = nationalIdentifierRepository
+                .findBySystemId(systemId);
         if (id == null) {
             String error = INFO_CANNOT_FIND_OBJECT + " NationalIdentifier, " +
                     "using systemId " + systemId;
-            logger.error(error);
             throw new NoarkEntityNotFoundException(error);
         }
         return id;

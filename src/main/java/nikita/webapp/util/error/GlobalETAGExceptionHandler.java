@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.apache.commons.lang3.exception.ExceptionUtils.getRootCauseMessage;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
@@ -41,7 +40,6 @@ class GlobalETAGExceptionHandler {
                 devMessage.replace("\"", "\\\""),
                 devStackTrace.replace("\"", "\\\""));
         return ResponseEntity.status(BAD_REQUEST)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(apiError);
     }
 }

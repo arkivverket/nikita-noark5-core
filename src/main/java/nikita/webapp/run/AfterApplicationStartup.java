@@ -95,6 +95,7 @@ public class AfterApplicationStartup {
         setDefaultMimeTypesAsConvertible();
 
         metadataInsert.populateMetadataEntities();
+
         if (createDirectoryStore) {
             createDirectoryStoreIfNotExists();
         }

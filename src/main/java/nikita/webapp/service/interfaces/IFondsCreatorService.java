@@ -2,36 +2,41 @@ package nikita.webapp.service.interfaces;
 
 import nikita.common.model.noark5.v5.Fonds;
 import nikita.common.model.noark5.v5.FondsCreator;
+import nikita.common.model.noark5.v5.hateoas.FondsCreatorHateoas;
 import nikita.common.model.noark5.v5.hateoas.FondsHateoas;
-import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
+import java.util.UUID;
 
 public interface IFondsCreatorService {
 
-    // -- All CREATE operations
-    FondsCreator createNewFondsCreator(FondsCreator fondsCreator);
+    FondsCreatorHateoas createNewFondsCreator(
+            @NotNull final FondsCreator fondsCreator);
 
-    Fonds createFondsAssociatedWithFondsCreator(String fondsCreatorSystemId, Fonds fonds);
+    FondsHateoas createFondsAssociatedWithFondsCreator(
+            @NotNull final UUID systemId,
+            @NotNull final Fonds fonds);
 
     // -- All READ operations
-    Iterable<FondsCreator> findAll();
 
-    List<FondsCreator> findByOwnedBy(String ownedBy);
+    FondsCreatorHateoas findAll();
 
-    FondsCreator findBySystemId(String systemId);
+    FondsCreatorHateoas findBySystemId(
+            @NotNull final UUID systemId);
 
-    ResponseEntity<FondsHateoas> findFondsAssociatedWithFondsCreator(
-            @NotNull final String systemId);
+    FondsHateoas findFondsAssociatedWithFondsCreator(
+            @NotNull final UUID systemId);
 
     // -- All UPDATE operations
-    FondsCreator handleUpdate(@NotNull final String systemId,
-                              @NotNull final Long version,
-                              @NotNull final FondsCreator fondsCreator);
+    FondsCreatorHateoas handleUpdate(
+            @NotNull final UUID systemId,
+            @NotNull final Long version,
+            @NotNull final FondsCreator fondsCreator);
 
     // -- All DELETE operations
-    void deleteEntity(@NotNull String systemId);
+    void deleteEntity(@NotNull final UUID systemId);
 
-    long deleteAllByOwnedBy();
+    void deleteAllByOwnedBy();
+
+    FondsCreatorHateoas generateDefaultFondsCreator();
 }
