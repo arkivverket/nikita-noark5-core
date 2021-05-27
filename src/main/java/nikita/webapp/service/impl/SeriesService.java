@@ -19,6 +19,7 @@ import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import nikita.common.util.exceptions.NoarkEntityEditWhenClosedException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
+import nikita.webapp.hateoas.interfaces.secondary.IScreeningMetadataHateoasHandler;
 import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.ICaseFileService;
 import nikita.webapp.service.interfaces.IClassificationSystemService;
@@ -60,6 +61,7 @@ public class SeriesService
     private final ISeriesHateoasHandler seriesHateoasHandler;
     private final IScreeningMetadataService screeningMetadataService;
     private final IStorageLocationService storageLocationService;
+    private final IScreeningMetadataHateoasHandler screeningMetadataHateoasHandler;
 
     public SeriesService(
             EntityManager entityManager,
@@ -73,7 +75,8 @@ public class SeriesService
             ISeriesRepository seriesRepository,
             ISeriesHateoasHandler seriesHateoasHandler,
             IScreeningMetadataService screeningMetadataService,
-            IStorageLocationService storageLocationService) {
+            IStorageLocationService storageLocationService,
+            IScreeningMetadataHateoasHandler screeningMetadataHateoasHandler) {
         super(entityManager, applicationEventPublisher, patchService, odataService);
         this.metadataService = metadataService;
         this.fileService = fileService;
@@ -83,6 +86,7 @@ public class SeriesService
         this.seriesHateoasHandler = seriesHateoasHandler;
         this.screeningMetadataService = screeningMetadataService;
         this.storageLocationService = storageLocationService;
+        this.screeningMetadataHateoasHandler = screeningMetadataHateoasHandler;
     }
 
     // All CREATE operations
@@ -232,9 +236,8 @@ public class SeriesService
                     INFO_CANNOT_FIND_OBJECT + " Screening, using systemId " +
                             systemId);
         }
-        NikitaPage page = new
-                NikitaPage(copyOf(screening.getReferenceScreeningMetadata()));
-        return new ScreeningMetadataHateoas(page);
+        return packAsHateoas(new NikitaPage(copyOf(
+                screening.getReferenceScreeningMetadata())));
     }
 
     // All UPDATE operations
@@ -359,6 +362,14 @@ public class SeriesService
     }
 
     // Helper methods
+
+    public ScreeningMetadataHateoas packAsHateoas(NikitaPage page) {
+        ScreeningMetadataHateoas screeningMetadataHateoas =
+                new ScreeningMetadataHateoas(page);
+        applyLinksAndHeader(screeningMetadataHateoas,
+                screeningMetadataHateoasHandler);
+        return screeningMetadataHateoas;
+    }
 
     public SeriesHateoas packAsHateoas(@NotNull final Series series) {
         SeriesHateoas seriesHateoas = new SeriesHateoas(series);

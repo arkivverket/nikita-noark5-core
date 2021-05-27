@@ -21,6 +21,7 @@ import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.repository.n5v5.IFileRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IFileHateoasHandler;
+import nikita.webapp.hateoas.interfaces.secondary.IScreeningMetadataHateoasHandler;
 import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.*;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
@@ -64,6 +65,7 @@ public class FileService
     private final IPartService partService;
     private final IScreeningMetadataService screeningMetadataService;
     private final IStorageLocationService storageLocationService;
+    private final IScreeningMetadataHateoasHandler screeningMetadataHateoasHandler;
 
     public FileService(EntityManager entityManager,
                        ApplicationEventPublisher applicationEventPublisher,
@@ -81,7 +83,8 @@ public class FileService
                        INationalIdentifierService nationalIdentifierService,
                        IPartService partService,
                        IScreeningMetadataService screeningMetadataService,
-                       IStorageLocationService storageLocationService) {
+                       IStorageLocationService storageLocationService,
+                       IScreeningMetadataHateoasHandler screeningMetadataHateoasHandler) {
         super(entityManager, applicationEventPublisher, patchService, odataService);
         this.recordService = recordService;
         this.caseFileService = caseFileService;
@@ -96,6 +99,7 @@ public class FileService
         this.partService = partService;
         this.screeningMetadataService = screeningMetadataService;
         this.storageLocationService = storageLocationService;
+        this.screeningMetadataHateoasHandler = screeningMetadataHateoasHandler;
     }
 
     // All CREATE operations
@@ -359,9 +363,8 @@ public class FileService
                     INFO_CANNOT_FIND_OBJECT + " Screening, using systemId " +
                             systemId);
         }
-        NikitaPage page = new
-                NikitaPage(copyOf(screening.getReferenceScreeningMetadata()));
-        return new ScreeningMetadataHateoas(page);
+        return packAsHateoas(new NikitaPage(copyOf(
+                screening.getReferenceScreeningMetadata())));
     }
 
     @Override
@@ -591,6 +594,14 @@ public class FileService
     }
 
     // All HELPER operations
+
+    public ScreeningMetadataHateoas packAsHateoas(NikitaPage page) {
+        ScreeningMetadataHateoas screeningMetadataHateoas =
+                new ScreeningMetadataHateoas(page);
+        applyLinksAndHeader(screeningMetadataHateoas,
+                screeningMetadataHateoasHandler);
+        return screeningMetadataHateoas;
+    }
 
     public FileHateoas packAsHateoas(@NotNull final File file) {
         FileHateoas fileHateoas = new FileHateoas(file);
