@@ -59,9 +59,9 @@ public class MetadataController {
     @PostMapping(value = "*")
     public ResponseEntity<MetadataHateoas> createMetadata(
             @RequestBody Metadata metadata)
-            throws NikitaException, ClassNotFoundException,
-            InvocationTargetException, NoSuchMethodException,
-            InstantiationException, IllegalAccessException {
+            throws NikitaException, InvocationTargetException,
+            NoSuchMethodException, InstantiationException,
+            IllegalAccessException {
         return ResponseEntity.status(CREATED)
                 .body(metadataService.createNewMetadataEntity(metadata));
     }
