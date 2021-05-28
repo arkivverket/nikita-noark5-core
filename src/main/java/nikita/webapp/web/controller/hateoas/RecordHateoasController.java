@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import nikita.common.model.nikita.PatchMerge;
 import nikita.common.model.nikita.PatchObjects;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.Record;
@@ -12,10 +13,7 @@ import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartIn
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartUnit;
 import nikita.common.model.noark5.v5.hateoas.*;
-import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartHateoas;
-import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInternalHateoas;
-import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
-import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
+import nikita.common.model.noark5.v5.hateoas.casehandling.*;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
 import nikita.common.model.noark5.v5.hateoas.secondary.*;
 import nikita.common.model.noark5.v5.metadata.Metadata;
@@ -1505,6 +1503,95 @@ public class RecordHateoasController
                                 systemID, crossReference));
     }
 
+
+    // Expand a Record to a RecordNote
+    // POST [contextPath][api]/arkivstruktur/mappe/{systemId}/utvid-til-arkivnotat
+    // REL https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/utvid-til-arkivnotat/
+    @Operation(summary = "Expands a Record identified by a systemId to a RecordNote",
+            description = "Returns the newly updated RecordNote")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "RecordNote " +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED),
+            @ApiResponse(
+                    responseCode = CREATED_VAL,
+                    description = "RecordNote " +
+                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = NOT_FOUND_VAL,
+                    description = API_MESSAGE_PARENT_DOES_NOT_EXIST +
+                            " of type Record"),
+            @ApiResponse(
+                    responseCode = CONFLICT_VAL,
+                    description = API_MESSAGE_CONFLICT),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
+            RECORD_EXPAND_TO_RECORD_NOTE,
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<RecordNoteHateoas> expandRecordToRecordNote(
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of record to expand",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID,
+            @RequestBody PatchMerge patchMerge)
+            throws NikitaException {
+        return ResponseEntity.status(OK)
+                .body(recordService.expandToRecordNote(systemID, patchMerge));
+    }
+
+    // Expand a Record to a RegistryEntry
+    // POST [contextPath][api]/arkivstruktur/mappe/{systemId}/utvid-til-journalpost
+    // REL https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/utvid-til-journalpost/
+    @Operation(summary = "Expands a Record identified by a systemId to a RegistryEntry",
+            description = "Returns the newly updated RegistryEntry")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "RegistryEntry " +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED),
+            @ApiResponse(
+                    responseCode = CREATED_VAL,
+                    description = "RegistryEntry " +
+                            API_MESSAGE_OBJECT_SUCCESSFULLY_CREATED),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = NOT_FOUND_VAL,
+                    description = API_MESSAGE_PARENT_DOES_NOT_EXIST +
+                            " of type Record"),
+            @ApiResponse(
+                    responseCode = CONFLICT_VAL,
+                    description = API_MESSAGE_CONFLICT),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
+            RECORD_EXPAND_TO_RECORD_NOTE,
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<RegistryEntryHateoas> expandRecordToRegistryEntry(
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of record to expand",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID,
+            @RequestBody PatchMerge patchMerge)
+            throws NikitaException {
+        return ResponseEntity.status(OK)
+                .body(recordService.expandToRegistryEntry(systemID, patchMerge));
+    }
+
     // Delete all Record
     // DELETE [contextPath][api]/arkivstruktur/registrering/
     @Operation(summary = "Deletes all Record")
@@ -2008,6 +2095,88 @@ public class RecordHateoasController
             throws NikitaException {
         return ResponseEntity.status(OK)
                 .body(recordService.generateDefaultUnit(systemID));
+    }
+
+    // Get default values to use when expanding a Record to a RecordNote
+    // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/utvid-til-journalpost
+    // REL https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/utvid-til-journalpost/
+    @Operation(summary = "Expands a Record identified by a systemId to a RecordNote",
+            description = "Returns the newly updated RecordNote")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "RecordNote " +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = NOT_FOUND_VAL,
+                    description = API_MESSAGE_PARENT_DOES_NOT_EXIST +
+                            " of type Record"),
+            @ApiResponse(
+                    responseCode = CONFLICT_VAL,
+                    description = API_MESSAGE_CONFLICT),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
+            RECORD_EXPAND_TO_RECORD_NOTE,
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<RecordNoteExpansionHateoas>
+    getExpandRecordToRecordNoteTemplate(
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of record to expand",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID)
+            throws NikitaException {
+        return ResponseEntity.status(OK)
+                .body(recordService
+                        .generateDefaultValuesToExpandToRecordNote(systemID));
+    }
+
+    // Get default values to use when expanding a Record to a RegistryEntry
+    // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/utvid-til-journalpost
+    // REL https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/utvid-til-journalpost/
+    @Operation(summary = "Expands a Record identified by a systemId to a RegistryEntry",
+            description = "Returns the newly updated RegistryEntry")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "RegistryEntry " +
+                            API_MESSAGE_OBJECT_ALREADY_PERSISTED),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = NOT_FOUND_VAL,
+                    description = API_MESSAGE_PARENT_DOES_NOT_EXIST +
+                            " of type Record"),
+            @ApiResponse(
+                    responseCode = CONFLICT_VAL,
+                    description = API_MESSAGE_CONFLICT),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
+            RECORD_EXPAND_TO_REGISTRY_ENTRY,
+            consumes = NOARK5_V5_CONTENT_TYPE_JSON)
+    public ResponseEntity<RegistryEntryExpansionHateoas>
+    getExpandRecordToRegistryEntryTemplate(
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of record to expand",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID)
+            throws NikitaException {
+        return ResponseEntity.status(OK)
+                .body(recordService
+                        .generateDefaultValuesToExpandToRegistryEntry(systemID));
     }
 
     // Delete a Record identified by systemID

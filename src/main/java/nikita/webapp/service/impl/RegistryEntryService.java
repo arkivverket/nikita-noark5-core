@@ -1,5 +1,6 @@
 package nikita.webapp.service.impl;
 
+import nikita.common.model.nikita.PatchMerge;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
@@ -7,6 +8,7 @@ import nikita.common.model.noark5.v5.admin.User;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePart;
+import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryExpansionHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.DocumentFlowHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.PrecedenceHateoas;
@@ -112,8 +114,9 @@ public class RegistryEntryService
 
     @Override
     @Transactional
-    public RegistryEntryHateoas expandRecordAsRegistryEntryFileHateoas(
-            Record record) {
+    public RegistryEntryHateoas expandRecordToRegistryEntry(
+            @NotNull final Record record,
+            @NotNull final PatchMerge patchMerge) {
         RegistryEntry registryEntry = new RegistryEntry(record);
         RegistryEntryStatus registryEntryStatus =
                 new RegistryEntryStatus("J", "Journalført");
@@ -439,22 +442,8 @@ public class RegistryEntryService
 
     @Override
     public RegistryEntryHateoas generateDefaultRegistryEntry(
-            @NotNull final UUID caseFileSystemId) {
-        RegistryEntry defaultRegistryEntry = new RegistryEntry();
-        OffsetDateTime now = OffsetDateTime.now();
-        defaultRegistryEntry.setRecordDate(now);
-        defaultRegistryEntry.setDocumentDate(now);
-        RegistryEntryStatus registryEntryStatus = (RegistryEntryStatus)
-                metadataService.findValidMetadataByEntityTypeOrThrow
-                        (REGISTRY_ENTRY_STATUS, TEST_REGISTRY_ENTRY_STATUS_CODE, null);
-        defaultRegistryEntry.setRegistryEntryStatus(registryEntryStatus);
-        RegistryEntryType registryEntryType = (RegistryEntryType)
-                metadataService.findValidMetadataByEntityTypeOrThrow
-                        (REGISTRY_ENTRY_TYPE, TEST_REGISTRY_ENTRY_TYPE_CODE, null);
-        defaultRegistryEntry.setRegistryEntryType(registryEntryType);
-        defaultRegistryEntry.setRecordYear(now.getYear());
-        defaultRegistryEntry.setVersion(-1L, true);
-        return packAsHateoas(defaultRegistryEntry);
+            @NotNull final UUID registryEntrySystemId) {
+        return packAsHateoas(generateDefaultRegistryEntry());
     }
 
     @Override
@@ -620,6 +609,40 @@ public class RegistryEntryService
         }
     }
 
+    /**
+     * Create a RegistryEntryExpansionHateoas that can be used when expanding a
+     * File to a RegistryEntry. None of the File attributes should be present in
+     * the returned payload. So we have a special approach that can be used to
+     * achieve this.
+     *
+     * @return RegistryEntryExpansionHateoas
+     */
+
+    @Override
+    public RegistryEntryExpansionHateoas generateDefaultExpandedRegistryEntry(
+            @NotNull final UUID systemId) {
+        return packAsRegistryEntryExpansionHateoas(
+                generateDefaultRegistryEntry());
+    }
+
+    public RegistryEntry generateDefaultRegistryEntry() {
+        RegistryEntry defaultRegistryEntry = new RegistryEntry();
+        OffsetDateTime now = OffsetDateTime.now();
+        defaultRegistryEntry.setRecordDate(now);
+        defaultRegistryEntry.setDocumentDate(now);
+        RegistryEntryStatus registryEntryStatus = (RegistryEntryStatus)
+                metadataService.findValidMetadataByEntityTypeOrThrow
+                        (REGISTRY_ENTRY_STATUS, TEST_REGISTRY_ENTRY_STATUS_CODE, null);
+        defaultRegistryEntry.setRegistryEntryStatus(registryEntryStatus);
+        RegistryEntryType registryEntryType = (RegistryEntryType)
+                metadataService.findValidMetadataByEntityTypeOrThrow
+                        (REGISTRY_ENTRY_TYPE, TEST_REGISTRY_ENTRY_TYPE_CODE, null);
+        defaultRegistryEntry.setRegistryEntryType(registryEntryType);
+        defaultRegistryEntry.setRecordYear(now.getYear());
+        defaultRegistryEntry.setVersion(-1L, true);
+        return defaultRegistryEntry;
+    }
+
     private void updateSignOffReferences(SignOff signOff) {
         RegistryEntry referenceRegistryEntry = null;
         CorrespondencePart referenceCorrespondencePart = null;
@@ -699,6 +722,14 @@ public class RegistryEntryService
     private RegistryEntryHateoas packAsHateoas(RegistryEntry registryEntry) {
         RegistryEntryHateoas registryEntryHateoas =
                 new RegistryEntryHateoas(registryEntry);
+        applyLinksAndHeader(registryEntryHateoas, registryEntryHateoasHandler);
+        return registryEntryHateoas;
+    }
+
+    private RegistryEntryExpansionHateoas packAsRegistryEntryExpansionHateoas(
+            RegistryEntry registryEntry) {
+        RegistryEntryExpansionHateoas registryEntryHateoas =
+                new RegistryEntryExpansionHateoas(registryEntry);
         applyLinksAndHeader(registryEntryHateoas, registryEntryHateoasHandler);
         return registryEntryHateoas;
     }

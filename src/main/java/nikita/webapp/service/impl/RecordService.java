@@ -1,6 +1,7 @@
 package nikita.webapp.service.impl;
 
 import nikita.common.model.nikita.NikitaPage;
+import nikita.common.model.nikita.PatchMerge;
 import nikita.common.model.nikita.PatchObjects;
 import nikita.common.model.noark5.bsm.BSMBase;
 import nikita.common.model.noark5.v5.DocumentDescription;
@@ -9,10 +10,7 @@ import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartIn
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartUnit;
 import nikita.common.model.noark5.v5.hateoas.*;
-import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartHateoas;
-import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInternalHateoas;
-import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
-import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
+import nikita.common.model.noark5.v5.hateoas.casehandling.*;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
 import nikita.common.model.noark5.v5.hateoas.secondary.*;
 import nikita.common.model.noark5.v5.md_other.BSMMetadata;
@@ -24,10 +22,8 @@ import nikita.common.repository.n5v5.IRecordRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
 import nikita.webapp.service.application.IPatchService;
-import nikita.webapp.service.interfaces.IBSMService;
-import nikita.webapp.service.interfaces.IDocumentDescriptionService;
-import nikita.webapp.service.interfaces.INationalIdentifierService;
-import nikita.webapp.service.interfaces.IRecordService;
+import nikita.webapp.service.interfaces.*;
+import nikita.webapp.service.interfaces.casehandling.IRecordNoteService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import nikita.webapp.service.interfaces.odata.IODataService;
 import nikita.webapp.service.interfaces.secondary.*;
@@ -69,6 +65,8 @@ public class RecordService
     private final ICommentService commentService;
     private final ICorrespondencePartService correspondencePartService;
     private final IMetadataService metadataService;
+    private final IRecordNoteService recordNoteService;
+    private final IRegistryEntryService registryEntryService;
     private final INationalIdentifierService nationalIdentifierService;
     private final IPartService partService;
     private final IScreeningMetadataService screeningMetadataService;
@@ -90,7 +88,7 @@ public class RecordService
             ICommentService commentService,
             ICorrespondencePartService correspondencePartService,
             IMetadataService metadataService,
-            INationalIdentifierService nationalIdentifierService,
+            IRecordNoteService recordNoteService, IRegistryEntryService registryEntryService, INationalIdentifierService nationalIdentifierService,
             IPartService partService,
             IScreeningMetadataService screeningMetadataService,
             IStorageLocationService storageLocationService) {
@@ -106,6 +104,8 @@ public class RecordService
         this.commentService = commentService;
         this.correspondencePartService = correspondencePartService;
         this.metadataService = metadataService;
+        this.recordNoteService = recordNoteService;
+        this.registryEntryService = registryEntryService;
         this.nationalIdentifierService = nationalIdentifierService;
         this.partService = partService;
         this.screeningMetadataService = screeningMetadataService;
@@ -121,6 +121,22 @@ public class RecordService
         validateScreening(metadataService, record);
         bsmService.validateBSMList(record.getReferenceBSMBase());
         return packAsHateoas(recordRepository.save(record));
+    }
+
+    @Override
+    public RecordNoteHateoas expandToRecordNote(
+            @NotNull final UUID systemId,
+            @NotNull final PatchMerge patchMerge) {
+        return recordNoteService.expandRecordToRecordNote(
+                getRecordOrThrow(systemId), patchMerge);
+    }
+
+    @Override
+    public RegistryEntryHateoas expandToRegistryEntry(
+            @NotNull final UUID systemId,
+            @NotNull final PatchMerge patchMerge) {
+        return registryEntryService.expandRecordToRegistryEntry(
+                getRecordOrThrow(systemId), patchMerge);
     }
 
     @Override
@@ -298,6 +314,7 @@ public class RecordService
     }
 
     @Override
+    @Transactional
     public KeywordHateoas createKeywordAssociatedWithRecord(
             @NotNull final UUID systemId, @NotNull final Keyword keyword) {
         return keywordService
@@ -306,6 +323,7 @@ public class RecordService
     }
 
     @Override
+    @Transactional
     public ScreeningMetadataHateoas createScreeningMetadataAssociatedWithRecord(
             @NotNull final UUID systemId,
             @NotNull final Metadata screeningMetadata) {
@@ -331,11 +349,41 @@ public class RecordService
     }
 
     @Override
+    @Transactional
     public CrossReferenceHateoas createCrossReferenceAssociatedWithRecord(
             @NotNull final UUID systemId,
             @NotNull final CrossReference crossReference) {
         return crossReferenceService.createCrossReferenceAssociatedWithRecord(
                 crossReference, getRecordOrThrow(systemId));
+    }
+
+    /**
+     * Create a RegistryEntryExpansionHateoas that can be used when expanding a
+     * File to a RegistryEntry. None of the File attributes should be present in
+     * the returned payload. So we have a special approach that can be used to
+     * achieve this.
+     *
+     * @return RegistryEntryExpansionHateoas
+     */
+    @Override
+    public RegistryEntryExpansionHateoas
+    generateDefaultValuesToExpandToRegistryEntry(@NotNull final UUID systemId) {
+        return registryEntryService
+                .generateDefaultExpandedRegistryEntry(systemId);
+    }
+
+    /**
+     * Create a RecordNoteExpansionHateoas that can be used when expanding a
+     * File to a RecordNote. None of the File attributes should be present in
+     * the returned payload. So we have a special approach that can be used to
+     * achieve this.
+     *
+     * @return RecordNoteExpansionHateoas
+     */
+    @Override
+    public RecordNoteExpansionHateoas
+    generateDefaultValuesToExpandToRecordNote(@NotNull final UUID systemId) {
+        return recordNoteService.generateDefaultExpandedRecordNote(systemId);
     }
 
     // All READ operations

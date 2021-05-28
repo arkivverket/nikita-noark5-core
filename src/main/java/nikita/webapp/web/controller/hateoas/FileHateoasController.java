@@ -1627,7 +1627,7 @@ public class FileHateoasController
             @ApiResponse(
                     responseCode = INTERNAL_SERVER_ERROR_VAL,
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @PatchMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
+    @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
             FILE_EXPAND_TO_CASE_FILE,
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<CaseFileHateoas> expandFileToCaseFile(

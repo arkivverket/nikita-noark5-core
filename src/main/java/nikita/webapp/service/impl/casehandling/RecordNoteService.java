@@ -1,6 +1,9 @@
 package nikita.webapp.service.impl.casehandling;
 
+import nikita.common.model.nikita.PatchMerge;
+import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.casehandling.RecordNote;
+import nikita.common.model.noark5.v5.hateoas.casehandling.RecordNoteExpansionHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RecordNoteHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.DocumentFlowHateoas;
 import nikita.common.model.noark5.v5.secondary.DocumentFlow;
@@ -13,6 +16,7 @@ import nikita.webapp.service.interfaces.casehandling.IRecordNoteService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
 import nikita.webapp.service.interfaces.odata.IODataService;
 import nikita.webapp.service.interfaces.secondary.IDocumentFlowService;
+import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +29,7 @@ import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
 
 @Service
@@ -63,6 +68,42 @@ public class RecordNoteService
     public RecordNoteHateoas save(@NotNull final RecordNote recordNote) {
         validateDocumentMedium(metadataService, recordNote);
         return packAsHateoas(recordNoteRepository.save(recordNote));
+    }
+
+    @Override
+    @Transactional
+    public RecordNoteHateoas expandRecordToRecordNote(
+            @NotNull final Record record,
+            @NotNull final PatchMerge patchMerge) {
+        RecordNote recordNote = new RecordNote(record);
+        record.setRecordId(recordNote.getRecordId());
+
+        entityManager.createNativeQuery(
+                "INSERT INTO " + TABLE_RECORD_NOTE +
+                        "(" +
+                        SYSTEM_ID_ENG + ", " +
+                        REGISTRY_ENTRY_NUMBER_ENG + ", " +
+                        REGISTRY_ENTRY_STATUS_CODE_ENG + ", " +
+                        REGISTRY_ENTRY_STATUS_CODE_NAME_ENG + "," +
+                        REGISTRY_ENTRY_TYPE_CODE_ENG + ", " +
+                        REGISTRY_ENTRY_TYPE_CODE_NAME_ENG + "," +
+                        REGISTRY_ENTRY_DATE_ENG + ", " +
+                        REGISTRY_ENTRY_YEAR_ENG + ", " +
+                        REGISTRY_ENTRY_SEQUENCE_NUMBER_ENG + ", " +
+                        ") VALUES (?,?,?,?,?,?,?,?,?)")
+                .setParameter(1, record.getSystemIdAsString())
+                .setParameter(2, recordNote.getDocumentDate())
+                .setParameter(3, recordNote.getDueDate())
+                .setParameter(4, recordNote.getFreedomAssessmentDate())
+                .setParameter(5, recordNote.getLoanedDate())
+                .setParameter(6, recordNote.getLoanedTo())
+                .setParameter(7, recordNote.getNumberOfAttachments())
+                .setParameter(8, recordNote.getReceivedDate())
+                .setParameter(9, recordNote.getSentDate())
+                .executeUpdate();
+        applicationEventPublisher.publishEvent(
+                new AfterNoarkEntityCreatedEvent(this, recordNote));
+        return packAsHateoas(recordNote);
     }
 
     // All READ methods
@@ -212,20 +253,39 @@ public class RecordNoteService
     @Override
     public RecordNoteHateoas generateDefaultRecordNote(
             @NotNull final UUID caseFileSystemId) {
-        RecordNote defaultRecordNote = new RecordNote();
-        defaultRecordNote.setTitle(DEFAULT_TITLE + "RecordNote");
-        defaultRecordNote.setDescription(DEFAULT_DESCRIPTION + "a CaseFile " +
-                "with systemId [" + caseFileSystemId + "]");
-        defaultRecordNote.setVersion(-1L, true);
-        return packAsHateoas(defaultRecordNote);
+        return packAsHateoas(generateDefaultRecordNote());
     }
 
     @Override
-    public DocumentFlowHateoas generateDefaultDocumentFlow(@NotNull final UUID systemId) {
+    public DocumentFlowHateoas generateDefaultDocumentFlow(
+            @NotNull final UUID systemId) {
         return documentFlowService.generateDefaultDocumentFlow();
     }
 
+    @Override
+    public RecordNoteExpansionHateoas generateDefaultExpandedRecordNote(
+            @NotNull final UUID systemId) {
+        return packAsRecordNoteExpansionHateoas(
+                generateDefaultRecordNote());
+    }
+
     // All helper methods
+
+    private RecordNoteExpansionHateoas packAsRecordNoteExpansionHateoas(
+            RecordNote recordNote) {
+        RecordNoteExpansionHateoas recordNoteHateoas =
+                new RecordNoteExpansionHateoas(recordNote);
+        applyLinksAndHeader(recordNoteHateoas, recordNoteHateoasHandler);
+        return recordNoteHateoas;
+    }
+
+    private RecordNote generateDefaultRecordNote() {
+        RecordNote defaultRecordNote = new RecordNote();
+        defaultRecordNote.setTitle(DEFAULT_TITLE + "RecordNote");
+        defaultRecordNote.setDescription(DEFAULT_DESCRIPTION + "RecordNote");
+        defaultRecordNote.setVersion(-1L, true);
+        return defaultRecordNote;
+    }
 
     public RecordNoteHateoas packAsHateoas(@NotNull final RecordNote recordNote) {
         RecordNoteHateoas recordNoteHateoas = new RecordNoteHateoas(recordNote);

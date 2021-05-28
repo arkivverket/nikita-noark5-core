@@ -1,7 +1,9 @@
 package nikita.webapp.service.interfaces;
 
+import nikita.common.model.nikita.PatchMerge;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
+import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryExpansionHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.DocumentFlowHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.PrecedenceHateoas;
@@ -18,8 +20,9 @@ public interface IRegistryEntryService {
     // All save methods
     RegistryEntryHateoas save(@NotNull final RegistryEntry registryEntry);
 
-    RegistryEntryHateoas expandRecordAsRegistryEntryFileHateoas(
-            @NotNull final Record record);
+    RegistryEntryHateoas expandRecordToRegistryEntry(
+            @NotNull final Record record,
+            @NotNull final PatchMerge patchMerge);
 
     PrecedenceHateoas createPrecedenceAssociatedWithRecord(
             @NotNull final UUID systemId,
@@ -84,8 +87,11 @@ public interface IRegistryEntryService {
             @NotNull final UUID systemId);
 
     RegistryEntryHateoas generateDefaultRegistryEntry(
-            @NotNull final UUID caseFileSystemId);
+            @NotNull final UUID systemId);
 
     SignOffHateoas generateDefaultSignOff(
-            @NotNull final UUID registryEntrySystemId);
+            @NotNull final UUID systemId);
+
+    RegistryEntryExpansionHateoas generateDefaultExpandedRegistryEntry(
+            @NotNull final UUID systemId);
 }

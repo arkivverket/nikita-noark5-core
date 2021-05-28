@@ -1,5 +1,6 @@
 package nikita.webapp.service.interfaces;
 
+import nikita.common.model.nikita.PatchMerge;
 import nikita.common.model.nikita.PatchObjects;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.Record;
@@ -7,10 +8,7 @@ import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartIn
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartUnit;
 import nikita.common.model.noark5.v5.hateoas.*;
-import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartHateoas;
-import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInternalHateoas;
-import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
-import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
+import nikita.common.model.noark5.v5.hateoas.casehandling.*;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
 import nikita.common.model.noark5.v5.hateoas.secondary.*;
 import nikita.common.model.noark5.v5.metadata.Metadata;
@@ -193,4 +191,18 @@ public interface IRecordService {
             @NotNull final UUID systemId);
 
     CrossReferenceHateoas getDefaultCrossReference(@NotNull final UUID systemId);
+
+    RegistryEntryExpansionHateoas generateDefaultValuesToExpandToRegistryEntry(
+            @NotNull final UUID systemId);
+
+    RecordNoteExpansionHateoas generateDefaultValuesToExpandToRecordNote(
+            @NotNull final UUID systemId);
+
+    RecordNoteHateoas expandToRecordNote(
+            @NotNull final UUID systemId,
+            @NotNull final PatchMerge patchMerge);
+
+    RegistryEntryHateoas expandToRegistryEntry(
+            @NotNull final UUID systemId,
+            @NotNull final PatchMerge patchMerge);
 }

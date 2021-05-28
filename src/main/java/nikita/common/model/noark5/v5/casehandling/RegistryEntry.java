@@ -398,12 +398,6 @@ public class RegistryEntry
     }
 
     @Override
-    public void setReferenceDocumentFlow(
-            List<DocumentFlow> referenceDocumentFlow) {
-        this.referenceDocumentFlow = referenceDocumentFlow;
-    }
-
-    @Override
     public void addDocumentFlow(DocumentFlow documentFlow) {
         this.referenceDocumentFlow.add(documentFlow);
         documentFlow.setReferenceRegistryEntry(this);

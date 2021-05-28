@@ -1,6 +1,9 @@
 package nikita.webapp.service.interfaces.casehandling;
 
+import nikita.common.model.nikita.PatchMerge;
+import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.casehandling.RecordNote;
+import nikita.common.model.noark5.v5.hateoas.casehandling.RecordNoteExpansionHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RecordNoteHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.DocumentFlowHateoas;
 import nikita.common.model.noark5.v5.secondary.DocumentFlow;
@@ -12,6 +15,10 @@ public interface IRecordNoteService {
 
     // All save methods
     RecordNoteHateoas save(@NotNull final RecordNote recordNote);
+
+    RecordNoteHateoas expandRecordToRecordNote(
+            @NotNull final Record record,
+            @NotNull final PatchMerge patchMerge);
 
     // All find methods
     RecordNoteHateoas findBySystemId(@NotNull final UUID systemId);
@@ -39,5 +46,8 @@ public interface IRecordNoteService {
             @NotNull final UUID systemId);
 
     DocumentFlowHateoas generateDefaultDocumentFlow(
+            @NotNull final UUID systemId);
+
+    RecordNoteExpansionHateoas generateDefaultExpandedRecordNote(
             @NotNull final UUID systemId);
 }
