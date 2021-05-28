@@ -1,12 +1,11 @@
 package nikita.common.model.noark5.v5.hateoas.secondary;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import nikita.common.model.nikita.NikitaPage;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.util.serializers.noark5v5.hateoas.secondary.DocumentFlowHateoasSerializer;
-
-import java.util.List;
 
 import static nikita.common.config.N5ResourceMappings.DOCUMENT_FLOW;
 
@@ -22,7 +21,7 @@ public class DocumentFlowHateoas
         super(entity);
     }
 
-    public DocumentFlowHateoas(List<INoarkEntity> entityList) {
-        super(entityList, DOCUMENT_FLOW);
+    public DocumentFlowHateoas(NikitaPage page) {
+        super(page, DOCUMENT_FLOW);
     }
 }

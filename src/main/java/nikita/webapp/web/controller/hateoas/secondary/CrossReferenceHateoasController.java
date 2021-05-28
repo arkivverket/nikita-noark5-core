@@ -18,7 +18,6 @@ import java.util.UUID;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
@@ -57,7 +56,7 @@ public class CrossReferenceHateoasController
     @GetMapping()
     public ResponseEntity<CrossReferenceHateoas> findAllCrossReference() {
         CrossReferenceHateoas crossReferenceHateoas =
-                crossReferenceService.findAllByOwner();
+                crossReferenceService.findAll();
         return ResponseEntity.status(OK)
                 .body(crossReferenceHateoas);
     }
@@ -89,7 +88,6 @@ public class CrossReferenceHateoasController
         CrossReferenceHateoas crossReferenceHateoas =
                 crossReferenceService.findBySystemId(systemID);
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(crossReferenceHateoas);
     }
 
@@ -138,7 +136,6 @@ public class CrossReferenceHateoasController
                 crossReferenceService.updateCrossReferenceBySystemId(systemID,
                         parseETAG(request.getHeader(ETAG)), crossReference);
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(crossReferenceHateoas);
     }
 

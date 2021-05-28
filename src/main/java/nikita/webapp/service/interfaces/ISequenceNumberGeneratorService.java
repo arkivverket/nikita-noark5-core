@@ -7,11 +7,11 @@ import javax.validation.constraints.NotNull;
 
 public interface ISequenceNumberGeneratorService {
     Integer getNextCaseFileSequenceNumber(
-            @NotNull AdministrativeUnit administrativeUnit);
+            @NotNull final AdministrativeUnit administrativeUnit);
 
     Integer getNextRecordSequenceNumber(
-            @NotNull AdministrativeUnit administrativeUnit);
+            @NotNull final AdministrativeUnit administrativeUnit);
 
     SequenceNumberGenerator createSequenceNumberGenerator(
-            @NotNull AdministrativeUnit administrativeUnit);
+            @NotNull final AdministrativeUnit administrativeUnit);
 }

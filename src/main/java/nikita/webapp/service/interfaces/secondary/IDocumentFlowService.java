@@ -6,6 +6,7 @@ import nikita.common.model.noark5.v5.hateoas.secondary.DocumentFlowHateoas;
 import nikita.common.model.noark5.v5.secondary.DocumentFlow;
 
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 public interface IDocumentFlowService {
 
@@ -16,13 +17,13 @@ public interface IDocumentFlowService {
 	(DocumentFlow documentFlow, RecordNote recordNote);
 
     DocumentFlowHateoas updateDocumentFlowBySystemId
-            (String systemId, Long version, DocumentFlow incomingDocumentFlow);
+            (@NotNull final UUID systemId, Long version, DocumentFlow incomingDocumentFlow);
 
-    void deleteDocumentFlowBySystemId(String systemID);
+    void deleteDocumentFlowBySystemId(@NotNull final UUID systemId);
 
-    DocumentFlowHateoas findAllByOwner();
+    DocumentFlowHateoas findAll();
 
-    DocumentFlowHateoas findBySystemId(String precedenceSystemId);
+    DocumentFlowHateoas findBySystemId(UUID systemId);
 
     DocumentFlowHateoas generateDefaultDocumentFlow();
 

@@ -22,8 +22,7 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.*;
 import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -133,7 +132,8 @@ public class DocumentObject
     private DocumentDescription referenceDocumentDescription;
 
     // Links to Conversion
-    @OneToMany(mappedBy = "referenceDocumentObject", cascade = PERSIST)
+    @OneToMany(mappedBy = "referenceDocumentObject",
+            cascade = {PERSIST, MERGE, REMOVE})
     private List<Conversion> referenceConversion = new ArrayList<>();
 
     // Link to ElectronicSignature

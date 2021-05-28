@@ -4,17 +4,16 @@ import nikita.common.model.noark5.v5.admin.User;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.hateoas.secondary.PrecedenceHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.PrecedenceStatus;
 import nikita.common.model.noark5.v5.secondary.Precedence;
 import nikita.common.repository.n5v5.secondary.IPrecedenceRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.secondary.IPrecedenceHateoasHandler;
-import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.IUserService;
 import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
+import nikita.webapp.service.interfaces.odata.IODataService;
 import nikita.webapp.service.interfaces.secondary.IPrecedenceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
@@ -47,12 +45,13 @@ public class PrecedenceService
     public PrecedenceService
             (EntityManager entityManager,
              ApplicationEventPublisher applicationEventPublisher,
+             IODataService odataService,
              IPatchService patchService,
              IMetadataService metadataService,
              IPrecedenceRepository precedenceRepository,
              IPrecedenceHateoasHandler precedenceHateoasHandler,
              IUserService userService) {
-        super(entityManager, applicationEventPublisher, patchService);
+        super(entityManager, applicationEventPublisher, patchService, odataService);
         this.precedenceRepository = precedenceRepository;
         this.precedenceHateoasHandler = precedenceHateoasHandler;
         this.userService = userService;
@@ -83,37 +82,19 @@ public class PrecedenceService
              entity.getPrecedenceFinalisedBy(),
              entity.getReferencePrecedenceFinalisedBySystemID());
         */
-
-        PrecedenceHateoas precedenceHateoas =
-                new PrecedenceHateoas(precedenceRepository.save(entity));
-        precedenceHateoasHandler
-                .addLinks(precedenceHateoas, new Authorisation());
-        setOutgoingRequestHeader(precedenceHateoas);
-        return precedenceHateoas;
+        return packAsHateoas(precedenceRepository.save(entity));
     }
 
     // All READ methods
 
     @Override
-    @SuppressWarnings("unchecked")
-    public PrecedenceHateoas findAllByOwner() {
-        PrecedenceHateoas precedenceHateoas =
-                new PrecedenceHateoas((List<INoarkEntity>) (List)
-                        precedenceRepository.findByOwnedBy(getUser()));
-        precedenceHateoasHandler.addLinks(precedenceHateoas,
-                new Authorisation());
-        setOutgoingRequestHeader(precedenceHateoas);
-        return precedenceHateoas;
+    public PrecedenceHateoas findAll() {
+        return (PrecedenceHateoas) odataService.processODataQueryGet();
     }
 
     @Override
-    public PrecedenceHateoas findBySystemId(String precedenceSystemId) {
-        PrecedenceHateoas precedenceHateoas =
-                new PrecedenceHateoas(getPrecedenceOrThrow(precedenceSystemId));
-        precedenceHateoasHandler.addLinks(precedenceHateoas,
-                new Authorisation());
-        setOutgoingRequestHeader(precedenceHateoas);
-        return precedenceHateoas;
+    public PrecedenceHateoas findBySystemId(@NotNull final UUID systemId) {
+        return packAsHateoas(getPrecedenceOrThrow(systemId));
     }
 
     // All UPDATE methods
@@ -121,7 +102,7 @@ public class PrecedenceService
     @Override
     @Transactional
     public PrecedenceHateoas updatePrecedenceBySystemId
-            (String systemId, Long version, Precedence incoming) {
+            (@NotNull final UUID systemId, Long version, Precedence incoming) {
         Precedence existing = getPrecedenceOrThrow(systemId);
         validatePrecedenceStatus(incoming);
         User approvedBy = userService.validateUserReference
@@ -163,13 +144,7 @@ public class PrecedenceService
         //existing.setReferenceFinalisedBy(incoming.getReferenceFinalisedBy());
 
         existing.setVersion(version);
-
-        PrecedenceHateoas precedenceHateoas =
-                new PrecedenceHateoas(precedenceRepository.save(existing));
-        precedenceHateoasHandler.addLinks(precedenceHateoas,
-                new Authorisation());
-        setOutgoingRequestHeader(precedenceHateoas);
-        return precedenceHateoas;
+        return packAsHateoas(existing);
     }
 
     // All DELETE methods
@@ -183,7 +158,7 @@ public class PrecedenceService
      */
     @Override
     @Transactional
-    public void deletePrecedenceBySystemId(String systemId) {
+    public void deletePrecedenceBySystemId(@NotNull final UUID systemId) {
         Precedence precedence = getPrecedenceOrThrow(systemId);
         // Remove any associations between a CaseFile and the given Precedence
         for (CaseFile caseFile : precedence.getReferenceCaseFile()) {
@@ -214,16 +189,20 @@ public class PrecedenceService
     // All template methods
 
     public PrecedenceHateoas generateDefaultPrecedence() {
-        Precedence template = new Precedence();
-        template.setPrecedenceDate(OffsetDateTime.now());
-        PrecedenceHateoas precedenceHateoas =
-                new PrecedenceHateoas(template);
-        precedenceHateoasHandler
-                .addLinksOnTemplate(precedenceHateoas, new Authorisation());
-        return precedenceHateoas;
+        Precedence precedence = new Precedence();
+        precedence.setPrecedenceDate(OffsetDateTime.now());
+        precedence.setVersion(-1L, true);
+        return packAsHateoas(precedence);
     }
 
     // All helper methods
+
+    public PrecedenceHateoas packAsHateoas(
+            @NotNull final Precedence precedence) {
+        PrecedenceHateoas precedenceHateoas = new PrecedenceHateoas(precedence);
+        applyLinksAndHeader(precedenceHateoas, precedenceHateoasHandler);
+        return precedenceHateoas;
+    }
 
     /**
      * Internal helper method. Rather than having a find and try catch in
@@ -231,16 +210,16 @@ public class PrecedenceService
      * will only ever get a valid Precedence back. If there is no valid
      * Precedence, an exception is thrown
      *
-     * @param precedenceSystemId systemID of the Precedence object to retrieve
+     * @param systemId systemId of the Precedence object to retrieve
      * @return the Precedence object
      */
     protected Precedence getPrecedenceOrThrow(
-            @NotNull String precedenceSystemId) {
+            @NotNull final UUID systemId) {
         Precedence precedence = precedenceRepository.
-                findBySystemId(UUID.fromString(precedenceSystemId));
+                findBySystemId(systemId);
         if (precedence == null) {
             String error = INFO_CANNOT_FIND_OBJECT +
-                    " Precedence, using systemId " + precedenceSystemId;
+                    " Precedence, using systemId " + systemId;
             logger.error(error);
             throw new NoarkEntityNotFoundException(error);
         }

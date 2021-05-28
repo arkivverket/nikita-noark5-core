@@ -1,8 +1,9 @@
 package nikita.webapp.service.interfaces;
 
+import nikita.common.model.nikita.PatchMerge;
 import nikita.common.model.noark5.v5.Record;
-import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
+import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryExpansionHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.DocumentFlowHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.PrecedenceHateoas;
@@ -10,76 +11,87 @@ import nikita.common.model.noark5.v5.hateoas.secondary.SignOffHateoas;
 import nikita.common.model.noark5.v5.secondary.DocumentFlow;
 import nikita.common.model.noark5.v5.secondary.Precedence;
 import nikita.common.model.noark5.v5.secondary.SignOff;
-import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
+import java.util.UUID;
 
 public interface IRegistryEntryService {
 
     // All save methods
-    RegistryEntry save(RegistryEntry registryEntry);
+    RegistryEntryHateoas save(@NotNull final RegistryEntry registryEntry);
 
-    RegistryEntryHateoas expandRecordAsRegistryEntryFileHateoas(Record record);
+    RegistryEntryHateoas expandRecordToRegistryEntry(
+            @NotNull final Record record,
+            @NotNull final PatchMerge patchMerge);
 
     PrecedenceHateoas createPrecedenceAssociatedWithRecord(
-            String registryEntrysystemID, Precedence precedence);
+            @NotNull final UUID systemId,
+            @NotNull final Precedence precedence);
 
     SignOffHateoas
-    createSignOffAssociatedWithRegistryEntry(String systemId,
-                                             SignOff signOff);
+    createSignOffAssociatedWithRegistryEntry(
+            @NotNull final UUID systemId,
+            @NotNull final SignOff signOff);
 
-    SignOffHateoas
-    findAllSignOffAssociatedWithRegistryEntry(String systemId);
+    SignOffHateoas findAllSignOffAssociatedWithRegistryEntry(
+            @NotNull final UUID systemId);
 
-    SignOffHateoas
-    findSignOffAssociatedWithRegistryEntry(String systemId,
-                                           String subSystemId);
+    SignOffHateoas findSignOffAssociatedWithRegistryEntry(
+            @NotNull final UUID systemId,
+            @NotNull final UUID signOffSystemId);
 
-    DocumentFlowHateoas associateDocumentFlowWithRegistryEntry
-        (String systemId, DocumentFlow documentFlow);
+    DocumentFlowHateoas associateDocumentFlowWithRegistryEntry(
+            @NotNull final UUID systemId,
+            @NotNull final DocumentFlow documentFlow);
 
     // All find methods
-    RegistryEntry findBySystemId(String systemId);
 
-    List<RegistryEntry> findAllRegistryEntry();
+    RegistryEntryHateoas findBySystemId(@NotNull final UUID systemId);
 
-    ResponseEntity<RegistryEntryHateoas> findAllRegistryEntryByCaseFile(
-            CaseFile caseFile);
+    /**
+     * @return Page of RegistryEntry objects the user owns
+     */
+    RegistryEntryHateoas findAllRegistryEntry();
 
-    DocumentFlowHateoas findAllDocumentFlowWithRegistryEntryBySystemId
-        (String systemID);
+    DocumentFlowHateoas findAllDocumentFlowWithRegistryEntryBySystemId(
+            @NotNull final UUID systemId);
 
     PrecedenceHateoas findAllPrecedenceForRegistryEntry(
-            @NotNull final String systemID);
+            @NotNull final UUID systemId);
 
     // All UPDATE operations
-    RegistryEntry handleUpdate(@NotNull final String systemId,
-                               @NotNull final Long version,
-                               @NotNull final RegistryEntry incomingRegistryEntry);
+    RegistryEntryHateoas handleUpdate(
+            @NotNull final UUID systemId,
+            @NotNull final Long version,
+            @NotNull final RegistryEntry incomingRegistryEntry);
 
     SignOffHateoas
-    handleUpdateSignOff(@NotNull final String systemID,
-                        @NotNull final String signOffSystemID,
-                        @NotNull final Long version,
-                        @NotNull final SignOff incomingSignOff);
+    handleUpdateSignOff(
+            @NotNull final UUID systemId,
+            @NotNull final UUID signOffSystemID,
+            @NotNull final Long version,
+            @NotNull final SignOff incomingSignOff);
 
     // All DELETE operations
-    void deleteEntity(@NotNull String systemId);
+    void deleteEntity(@NotNull final UUID systemId);
 
-    long deleteAllByOwnedBy();
+    void deleteAllByOwnedBy();
 
-    void deleteSignOff(@NotNull String systemId,
-                       @NotNull String signOffSystemId);
+    void deleteSignOff(@NotNull final UUID systemId,
+                       @NotNull final UUID signOffSystemId);
 
-    PrecedenceHateoas generateDefaultPrecedence(String systemID);
+    PrecedenceHateoas generateDefaultPrecedence(
+            @NotNull final UUID systemId);
 
-    DocumentFlowHateoas generateDefaultDocumentFlow(String systemID);
+    DocumentFlowHateoas generateDefaultDocumentFlow(
+            @NotNull final UUID systemId);
 
-    ResponseEntity<RegistryEntryHateoas> generateDefaultRegistryEntry(
-            @NotNull final String caseFileSystemId);
+    RegistryEntryHateoas generateDefaultRegistryEntry(
+            @NotNull final UUID systemId);
 
-    SignOffHateoas generateDefaultSignOff
-        (@NotNull final String registryEntrySystemId);
+    SignOffHateoas generateDefaultSignOff(
+            @NotNull final UUID systemId);
 
+    RegistryEntryExpansionHateoas generateDefaultExpandedRegistryEntry(
+            @NotNull final UUID systemId);
 }

@@ -9,9 +9,9 @@ import nikita.common.model.noark5.v5.secondary.StorageLocation;
 import nikita.common.repository.n5v5.secondary.IStorageLocationRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.secondary.IStorageLocationHateoasHandler;
-import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.impl.NoarkService;
+import nikita.webapp.service.interfaces.odata.IODataService;
 import nikita.webapp.service.interfaces.secondary.IStorageLocationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
@@ -40,10 +39,11 @@ public class StorageLocationService
     public StorageLocationService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IODataService odataService,
             IPatchService patchService,
             IStorageLocationRepository storageLocationRepository,
             IStorageLocationHateoasHandler storageLocationHateoasHandler) {
-        super(entityManager, applicationEventPublisher, patchService);
+        super(entityManager, applicationEventPublisher, patchService, odataService);
         this.storageLocationRepository = storageLocationRepository;
         this.storageLocationHateoasHandler = storageLocationHateoasHandler;
     }
@@ -55,13 +55,7 @@ public class StorageLocationService
     public StorageLocationHateoas createStorageLocationAssociatedWithFile
             (StorageLocation storageLocation, File file) {
         storageLocation.addReferenceFile(file);
-        storageLocation = storageLocationRepository.save(storageLocation);
-        StorageLocationHateoas storageLocationHateoas =
-                new StorageLocationHateoas(storageLocation);
-        storageLocationHateoasHandler.addLinks(
-                storageLocationHateoas, new Authorisation());
-        setOutgoingRequestHeader(storageLocationHateoas);
-        return storageLocationHateoas;
+        return packAsHateoas(storageLocationRepository.save(storageLocation));
     }
 
     @Override
@@ -69,13 +63,7 @@ public class StorageLocationService
     public StorageLocationHateoas createStorageLocationAssociatedWithFonds
             (StorageLocation storageLocation, Fonds fonds) {
         storageLocation.addReferenceFonds(fonds);
-        storageLocation = storageLocationRepository.save(storageLocation);
-        StorageLocationHateoas storageLocationHateoas =
-                new StorageLocationHateoas(storageLocation);
-        storageLocationHateoasHandler.addLinks(storageLocationHateoas,
-                new Authorisation());
-        setOutgoingRequestHeader(storageLocationHateoas);
-        return storageLocationHateoas;
+        return packAsHateoas(storageLocationRepository.save(storageLocation));
     }
 
     @Override
@@ -83,13 +71,7 @@ public class StorageLocationService
     public StorageLocationHateoas createStorageLocationAssociatedWithSeries
             (StorageLocation storageLocation, Series series) {
         storageLocation.addReferenceSeries(series);
-        storageLocation = storageLocationRepository.save(storageLocation);
-        StorageLocationHateoas storageLocationHateoas =
-                new StorageLocationHateoas(storageLocation);
-        storageLocationHateoasHandler.addLinks(storageLocationHateoas,
-                new Authorisation());
-        setOutgoingRequestHeader(storageLocationHateoas);
-        return storageLocationHateoas;
+        return packAsHateoas(storageLocationRepository.save(storageLocation));
     }
 
     @Override
@@ -97,36 +79,19 @@ public class StorageLocationService
     public StorageLocationHateoas createStorageLocationAssociatedWithRecord
             (StorageLocation storageLocation, Record record) {
         storageLocation.addReferenceRecord(record);
-        storageLocation = storageLocationRepository.save(storageLocation);
-        StorageLocationHateoas storageLocationHateoas =
-                new StorageLocationHateoas(storageLocation);
-        storageLocationHateoasHandler.addLinks(storageLocationHateoas,
-                new Authorisation());
-        setOutgoingRequestHeader(storageLocationHateoas);
-        return storageLocationHateoas;
+        return packAsHateoas(storageLocationRepository.save(storageLocation));
     }
 
     // All READ methods
 
     @Override
-    public StorageLocationHateoas findBySystemId(UUID systemId) {
-        StorageLocationHateoas storageLocationHateoas =
-                new StorageLocationHateoas(getStorageLocationOrThrow(systemId));
-        storageLocationHateoasHandler.addLinks(storageLocationHateoas,
-                new Authorisation());
-        setOutgoingRequestHeader(storageLocationHateoas);
-        return storageLocationHateoas;
+    public StorageLocationHateoas findBySystemId(@NotNull final UUID systemId) {
+        return packAsHateoas(getStorageLocationOrThrow(systemId));
     }
 
     @Override
-    public StorageLocationHateoas findAllByOwner() {
-        StorageLocationHateoas storageLocationHateoas =
-                new StorageLocationHateoas(List.copyOf(
-                        storageLocationRepository.findByOwnedBy(getUser())));
-        storageLocationHateoasHandler.addLinks(storageLocationHateoas,
-                new Authorisation());
-        setOutgoingRequestHeader(storageLocationHateoas);
-        return storageLocationHateoas;
+    public StorageLocationHateoas findAll() {
+        return (StorageLocationHateoas) odataService.processODataQueryGet();
     }
 
     // All UPDATE methods
@@ -134,26 +99,22 @@ public class StorageLocationService
     @Override
     @Transactional
     public StorageLocationHateoas updateStorageLocationBySystemId(
-            UUID systemId, Long version,
-            StorageLocation incomingStorageLocation) {
+            @NotNull final UUID systemId,
+            @NotNull final Long version,
+            @NotNull final StorageLocation incomingStorageLocation) {
         StorageLocation existingStorageLocation =
                 getStorageLocationOrThrow(systemId);
         existingStorageLocation.setStorageLocation(
                 incomingStorageLocation.getStorageLocation());
         existingStorageLocation.setVersion(version);
-        StorageLocationHateoas storageLocationHateoas =
-                new StorageLocationHateoas(existingStorageLocation);
-        storageLocationHateoasHandler.addLinks(
-                storageLocationHateoas, new Authorisation());
-        setOutgoingRequestHeader(storageLocationHateoas);
-        return storageLocationHateoas;
+        return packAsHateoas(existingStorageLocation);
     }
 
     // All DELETE methods
 
     @Override
     @Transactional
-    public void deleteStorageLocationBySystemId(UUID systemId) {
+    public void deleteStorageLocationBySystemId(@NotNull final UUID systemId) {
         StorageLocation storageLocation = getStorageLocationOrThrow(systemId);
         // Remove any associations between a Record and the given StorageLocation
         for (Fonds fonds : storageLocation.getReferenceFonds()) {
@@ -193,17 +154,22 @@ public class StorageLocationService
 
     // All template methods
 
-    public StorageLocationHateoas getDefaultStorageLocation(
-            UUID systemId) {
-        StorageLocation suggestedStorageLocation = new StorageLocation();
-        StorageLocationHateoas storageLocationHateoas =
-                new StorageLocationHateoas(suggestedStorageLocation);
-        storageLocationHateoasHandler.addLinksOnTemplate(
-                storageLocationHateoas, new Authorisation());
-        return storageLocationHateoas;
+    public StorageLocationHateoas getDefaultStorageLocation(UUID systemId) {
+        StorageLocation storageLocation = new StorageLocation();
+        storageLocation.setVersion(-1L, true);
+        return packAsHateoas(storageLocation);
     }
 
     // All helper methods
+
+    public StorageLocationHateoas packAsHateoas(
+            @NotNull final StorageLocation storageLocation) {
+        StorageLocationHateoas storageLocationHateoas =
+                new StorageLocationHateoas(storageLocation);
+        applyLinksAndHeader(storageLocationHateoas,
+                storageLocationHateoasHandler);
+        return storageLocationHateoas;
+    }
 
     /**
      * Internal helper method. Rather than having a find and try catch in
@@ -211,11 +177,11 @@ public class StorageLocationService
      * will only ever get a valid StorageLocation back. If there is no valid
      * StorageLocation, an exception is thrown
      *
-     * @param storageLocationSystemId systemID of the StorageLocation object to retrieve
+     * @param storageLocationSystemId systemId of the StorageLocation object to retrieve
      * @return the StorageLocation object
      */
     protected StorageLocation getStorageLocationOrThrow(
-            @NotNull UUID storageLocationSystemId) {
+            @NotNull final UUID storageLocationSystemId) {
         StorageLocation storageLocation = storageLocationRepository.
                 findBySystemId(storageLocationSystemId);
         if (storageLocation == null) {

@@ -20,7 +20,6 @@ import java.util.UUID;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.*;
 
@@ -71,7 +70,6 @@ public class ClassificationSystemHateoasController
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<ClassificationSystemHateoas>
     createClassificationSystem(
-            HttpServletRequest request,
             @Parameter(name = "classificationSystem",
                     description = "Incoming classificationSystem object",
                     required = true)
@@ -81,8 +79,6 @@ public class ClassificationSystemHateoasController
                 classificationSystemService.
                         save(classificationSystem);
         return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(classificationSystem.getVersion().toString())
                 .body(classificationSystemHateoas);
     }
 
@@ -121,8 +117,7 @@ public class ClassificationSystemHateoasController
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<ClassHateoas>
     createClassAssociatedWithClassificationSystem(
-            HttpServletRequest request,
-            @Parameter(name = "systemID",
+            @Parameter(name = SYSTEM_ID,
                     description = "systemID of classificationSystem to " +
                             "associate the class with.",
                     required = true)
@@ -136,8 +131,6 @@ public class ClassificationSystemHateoasController
                         createClassAssociatedWithClassificationSystem(
                                 systemID, klass);
         return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(klass.getVersion().toString())
                 .body(classHateoas);
     }
 
@@ -145,7 +138,6 @@ public class ClassificationSystemHateoasController
 
     @GetMapping(value = CLASSIFICATION_SYSTEM + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<ClassificationSystemHateoas> findOne(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of classificationSystem to " +
                             "retrieve.",
@@ -154,9 +146,7 @@ public class ClassificationSystemHateoasController
         ClassificationSystemHateoas classificationSystemHateoas =
                 classificationSystemService.
                         findSingleClassificationSystem(systemID);
-        return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(classificationSystemHateoas.getEntityVersion().toString())
+        return ResponseEntity.status(OK)
                 .body(classificationSystemHateoas);
     }
 
@@ -188,8 +178,9 @@ public class ClassificationSystemHateoasController
                     description = "systemID of the classificationSystem",
                     required = true)
             @PathVariable(SYSTEM_ID) final UUID systemID) {
-        return classificationSystemService.
-                findSeriesAssociatedWithClassificationSystem(systemID);
+        return ResponseEntity.status(OK)
+                .body(classificationSystemService
+                        .findSeriesAssociatedWithClassificationSystem(systemID));
     }
 
     @Operation(summary = "Retrieves multiple ClassificationSystem entities " +
@@ -209,12 +200,10 @@ public class ClassificationSystemHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = CLASSIFICATION_SYSTEM)
     public ResponseEntity<ClassificationSystemHateoas>
-    findAllClassificationSystem(
-            HttpServletRequest request) {
+    findAllClassificationSystem() {
         ClassificationSystemHateoas classificationSystemHateoas =
                 classificationSystemService.findAllClassificationSystem();
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(classificationSystemHateoas);
     }
 
@@ -240,7 +229,6 @@ public class ClassificationSystemHateoasController
             SYSTEM_ID_PARAMETER + SLASH + CLASS)
     public ResponseEntity<ClassHateoas>
     findClassAssociatedWithClassificationSystem(
-            HttpServletRequest request,
             @Parameter(
                     name = SYSTEM_ID,
                     description = "systemID of ClassificationSystem you want " +
@@ -248,7 +236,6 @@ public class ClassificationSystemHateoasController
                     required = true)
             @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(classificationSystemService.
                         findAllClassAssociatedWithClassificationSystem(
                                 systemID));
@@ -275,14 +262,12 @@ public class ClassificationSystemHateoasController
     @GetMapping(value = CLASSIFICATION_SYSTEM + SLASH +
             SYSTEM_ID_PARAMETER + SLASH + NEW_CLASS)
     public ResponseEntity<ClassHateoas> createDefaultClass(
-            HttpServletRequest request,
             @Parameter(
                     name = SYSTEM_ID,
                     description = "systemID of Class to associate Class with.",
                     required = true)
             @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(classificationSystemService.generateDefaultClass(systemID));
     }
 
@@ -306,7 +291,6 @@ public class ClassificationSystemHateoasController
     @DeleteMapping(value = CLASSIFICATION_SYSTEM + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<String>
     deleteClassificationSystemBySystemId(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the ClassificationSystem to " +
                             "delete",
@@ -314,7 +298,6 @@ public class ClassificationSystemHateoasController
             @PathVariable(SYSTEM_ID) final UUID systemID) {
         classificationSystemService.deleteClassificationSystem(systemID);
         return ResponseEntity.status(NO_CONTENT)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(DELETE_RESPONSE);
     }
 
@@ -392,8 +375,6 @@ public class ClassificationSystemHateoasController
                         parseETAG(request.getHeader(ETAG)),
                         classificationSystem);
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(classificationSystemHateoas.getEntityVersion().toString())
                 .body(classificationSystemHateoas);
     }
 }

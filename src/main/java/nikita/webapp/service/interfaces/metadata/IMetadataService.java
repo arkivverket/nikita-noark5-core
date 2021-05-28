@@ -3,7 +3,6 @@ package nikita.webapp.service.interfaces.metadata;
 import nikita.common.model.noark5.v5.hateoas.metadata.MetadataHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.common.model.noark5.v5.metadata.Metadata;
-import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
 import java.lang.reflect.InvocationTargetException;
@@ -16,7 +15,7 @@ public interface IMetadataService {
      * @param code The code of the metadata object to delete
      * @return empty response, but 206 No contet
      */
-    ResponseEntity<String> deleteMetadataEntity(@NotNull final String code);
+    String deleteMetadataEntity(@NotNull final String code);
 
     /**
      * Find a valid metadata object by entity type and check that the (code,
@@ -67,8 +66,7 @@ public interface IMetadataService {
      * @param code The code of the Metadata object to retrieve
      * @return the metadata object packed as a MetadataHateoas object
      */
-    ResponseEntity<MetadataHateoas>
-    findMetadataByCodeOrThrow(@NotNull final String code);
+    MetadataHateoas findMetadataByCodeOrThrow(@NotNull final String code);
 
     /**
      * retrieve a list of all IMetadataEntity
@@ -76,9 +74,9 @@ public interface IMetadataService {
      * @return A list of IMetadataEntity wrapped as a MetadataHateoas object,
      * put inside a ResponseEntity that has all HTTP values set.
      */
-    ResponseEntity<MetadataHateoas> findAll();
+    MetadataHateoas findAll();
 
-    ResponseEntity<String> generateTemplateMetadata();
+    MetadataHateoas generateTemplateMetadata();
 
     /**
      * Update an existing metadata object.  Raise exception if the code is
@@ -89,7 +87,7 @@ public interface IMetadataService {
      * @return The metadata object wrapped as a MetadataHateoas object after
      * has been persisted to the database
      */
-    ResponseEntity<MetadataHateoas> updateMetadataEntity(
+    MetadataHateoas updateMetadataEntity(
             @NotNull final String code,
             @NotNull final Metadata incomingMetadata);
 
@@ -100,9 +98,8 @@ public interface IMetadataService {
      * @return The metadata object wrapped as a MetadataHateoas object after
      * has been persisted to the database
      */
-    ResponseEntity<MetadataHateoas> createNewMetadataEntity(
+    MetadataHateoas createNewMetadataEntity(
             @NotNull final IMetadataEntity entity)
-            throws ClassNotFoundException, NoSuchMethodException,
-            IllegalAccessException, InvocationTargetException,
-            InstantiationException;
+            throws NoSuchMethodException, IllegalAccessException,
+            InvocationTargetException, InstantiationException;
 }

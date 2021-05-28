@@ -82,7 +82,8 @@ nikita:
     incoming-directory: /data2/nikita/storage/incoming/ # Temporary storage area
   application:
     pagination:
-      max-page-size: 10 # Set number of results per page. Currently not used
+      max-page-size: 10 # Set number of results per page, if request does not have one.
+      absolute-max-page-size: 1000 # Set maximum number of results per page. To prevent resource starvation.
     checksum-algorithm: SHA-256
   server:
     hateoas:

@@ -161,7 +161,7 @@ public class BSMTest {
             System.out.println(createBSMMetadata(entry.getKey(),
                     (String) values.get(0), false,
                     (String) values.get(1), (String) values.get(2),
-                    factory).toString());
+                    factory));
             ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
                     .post(url)
                     .contextPath("/noark5v5")

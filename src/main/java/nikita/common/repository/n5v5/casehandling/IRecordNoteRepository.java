@@ -14,8 +14,6 @@ public interface IRecordNoteRepository extends
 
     RecordNote findBySystemId(UUID systemId);
 
-    List<RecordNote> findByOwnedBy(String ownedBy);
-
     List<RecordNote> findByReferenceFile(File file);
 
     long deleteByOwnedBy(String ownedBy);

@@ -16,40 +16,45 @@ import java.util.UUID;
 public interface IDocumentObjectService {
 
     // -- All CREATE operations
-    DocumentObject save(@NotNull DocumentObject documentObject);
+    DocumentObjectHateoas save(@NotNull final DocumentObject documentObject);
 
     // -- All READ operations
 
     DocumentObjectHateoas generateDefaultDocumentObject();
 
-    DocumentObjectHateoas findDocumentObjectByOwner();
+    DocumentObjectHateoas findAll();
 
-    ConversionHateoas generateDefaultConversion(String systemID);
-
-    ConversionHateoas
-    createConversionAssociatedWithDocumentObject(String systemID,
-                                                 Conversion conversion);
+    ConversionHateoas generateDefaultConversion(@NotNull final UUID systemId);
 
     ConversionHateoas
-    findAllConversionAssociatedWithDocumentObject(String systemId);
+    createConversionAssociatedWithDocumentObject(
+            @NotNull final UUID systemId,
+            @NotNull final Conversion conversion);
 
     ConversionHateoas
-    findConversionAssociatedWithDocumentObject
-        (String systemId, String subSystemId);
+    findAllConversionAssociatedWithDocumentObject(@NotNull final UUID systemId);
 
-    ConversionHateoas handleUpdateConversionBySystemId
-        (String systemId, String subSystemId, Conversion conversion);
+    ConversionHateoas
+    findConversionAssociatedWithDocumentObject(
+            @NotNull final UUID systemId,
+            @NotNull final UUID subSystemId);
+
+    ConversionHateoas handleUpdateConversionBySystemId(
+            @NotNull final UUID systemId,
+            @NotNull final UUID subSystemId,
+            @NotNull final Conversion conversion);
 
     // systemId
-    DocumentObjectHateoas findBySystemId(@NotNull String systemId);
+    DocumentObjectHateoas findBySystemId(@NotNull final UUID systemId);
 
     // All UPDATE operations
-    DocumentObjectHateoas handleUpdate
-        (@NotNull final String systemId, @NotNull final Long version,
-         @NotNull final DocumentObject documentObject);
+    DocumentObjectHateoas handleUpdate(
+            @NotNull final UUID systemId,
+            @NotNull final Long version,
+            @NotNull final DocumentObject documentObject);
 
     // All DELETE operations
-    void deleteEntity(@NotNull String systemId);
+    void deleteEntity(@NotNull final UUID systemId);
 
     long deleteAll();
 
@@ -59,26 +64,24 @@ public interface IDocumentObjectService {
      * Given an systemId for a documentObject, find the documentObject and
      * create a new documentObject with an archive version of the the
      * original documentObject
-     *
      **/
     DocumentObjectHateoas
-    convertDocumentToPDF(String documentObjectSystemId)
-            throws Exception;
-
+    convertDocumentToPDF(@NotNull final UUID systemId);
 
     DocumentObjectHateoas
-    handleIncomingFile(@NotNull String systemId,
-                       @NotNull HttpServletRequest request) throws IOException;
+    handleIncomingFile(@NotNull final UUID systemId,
+                       @NotNull final HttpServletRequest request) throws IOException;
 
-    Resource loadAsResource(@NotNull String systemId,
-                            @NotNull HttpServletRequest request,
-                            @NotNull HttpServletResponse response);
+    Resource loadAsResource(@NotNull final UUID systemId,
+                            @NotNull final HttpServletRequest request,
+                            @NotNull final HttpServletResponse response);
 
     /**
      * Delete a conversion object associated with the documentObject.
      *
-     * @param documentObjectSystemID UUID of the documentObject object
-     * @param conversionSystemID     UUID of the Conversion object
+     * @param systemId           UUID of the documentObject object
+     * @param conversionSystemID UUID of the Conversion object
      */
-    void deleteConversion(UUID documentObjectSystemID, UUID conversionSystemID);
+    void deleteConversion(@NotNull final UUID systemId,
+                          @NotNull final UUID conversionSystemID);
 }

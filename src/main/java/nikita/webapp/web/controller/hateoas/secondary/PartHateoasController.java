@@ -11,8 +11,6 @@ import nikita.common.model.noark5.v5.hateoas.secondary.PartUnitHateoas;
 import nikita.common.model.noark5.v5.secondary.PartPerson;
 import nikita.common.model.noark5.v5.secondary.PartUnit;
 import nikita.common.util.exceptions.NikitaException;
-import nikita.webapp.hateoas.interfaces.secondary.IPartHateoasHandler;
-import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.secondary.IPartService;
 import nikita.webapp.web.controller.hateoas.NoarkController;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +22,6 @@ import java.util.UUID;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
@@ -35,12 +32,9 @@ import static org.springframework.http.HttpStatus.OK;
 public class PartHateoasController
         extends NoarkController {
 
-    private final IPartHateoasHandler partHateoasHandler;
     private final IPartService partService;
 
-    public PartHateoasController(IPartHateoasHandler partHateoasHandler,
-                                 IPartService partService) {
-        this.partHateoasHandler = partHateoasHandler;
+    public PartHateoasController(IPartService partService) {
         this.partService = partService;
     }
 
@@ -63,20 +57,12 @@ public class PartHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = PART_PERSON + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<PartPersonHateoas> findOnePartPersonBySystemId(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the partPerson to retrieve",
                     required = true)
             @PathVariable(SYSTEM_ID) final UUID partPersonSystemId) {
-        PartPerson partPerson =
-                (PartPerson) partService.findBySystemId(partPersonSystemId);
-        PartPersonHateoas partPersonHateoas =
-                new PartPersonHateoas(partPerson);
-        partHateoasHandler.addLinks(partPersonHateoas, new Authorisation());
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(partPerson.getVersion().toString())
-                .body(partPersonHateoas);
+                .body(partService.findPartPersonBySystemId(partPersonSystemId));
     }
 
     // GET [contextPath][api]/arkivstruktur/partenhet/{systemId}
@@ -96,19 +82,12 @@ public class PartHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = PART_UNIT + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<PartUnitHateoas> findOnePartUnitBySystemId(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the partUnit to retrieve",
                     required = true)
             @PathVariable(SYSTEM_ID) final UUID partUnitSystemId) {
-        PartUnit partUnit =
-                (PartUnit) partService.findBySystemId(partUnitSystemId);
-        PartUnitHateoas partUnitHateoas = new PartUnitHateoas(partUnit);
-        partHateoasHandler.addLinks(partUnitHateoas, new Authorisation());
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(partUnit.getVersion().toString())
-                .body(partUnitHateoas);
+                .body(partService.findPartUnitBySystemId(partUnitSystemId));
     }
 
     // PUT [contextPath][api]/arkivstruktur/partenhet/{systemId}
@@ -152,16 +131,9 @@ public class PartHateoasController
                     required = true)
             @RequestBody PartUnit partUnit) throws NikitaException {
         validateForUpdate(partUnit);
-
-        PartUnit updatedPartUnit = partService.updatePartUnit(systemID,
-                parseETAG(request.getHeader(ETAG)), partUnit);
-        PartUnitHateoas partUnitHateoas = new
-                PartUnitHateoas(updatedPartUnit);
-        partHateoasHandler.addLinks(partUnitHateoas, new Authorisation());
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(updatedPartUnit.getVersion().toString())
-                .body(partUnitHateoas);
+                .body(partService.updatePartUnit(systemID,
+                        parseETAG(request.getHeader(ETAG)), partUnit));
     }
 
     // PUT [contextPath][api]/arkivstruktur/partperson/{systemId}
@@ -205,16 +177,9 @@ public class PartHateoasController
                     required = true)
             @RequestBody PartPerson partPerson) throws NikitaException {
         validateForUpdate(partPerson);
-        PartPerson updatedPartPerson =
-                partService.updatePartPerson(systemID,
-                        parseETAG(request.getHeader(ETAG)), partPerson);
-        PartPersonHateoas partPersonHateoas =
-                new PartPersonHateoas(updatedPartPerson);
-        partHateoasHandler.addLinks(partPersonHateoas, new Authorisation());
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(updatedPartPerson.getVersion().toString())
-                .body(partPersonHateoas);
+                .body(partService.updatePartPerson(systemID,
+                        parseETAG(request.getHeader(ETAG)), partPerson));
     }
 
     // Update a Part with given values
@@ -254,7 +219,8 @@ public class PartHateoasController
                     required = true)
             @RequestBody PatchObjects patchObjects)
             throws NikitaException {
-        return partService.handleUpdate(systemID, patchObjects);
+        return ResponseEntity.status(OK).body(
+                partService.handleUpdate(systemID, patchObjects));
     }
 
     // DELETE [contextPath][api]/arkivstruktur/partenhet/{systemID}/

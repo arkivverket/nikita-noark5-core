@@ -13,4 +13,9 @@ public final class ErrorMessagesConstants {
             "HTTP request";
     public static final String CROSS_REFERENCE_DUPLICATE = "Attempt to " +
             "create duplicate cross reference from [%s] to [%s]";
+    public static final String STRING_IS_BLANK =
+            "The [%s] string cannot contain only blank values.";
+    public static final String MALFORMED_PAYLOAD =
+            "The [%s] you tried to create is malformed. The following fields" +
+                    " are not recognised as fields [%s]";
 }

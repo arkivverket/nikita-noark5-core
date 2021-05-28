@@ -8,7 +8,6 @@ import com.google.common.net.MediaType;
 import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.bsm.BSMBase;
 import nikita.common.model.noark5.v5.FondsCreator;
-import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.admin.User;
 import nikita.common.model.noark5.v5.casehandling.secondary.*;
@@ -23,12 +22,15 @@ import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.common.util.exceptions.NikitaMalformedHeaderException;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
+import nikita.webapp.util.annotation.ANationalIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
 
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.BadRequestException;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -46,6 +48,7 @@ import static java.time.temporal.ChronoField.HOUR_OF_DAY;
 import static java.time.temporal.ChronoField.MINUTE_OF_HOUR;
 import static java.util.UUID.fromString;
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.ErrorMessagesConstants.STRING_IS_BLANK;
 import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.http.HttpMethod.*;
@@ -74,27 +77,31 @@ public final class CommonUtils {
                     "(00|[0-9]|1[0-9]|2[0-3]):([0-9]|[0-5][0-9]):" +
                     "([0-9]|[0-5][0-9])" + "(\\.\\d\\d?\\d?\\d?\\d)?" +
                     "(\\+|\\-)\\d{2}:\\d{2}$");
+    public static final Map<String, Class<?>> entityMap = new HashMap<>();
+    public static final Map<String, Class<?>> natIdentMap = new HashMap<>();
     /**
      * Holds a list of servletPaths and their HTTP methods
      */
-    private static Map<String, Set<HttpMethod>> requestMethodMap = new HashMap<>();
+    private static final Map<String, Set<HttpMethod>>
+            requestMethodMap = new HashMap<>();
     /**
      * Holds a list of mimeType and boolean value stating if we should attempt
      * to convert a file of that mimeType to an archive version
      */
-    private static Map<String, Boolean> mimeTypeConversionMap =
-            new HashMap<>();
+    private static final Map<String, Boolean>
+            mimeTypeConversionMap = new HashMap<>();
     /**
      * Holds a mapping of Norwegian entity names to English entity names
      * e.g mappe->file
      */
-    private static Map<String, ModelNames> nor2engEntityMap = new HashMap<>();
+    private static final Map<String, ModelNames>
+            nor2engEntityMap = new HashMap<>();
     /**
      * Holds a mapping of mimeTypes and their archive equivalent. The equivalent
      * contains both the equivalent mimeType and file extension.
      */
-    private static Map<String, FileExtensionAndMimeType> archiveVersion =
-            new HashMap<>();
+    private static final Map<String, FileExtensionAndMimeType>
+            archiveVersion = new HashMap<>();
 
     // You shall not instantiate me!
     private CommonUtils() {
@@ -108,29 +115,23 @@ public final class CommonUtils {
          * will be validated differently if it's a CREATE operation as opposed to a UPDATE operation.
          *
          * @param nikitaEntity incoming nikita object
-         * @return true if valid. If not valid an exception is thrown
          */
-        public static boolean validateUpdateNoarkEntity(@NotNull INoarkEntity nikitaEntity) {
-
+        public static void validateUpdateNoarkEntity(
+                @NotNull INoarkEntity nikitaEntity) {
             if (nikitaEntity instanceof ITitleDescription) {
-                rejectIfEmptyOrWhitespace(((ITitleDescription) nikitaEntity).getDescription());
-                rejectIfEmptyOrWhitespace(((ITitleDescription) nikitaEntity).getTitle());
+                rejectIfEmptyOrWhitespace(((ITitleDescription) nikitaEntity)
+                        .getDescription(), DESCRIPTION);
+                rejectIfEmptyOrWhitespace(((ITitleDescription) nikitaEntity)
+                        .getTitle(), TITLE);
             }
-            if (nikitaEntity instanceof ITitleDescription) {
-                rejectIfEmptyOrWhitespace(((ITitleDescription) nikitaEntity).getDescription());
-                rejectIfEmptyOrWhitespace(((ITitleDescription) nikitaEntity).getTitle());
-            }
-
-
-            return true;
         }
 
-        public static void rejectIfEmptyOrWhitespace(String stringToCheck) {
-
-        }
-
-        public static boolean validateCreateNoarkEntity(@NotNull INoarkGeneralEntity noarkEntity) {
-            return true;
+        public static void rejectIfEmptyOrWhitespace(
+                String stringToCheck, String attribute) {
+            if (stringToCheck.isBlank()) {
+                throw new NikitaMalformedInputDataException(
+                        String.format(STRING_IS_BLANK, attribute));
+            }
         }
 
         public static Long parseETAG(String quotedETAG) {
@@ -153,6 +154,21 @@ public final class CommonUtils {
 
     public static final class FileUtils {
 
+        public static void addClassToMap(String simpleName, Class klass) {
+            entityMap.put(simpleName, klass);
+        }
+
+        public static void addClassToNatIdentMap(
+                Class klass, Annotation annotation) {
+            natIdentMap.put(
+                    ((ANationalIdentifier) annotation).name(), klass);
+        }
+
+        public static Class getClassFromName(String className) {
+            return Optional.ofNullable(entityMap.get(className))
+                    .orElseThrow(() -> new BadRequestException(
+                            "Unsupported Noark class: " + className));
+        }
 
         public static Boolean mimeTypeIsConvertible(@NotNull String mimeType) {
             return mimeTypeConversionMap.containsKey(mimeType);
@@ -162,7 +178,6 @@ public final class CommonUtils {
             // TODO At the moment there seems to be a problem with
             // unoconv and I don't have time to debug this to find out
             // why ...
-
             // doc, ppt, xls
             addMimeTypeAsConvertible(MediaType.MICROSOFT_EXCEL);
             addMimeTypeAsConvertible(MediaType.MICROSOFT_POWERPOINT);
@@ -189,7 +204,6 @@ public final class CommonUtils {
                 @NotNull String productionMimeType,
                 @NotNull String archiveFileExtension,
                 @NotNull String archiveMimeType) {
-
             archiveVersion.put(productionMimeType,
                     new FileExtensionAndMimeType(archiveMimeType,
                             archiveFileExtension));
@@ -197,13 +211,10 @@ public final class CommonUtils {
 
         public static String getArchiveFileExtension(
                 String productionMimeType) {
-
             String fileExtension = "unknown";
-
             if (null == productionMimeType) {
                 return fileExtension;
             }
-
             FileExtensionAndMimeType fileExtensionAndMimeType =
                     archiveVersion.get(productionMimeType);
             if (null != fileExtensionAndMimeType) {
@@ -258,7 +269,7 @@ public final class CommonUtils {
                     (url.contains("http://") || url.contains("https" +
                             "://"))) {
                 String[] split = url.split(HATEOAS_API_PATH);
-                if (split != null && split.length != 2) {
+                if (split.length != 2) {
                     throw new NikitaMalformedInputDataException(
                             "OData filtering problem with URL [" + url + "]");
                 }
@@ -289,10 +300,6 @@ public final class CommonUtils {
             return nor2engEntityMap.get(norwegianName).getEnglishNameDatabase();
         }
 
-        public static String getSuccessStatusStringForDelete() {
-            return "{\"status\" : \"Success\"}";
-        }
-
         /**
          * requestMethodMap maps servletPaths to HTTP methods. If a particular
          * servletPath supports
@@ -310,12 +317,10 @@ public final class CommonUtils {
          * @param method      An instance of a single HTTP method
          */
         public static void addRequestToMethodMap(@NotNull String servletPath, @NotNull Set<HttpMethod> method) {
-
             Set<HttpMethod> methods = requestMethodMap.get(servletPath.toLowerCase());
             if (null == methods) {
                 methods = new TreeSet<>();
             }
-
             // GET automatically implies HEAD
             if (method.contains(GET)) {
                 methods.add(GET);
@@ -333,11 +338,10 @@ public final class CommonUtils {
          * Provides the ability to throw an Exception if this call fails.
          * This is just a helper to make the code more readable in other places.
          *
-         * @param servletPath
+         * @param servletPath The servletPath
          */
         public static String getMethodsForRequestAsListOrThrow(
                 @NotNull String servletPath) {
-
             HttpMethod[] methods = getMethodsForRequest(servletPath);
             if (null == methods) {
                 String msg = "Error servletPath [" + servletPath
@@ -345,8 +349,7 @@ public final class CommonUtils {
                 logger.error(msg);
                 throw new NikitaException(msg);
             }
-            return Arrays.asList(methods)
-                    .stream()
+            return Arrays.stream(methods)
                     .map(a -> String.valueOf(a.toString()))
                     .collect(Collectors.joining(","));
         }
@@ -355,11 +358,10 @@ public final class CommonUtils {
          * Provides the ability to throw an Exception if this call fails.
          * This is just a helper to make the code more readable in other places.
          *
-         * @param servletPath
+         * @param servletPath The servletPath
          */
 
         public static HttpMethod[] getMethodsForRequestOrThrow(@NotNull String servletPath) {
-
             HttpMethod[] methods = getMethodsForRequest(servletPath);
             if (null == methods) {
                 String msg = "Error servletPath [" +
@@ -374,20 +376,18 @@ public final class CommonUtils {
          * Provides the ability to throw an Exception if this call fails.
          * This is just a helper to make the code more readable in other places.
          *
-         * @param servletPath
+         * @param servletPath The servletPath
          */
         public static HttpMethod[] getMethodsForRequest(@NotNull String servletPath) {
-
             // Adding a trailing slash as the map is setup with a trailing slash
-            if (false == servletPath.endsWith("/")) {
+            if (!servletPath.endsWith("/")) {
                 servletPath += SLASH;
             }
-
             // Next, we have to replace the first occurrence of an
             // actual UUID with the word {systemID}, the next with
             // {subSystemID} for non-metadata entries, and {kode} or
             // {code}/{value} for metadata entries.
-            String updatedServletPath = servletPath;
+            String updatedServletPath;
             if (servletPath.startsWith(SLASH + HREF_BASE_METADATA + SLASH)) {
                 // Anything to do with metadata, just let it through
                 HttpMethod[] methods = new HttpMethod[5];
@@ -398,7 +398,6 @@ public final class CommonUtils {
                 methods[4] = OPTIONS;
                 return methods;
             } else {
-
                 // The following pattern is taken from
                 // https://stackoverflow.com/questions/136505/searching-for-uuids-in-text-with-regex#6640851
                 Pattern pattern = Pattern.compile(
@@ -408,7 +407,6 @@ public final class CommonUtils {
                 matcher = pattern.matcher(servletPath.toLowerCase());
                 updatedServletPath = matcher.replaceFirst(SUB_SYSTEM_ID_PARAMETER);
             }
-
             Set<HttpMethod> methods = requestMethodMap.get(
                     updatedServletPath.toLowerCase());
             if (methods == null) {
@@ -432,13 +430,15 @@ public final class CommonUtils {
                     if (currentNode.isNumber()) {
                         return currentNode.intValue();
                     } else {
-                        errors.append(fieldname + " (\"" +
-                                currentNode.textValue() +
-                                "\") is not numeric. ");
+                        errors.append(fieldname);
+                        errors.append(" (\"");
+                        errors.append(currentNode.textValue());
+                        errors.append("\") is not numeric. ");
                         return null;
                     }
                 } else if (required) {
-                    errors.append(fieldname + " is missing. ");
+                    errors.append(fieldname);
+                    errors.append(" is missing. ");
                 }
                 return null;
             }
@@ -453,13 +453,15 @@ public final class CommonUtils {
                     if (currentNode.isNumber()) {
                         return currentNode.longValue();
                     } else {
-                        errors.append(fieldname + " (\"" +
-                                currentNode.textValue() +
-                                "\") is not numeric. ");
+                        errors.append(fieldname);
+                        errors.append(" (\"");
+                        errors.append(currentNode.textValue());
+                        errors.append("\") is not numeric. ");
                         return null;
                     }
                 } else if (required) {
-                    errors.append(fieldname + " is missing. ");
+                    errors.append(fieldname);
+                    errors.append(" is missing. ");
                 }
                 return null;
             }
@@ -475,19 +477,22 @@ public final class CommonUtils {
                         try {
                             return fromString(currentNode.textValue());
                         } catch (IllegalArgumentException e) {
-                            errors.append(fieldname + " (\"" +
-                                    currentNode.textValue() +
-                                    "\") is not valid UUID. ");
+                            errors.append(fieldname);
+                            errors.append(" (\"");
+                            errors.append(currentNode.textValue());
+                            errors.append("\") is not valid UUID.");
                             return null;
                         }
                     } else {
-                        errors.append(fieldname + " (\"" +
-                                currentNode.textValue() +
-                                "\") is not UUID. ");
+                        errors.append(fieldname);
+                        errors.append(" (\"");
+                        errors.append(currentNode.textValue());
+                        errors.append("\") is not numeric. ");
                         return null;
                     }
                 } else if (required) {
-                    errors.append(fieldname + " is missing. ");
+                    errors.append(fieldname);
+                    errors.append(" is missing. ");
                 }
                 return null;
             }
@@ -507,7 +512,6 @@ public final class CommonUtils {
                             .parseDefaulting(MINUTE_OF_HOUR, 0)
                             .toFormatter();
                 }
-
                 ZonedDateTime zonedDateTime =
                         ZonedDateTime.parse(date, dateFormatter);
                 if (null == zonedDateTime) {
@@ -544,7 +548,8 @@ public final class CommonUtils {
                     }
                     objectNode.remove(fieldname);
                 } else if (required) {
-                    errors.append(fieldname + " is missing. ");
+                    errors.append(fieldname);
+                    errors.append(" is missing. ");
                 }
                 return d;
             }
@@ -575,7 +580,8 @@ public final class CommonUtils {
                     }
                     objectNode.remove(fieldname);
                 } else if (required) {
-                    errors.append(fieldname + "is missing. ");
+                    errors.append(fieldname);
+                    errors.append(" is missing. ");
                 }
                 return d;
             }
@@ -600,7 +606,8 @@ public final class CommonUtils {
                         objectNode.remove(parentname);
                     }
                 } else if (required) {
-                    errors.append(parentname + " is missing. ");
+                    errors.append(parentname);
+                    errors.append(" is missing. ");
                 }
                 return entity;
             }
@@ -621,7 +628,10 @@ public final class CommonUtils {
                 if (null != node) {
                     entity.setCode(node.textValue());
                 } else {
-                    errors.append(parentname + "." + CODE + " is missing. ");
+                    errors.append(parentname);
+                    errors.append(".");
+                    errors.append(CODE);
+                    errors.append(" is missing. ");
                 }
                 node = metadataNode.get(CODE_NAME);
                 if (null != node) {
@@ -642,7 +652,7 @@ public final class CommonUtils {
 
             public static void deserialiseNoarkSystemIdEntity(
                     ISystemId noarkSystemIdEntity,
-                    ObjectNode objectNode, StringBuilder errors) {
+                    ObjectNode objectNode) {
                 // Deserialize systemId
                 JsonNode currentNode = objectNode.get(SYSTEM_ID);
                 if (null != currentNode) {
@@ -654,9 +664,7 @@ public final class CommonUtils {
 
 
             public static void deserialiseNoarkMetadataEntity(
-                    IMetadataEntity metadataEntity, ObjectNode objectNode,
-                    StringBuilder errors) {
-
+                    IMetadataEntity metadataEntity, ObjectNode objectNode) {
                 JsonNode currentNode = objectNode.get(CODE);
                 if (null != currentNode) {
                     metadataEntity.setCode(currentNode.textValue());
@@ -685,7 +693,7 @@ public final class CommonUtils {
             }
 
             public static void deserialiseKeyword(IKeyword keywordEntity,
-                                                  ObjectNode objectNode, StringBuilder errors) {
+                                                  ObjectNode objectNode) {
                 // Deserialize keyword
                 JsonNode currentNode = objectNode.get(KEYWORD);
                 if (null != currentNode) {
@@ -740,10 +748,9 @@ public final class CommonUtils {
 
             public static void deserialiseStorageLocation(
                     IStorageLocation storageLocationEntity,
-                    ObjectNode objectNode, StringBuilder errors) {
+                    ObjectNode objectNode) {
                 // Deserialize storageLocation
                 JsonNode currentNode = objectNode.get(STORAGE_LOCATION);
-
                 if (null != currentNode) {
                     if (currentNode.isArray()) {
                         currentNode.iterator();
@@ -783,7 +790,6 @@ public final class CommonUtils {
                                                             ObjectNode objectNode, StringBuilder errors) {
                 // Deserialize createdDate
                 noarkCreateEntity.setCreatedDate(deserializeDateTime(CREATED_DATE, objectNode, errors));
-
                 // Deserialize createdBy
                 JsonNode currentNode = objectNode.get(CREATED_BY);
                 if (null != currentNode) {
@@ -815,7 +821,6 @@ public final class CommonUtils {
                                                               ObjectNode objectNode, StringBuilder errors) {
                 // Deserialize finalisedDate
                 finaliseEntity.setFinalisedDate(deserializeDateTime(FINALISED_DATE, objectNode, errors));
-
                 // Deserialize finalisedBy
                 JsonNode currentNode = objectNode.get(FINALISED_BY);
                 if (null != currentNode) {
@@ -835,7 +840,6 @@ public final class CommonUtils {
                 } else {
                     errors.append(TITLE + " is missing. ");
                 }
-
                 // Deserialize description
                 currentNode = objectNode.get(DESCRIPTION);
                 if (null != currentNode) {
@@ -848,7 +852,7 @@ public final class CommonUtils {
                     ISystemId systemIdEntity, ObjectNode objectNode,
                     StringBuilder errors) {
                 deserialiseNoarkSystemIdEntity(
-                        systemIdEntity, objectNode, errors);
+                        systemIdEntity, objectNode);
                 deserialiseNoarkCreateEntity(
                         systemIdEntity, objectNode, errors);
                 deserialiseNoarkLastModifiedEntity(
@@ -862,7 +866,7 @@ public final class CommonUtils {
             }
 
             public static String checkNodeObjectEmpty(JsonNode objectNode) {
-                StringBuffer result = new StringBuffer();
+                StringBuilder result = new StringBuilder();
                 if (objectNode.size() != 0) {
                     Iterator<Map.Entry<String, JsonNode>> nodes = objectNode.fields();
                     while (nodes.hasNext()) {
@@ -877,23 +881,6 @@ public final class CommonUtils {
                 return result.toString();
             }
 
-            public static List<CrossReference> deserialiseCrossReferences(
-                    @NotNull ICrossReference crossReferenceObject,
-                    @NotNull ObjectNode objectNode,
-                    @NotNull StringBuilder errors) {
-
-                List<CrossReference> crossReferences = crossReferenceObject.
-                        getReferenceCrossReference();
-                if (null != crossReferences) {
-                    crossReferences.forEach(
-                            crossReference ->
-                                    deserialiseCrossReferenceEntity(crossReference,
-                                            objectNode, errors));
-                }
-                objectNode.remove(CROSS_REFERENCES);
-                return crossReferences;
-            }
-
             /**
              * Note: This approach requires an additional step to add the
              * fromSystemId. This can't be solved here.
@@ -905,10 +892,8 @@ public final class CommonUtils {
             public static void deserialiseCrossReferenceEntity(
                     ICrossReferenceEntity crossReferenceEntity,
                     ObjectNode objectNode, StringBuilder errors) {
-
                 deserialiseNoarkSystemIdEntity(crossReferenceEntity,
-                        objectNode, errors);
-
+                        objectNode);
                 JsonNode currentNode = objectNode.get(REFERENCE_TO_CLASS);
                 if (null != currentNode) {
                     crossReferenceEntity.setReferenceType(REFERENCE_TO_CLASS);
@@ -934,21 +919,6 @@ public final class CommonUtils {
                 objectNode.remove(CROSS_REFERENCE);
             }
 
-            public static List<Series> deserialiseReferenceMultipleSeries(ObjectNode objectNode, StringBuilder errors) {
-                List<Series> referenceSeries = null;
-                JsonNode node = objectNode.get(REFERENCE_SERIES);
-                if (node != null) {
-                    referenceSeries = new ArrayList<>();
-                    deserialiseReferenceSeries(referenceSeries, objectNode.deepCopy(), errors);
-                }
-                objectNode.remove(REFERENCE_SERIES);
-                return referenceSeries;
-            }
-
-            public static void deserialiseReferenceSeries(List<Series> referenceSeries, ObjectNode objectNode, StringBuilder errors) {
-
-            }
-
             public static Disposal deserialiseDisposal(ObjectNode objectNode, StringBuilder errors) {
                 Disposal disposal = null;
                 JsonNode disposalNode = objectNode.get(DISPOSAL);
@@ -961,7 +931,6 @@ public final class CommonUtils {
             }
 
             public static void deserialiseDisposalEntity(IDisposalEntity disposalEntity, ObjectNode objectNode, StringBuilder errors) {
-
                 // Deserialize disposalDecision
                 JsonNode currentNode = objectNode.get(DISPOSAL_DECISION);
                 if (null != currentNode) {
@@ -1003,7 +972,6 @@ public final class CommonUtils {
                     disposalUndertakenEntity.setDisposalBy(currentNode.textValue());
                     objectNode.remove(DISPOSAL_UNDERTAKEN_BY);
                 }
-
                 // Deserialize disposalDate
                 disposalUndertakenEntity.setDisposalDate(deserializeDate(DISPOSAL_UNDERTAKEN_DATE, objectNode, errors));
             }
@@ -1036,9 +1004,7 @@ public final class CommonUtils {
                 } else {
                     errors.append(DELETION_BY + " is missing. ");
                 }
-
                 // TODO referanseSlettetAv
-
                 // Deserialize deletionType
                 DeletionType entity = (DeletionType)
                         deserialiseMetadataValue(objectNode,
@@ -1046,33 +1012,29 @@ public final class CommonUtils {
                                 new DeletionType(),
                                 errors, true);
                 deletionEntity.setDeletionType(entity);
-
                 // Deserialize deletionDate
                 deletionEntity.setDeletionDate(deserializeDateTime(DELETION_DATE, objectNode, errors));
             }
 
-            public static void deserialiseAdministrativeUnitEntity(IAdministrativeUnitEntity administrativeUnit,
-                                                                   ObjectNode objectNode, StringBuilder errors) {
+            public static void deserialiseAdministrativeUnitEntity(
+                    IAdministrativeUnitEntity administrativeUnit,
+                    ObjectNode objectNode, StringBuilder errors) {
                 if (null != administrativeUnit) {
-
-                    deserialiseNoarkSystemIdEntity(administrativeUnit, objectNode, errors);
+                    deserialiseNoarkSystemIdEntity(administrativeUnit, objectNode);
                     deserialiseNoarkCreateEntity(administrativeUnit, objectNode, errors);
                     deserialiseNoarkFinaliseEntity(administrativeUnit, objectNode, errors);
-
                     // Deserialize kortnavn
                     JsonNode currentNode = objectNode.get(SHORT_NAME);
                     if (null != currentNode) {
                         administrativeUnit.setShortName(currentNode.textValue());
                         objectNode.remove(SHORT_NAME);
                     }
-
                     // Deserialize administrativEnhetNavn
                     currentNode = objectNode.get(ADMINISTRATIVE_UNIT_NAME);
                     if (null != currentNode) {
                         administrativeUnit.setAdministrativeUnitName(currentNode.textValue());
                         objectNode.remove(ADMINISTRATIVE_UNIT_NAME);
                     }
-
                     // It is unclear if status values are to be set by special endpoint calls
                     // e.g. adminunit->avsluttAdministrativeEnhet
                     // Deserialize administrativEnhetsstatus
@@ -1081,7 +1043,6 @@ public final class CommonUtils {
                         administrativeUnit.setAdministrativeUnitStatus(currentNode.textValue());
                         objectNode.remove(ADMINISTRATIVE_UNIT_STATUS);
                     }
-
                     // Deserialize referanseOverordnetEnhet
                     currentNode = objectNode.get(ADMINISTRATIVE_UNIT_PARENT_REFERENCE);
                     if (null != currentNode) {
@@ -1095,13 +1056,15 @@ public final class CommonUtils {
                 }
             }
 
-            public static void deserialiseUserEntity(IUserEntity user, ObjectNode objectNode, StringBuilder errors) {
+            public static void deserialiseUserEntity(
+                    IUserEntity user, ObjectNode objectNode,
+                    StringBuilder errors) {
                 // TODO implement
-
             }
 
-            public static void deserialiseContactInformationEntity(IContactInformationEntity contactInformation,
-                                                                   ObjectNode objectNode, StringBuilder errors) {
+            public static void deserialiseContactInformationEntity(
+                    IContactInformationEntity contactInformation,
+                    ObjectNode objectNode) {
                 if (contactInformation != null) {
                     // Deserialize telefonnummer
                     JsonNode currentNode = objectNode.get(TELEPHONE_NUMBER);
@@ -1160,9 +1123,10 @@ public final class CommonUtils {
                         simpleAddress.setPostalTown(currentNode.textValue());
                         objectNode.remove(POSTAL_TOWN);
                     } else {
-                        errors.append(addressType
-                                + "." + POSTAL_TOWN
-                                + " is missing. ");
+                        errors.append(addressType);
+                        errors.append(".");
+                        errors.append(POSTAL_TOWN);
+                        errors.append(" is missing. ");
                     }
                     // Deserialize landkode
                     currentNode = objectNode.get(COUNTRY_CODE);
@@ -1176,11 +1140,9 @@ public final class CommonUtils {
             public static void deserialiseCorrespondencePartPersonEntity(
                     ICorrespondencePartPersonEntity partPerson,
                     ObjectNode objectNode, StringBuilder errors) {
-
                 deserialiseCorrespondencePartType(
                         partPerson, objectNode, errors);
-                deserialiseGenericPersonEntity(partPerson, objectNode, errors);
-
+                deserialiseGenericPersonEntity(partPerson, objectNode);
                 // Deserialize postalAddress
                 JsonNode currentNode = objectNode.get(POSTAL_ADDRESS);
                 if (null != currentNode) {
@@ -1194,7 +1156,6 @@ public final class CommonUtils {
                     partPerson.setPostalAddress(postalAddress);
                     objectNode.remove(N5ResourceMappings.POSTAL_ADDRESS);
                 }
-
                 // Deserialize residingAddress
                 currentNode = objectNode.get(RESIDING_ADDRESS);
                 if (null != currentNode) {
@@ -1210,14 +1171,13 @@ public final class CommonUtils {
                     partPerson.setResidingAddress(residingAddress);
                     objectNode.remove(RESIDING_ADDRESS);
                 }
-
                 // Deserialize kontaktinformasjon
                 currentNode = objectNode.get(CONTACT_INFORMATION);
                 if (null != currentNode) {
                     ContactInformation contactInformation =
                             new ContactInformation();
                     deserialiseContactInformationEntity(
-                            contactInformation, currentNode.deepCopy(), errors);
+                            contactInformation, currentNode.deepCopy());
                     partPerson.
                             setContactInformation(contactInformation);
                     objectNode.remove(CONTACT_INFORMATION);
@@ -1227,18 +1187,13 @@ public final class CommonUtils {
             public static void deserialisePartPersonEntity(
                     IPartPersonEntity partPersonEntity,
                     ObjectNode objectNode, StringBuilder errors) {
-
                 deserialisePartRole(
                         partPersonEntity, objectNode, errors);
-
-                deserialiseGenericPersonEntity(partPersonEntity,
-                        objectNode, errors);
-
+                deserialiseGenericPersonEntity(partPersonEntity, objectNode);
                 // TODO : Ugly hack as code evolved where metadataentity
                 // and nikitaentity suddenly no longer are the same
                 // just to keep things moving ...
                 ((INoarkGeneralEntity) partPersonEntity).setTitle("TEMP: REMOVE ME!");
-
                 // Deserialize postalAddress
                 JsonNode currentNode = objectNode.get(POSTAL_ADDRESS);
                 if (null != currentNode) {
@@ -1251,7 +1206,6 @@ public final class CommonUtils {
                     partPersonEntity.setPostalAddress(postalAddress);
                     objectNode.remove(N5ResourceMappings.POSTAL_ADDRESS);
                 }
-
                 // Deserialize residingAddress
                 currentNode = objectNode.get(RESIDING_ADDRESS);
                 if (null != currentNode) {
@@ -1265,14 +1219,13 @@ public final class CommonUtils {
                     partPersonEntity.setResidingAddress(residingAddress);
                     objectNode.remove(RESIDING_ADDRESS);
                 }
-
                 // Deserialize kontaktinformasjon
                 currentNode = objectNode.get(CONTACT_INFORMATION);
                 if (null != currentNode) {
                     ContactInformation contactInformation =
                             new ContactInformation();
                     deserialiseContactInformationEntity(
-                            contactInformation, currentNode.deepCopy(), errors);
+                            contactInformation, currentNode.deepCopy());
                     partPersonEntity.
                             setContactInformation(contactInformation);
                     objectNode.remove(CONTACT_INFORMATION);
@@ -1282,35 +1235,29 @@ public final class CommonUtils {
             public static void deserialisePartUnitEntity(
                     IPartUnitEntity partUnit,
                     ObjectNode objectNode, StringBuilder errors) {
-
                 deserialisePartRole(partUnit, objectNode, errors);
-
                 // TODO : Ugly hack as code evolved where metadataentity
                 // and nikitaentity suddenly no longer are the same
                 // just to keep things moving ...
                 ((INoarkGeneralEntity) partUnit).setTitle("TEMP: REMOVE ME!");
-
                 // Deserialize kontaktperson
                 JsonNode currentNode = objectNode.get(CONTACT_PERSON);
                 if (null != currentNode) {
                     partUnit.setContactPerson(currentNode.textValue());
                     objectNode.remove(CONTACT_PERSON);
                 }
-
                 // Deserialize navn
                 currentNode = objectNode.get(NAME);
                 if (null != currentNode) {
                     partUnit.setName(currentNode.textValue());
                     objectNode.remove(NAME);
                 }
-
                 // Deserialize organisasjonsnummer
                 currentNode = objectNode.get(UNIT_IDENTIFIER);
                 if (null != currentNode) {
                     JsonNode node = currentNode.get(ORGANISATION_NUMBER);
                     if (null != node) {
                         partUnit.setUnitIdentifier(node.textValue());
-
                         // This remove() call is placed inside block
                         // to report error if no organisasjonsnummer
                         // was found.
@@ -1323,7 +1270,6 @@ public final class CommonUtils {
                     partUnit.setContactPerson(currentNode.textValue());
                     objectNode.remove(CONTACT_PERSON);
                 }
-
                 // Deserialize postadresse
                 currentNode = objectNode.get(POSTAL_ADDRESS);
                 if (null != currentNode) {
@@ -1335,7 +1281,6 @@ public final class CommonUtils {
                     partUnit.setPostalAddress(postalAddressEntity);
                     objectNode.remove(POSTAL_ADDRESS);
                 }
-
                 // Deserialize forretningsadresse
                 currentNode = objectNode.get(BUSINESS_ADDRESS);
                 if (null != currentNode) {
@@ -1349,23 +1294,20 @@ public final class CommonUtils {
                             businessAddressEntity);
                     objectNode.remove(BUSINESS_ADDRESS);
                 }
-
                 // Deserialize kontaktinformasjon
                 currentNode = objectNode.get(CONTACT_INFORMATION);
                 if (null != currentNode) {
                     ContactInformation contactInformation =
                             new ContactInformation();
                     deserialiseContactInformationEntity(
-                            contactInformation, currentNode.deepCopy(), errors);
+                            contactInformation, currentNode.deepCopy());
                     partUnit.setContactInformation(contactInformation);
                     objectNode.remove(CONTACT_INFORMATION);
                 }
             }
 
             public static void deserialiseGenericPersonEntity(
-                    IGenericPersonEntity person, ObjectNode objectNode,
-                    StringBuilder errors) {
-
+                    IGenericPersonEntity person, ObjectNode objectNode) {
                 JsonNode currentNode = objectNode.get(PERSON_IDENTIFIER);
                 if (null != currentNode) {
                     // Deserialize foedselsnummer
@@ -1380,14 +1322,12 @@ public final class CommonUtils {
                     }
                     objectNode.remove(PERSON_IDENTIFIER);
                 }
-
                 // Deserialize navn
                 currentNode = objectNode.get(NAME);
                 if (null != currentNode) {
                     person.setName(currentNode.textValue());
                     objectNode.remove(NAME);
                 }
-
             }
 
 
@@ -1397,7 +1337,6 @@ public final class CommonUtils {
                     ObjectNode objectNode, StringBuilder errors) {
                 deserialiseCorrespondencePartType(
                         correspondencePartInternal, objectNode, errors);
-
                 // Deserialize administrativEnhet
                 JsonNode currentNode =
                         objectNode.get(ADMINISTRATIVE_UNIT_FIELD);
@@ -1412,7 +1351,6 @@ public final class CommonUtils {
                     correspondencePartInternal.setCaseHandler(currentNode.textValue());
                     objectNode.remove(CASE_HANDLER);
                 }
-
                 // Deserialize referanseAdministratitivEnhet
                 currentNode = objectNode.get(REFERENCE_ADMINISTRATIVE_UNIT);
                 if (null != currentNode) {
@@ -1423,7 +1361,6 @@ public final class CommonUtils {
                     //    (administrativeUnit);
                     objectNode.remove(REFERENCE_ADMINISTRATIVE_UNIT);
                 }
-
                 // Deserialize referanseSaksbehandler
                 currentNode = objectNode.get(REFERENCE_CASE_HANDLER);
                 if (null != currentNode) {
@@ -1437,10 +1374,8 @@ public final class CommonUtils {
             public static void deserialiseCorrespondencePartUnitEntity(
                     ICorrespondencePartUnitEntity correspondencePartUnit,
                     ObjectNode objectNode, StringBuilder errors) {
-
                 deserialiseCorrespondencePartType(correspondencePartUnit,
                         objectNode, errors);
-
                 // Deserialize enhetsidentifikator
                 JsonNode currentNode = objectNode.get(UNIT_IDENTIFIER);
                 // { "enhetsidentifikator": { "organisasjonsnummer": "123458"}}
@@ -1452,7 +1387,6 @@ public final class CommonUtils {
                     }
                     objectNode.remove(UNIT_IDENTIFIER);
                 }
-
                 // Deserialize kontaktperson
                 currentNode = objectNode.get(CONTACT_PERSON);
                 if (null != currentNode) {
@@ -1460,14 +1394,12 @@ public final class CommonUtils {
                             currentNode.textValue());
                     objectNode.remove(CONTACT_PERSON);
                 }
-
                 // Deserialize navn
                 currentNode = objectNode.get(NAME);
                 if (null != currentNode) {
                     correspondencePartUnit.setName(currentNode.textValue());
                     objectNode.remove(NAME);
                 }
-
                 // Deserialize postadresse
                 currentNode = objectNode.get(POSTAL_ADDRESS);
                 if (null != currentNode) {
@@ -1480,7 +1412,6 @@ public final class CommonUtils {
                             setPostalAddress(postalAddressEntity);
                     objectNode.remove(N5ResourceMappings.POSTAL_ADDRESS);
                 }
-
                 // Deserialize forretningsadresse
                 currentNode = objectNode.get(BUSINESS_ADDRESS);
                 if (null != currentNode) {
@@ -1494,25 +1425,17 @@ public final class CommonUtils {
                             businessAddressEntity);
                     objectNode.remove(BUSINESS_ADDRESS);
                 }
-
                 // Deserialize kontaktinformasjon
                 currentNode = objectNode.get(CONTACT_INFORMATION);
                 if (null != currentNode) {
                     ContactInformation contactInformation =
                             new ContactInformation();
                     deserialiseContactInformationEntity(
-                            contactInformation, currentNode.deepCopy(), errors);
+                            contactInformation, currentNode.deepCopy());
                     correspondencePartUnit.
                             setContactInformation(contactInformation);
                     objectNode.remove(CONTACT_INFORMATION);
                 }
-            }
-
-            // TODO: Double check how the JSON of this looks if multiple fondsCreators are embedded within a fonds
-            // object There might be some 'root' node in the JSON to remove
-            // This might be implemented as an array???
-            public static List<FondsCreator> deserialiseFondsCreators(ObjectNode objectNode, StringBuilder errors) {
-                return null;
             }
 
             public static void deserialiseFondsCreator(IFondsCreatorEntity fondsCreatorEntity, ObjectNode objectNode, StringBuilder errors) {
@@ -1593,7 +1516,6 @@ public final class CommonUtils {
                 // Deserialize screeningExpiresDate
                 screeningEntity.setScreeningExpiresDate(
                         deserializeDateTime(SCREENING_EXPIRES_DATE, objectNode, errors));
-
                 // Deserialize screeningDuration
                 screeningEntity.setScreeningDuration
                         (deserializeInteger(SCREENING_DURATION,
@@ -1619,7 +1541,6 @@ public final class CommonUtils {
             }
 
             public static void deserialiseClassifiedEntity(IClassifiedEntity classifiedEntity, ObjectNode objectNode, StringBuilder errors) {
-
                 // Deserialize classification
                 ClassifiedCode classifiedCode = (ClassifiedCode)
                         deserialiseMetadataValue(objectNode,
@@ -1627,10 +1548,8 @@ public final class CommonUtils {
                                 new ClassifiedCode(),
                                 errors, true);
                 classifiedEntity.setClassification(classifiedCode);
-
                 // Deserialize classificationDate
                 classifiedEntity.setClassificationDate(deserializeDateTime(CLASSIFICATION_DATE, objectNode, errors));
-
                 // Deserialize classificationBy
                 JsonNode currentNode = objectNode.get(CLASSIFICATION_BY);
                 if (null != currentNode) {
@@ -1640,7 +1559,6 @@ public final class CommonUtils {
                 // Deserialize classificationDowngradedDate
                 classifiedEntity.setClassificationDowngradedDate(deserializeDateTime(CLASSIFICATION_DOWNGRADED_DATE,
                         objectNode, errors));
-
                 // Deserialize
                 currentNode = objectNode.get(CLASSIFICATION_DOWNGRADED_BY);
                 if (null != currentNode) {
@@ -1680,7 +1598,6 @@ public final class CommonUtils {
                                         errors, true);
                 electronicSignature
                         .setElectronicSignatureSecurityLevel(essLevel);
-
                 // Deserialise elektroniskSignaturVerifisert
                 ElectronicSignatureVerified esVerified =
                         (ElectronicSignatureVerified)
@@ -1689,7 +1606,6 @@ public final class CommonUtils {
                                         new ElectronicSignatureVerified(),
                                         errors, true);
                 electronicSignature.setElectronicSignatureVerified(esVerified);
-
                 // Deserialise verifisertDato
                 JsonNode currentNode =
                         objectNode.get(ELECTRONIC_SIGNATURE_VERIFIED_DATE);
@@ -1703,7 +1619,6 @@ public final class CommonUtils {
                             + "." + ELECTRONIC_SIGNATURE_VERIFIED_DATE
                             + " is missing. ");
                 }
-
                 // Deserialise verifisertAv
                 currentNode = objectNode.get(ELECTRONIC_SIGNATURE_VERIFIED_BY);
                 if (null != currentNode) {
@@ -1786,7 +1701,6 @@ public final class CommonUtils {
             public static void printTitleAndDescription(JsonGenerator jgen,
                                                         ITitleDescription titleDescriptionEntity)
                     throws IOException {
-
                 if (titleDescriptionEntity != null) {
                     printNullable(jgen, TITLE,
                             titleDescriptionEntity.getTitle());
@@ -2028,7 +1942,6 @@ public final class CommonUtils {
              */
             public static void printHateoasLinks(
                     JsonGenerator jgen, List<Link> links) throws IOException {
-
                 if (links != null && links.size() > 0) {
                     jgen.writeObjectFieldStart(LINKS);
                     for (Link link : links) {
@@ -2079,7 +1992,6 @@ public final class CommonUtils {
                     JsonGenerator jgen,
                     ICorrespondencePartEntity correspondencePart)
                     throws IOException {
-
                 if (correspondencePart != null) {
                     printSystemIdEntity(jgen, correspondencePart);
                     printNullableMetadata
@@ -2090,7 +2002,6 @@ public final class CommonUtils {
 
             public static void printContactInformation(JsonGenerator jgen, IContactInformationEntity contactInformation)
                     throws IOException {
-
                 if (null != contactInformation) {
                     jgen.writeFieldName(CONTACT_INFORMATION);
                     jgen.writeStartObject();
@@ -2107,11 +2018,9 @@ public final class CommonUtils {
             public static void printAddress(JsonGenerator jgen,
                                             ISimpleAddressEntity address)
                     throws IOException {
-
                 if (null != address) {
                     jgen.writeFieldName(address.getAddressType());
                     jgen.writeStartObject();
-
                     printNullable(jgen, ADDRESS_LINE_1,
                             address.getAddressLine1());
                     printNullable(jgen, ADDRESS_LINE_2,
@@ -2196,7 +2105,6 @@ public final class CommonUtils {
                         printAddress(jgen, unit.
                                 getPostalAddress().getSimpleAddress());
                     }
-
                     if (null != unit.getContactInformation()) {
                         printContactInformation(jgen,
                                 unit.getContactInformation());
@@ -2248,7 +2156,7 @@ public final class CommonUtils {
                             (jgen, ADMINISTRATIVE_UNIT_FIELD,
                                     correspondencePartInternal.getAdministrativeUnit());
 //                    if (null != correspondencePartInternal.getReferenceAdministrativeUnit()) {
-//                        String systemID = correspondencePartInternal.getReferenceAdministrativeUnit().getSystemId();
+//                        UUID systemID = correspondencePartInternal.getReferenceAdministrativeUnit().getSystemId();
 //                        if (null != systemID) {
 //                            jgen.writeStringField(REFERENCE_ADMINISTRATIVE_UNIT, systemID);
 //                        }
@@ -2257,7 +2165,7 @@ public final class CommonUtils {
                             (jgen, CASE_HANDLER,
                                     correspondencePartInternal.getCaseHandler());
 //                    if (null != correspondencePartInternal.getReferenceUser()) {
-//                        String systemID = correspondencePartInternal
+//                        UUID systemID = correspondencePartInternal
 //                                .getReferenceUser().getSystemId();
 //                        if (null != systemID) {
 //                            jgen.writeStringField(REFERENCE_CASE_HANDLER, systemID);
@@ -2362,27 +2270,35 @@ public final class CommonUtils {
                         && bsm.getReferenceBSMBase().size() > 0) {
                     jgen.writeObjectFieldStart(BSM_DEF);
                     for (BSMBase bsmBase : bsm.getReferenceBSMBase()) {
-                        if (bsmBase.getDataType().equals(TYPE_STRING)) {
-                            printNullable(jgen, bsmBase.getValueName(),
-                                    bsmBase.getStringValue());
-                        } else if (bsmBase.getDataType().equals(TYPE_URI)) {
-                            printNullable(jgen, bsmBase.getValueName(),
-                                    bsmBase.getUriValue());
-                        } else if (bsmBase.getDataType().equals(TYPE_INTEGER)) {
-                            printNullable(jgen, bsmBase.getValueName(),
-                                    bsmBase.getIntegerValue());
-                        } else if (bsmBase.getDataType().equals(TYPE_DOUBLE)) {
-                            printNullable(jgen, bsmBase.getValueName(),
-                                    bsmBase.getDoubleValue());
-                        } else if (bsmBase.getDataType().equals(TYPE_BOOLEAN)) {
-                            printNullable(jgen, bsmBase.getValueName(),
-                                    bsmBase.getBooleanValue());
-                        } else if (bsmBase.getDataType().equals(TYPE_DATE)) {
-                            printNullableDate(jgen, bsmBase.getValueName(),
-                                    bsmBase.getDateTimeValue());
-                        } else if (bsmBase.getDataType().equals(TYPE_DATE_TIME)) {
-                            printNullableDateTime(jgen, bsmBase.getValueName(),
-                                    bsmBase.getDateTimeValue());
+                        switch (bsmBase.getDataType()) {
+                            case TYPE_STRING:
+                                printNullable(jgen, bsmBase.getValueName(),
+                                        bsmBase.getStringValue());
+                                break;
+                            case TYPE_URI:
+                                printNullable(jgen, bsmBase.getValueName(),
+                                        bsmBase.getUriValue());
+                                break;
+                            case TYPE_INTEGER:
+                                printNullable(jgen, bsmBase.getValueName(),
+                                        bsmBase.getIntegerValue());
+                                break;
+                            case TYPE_DOUBLE:
+                                printNullable(jgen, bsmBase.getValueName(),
+                                        bsmBase.getDoubleValue());
+                                break;
+                            case TYPE_BOOLEAN:
+                                printNullable(jgen, bsmBase.getValueName(),
+                                        bsmBase.getBooleanValue());
+                                break;
+                            case TYPE_DATE:
+                                printNullableDate(jgen, bsmBase.getValueName(),
+                                        bsmBase.getDateTimeValue());
+                                break;
+                            case TYPE_DATE_TIME:
+                                printNullableDateTime(jgen, bsmBase.getValueName(),
+                                        bsmBase.getDateTimeValue());
+                                break;
                         }
                     }
                     jgen.writeEndObject();

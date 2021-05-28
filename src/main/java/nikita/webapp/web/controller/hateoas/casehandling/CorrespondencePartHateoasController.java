@@ -13,12 +13,8 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInte
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
 import nikita.common.util.exceptions.NikitaException;
-import nikita.webapp.hateoas.interfaces.secondary.ICorrespondencePartHateoasHandler;
-import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.secondary.ICorrespondencePartService;
 import nikita.webapp.web.controller.hateoas.NoarkController;
-import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +24,6 @@ import java.util.UUID;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
@@ -39,19 +34,11 @@ import static org.springframework.http.HttpStatus.OK;
 public class CorrespondencePartHateoasController
         extends NoarkController {
 
-    private final ICorrespondencePartHateoasHandler
-            correspondencePartHateoasHandler;
     private final ICorrespondencePartService correspondencePartService;
-    private final ApplicationEventPublisher applicationEventPublisher;
 
     public CorrespondencePartHateoasController(
-            ICorrespondencePartHateoasHandler correspondencePartHateoasHandler,
-            ICorrespondencePartService correspondencePartService,
-            ApplicationEventPublisher applicationEventPublisher) {
-        this.correspondencePartHateoasHandler =
-                correspondencePartHateoasHandler;
+            ICorrespondencePartService correspondencePartService) {
         this.correspondencePartService = correspondencePartService;
-        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     // API - All GET Requests (CRUD - READ)
@@ -76,23 +63,15 @@ public class CorrespondencePartHateoasController
             SYSTEM_ID_PARAMETER)
     public ResponseEntity<CorrespondencePartPersonHateoas>
     findOneCorrespondencePartPersonBySystemId(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the correspondencePartPerson " +
                             "to retrieve",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String correspondencePartPersonSystemId) {
-        CorrespondencePartPerson correspondencePartPerson =
-                (CorrespondencePartPerson) correspondencePartService
-                        .findBySystemId(correspondencePartPersonSystemId);
-        CorrespondencePartPersonHateoas correspondencePartPersonHateoas =
-                new CorrespondencePartPersonHateoas(correspondencePartPerson);
-        correspondencePartHateoasHandler.addLinks(
-                correspondencePartPersonHateoas, new Authorisation());
+            @PathVariable(SYSTEM_ID) final UUID correspondencePartPersonSystemId) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(correspondencePartPerson.getVersion().toString())
-                .body(correspondencePartPersonHateoas);
+                .body(correspondencePartService
+                        .findCorrespondencePartPersonBySystemId(
+                                correspondencePartPersonSystemId));
     }
 
     // Get a CorrespondencePartInternal identified by systemID
@@ -116,26 +95,15 @@ public class CorrespondencePartHateoasController
             SYSTEM_ID_PARAMETER)
     public ResponseEntity<CorrespondencePartInternalHateoas>
     findOneCorrespondencePartInternalBySystemId(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the correspondencePartInternal" +
                             " to retrieve",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String correspondencePartInternalSystemId) {
-        CorrespondencePartInternal correspondencePartInternal =
-                (CorrespondencePartInternal)
-                        correspondencePartService.findBySystemId(
-                                correspondencePartInternalSystemId);
-        CorrespondencePartInternalHateoas correspondencePartInternalHateoas =
-                new CorrespondencePartInternalHateoas(
-                        correspondencePartInternal);
-        correspondencePartHateoasHandler
-                .addLinks(correspondencePartInternalHateoas,
-                        new Authorisation());
+            @PathVariable(SYSTEM_ID) final UUID correspondencePartInternalSystemId) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(correspondencePartInternal.getVersion().toString())
-                .body(correspondencePartInternalHateoas);
+                .body(correspondencePartService
+                        .findCorrespondencePartInternalBySystemId(
+                                correspondencePartInternalSystemId));
     }
 
     // Get a CorrespondencePartPerson identified by systemID
@@ -159,23 +127,15 @@ public class CorrespondencePartHateoasController
             SYSTEM_ID_PARAMETER)
     public ResponseEntity<CorrespondencePartUnitHateoas>
     findOneCorrespondencePartUnitBySystemId(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the correspondencePartUnit to " +
                             "retrieve",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String correspondencePartUnitSystemId) {
-        CorrespondencePartUnit correspondencePartUnit =
-                (CorrespondencePartUnit) correspondencePartService
-                        .findBySystemId(correspondencePartUnitSystemId);
-        CorrespondencePartUnitHateoas correspondencePartUnitHateoas =
-                new CorrespondencePartUnitHateoas(correspondencePartUnit);
-        correspondencePartHateoasHandler.addLinks(
-                correspondencePartUnitHateoas, new Authorisation());
+            @PathVariable(SYSTEM_ID) final UUID correspondencePartUnitSystemId) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(correspondencePartUnit.getVersion().toString())
-                .body(correspondencePartUnitHateoas);
+                .body(correspondencePartService
+                        .findCorrespondencePartUnitBySystemId(
+                                correspondencePartUnitSystemId));
     }
 
     // Update a CorrespondencePartUnit with given values
@@ -218,28 +178,17 @@ public class CorrespondencePartHateoasController
                     description = "systemID of correspondencePartUnit to " +
                             "update",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID,
+            @PathVariable(SYSTEM_ID) final UUID systemID,
             @Parameter(name = "CorrespondencePartUnit",
                     description = "Incoming correspondencePartUnit object",
                     required = true)
             @RequestBody CorrespondencePartUnit correspondencePartUnit)
             throws NikitaException {
         validateForUpdate(correspondencePartUnit);
-        CorrespondencePartUnit updatedCorrespondencePartUnit =
-                correspondencePartService.updateCorrespondencePartUnit(
-                        systemID, parseETAG(request.getHeader(ETAG)),
-                        correspondencePartUnit);
-        CorrespondencePartUnitHateoas correspondencePartUnitHateoas = new
-                CorrespondencePartUnitHateoas(updatedCorrespondencePartUnit);
-        correspondencePartHateoasHandler.addLinks(correspondencePartUnitHateoas,
-                new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityUpdatedEvent(this,
-                        updatedCorrespondencePartUnit));
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(updatedCorrespondencePartUnit.getVersion().toString())
-                .body(correspondencePartUnitHateoas);
+                .body(correspondencePartService.updateCorrespondencePartUnit(
+                        systemID, parseETAG(request.getHeader(ETAG)),
+                        correspondencePartUnit));
     }
 
     // Update a CorrespondencePartPerson with given values
@@ -282,31 +231,18 @@ public class CorrespondencePartHateoasController
                     description = "systemID of correspondencePartPerson to " +
                             "update",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID,
+            @PathVariable(SYSTEM_ID) final UUID systemID,
             @Parameter(name = "CorrespondencePartPerson",
                     description = "Incoming correspondencePartPerson object",
                     required = true)
             @RequestBody CorrespondencePartPerson correspondencePartPerson)
             throws NikitaException {
         validateForUpdate(correspondencePartPerson);
-
-        CorrespondencePartPerson updatedCorrespondencePartPerson =
-                correspondencePartService
+        return ResponseEntity.status(OK)
+                .body(correspondencePartService
                         .updateCorrespondencePartPerson(systemID,
                                 parseETAG(request.getHeader(ETAG)),
-                                correspondencePartPerson);
-        CorrespondencePartPersonHateoas correspondencePartPersonHateoas =
-                new CorrespondencePartPersonHateoas(
-                        updatedCorrespondencePartPerson);
-        correspondencePartHateoasHandler.addLinks(
-                correspondencePartPersonHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityUpdatedEvent(this,
-                        updatedCorrespondencePartPerson));
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(updatedCorrespondencePartPerson.getVersion().toString())
-                .body(correspondencePartPersonHateoas);
+                                correspondencePartPerson));
     }
 
     // Update a CorrespondencePartInternal with given values
@@ -350,30 +286,18 @@ public class CorrespondencePartHateoasController
                     description = "systemID of correspondencePartInternal to " +
                             "update",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID,
+            @PathVariable(SYSTEM_ID) final UUID systemID,
             @Parameter(name = "CorrespondencePartInternal",
                     description = "Incoming correspondencePartInternal object",
                     required = true)
             @RequestBody CorrespondencePartInternal correspondencePartInternal)
             throws NikitaException {
         validateForUpdate(correspondencePartInternal);
-        CorrespondencePartInternal updatedCorrespondencePartInternal =
-                correspondencePartService
+        return ResponseEntity.status(OK)
+                .body(correspondencePartService
                         .updateCorrespondencePartInternal(systemID,
                                 parseETAG(request.getHeader(ETAG)),
-                                correspondencePartInternal);
-        CorrespondencePartInternalHateoas correspondencePartInternalHateoas =
-                new CorrespondencePartInternalHateoas(
-                        updatedCorrespondencePartInternal);
-        correspondencePartHateoasHandler.addLinks(
-                correspondencePartInternalHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityUpdatedEvent(this,
-                        updatedCorrespondencePartInternal));
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(updatedCorrespondencePartInternal.getVersion().toString())
-                .body(correspondencePartInternalHateoas);
+                                correspondencePartInternal));
     }
 
     // Update a CorrespondencePart with given values
@@ -394,7 +318,6 @@ public class CorrespondencePartHateoasController
             @ApiResponse(
                     responseCode = NOT_FOUND_VAL,
                     description = API_MESSAGE_PARENT_DOES_NOT_EXIST +
-
                             " of type CorrespondencePart"),
             @ApiResponse(
                     responseCode = CONFLICT_VAL,
@@ -414,7 +337,9 @@ public class CorrespondencePartHateoasController
                     description = "Incoming correspondencePart object",
                     required = true)
             @RequestBody PatchObjects patchObjects) throws NikitaException {
-        return correspondencePartService.handleUpdate(systemID, patchObjects);
+        return ResponseEntity.status(OK)
+                .body(correspondencePartService
+                        .handleUpdate(systemID, patchObjects));
     }
 
     // Delete a correspondencePartUnit identified by systemID
@@ -441,7 +366,7 @@ public class CorrespondencePartHateoasController
                     description = "systemID of the correspondencePartUnit to " +
                             "delete",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         correspondencePartService.deleteCorrespondencePartUnit(systemID);
         return ResponseEntity.status(NO_CONTENT)
                 .body(DELETE_RESPONSE);
@@ -471,7 +396,7 @@ public class CorrespondencePartHateoasController
                     description = "systemID of the correspondencePartPerson " +
                             "to delete",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         correspondencePartService.deleteCorrespondencePartPerson(systemID);
         return ResponseEntity.status(NO_CONTENT)
                 .body(DELETE_RESPONSE);
@@ -501,7 +426,7 @@ public class CorrespondencePartHateoasController
                     description = "systemID of the correspondencePartInternal" +
                             " to delete",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         correspondencePartService.deleteCorrespondencePartInternal(systemID);
         return ResponseEntity.status(NO_CONTENT)
                 .body(DELETE_RESPONSE);

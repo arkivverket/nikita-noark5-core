@@ -1,8 +1,8 @@
 package nikita.webapp.structure;
 
+import nikita.webapp.odata.QueryObject;
 import nikita.webapp.service.impl.odata.ODataService;
 import org.hibernate.Session;
-import org.hibernate.query.Query;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -102,13 +102,13 @@ public class TestOData {
     @Transactional
     public void shouldReturnValidHQLEQQueryMetadataEntity() {
         String odata = "arkivstatus?$filter=kode eq 'O'";
-        Query query = oDataService.convertODataToHQL(odata, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
         String hql = "SELECT fondsstatus_1 FROM FondsStatus AS fondsstatus_1" +
                 " WHERE" +
                 " fondsstatus_1.code = :parameter_0";
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 "O");
-        Assertions.assertEquals(query.getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
     }
 
     /**
@@ -131,13 +131,13 @@ public class TestOData {
     @Transactional
     public void shouldReturnValidHQLEQQueryCountWithFilter() {
         String odata = "arkiv/$count?$filter=tittel eq 'The fonds'";
-        Query query = oDataService.convertODataToHQL(odata, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
         String hql = "SELECT count(*) FROM Fonds AS fonds_1" +
                 " WHERE" +
                 " fonds_1.title = :parameter_0";
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 "The fonds");
-        Assertions.assertEquals(query.getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
     }
 
     /**
@@ -159,9 +159,9 @@ public class TestOData {
     @Transactional
     public void shouldReturnValidHQLEQQueryCount() {
         String odata = "arkiv/$count";
-        Query query = oDataService.convertODataToHQL(odata, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
         String hql = "SELECT count(*) FROM Fonds AS fonds_1";
-        Assertions.assertEquals(query.getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
     }
 
     /**
@@ -184,12 +184,12 @@ public class TestOData {
     @Transactional
     public void shouldReturnValidHQLEQQueryString() {
         String odata = "arkiv?$filter=tittel eq 'The fonds'";
-        Query query = oDataService.convertODataToHQL(odata, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
         String hql = "SELECT fonds_1 FROM Fonds AS fonds_1" +
                 " WHERE fonds_1.title = :parameter_0";
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 "The fonds");
-        Assertions.assertEquals(query.getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
     }
 
     /**
@@ -213,13 +213,13 @@ public class TestOData {
     public void shouldReturnValidHQLOrderBySingleAttributeSortOrder() {
         String joinQuery = "mappe?$filter=" +
                 "contains(tittel, 'søknad')&$orderby=opprettetDato ASC";
-        Query query = oDataService.convertODataToHQL(joinQuery, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(joinQuery, "");
         String hqlJoin = "SELECT file_1 FROM File AS file_1" +
                 " WHERE" +
                 " file_1.title like :parameter_0" +
                 " order by file_1.createdDate ASC";
-        Assertions.assertEquals(query.getParameterValue("parameter_0"), "%søknad%");
-        Assertions.assertEquals(query.getQueryString(), hqlJoin);
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"), "%søknad%");
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hqlJoin);
     }
 
     /**
@@ -245,13 +245,13 @@ public class TestOData {
         String joinQuery = "mappe?$filter=" +
                 "contains(tittel, 'søknad')" +
                 "&$orderby=opprettetDato ASC, tittel DESC";
-        Query query = oDataService.convertODataToHQL(joinQuery, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(joinQuery, "");
         String hqlJoin = "SELECT file_1 FROM File AS file_1" +
                 " WHERE" +
                 " file_1.title like :parameter_0" +
                 " order by file_1.createdDate ASC, file_1.title DESC";
-        Assertions.assertEquals(query.getParameterValue("parameter_0"), "%søknad%");
-        Assertions.assertEquals(query.getQueryString(), hqlJoin);
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"), "%søknad%");
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hqlJoin);
     }
 
     /**
@@ -275,13 +275,13 @@ public class TestOData {
     public void shouldReturnValidHQLOrderBySingleAttribute() {
         String joinQuery = "mappe?$filter=" +
                 "contains(tittel, 'søknad')&$orderby=opprettetDato";
-        Query query = oDataService.convertODataToHQL(joinQuery, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(joinQuery, "");
         String hqlJoin = "SELECT file_1 FROM File AS file_1" +
                 " WHERE" +
                 " file_1.title like :parameter_0" +
                 " order by file_1.createdDate";
-        Assertions.assertEquals(query.getParameterValue("parameter_0"), "%søknad%");
-        Assertions.assertEquals(query.getQueryString(), hqlJoin);
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"), "%søknad%");
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hqlJoin);
     }
 
     /**
@@ -306,15 +306,15 @@ public class TestOData {
     @Transactional
     public void shouldReturnValidHQTop() {
         String odata = "arkiv?$filter=tittel eq 'The fonds'&$top=5";
-        Query query = oDataService.convertODataToHQL(odata, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
         String hql = "SELECT fonds_1 FROM Fonds AS fonds_1" +
                 " WHERE fonds_1.title = :parameter_0";
 
-        Integer maxRows = query.getQueryOptions().getMaxRows();
+        Integer maxRows = queryObject.getQuery().getQueryOptions().getMaxRows();
         Assertions.assertEquals(maxRows, Integer.valueOf(5));
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 "The fonds");
-        Assertions.assertEquals(query.getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
     }
 
     /**
@@ -339,15 +339,15 @@ public class TestOData {
     @Transactional
     public void shouldReturnValidHQSkip() {
         String odata = "arkiv?$filter=tittel eq 'The fonds'&$skip=10";
-        Query query = oDataService.convertODataToHQL(odata, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
         String hql = "SELECT fonds_1 FROM Fonds AS fonds_1" +
                 " WHERE fonds_1.title = :parameter_0";
 
-        Integer firstRow = query.getQueryOptions().getFirstRow();
+        Integer firstRow = queryObject.getQuery().getQueryOptions().getFirstRow();
         Assertions.assertEquals(firstRow, Integer.valueOf(10));
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 "The fonds");
-        Assertions.assertEquals(query.getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
     }
 
     /**
@@ -374,15 +374,15 @@ public class TestOData {
     @Transactional
     public void shouldReturnValidHQTopSkip() {
         String odata = "arkiv?$filter=tittel eq 'The fonds'&$top=8&$skip=10";
-        Query query = oDataService.convertODataToHQL(odata, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
         String hql = "SELECT fonds_1 FROM Fonds AS fonds_1" +
                 " WHERE fonds_1.title = :parameter_0";
 
-        Assertions.assertEquals(query.getQueryOptions().getMaxRows(), Integer.valueOf(8));
-        Assertions.assertEquals(query.getQueryOptions().getFirstRow(), Integer.valueOf(10));
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        Assertions.assertEquals(queryObject.getQuery().getQueryOptions().getMaxRows(), Integer.valueOf(8));
+        Assertions.assertEquals(queryObject.getQuery().getQueryOptions().getFirstRow(), Integer.valueOf(10));
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 "The fonds");
-        Assertions.assertEquals(query.getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
     }
 
     /**
@@ -410,16 +410,16 @@ public class TestOData {
     public void shouldReturnValidHQTopSkipOrderBy() {
         String odata = "mappe?$filter=contains(tittel, 'søknad')" +
                 "&$top=23&$skip=49&$orderby=opprettetDato";
-        Query query = oDataService.convertODataToHQL(odata, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
         String hql = "SELECT file_1 FROM File AS file_1" +
                 " WHERE file_1.title like :parameter_0" +
                 " order by file_1.createdDate";
 
-        Assertions.assertEquals(query.getQueryOptions().getMaxRows(), Integer.valueOf(23));
-        Assertions.assertEquals(query.getQueryOptions().getFirstRow(), Integer.valueOf(49));
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        Assertions.assertEquals(queryObject.getQuery().getQueryOptions().getMaxRows(), Integer.valueOf(23));
+        Assertions.assertEquals(queryObject.getQuery().getQueryOptions().getFirstRow(), Integer.valueOf(49));
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 "%søknad%");
-        Assertions.assertEquals(query.getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
     }
 
     /**
@@ -439,11 +439,11 @@ public class TestOData {
     @Transactional
     public void shouldReturnValidHQLEQNullQuery() {
         String odata = "arkiv?$filter=beskrivelse eq null";
-        Query query = oDataService.convertODataToHQL(odata, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
         String hql = "SELECT fonds_1 FROM Fonds AS fonds_1" +
                 " WHERE" +
                 " fonds_1.description is null";
-        Assertions.assertEquals(query.getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
     }
 
     /**
@@ -463,11 +463,11 @@ public class TestOData {
     @Transactional
     public void shouldReturnValidHQLEQNotNullQuery() {
         String odata = "arkiv?$filter=beskrivelse ne null";
-        Query query = oDataService.convertODataToHQL(odata, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
         String hql = "SELECT fonds_1 FROM Fonds AS fonds_1" +
                 " WHERE" +
                 " fonds_1.description is not null";
-        Assertions.assertEquals(query.getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
     }
 
     /**
@@ -491,19 +491,19 @@ public class TestOData {
                 " length(tittel) gt 4) or" +
                 " (tittel eq 'class number 1' and" +
                 " year(opprettetDato) eq 2019)";
-        Query query = oDataService.convertODataToHQL(odata, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
         String hql = "SELECT class_1 FROM Class AS class_1" +
                 " WHERE" +
                 " (class_1.description is not null and" +
                 " length(class_1.title) > :parameter_0) or" +
                 " (class_1.title = :parameter_1 and" +
                 " year(class_1.createdDate) = :parameter_2)";
-        Assertions.assertEquals(query.getQueryString(), hql);
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 Integer.valueOf("4"));
-        Assertions.assertEquals(query.getParameterValue("parameter_1"),
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_1"),
                 "class number 1");
-        Assertions.assertEquals(query.getParameterValue("parameter_2"),
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_2"),
                 Integer.valueOf("2019"));
 
     }
@@ -531,13 +531,13 @@ public class TestOData {
     public void shouldReturnValidHQLEQQueryStringWithChars() {
         String odata = "dokumentobjekt?$filter=" +
                 "filnavn eq '<9aqr221f34c.hsr@address.udn.com>'";
-        Query query = oDataService.convertODataToHQL(odata, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
         String hql = "SELECT documentobject_1" +
                 " FROM DocumentObject AS documentobject_1 WHERE" +
                 " documentobject_1.originalFilename = :parameter_0";
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 "<9aqr221f34c.hsr@address.udn.com>");
-        Assertions.assertEquals(query.getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
     }
 
     /**
@@ -564,13 +564,13 @@ public class TestOData {
     public void shouldReturnValidHQLEQQueryStringWithJOIN() {
         String odata = "arkivdel?$filter=arkiv/beskrivelse " +
                 "eq 'The fonds description'";
-        Query query = oDataService.convertODataToHQL(odata, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
         String hql = "SELECT series_1 FROM Series AS series_1 " +
                 "JOIN series_1.referenceFonds AS fonds_1 " +
                 "WHERE fonds_1.description = :parameter_0";
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 "The fonds description");
-        Assertions.assertEquals(query.getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
     }
 
     /**
@@ -593,13 +593,13 @@ public class TestOData {
     public void shouldReturnValidHQLNotEQQueryString() {
         String odata = "journalpost?$filter=registreringsID " +
                 "ne '2020/000234-23'";
-        Query query = oDataService.convertODataToHQL(odata, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
         String hql = "SELECT registryentry_1 FROM RegistryEntry AS " +
                 "registryentry_1 WHERE " +
                 "registryentry_1.recordId != :parameter_0";
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 "2020/000234-23");
-        Assertions.assertEquals(query.getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
     }
 
     /**
@@ -622,13 +622,13 @@ public class TestOData {
     public void shouldReturnValidHQLYearComparison() {
         String odata = "dokumentobjekt?$filter=" +
                 "year(opprettetDato) eq 2020";
-        Query query = oDataService.convertODataToHQL(odata, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
         String hql = "SELECT documentobject_1 FROM DocumentObject AS " +
                 "documentobject_1 WHERE " +
                 "year(documentobject_1.createdDate) = :parameter_0";
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 2020);
-        Assertions.assertEquals(query.getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
     }
 
     /**
@@ -657,15 +657,15 @@ public class TestOData {
     public void shouldReturnValidHQLMonthComparison() {
         String monthQuery = "dokumentobjekt?$filter=" +
                 "month(opprettetDato) gt 5 and month(opprettetDato) lt 9";
-        Query query = oDataService.convertODataToHQL(monthQuery, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(monthQuery, "");
         String hql = "SELECT documentobject_1 FROM DocumentObject AS " +
                 "documentobject_1 WHERE " +
                 "month(documentobject_1.createdDate) > :parameter_0" +
                 " and " +
                 "month(documentobject_1.createdDate) < :parameter_1";
-        Assertions.assertEquals(query.getParameterValue("parameter_0"), 5);
-        Assertions.assertEquals(query.getParameterValue("parameter_1"), 9);
-        Assertions.assertEquals(query.getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"), 5);
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_1"), 9);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
     }
 
     /**
@@ -698,7 +698,7 @@ public class TestOData {
         String odata = "dokumentobjekt?$filter=" +
                 "month(dokumentbeskrivelse/opprettetDato) gt 5 and " +
                 "month(opprettetDato) le 9";
-        Query query = oDataService.convertODataToHQL(odata, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
         String hql = "SELECT documentobject_1 FROM DocumentObject AS " +
                 "documentobject_1 JOIN " +
                 "documentobject_1.referenceDocumentDescription AS " +
@@ -707,9 +707,9 @@ public class TestOData {
                 "> :parameter_0 and " +
                 "month(documentobject_1.createdDate) " +
                 "<= :parameter_1";
-        Assertions.assertEquals(query.getQueryString(), hql);
-        Assertions.assertEquals(query.getParameterValue("parameter_0"), 5);
-        Assertions.assertEquals(query.getParameterValue("parameter_1"), 9);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"), 5);
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_1"), 9);
     }
 
     /**
@@ -735,15 +735,15 @@ public class TestOData {
     public void shouldReturnValidHQLMetadataCodeDocumentStatusJoin() {
         String odata = "dokumentobjekt?$filter=dokumentbeskrivelse" +
                 "/dokumentstatus/kode eq 'B'";
-        Query query = oDataService.convertODataToHQL(odata, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
         String hql = "SELECT documentobject_1 FROM DocumentObject" +
                 " AS documentobject_1" +
                 " JOIN" +
                 " documentobject_1.referenceDocumentDescription AS documentdescription_1" +
                 " WHERE" +
                 " documentdescription_1.documentStatusCode = :parameter_0";
-        Assertions.assertEquals(query.getQueryString(), hql);
-        Assertions.assertEquals(query.getParameterValue("parameter_0"), "B");
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"), "B");
     }
 
     /**
@@ -770,13 +770,13 @@ public class TestOData {
     public void shouldReturnValidHQLMetadataCodeDocumentStatusCodeName() {
         String odata = "dokumentbeskrivelse?$filter=" +
                 "dokumentstatus/kodenavn eq 'Dokumentet er under redigering'";
-        Query query = oDataService.convertODataToHQL(odata, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
         String hql = "SELECT documentdescription_1 FROM DocumentDescription" +
                 " AS documentdescription_1" +
                 " WHERE" +
                 " documentdescription_1.documentStatusCodeName = :parameter_0";
-        Assertions.assertEquals(query.getQueryString(), hql);
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 "Dokumentet er under redigering");
     }
 
@@ -799,17 +799,17 @@ public class TestOData {
     @Test
     @Transactional
     public void shouldReturnValidHQLEQQueryCreatedBy() {
-	String user = "admin@example.com";
+        String user = "admin@example.com";
         String odata = "dokumentbeskrivelse?$filter=" +
                 CREATED_BY + " eq '" + user + "'";
-        Query query = oDataService.convertODataToHQL(odata, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
         String hql = "SELECT documentdescription_1 FROM " +
                 DOCUMENT_DESCRIPTION_ENG_OBJECT +
                 " AS documentdescription_1" +
                 " WHERE" +
                 " documentdescription_1." + CREATED_BY_ENG_OBJECT + " = :parameter_0";
-        Assertions.assertEquals(query.getQueryString(), hql);
-        Assertions.assertEquals(query.getParameterValue("parameter_0"), user);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"), user);
     }
 
     /**
@@ -834,12 +834,12 @@ public class TestOData {
     @Transactional
     public void shouldReturnValidHQLMetadataCodeFondsStatus() {
         String odata = "arkiv?$filter=arkivstatus/kode eq 'O'";
-        Query query = oDataService.convertODataToHQL(odata, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
         String hql = "SELECT fonds_1 FROM Fonds AS fonds_1" +
                 " WHERE" +
                 " fonds_1.fondsStatusCode = :parameter_0";
-        Assertions.assertEquals(query.getQueryString(), hql);
-        Assertions.assertEquals(query.getParameterValue("parameter_0"), "O");
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"), "O");
     }
 
     /**
@@ -872,7 +872,7 @@ public class TestOData {
         String odata = "dokumentobjekt?$filter=" +
                 "month(dokumentbeskrivelse/registrering/mappe/arkivdel/arkiv" +
                 "/opprettetDato) gt 5";
-        Query query = oDataService.convertODataToHQL(odata, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
         String hql = "SELECT documentobject_1 FROM DocumentObject" +
                 " AS documentobject_1" +
                 " JOIN documentobject_1.referenceDocumentDescription" +
@@ -882,8 +882,8 @@ public class TestOData {
                 " JOIN file_1.referenceSeries AS series_1" +
                 " JOIN series_1.referenceFonds AS fonds_1" +
                 " WHERE month(fonds_1.createdDate) > :parameter_0";
-        Assertions.assertEquals(query.getQueryString(), hql);
-        Assertions.assertEquals(query.getParameterValue("parameter_0"), 5);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"), 5);
     }
 
     /**
@@ -908,12 +908,12 @@ public class TestOData {
     public void shouldReturnValidHQLDayComparison() {
         String odata = "dokumentobjekt?$filter=" +
                 "day(opprettetDato) ge 4";
-        Query query = oDataService.convertODataToHQL(odata, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
         String hql = "SELECT documentobject_1 FROM DocumentObject AS " +
                 "documentobject_1 WHERE " +
                 "day(documentobject_1.createdDate) >= :parameter_0";
-        Assertions.assertEquals(query.getParameterValue("parameter_0"), 4);
-        Assertions.assertEquals(query.getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"), 4);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
     }
 
     /**
@@ -938,12 +938,12 @@ public class TestOData {
     public void shouldReturnValidHQLHourComparison() {
         String odata = "dokumentobjekt?$filter=" +
                 "hour(opprettetDato) lt 14";
-        Query query = oDataService.convertODataToHQL(odata, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
         String hql = "SELECT documentobject_1 FROM DocumentObject AS " +
                 "documentobject_1 WHERE " +
                 "hour(documentobject_1.createdDate) < :parameter_0";
-        Assertions.assertEquals(query.getParameterValue("parameter_0"), 14);
-        Assertions.assertEquals(query.getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"), 14);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
     }
 
     /**
@@ -968,12 +968,12 @@ public class TestOData {
     public void shouldReturnValidHQLMinuteComparison() {
         String odata = "dokumentobjekt?$filter=" +
                 "minute(opprettetDato) ge 56";
-        Query query = oDataService.convertODataToHQL(odata, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
         String hql = "SELECT documentobject_1 FROM DocumentObject AS " +
                 "documentobject_1 WHERE " +
                 "minute(documentobject_1.createdDate) >= :parameter_0";
-        Assertions.assertEquals(query.getParameterValue("parameter_0"), 56);
-        Assertions.assertEquals(query.getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"), 56);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
     }
 
     /**
@@ -998,12 +998,12 @@ public class TestOData {
     public void shouldReturnValidHQLsecondComparison() {
         String odata = "dokumentobjekt?$filter=" +
                 "second(opprettetDato) ge 56";
-        Query query = oDataService.convertODataToHQL(odata, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
         String hql = "SELECT documentobject_1 FROM DocumentObject AS " +
                 "documentobject_1 WHERE " +
                 "second(documentobject_1.createdDate) >= :parameter_0";
-        Assertions.assertEquals(query.getParameterValue("parameter_0"), 56);
-        Assertions.assertEquals(query.getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"), 56);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
     }
 
     /**
@@ -1027,10 +1027,10 @@ public class TestOData {
         String hql = "SELECT fondscreator_1 FROM FondsCreator AS" +
                 " fondscreator_1 WHERE" +
                 " fondscreator_1.fondsCreatorId like :parameter_0";
-        Query query = oDataService.convertODataToHQL(containsQuery, "");
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        QueryObject queryObject = oDataService.convertODataToHQL(containsQuery, "");
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 "%Eksempel kommune%");
-        Assertions.assertEquals(query.getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
     }
 
     /**
@@ -1057,9 +1057,9 @@ public class TestOData {
         String hql = "SELECT fonds_1 FROM Fonds AS fonds_1" +
                 " WHERE" +
                 " fonds_1.title like :parameter_0";
-        Query query = oDataService.convertODataToHQL(containsQuery, "");
-        String parameter = (String) query.getParameterValue("parameter_0");
-        Assertions.assertEquals(query.getQueryString(), hql);
+        QueryObject queryObject = oDataService.convertODataToHQL(containsQuery, "");
+        String parameter = (String) queryObject.getQuery().getParameterValue("parameter_0");
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
         Assertions.assertEquals(parameter, "%Jennifer O'Malley%");
     }
 
@@ -1085,14 +1085,14 @@ public class TestOData {
     public void shouldReturnValidHQLJoinQuery() {
         String joinQuery = "mappe?$filter=" +
                 "klasse/klasseID eq '12/2'";
-        Query query = oDataService.convertODataToHQL(joinQuery, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(joinQuery, "");
         String hqlJoin = "SELECT file_1 FROM File AS file_1" +
                 " JOIN" +
                 " file_1.referenceClass AS class_1" +
                 " WHERE " +
                 "class_1.classId = :parameter_0";
-        Assertions.assertEquals(query.getParameterValue("parameter_0"), "12/2");
-        Assertions.assertEquals(query.getQueryString(), hqlJoin);
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"), "12/2");
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hqlJoin);
     }
 
     /**
@@ -1115,16 +1115,16 @@ public class TestOData {
     public void shouldReturnValidHQLJoinQueryWithContains() {
         String joinQuery = "mappe?$filter=" +
                 "contains(klasse/klasseID, '12/2')";
-        Query query = oDataService.convertODataToHQL(joinQuery, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(joinQuery, "");
         String hqlJoin = "SELECT file_1 FROM File AS file_1" +
                 " JOIN" +
                 " file_1.referenceClass AS class_1" +
                 " WHERE" +
                 " class_1.classId like :parameter_0";
-        String parameter = (String) query.getParameterValue(
+        String parameter = (String) queryObject.getQuery().getParameterValue(
                 "parameter_0");
         Assertions.assertEquals(parameter, "%12/2%");
-        Assertions.assertEquals(query.getQueryString(), hqlJoin);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hqlJoin);
     }
 
     /**
@@ -1149,17 +1149,17 @@ public class TestOData {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             String joinQuery = "mappe?$filter=contains(" +
                     "merknad/systemID, '2a146779-77ef-41a8-b958-0a4bddeac2d7')";
-            Query query = oDataService.convertODataToHQL(joinQuery, "");
+            QueryObject queryObject = oDataService.convertODataToHQL(joinQuery, "");
             String hqlJoin = "SELECT file_1 FROM File AS file_1" +
                     " JOIN" +
                     " file_1.referenceComment AS comment_1" +
                     " WHERE" +
                     " comment_1.systemId like :parameter_0";
-            String parameter = (String) query.getParameterValue(
+            String parameter = (String) queryObject.getQuery().getParameterValue(
                     "parameter_0");
             Assertions.assertEquals(parameter,
                     "2a146779-77ef-41a8-b958-0a4bddeac2d7");
-            Assertions.assertEquals(query.getQueryString(), hqlJoin);
+            Assertions.assertEquals(queryObject.getQuery().getQueryString(), hqlJoin);
         });
     }
 
@@ -1183,15 +1183,15 @@ public class TestOData {
     public void shouldReturnValidHQLJoinQueryWithEqSecondaryEntity() {
         String joinQuery = "mappe?$filter=" +
                 "merknad/systemID eq '2a146779-77ef-41a8-b958-0a4bddeac2d7'";
-        Query query = oDataService.convertODataToHQL(joinQuery, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(joinQuery, "");
         String hqlJoin = "SELECT file_1 FROM File AS file_1" +
                 " JOIN" +
                 " file_1.referenceComment AS comment_1" +
                 " WHERE" +
                 " comment_1.systemId = :parameter_0";
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 fromString("2a146779-77ef-41a8-b958-0a4bddeac2d7"));
-        Assertions.assertEquals(query.getQueryString(), hqlJoin);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hqlJoin);
     }
 
     /**
@@ -1220,16 +1220,16 @@ public class TestOData {
         String joinQuery = "journalpost?$filter=" +
                 "avskrivning/systemID eq" +
                 " '7f000101-7306-18d0-8173-06fa3c170049'";
-        Query query = oDataService.convertODataToHQL(joinQuery, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(joinQuery, "");
         String hqlJoin = "SELECT registryentry_1 FROM" +
                 " RegistryEntry AS registryentry_1" +
                 " JOIN" +
                 " registryentry_1.referenceSignOff AS signoff_1" +
                 " WHERE" +
                 " signoff_1.systemId = :parameter_0";
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 fromString("7f000101-7306-18d0-8173-06fa3c170049"));
-        Assertions.assertEquals(query.getQueryString(), hqlJoin);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hqlJoin);
     }
 
     /**
@@ -1260,14 +1260,14 @@ public class TestOData {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             String joinQuery = "mappe?$filter=" +
                     "contains(foedselsnummer/foedselsnummer, '050282')";
-            Query query = oDataService.convertODataToHQL(joinQuery, "");
+            QueryObject queryObject = oDataService.convertODataToHQL(joinQuery, "");
             String hqlJoin = "SELECT file_1 FROM File AS file_1" +
                     " JOIN" +
                     " file_1.referenceSocialSecurityNumber AS socialSecurityNumber" +
                     " WHERE" +
                     " class_1.classId like : parameter_0";
-            Assertions.assertEquals(query.getParameterValue("parameter_0"), "%050282%");
-            Assertions.assertEquals(query.getQueryString(), hqlJoin);
+            Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"), "%050282%");
+            Assertions.assertEquals(queryObject.getQuery().getQueryString(), hqlJoin);
         });
     }
 
@@ -1295,7 +1295,7 @@ public class TestOData {
         String joinQuery = "mappe?$filter=" +
                 "startswith(klasse/klassifikasjonssystem/tittel, " +
                 "'Gårds- og bruksnummer')";
-        Query query = oDataService.convertODataToHQL(joinQuery, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(joinQuery, "");
         String hqlJoin = "SELECT file_1 FROM File AS file_1" +
                 " JOIN" +
                 " file_1.referenceClass AS class_1" +
@@ -1304,10 +1304,10 @@ public class TestOData {
                 " classificationsystem_1" +
                 " WHERE" +
                 " classificationsystem_1.title like :parameter_0";
-        String parameter = (String) query.getParameterValue(
+        String parameter = (String) queryObject.getQuery().getParameterValue(
                 "parameter_0");
         Assertions.assertEquals(parameter, "Gårds- og bruksnummer%");
-        Assertions.assertEquals(query.getQueryString(), hqlJoin);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hqlJoin);
     }
 
     /**
@@ -1342,20 +1342,20 @@ public class TestOData {
         String joinQuery = "mappe?$filter=" +
                 "klasse/klasseID eq '12/2' and contains(tittel, 'Oslo') and " +
                 "registrering/tittel ne 'Brev fra dept.'";
-        Query query = oDataService.convertODataToHQL(joinQuery, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(joinQuery, "");
         String hqlJoin = "SELECT file_1 FROM File AS file_1 " +
                 "JOIN file_1.referenceClass AS class_1 " +
                 "JOIN file_1.referenceRecord AS record_1 WHERE " +
                 "class_1.classId = :parameter_0 and " +
                 "file_1.title like :parameter_1 and " +
                 "record_1.title != :parameter_2";
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 "12/2");
-        Assertions.assertEquals(query.getParameterValue("parameter_1"),
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_1"),
                 "%Oslo%");
-        Assertions.assertEquals(query.getParameterValue("parameter_2"),
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_2"),
                 "Brev fra dept.");
-        Assertions.assertEquals(query.getQueryString(), hqlJoin);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hqlJoin);
     }
 
     /**
@@ -1390,20 +1390,20 @@ public class TestOData {
         String odata = "mappe?$filter=" +
                 "(klasse/klasseID eq '12/2' and contains(tittel, 'Oslo'))" +
                 " or (registrering/tittel ne 'Brev fra dept.')";
-        Query query = oDataService.convertODataToHQL(odata, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
         String hql = "SELECT file_1 FROM File AS file_1 " +
                 "JOIN file_1.referenceClass AS class_1 " +
                 "JOIN file_1.referenceRecord AS record_1 WHERE " +
                 "(class_1.classId = :parameter_0 and " +
                 "file_1.title like :parameter_1) or (" +
                 "record_1.title != :parameter_2)";
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 "12/2");
-        Assertions.assertEquals(query.getParameterValue("parameter_1"),
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_1"),
                 "%Oslo%");
-        Assertions.assertEquals(query.getParameterValue("parameter_2"),
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_2"),
                 "Brev fra dept.");
-        Assertions.assertEquals(query.getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
     }
 
     /**
@@ -1434,10 +1434,10 @@ public class TestOData {
                 " concat(casefile_1.caseYear,'-'," +
                 "casefile_1.caseSequenceNumber) =" +
                 " :parameter_0";
-        Query query = oDataService.convertODataToHQL(concatQuery, "");
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        QueryObject queryObject = oDataService.convertODataToHQL(concatQuery, "");
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 "2020-10233");
-        Assertions.assertEquals(query.getQueryString(), hqlConcat);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hqlConcat);
     }
 
     /**
@@ -1468,10 +1468,10 @@ public class TestOData {
                 " WHERE" +
                 " trim(fondscreator_1.fondsCreatorName) =" +
                 " :parameter_0";
-        Query query = oDataService.convertODataToHQL(trimQuery, "");
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        QueryObject queryObject = oDataService.convertODataToHQL(trimQuery, "");
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 "Oslo kommune");
-        Assertions.assertEquals(query.getQueryString(), hqlTrim);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hqlTrim);
     }
 
     /**
@@ -1496,15 +1496,15 @@ public class TestOData {
     public void shouldReturnValidHQLLength() {
         String eqQuery = "dokumentobjekt?$filter=" +
                 " length(sjekksum) ne 64";
-        Query query = oDataService.convertODataToHQL(eqQuery, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(eqQuery, "");
         String hql = "SELECT documentobject_1" +
                 " FROM" +
                 " DocumentObject AS documentobject_1" +
                 " WHERE " +
                 "length(documentobject_1.checksum) != :parameter_0";
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 64);
-        Assertions.assertEquals(query.getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
     }
 
     /**
@@ -1533,10 +1533,10 @@ public class TestOData {
                 " WHERE" +
                 " lower(fondscreator_1.fondsCreatorName) =" +
                 " :parameter_0";
-        Query query = oDataService.convertODataToHQL(trimQuery, "");
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        QueryObject queryObject = oDataService.convertODataToHQL(trimQuery, "");
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 "oslo kommune");
-        Assertions.assertEquals(query.getQueryString(), hqlTrim);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hqlTrim);
     }
 
     /**
@@ -1567,10 +1567,10 @@ public class TestOData {
                 " WHERE" +
                 " trim(upper(lower(fondscreator_1.fondsCreatorName))) =" +
                 " :parameter_0";
-        Query query = oDataService.convertODataToHQL(trimQuery, "");
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        QueryObject queryObject = oDataService.convertODataToHQL(trimQuery, "");
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 "oslo kommune");
-        Assertions.assertEquals(query.getQueryString(), hqlTrim);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hqlTrim);
     }
 
     /**
@@ -1600,10 +1600,10 @@ public class TestOData {
                 " WHERE" +
                 " upper(fondscreator_1.fondsCreatorName) =" +
                 " :parameter_0";
-        Query query = oDataService.convertODataToHQL(upperQuery, "");
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        QueryObject queryObject = oDataService.convertODataToHQL(upperQuery, "");
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 "OSLO KOMMUNE");
-        Assertions.assertEquals(query.getQueryString(), hqlTrim);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hqlTrim);
     }
 
     /**
@@ -1628,14 +1628,14 @@ public class TestOData {
     public void shouldReturnValidHQLRoundExample() {
         String roundQuery = "dokumentbeskrivelse?$filter=" +
                 "round(dokumentnummer) gt 5.0";
-        Query query = oDataService.convertODataToHQL(roundQuery, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(roundQuery, "");
         String hql = "SELECT documentdescription_1" +
                 " FROM DocumentDescription AS documentdescription_1" +
                 " WHERE" +
                 " round(documentdescription_1.documentNumber)" +
                 " > :parameter_0";
-        Assertions.assertEquals(query.getQueryString(), hql);
-        Assertions.assertEquals(query.getParameterValue("parameter_0"), 5.0);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"), 5.0);
     }
 
     /**
@@ -1660,14 +1660,14 @@ public class TestOData {
     public void shouldReturnValidHQLCeilingExample() {
         String ceilingQuery = "dokumentbeskrivelse?$filter=" +
                 "ceiling(dokumentnummer) ge 8.0";
-        Query query = oDataService.convertODataToHQL(ceilingQuery, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(ceilingQuery, "");
         String hql = "SELECT documentdescription_1" +
                 " FROM DocumentDescription AS documentdescription_1" +
                 " WHERE" +
                 " ceiling(documentdescription_1.documentNumber)" +
                 " >= :parameter_0";
-        Assertions.assertEquals(query.getQueryString(), hql);
-        Assertions.assertEquals(query.getParameterValue("parameter_0"), 8.0);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"), 8.0);
     }
 
     /**
@@ -1694,7 +1694,7 @@ public class TestOData {
 
             String floorQuery = "dokumentbeskrivelse?$filter=" +
                     "floor(dokumentnummer) le 5";
-            Query query = oDataService.convertODataToHQL(floorQuery, "");
+            QueryObject queryObject = oDataService.convertODataToHQL(floorQuery, "");
             String hql = "SELECT documentDescription_1" +
                     " FROM DocumentDescription AS documentDescription_1" +
                     " WHERE" +
@@ -1702,8 +1702,8 @@ public class TestOData {
                     " <= :parameter_0";
 
 
-            Assertions.assertEquals(query.getQueryString(), hql);
-            Assertions.assertEquals(query.getParameterValue("parameter_0"), 5);
+            Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
+            Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"), 5);
         });
     }
 
@@ -1741,12 +1741,12 @@ public class TestOData {
                 " WHERE" +
                 " series_1.systemId = :parameter_0 and" +
                 " year(file_1.createdDate) < :parameter_1";
-        Query query = oDataService.convertODataToHQL(joinQuery, "");
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        QueryObject queryObject = oDataService.convertODataToHQL(joinQuery, "");
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 fromString("6654347b-077b-4241-a3ec-f351ef748250"));
-        Assertions.assertEquals(query.getParameterValue("parameter_1"),
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_1"),
                 Integer.valueOf("2020"));
-        Assertions.assertEquals(query.getQueryString(), hqlConcat);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hqlConcat);
     }
 
     /**
@@ -1789,14 +1789,14 @@ public class TestOData {
                 " series_1.systemId = :parameter_0 and" +
                 " fonds_1.systemId = :parameter_1 and" +
                 " year(file_1.createdDate) < :parameter_2";
-        Query query = oDataService.convertODataToHQL(joinQuery, "");
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        QueryObject queryObject = oDataService.convertODataToHQL(joinQuery, "");
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 fromString("6654347b-077b-4241-a3ec-f351ef748250"));
-        Assertions.assertEquals(query.getParameterValue("parameter_1"),
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_1"),
                 fromString("f984d44f-02c2-4f8d-b3c2-6106094b15b0"));
-        Assertions.assertEquals(query.getParameterValue("parameter_2"),
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_2"),
                 Integer.valueOf("2020"));
-        Assertions.assertEquals(query.getQueryString(), hqlConcat);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hqlConcat);
     }
 
     /**
@@ -1834,12 +1834,12 @@ public class TestOData {
                 " WHERE series_1.systemId = :parameter_0 and" +
                 " classificationsystem_1.title like :parameter_1";
 
-        Query query = oDataService.convertODataToHQL(odata, "");
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 fromString("6654347b-077b-4241-a3ec-f351ef748250"));
-        Assertions.assertEquals(query.getParameterValue("parameter_1"),
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_1"),
                 "Gårds- og bruksnummer%");
-        Assertions.assertEquals(query.getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
     }
 
     /**
@@ -1876,11 +1876,11 @@ public class TestOData {
                 " WHERE" +
                 " unitidentifier_1.organisationNumber = :parameter_0";
 
-        Query query = oDataService.convertODataToHQL(odata, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
 
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 compareValue);
-        Assertions.assertEquals(query.getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
     }
 
     /**
@@ -1919,13 +1919,13 @@ public class TestOData {
                 " bsmbase_1.valueName = :parameter_0 and" +
                 " bsmbase_1.offsetdatetimeValue = :parameter_1";
 
-        Query query = oDataService.convertODataToHQL(odata, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
 
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 "ppt-v1:meldingstidspunkt");
-        Assertions.assertEquals(query.getParameterValue("parameter_1"),
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_1"),
                 OffsetDateTime.parse("2020-01-01T22:25:06.09+02:00"));
-        Assertions.assertEquals(query.getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
     }
 
     /**
@@ -1963,11 +1963,11 @@ public class TestOData {
                 " bsmbase_1.valueName = :parameter_0 and" +
                 " bsmbase_1.isNullValue is not null";
 
-        Query query = oDataService.convertODataToHQL(odata, "");
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
 
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 attributeName);
-        Assertions.assertEquals(query.getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
     }
 
     /**
@@ -2000,10 +2000,10 @@ public class TestOData {
                 " and" +
                 " bsmbase_1.isNullValue is null";
 
-        Query query = oDataService.convertODataToHQL(odata, "");
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 attributeName);
-        Assertions.assertEquals(query.getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
     }
 
     /**
@@ -2036,10 +2036,10 @@ public class TestOData {
                 " and" +
                 " bsmbase_1.isNullValue is not null";
 
-        Query query = oDataService.convertODataToHQL(odata, "");
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 attributeName);
-        Assertions.assertEquals(query.getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
     }
 
     /**
@@ -2076,10 +2076,10 @@ public class TestOData {
                 " WHERE" +
                 " part_1.partRoleCode = :parameter_0";
 
-        Query query = oDataService.convertODataToHQL(odata, "");
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 compareValue);
-        Assertions.assertEquals(query.getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
     }
 
     /**
@@ -2116,10 +2116,10 @@ public class TestOData {
                 " WHERE" +
                 " part_1.partRoleCodeName = :parameter_0";
 
-        Query query = oDataService.convertODataToHQL(odata, "");
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 compareValue);
-        Assertions.assertEquals(query.getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
     }
 
     /**
@@ -2157,10 +2157,10 @@ public class TestOData {
                 " WHERE" +
                 " part_1.name like :parameter_0";
 
-        Query query = oDataService.convertODataToHQL(odata, "");
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 "%" + compareValue + "%");
-        Assertions.assertEquals(query.getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
     }
 
     /**
@@ -2200,10 +2200,10 @@ public class TestOData {
                 " part_1.name = :parameter_0" +
                 "  and type(part_1) = PartPerson";
         // Note: There are two spaces before "  and .."
-        Query query = oDataService.convertODataToHQL(odata, "");
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 "Hans Gruber");
-        Assertions.assertEquals(query.getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
     }
 
     /**
@@ -2243,10 +2243,10 @@ public class TestOData {
                 " part_1.name = :parameter_0" +
                 "  and type(part_1) = PartUnit";
         // Note: There are two spaces  before "  and .."
-        Query query = oDataService.convertODataToHQL(odata, "");
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 "Hans Gruber");
-        Assertions.assertEquals(query.getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
     }
 
     /**
@@ -2286,10 +2286,10 @@ public class TestOData {
                 " documentdescription_1.referenceAuthor AS author_1" +
                 " WHERE" +
                 " author_1.author = :parameter_0";
-        Query query = oDataService.convertODataToHQL(odata, "");
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 compareValue);
-        Assertions.assertEquals(query.getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
     }
 
     /**
@@ -2329,10 +2329,10 @@ public class TestOData {
                 " part_1.organisationNumber = :parameter_0" +
                 "  and type(part_1) = PartUnit";
         // Note the double space "  and type(..."
-        Query query = oDataService.convertODataToHQL(odata, "");
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 compareValue);
-        Assertions.assertEquals(query.getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
     }
 
     /**
@@ -2361,10 +2361,56 @@ public class TestOData {
                 " storagelocation_1" +
                 " WHERE" +
                 " storagelocation_1.storageLocation = :parameter_0";
-        Query query = oDataService.convertODataToHQL(odata, "");
-        Assertions.assertEquals(query.getParameterValue("parameter_0"),
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 compareValue);
-        Assertions.assertEquals(query.getQueryString(), hql);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
+    }
+
+    /**
+     * Check that it is possible to do a JOIN query with StorageLocation
+     * Entity:  mappe, oppbevaringssted
+     * Attribute: oppbevaringssted
+     * <p>
+     * ODATA Input:
+     * mappe?$filter=oppbevaringssted eq 'Archive Room XVI'
+     * <p>
+     * Expected HQL:
+     * SELECT file_1 FROM File AS file_1
+     * JOIN
+     * file_1.referenceStorageLocation AS storagelocation_1
+     * WHERE
+     * storagelocation_1.storageLocation = :parameter_0
+     * <p>
+     * Additionally parameter_0 should be
+     * Archive Room XVI
+     */
+    @Test
+    @Transactional
+    public void shouldReturnValidHQLStorageLocationJoin() {
+        ///noark5v5/odata/api/arkivstruktur/mappe?$filter=oppbevaringssted/oppbevaringssted eq 'Archive Room XVI'
+        String compareValue = "Archive Room XVI";
+        String odata = FILE + "?$filter=" + STORAGE_LOCATION + "/" +
+                STORAGE_LOCATION + " eq '" + compareValue + "')";
+        String hql = "SELECT file_1 FROM File AS file_1" +
+                " JOIN" +
+                " file_1.referenceStorageLocation AS storagelocation_1" +
+                " WHERE" +
+                " storagelocation_1.storageLocation = :parameter_0";
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
+                compareValue);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
+    }
+
+    @Test
+    @Transactional
+    public void shouldReturnValidHQLQueryNoFilter() {
+        ///noark5v5/odata/api/arkivstruktur/mappe?$filter=oppbevaringssted/oppbevaringssted eq 'Archive Room XVI'
+        String odata = FILE;
+        String hql = "SELECT file_1 FROM File AS file_1";
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
     }
 
     /**

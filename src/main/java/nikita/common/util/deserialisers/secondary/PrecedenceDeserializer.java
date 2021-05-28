@@ -15,12 +15,13 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.UUID;
 
+import static nikita.common.config.ErrorMessagesConstants.MALFORMED_PAYLOAD;
 import static nikita.common.config.HATEOASConstants.LINKS;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 
 public class PrecedenceDeserializer
-        extends JsonDeserializer {
+        extends JsonDeserializer<Precedence> {
 
     private static final Logger logger =
             LoggerFactory.getLogger(PrecedenceDeserializer.class);
@@ -34,7 +35,7 @@ public class PrecedenceDeserializer
         StringBuilder errors = new StringBuilder();
         Precedence precedence = new Precedence();
         ObjectNode objectNode = mapper.readTree(jsonParser);
-        deserialiseNoarkSystemIdEntity(precedence, objectNode, errors);
+        deserialiseNoarkSystemIdEntity(precedence, objectNode);
         deserialiseNoarkCreateEntity(precedence, objectNode, errors);
         deserialiseNoarkTitleDescriptionEntity(precedence, objectNode, errors);
         deserialiseNoarkFinaliseEntity(precedence, objectNode, errors);
@@ -92,11 +93,8 @@ public class PrecedenceDeserializer
         // Check that there are no additional values left after processing the
         // tree. If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {
-            errors.append("The precedence you tried to create is malformed.");
-            errors.append(" The following fields are not recognised as");
-            errors.append(" precedence fields [");
-            errors.append(checkNodeObjectEmpty(objectNode));
-            errors.append("]. ");
+            errors.append(String.format(MALFORMED_PAYLOAD,
+                    PRECEDENCE, checkNodeObjectEmpty(objectNode)));
         }
         if (0 < errors.length())
             throw new NikitaMalformedInputDataException(errors.toString());

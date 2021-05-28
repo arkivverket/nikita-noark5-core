@@ -6,16 +6,19 @@ import nikita.common.model.nikita.PatchObjects;
 import nikita.common.model.noark5.bsm.BSMBase;
 import nikita.common.model.noark5.v5.NoarkEntity;
 import nikita.common.model.noark5.v5.SystemIdEntity;
+import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
-import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.ITitleDescription;
 import nikita.common.model.noark5.v5.md_other.BSMMetadata;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import nikita.common.util.exceptions.NikitaMisconfigurationException;
 import nikita.common.util.exceptions.NoarkConcurrencyException;
 import nikita.common.util.exceptions.PatchMisconfigurationException;
+import nikita.webapp.hateoas.interfaces.IHateoasHandler;
+import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.INoarkService;
+import nikita.webapp.service.interfaces.odata.IODataService;
 import nikita.webapp.util.annotation.Updatable;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.poi.ss.formula.functions.T;
@@ -40,6 +43,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static nikita.common.config.Constants.DASH;
+import static nikita.common.config.Constants.NEW;
 import static nikita.common.config.DatabaseConstants.ID;
 import static nikita.common.config.N5ResourceMappings.BSM_DEF;
 import static nikita.common.config.N5ResourceMappings.PASSWORD_ENG;
@@ -59,16 +64,18 @@ public class NoarkService
     private static final Logger logger =
             LoggerFactory.getLogger(NoarkService.class);
 
-    protected EntityManager entityManager;
-    protected ApplicationEventPublisher applicationEventPublisher;
+    protected final EntityManager entityManager;
+    protected final ApplicationEventPublisher applicationEventPublisher;
     protected final IPatchService patchService;
+    protected final IODataService odataService;
 
     public NoarkService(EntityManager entityManager,
                         ApplicationEventPublisher applicationEventPublisher,
-                        IPatchService patchService) {
+                        IPatchService patchService, IODataService odataService) {
         this.entityManager = entityManager;
         this.applicationEventPublisher = applicationEventPublisher;
         this.patchService = patchService;
+        this.odataService = odataService;
     }
 
     protected void updateTitleAndDescription(
@@ -78,16 +85,6 @@ public class NoarkService
             existingEntity.setTitle(incomingEntity.getTitle());
         }
         existingEntity.setDescription(incomingEntity.getDescription());
-    }
-
-    protected void updateCodeAndDescription(
-            @NotNull IMetadataEntity incomingEntity,
-            @NotNull IMetadataEntity existingEntity) {
-        // Copy all the values you are allowed to copy ....
-        if (null != incomingEntity.getCode()) {
-            existingEntity.setCode(incomingEntity.getCode());
-        }
-        existingEntity.setCodeName(incomingEntity.getCodeName());
     }
 
     protected String getUser() {
@@ -101,7 +98,7 @@ public class NoarkService
                 .getRequest().getServletPath();
     }
 
-    protected String getFirstSystemIDFromRequest() {
+    protected UUID getFirstSystemIDFromRequest() {
         HttpServletRequest request = ((ServletRequestAttributes)
                 Objects.requireNonNull(RequestContextHolder.getRequestAttributes()))
                 .getRequest();
@@ -111,9 +108,9 @@ public class NoarkService
                         "]{12})");
         Matcher matcher = pattern.matcher(path);
         if (matcher.find()) {
-            return matcher.group(0);
+            return UUID.fromString(matcher.group(0));
         }
-        return "";
+        return null;
     }
 
     protected Long getETag() {
@@ -137,24 +134,12 @@ public class NoarkService
                 ((ServletRequestAttributes) RequestContextHolder
                         .getRequestAttributes()).getRequest();
         Objects.requireNonNull(response);
-        response.addHeader(ETAG,
-                "\"" + noarkObject.getEntityVersion().toString() + "\"");
-        response.addHeader(ALLOW, getMethodsForRequestAsListOrThrow(
-                request.getServletPath()));
-    }
-
-    /**
-     * Set the outgoing ALLOW header
-     */
-    protected void setOutgoingRequestHeaderList() {
-        HttpServletResponse response = ((ServletRequestAttributes)
-                Objects.requireNonNull(
-                        RequestContextHolder.getRequestAttributes()))
-                .getResponse();
-        HttpServletRequest request =
-                ((ServletRequestAttributes)
-                        RequestContextHolder
-                                .getRequestAttributes()).getRequest();
+        // Default/template objects will not have an ETAG an will have a
+        // value of -1
+        if (-1L != noarkObject.getEntityVersion()) {
+            response.addHeader(ETAG,
+                    "\"" + noarkObject.getEntityVersion().toString() + "\"");
+        }
         response.addHeader(ALLOW, getMethodsForRequestAsListOrThrow(
                 request.getServletPath()));
     }
@@ -216,7 +201,7 @@ public class NoarkService
                 return handlePatchMove((UUID) object, patchObject);
             } else {
                 String error = "Cannot handle this PatchObject : " +
-                        patchObject.toString();
+                        patchObject;
                 logger.error(error);
                 throw new PatchMisconfigurationException(error);
             }
@@ -225,17 +210,17 @@ public class NoarkService
     }
 
     /**
-     * registrering/systemID (what)
+     * registrering/systemId (what)
      * {
      * "op": "move",
-     * "from": "mappe/systemID", (fromObject)
-     * "path": "mappe/systemID" (toObject)
+     * "from": "mappe/systemId", (fromObject)
+     * "path": "mappe/systemId" (toObject)
      * }
      *
-     * @param originalObjectId
-     * @param patchObject
+     * @param originalObjectId systemId of object to patch
+     * @param patchObject      the patch object that has the change to apply
      */
-    protected Object handlePatchMove(UUID originalObjectId,
+    protected Object handlePatchMove(@NotNull final UUID originalObjectId,
                                      PatchObject patchObject) {
         return patchService.handlePatch(originalObjectId, patchObject);
     }
@@ -243,7 +228,7 @@ public class NoarkService
     /**
      * {
      * "op": "add",
-     * "path": ".../mappe/systemID",
+     * "path": ".../mappe/systemId",
      * "value": {
      * "virksomhetsspesifikkeMetadata": {
      * "ppt-v1:sakferdig": true,
@@ -260,7 +245,7 @@ public class NoarkService
      * @param uuid        Identity of object to add BSM
      * @param patchObject A single instance of a patchObject to apply
      */
-    protected Object handlePatchAdd(UUID uuid, PatchObject patchObject) {
+    protected Object handlePatchAdd(@NotNull final UUID uuid, PatchObject patchObject) {
         List<BSMBase> bsm = getBSM(patchObject.getValue());
         checkBSM(bsm);
         return associateBSM(uuid, bsm);
@@ -374,23 +359,23 @@ public class NoarkService
         return bsmList;
     }
 
-    protected Object associateBSM(@NotNull UUID systemID, List<BSMBase> bsm) {
+    protected Object associateBSM(@NotNull final UUID systemId, List<BSMBase> bsm) {
         String error = "Cannot find internal nikita processor of BSM for " +
-                "object with systemID " + systemID.toString();
+                "object with systemId " + systemId.toString();
         logger.error(error);
         throw new PatchMisconfigurationException(error);
     }
 
     /**
-     * Update a systemID object using a RFC 7396 approach
+     * Update a systemId object using a RFC 7396 approach
      *
-     * @param systemID   The systemID of the object to update
+     * @param systemId   The systemId of the object to update
      * @param patchMerge Values to change
      * @return The updated BSMMetadata object wrapped as a BSMMetadataHateoas
      */
     // Note the sub-class has to implement this as the sub-class is aware of
     // its type
-    public Object handleUpdateRfc7396(@NotNull UUID systemID,
+    public Object handleUpdateRfc7396(@NotNull final UUID systemId,
                                       @NotNull PatchMerge patchMerge) {
         return null;
     }
@@ -461,5 +446,46 @@ public class NoarkService
                 throw new PatchMisconfigurationException(error);
             }
         }
+    }
+
+    private HttpServletRequest getRequest() {
+        assert RequestContextHolder.getRequestAttributes() != null;
+        return ((ServletRequestAttributes) RequestContextHolder
+                .getRequestAttributes()).getRequest();
+    }
+
+    protected String getMethod() {
+        HttpServletRequest request = getRequest();
+        String method = request.getMethod().toLowerCase();
+        if (method.equals("get")) {
+            StringBuffer buffer = request.getRequestURL();
+            if (buffer.lastIndexOf(NEW + DASH) > 0) {
+                return "get-template";
+            }
+        }
+        return method;
+    }
+
+    public void applyLinksAndHeader(HateoasNoarkObject noarkObject,
+                                    IHateoasHandler handler) {
+        String method = getMethod();
+        switch (method) {
+            case "get":
+                handler.addLinks(noarkObject, new Authorisation());
+                break;
+            case "get-template":
+                handler.addLinksOnTemplate(noarkObject, new Authorisation());
+                break;
+            case "post":
+                handler.addLinks(noarkObject, new Authorisation());
+                break;
+            case "put":
+                handler.addLinks(noarkObject, new Authorisation());
+                break;
+            case "patch":
+                handler.addLinks(noarkObject, new Authorisation());
+                break;
+        }
+        setOutgoingRequestHeader(noarkObject);
     }
 }

@@ -4,22 +4,19 @@ import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.DocumentObject;
 import nikita.common.model.noark5.v5.hateoas.DocumentObjectHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.ConversionHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.Format;
 import nikita.common.model.noark5.v5.metadata.VariantFormat;
 import nikita.common.model.noark5.v5.secondary.Conversion;
 import nikita.common.repository.n5v5.IDocumentObjectRepository;
-import nikita.common.repository.n5v5.secondary.IConversionRepository;
 import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.*;
 import nikita.webapp.config.WebappProperties;
 import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
-import nikita.webapp.hateoas.interfaces.secondary.IConversionHateoasHandler;
-import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.IDocumentObjectService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
-import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
+import nikita.webapp.service.interfaces.odata.IODataService;
+import nikita.webapp.service.interfaces.secondary.IConversionService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.config.TikaConfig;
@@ -39,10 +36,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
@@ -92,9 +85,8 @@ public class DocumentObjectService
             LoggerFactory.getLogger(DocumentObjectService.class);
 
     private final IDocumentObjectRepository documentObjectRepository;
-    private final IConversionRepository conversionRepository;
+    private final IConversionService conversionService;
     private final IMetadataService metadataService;
-    private final IConversionHateoasHandler conversionHateoasHandler;
     private final IDocumentObjectHateoasHandler documentObjectHateoasHandler;
 
     @Value("${nikita.startup.directory-store-name}")
@@ -107,17 +99,16 @@ public class DocumentObjectService
     public DocumentObjectService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IODataService odataService,
             IPatchService patchService,
-            IConversionRepository conversionRepository,
+            IConversionService conversionService,
             IDocumentObjectRepository documentObjectRepository,
             IMetadataService metadataService,
-            IConversionHateoasHandler conversionHateoasHandler,
             IDocumentObjectHateoasHandler documentObjectHateoasHandler) {
-        super(entityManager, applicationEventPublisher, patchService);
-        this.conversionRepository = conversionRepository;
+        super(entityManager, applicationEventPublisher, patchService, odataService);
+        this.conversionService = conversionService;
         this.documentObjectRepository = documentObjectRepository;
         this.metadataService = metadataService;
-        this.conversionHateoasHandler = conversionHateoasHandler;
         this.documentObjectHateoasHandler = documentObjectHateoasHandler;
     }
 
@@ -125,7 +116,7 @@ public class DocumentObjectService
 
     @Override
     @Transactional
-    public DocumentObject save(DocumentObject documentObject) {
+    public DocumentObjectHateoas save(DocumentObject documentObject) {
         Long version =
                 documentObjectRepository.
                         countByReferenceDocumentDescriptionAndVariantFormatCode(
@@ -137,49 +128,35 @@ public class DocumentObjectService
         validateFormat(documentObject);
         validateVariantFormat(documentObject);
         checkChecksumAlgorithmSetIfNull(documentObject);
-        return documentObjectRepository.save(documentObject);
+        return packAsHateoas(documentObjectRepository.save(documentObject));
     }
 
     @Override
     @Transactional
     public ConversionHateoas
-    createConversionAssociatedWithDocumentObject(String systemId,
-                                                 Conversion conversion) {
-        DocumentObject documentObject =
-                getDocumentObjectOrThrow(systemId);
-        conversion.setReferenceDocumentObject(documentObject);
+    createConversionAssociatedWithDocumentObject(
+            @NotNull final UUID systemId,
+            @NotNull final Conversion conversion) {
+        DocumentObject documentObject = getDocumentObjectOrThrow(systemId);
         documentObject.addReferenceConversion(conversion);
-        ConversionHateoas conversionHateoas =
-                new ConversionHateoas(conversionRepository.save(conversion));
-        conversionHateoasHandler.addLinks(conversionHateoas,
-                new Authorisation());
-        return conversionHateoas;
+        return conversionService.save(conversion);
     }
 
     @Override
     @Transactional
     public DocumentObjectHateoas convertDocumentToPDF(
-            String documentObjectSystemId) {
-        DocumentObject originalDocumentObject =
-                getDocumentObjectOrThrow(documentObjectSystemId);
-
-        DocumentObjectHateoas documentObjectHateoas =
-                new DocumentObjectHateoas
-                        (convertDocumentToPDF(originalDocumentObject));
-        documentObjectHateoasHandler.addLinks(documentObjectHateoas,
-                new Authorisation());
-
-        return documentObjectHateoas;
+            @NotNull final UUID systemId) {
+        return packAsHateoas(convertDocumentToPDF(
+                getDocumentObjectOrThrow(systemId)));
     }
-
 
     @Override
     @Transactional
     public DocumentObjectHateoas
-    handleIncomingFile(String systemID, HttpServletRequest request)
+    handleIncomingFile(@NotNull final UUID systemId, HttpServletRequest request)
             throws IOException {
 
-        DocumentObject documentObject = getDocumentObjectOrThrow(systemID);
+        DocumentObject documentObject = getDocumentObjectOrThrow(systemId);
         // Following will be needed for uploading file in chunks
         // String headerContentRange = request.getHeader("content-range");
         // Content-Range:bytes 737280-819199/845769
@@ -221,82 +198,49 @@ public class DocumentObjectService
 
         // We need to update the documentObject in the database as checksum
         // and checksum algorithm are set after the document has been uploaded
-        documentObjectRepository.save(documentObject);
-        DocumentObjectHateoas documentObjectHateoas = new
-                DocumentObjectHateoas(documentObject);
-        documentObjectHateoasHandler.addLinks(documentObjectHateoas,
-                new Authorisation());
-        return documentObjectHateoas;
+        return packAsHateoas(documentObjectRepository.save(documentObject));
     }
 
     // All READ operations
 
     @Override
-    @SuppressWarnings("unchecked")
-    public DocumentObjectHateoas findDocumentObjectByOwner() {
-
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<DocumentObject> criteriaQuery = criteriaBuilder.
-                createQuery(DocumentObject.class);
-        Root<DocumentObject> from = criteriaQuery.from(DocumentObject.class);
-        CriteriaQuery<DocumentObject> select = criteriaQuery.select(from);
-
-        criteriaQuery.where(criteriaBuilder.equal(from.get("ownedBy"), getUser()));
-        TypedQuery<DocumentObject> typedQuery = entityManager.createQuery(select);
-        DocumentObjectHateoas documentObjectHateoas = new
-                DocumentObjectHateoas((List<INoarkEntity>) (List)
-                                      typedQuery.getResultList());
-        documentObjectHateoasHandler.addLinks(documentObjectHateoas,
-                                              new Authorisation());
-        return documentObjectHateoas;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public ConversionHateoas
-    findAllConversionAssociatedWithDocumentObject(String systemId) {
-        ConversionHateoas conversionHateoas =
-            new ConversionHateoas((List<INoarkEntity>) (List)
-            getDocumentObjectOrThrow(systemId).getReferenceConversion());
-        conversionHateoasHandler.addLinks(conversionHateoas,
-                                          new Authorisation());
-        return conversionHateoas;
+    public DocumentObjectHateoas findAll() {
+        return (DocumentObjectHateoas) odataService.processODataQueryGet();
     }
 
     @Override
     public ConversionHateoas
-    findConversionAssociatedWithDocumentObject(String systemId,
-                                               String subSystemId) {
+    findAllConversionAssociatedWithDocumentObject(@NotNull final UUID systemId) {
+        return (ConversionHateoas) odataService.processODataQueryGet();
+    }
+
+    @Override
+    public ConversionHateoas
+    findConversionAssociatedWithDocumentObject(@NotNull final UUID systemId,
+                                               @NotNull final UUID subSystemId) {
         DocumentObject documentObject = getDocumentObjectOrThrow(systemId);
-        Conversion conversion = getConversionOrThrow(subSystemId);
+        Conversion conversion =
+                conversionService.findConversionBySystemId(subSystemId);
         if (null == conversion.getReferenceDocumentObject()
-            || conversion.getReferenceDocumentObject() != documentObject) {
+                || conversion.getReferenceDocumentObject() != documentObject) {
             String error = INFO_CANNOT_FIND_OBJECT +
                     " Conversion " + subSystemId +
                     " below DocumentObject " + systemId + ".";
             logger.error(error);
             throw new NoarkEntityNotFoundException(error);
         }
-        ConversionHateoas conversionHateoas = new ConversionHateoas(conversion);
-        conversionHateoasHandler
-                .addLinks(conversionHateoas, new Authorisation());
-        setOutgoingRequestHeader(conversionHateoas);
-        return conversionHateoas;
+        return conversionService.packAsHateoas(conversion);
     }
 
     @Override
     public DocumentObjectHateoas findBySystemId(
-            String systemId) {
-        DocumentObjectHateoas documentObjectHateoas = new
-                DocumentObjectHateoas(getDocumentObjectOrThrow(systemId));
-
-        documentObjectHateoasHandler.addLinks(documentObjectHateoas,
-                new Authorisation());
-        return documentObjectHateoas;
+            @NotNull final UUID systemId) {
+        return packAsHateoas(getDocumentObjectOrThrow(systemId));
     }
 
     @Override
-    public Resource loadAsResource(String systemId, HttpServletRequest request,
+    public Resource loadAsResource(@NotNull final UUID systemId,
+                                   HttpServletRequest request,
                                    HttpServletResponse response) {
         DocumentObject documentObject =
                 getDocumentObjectOrThrow(systemId);
@@ -327,7 +271,7 @@ public class DocumentObjectService
             if (null == mimeType) {
                 mimeType = "application/octet-stream";
                 logger.warn("Overriding unset mime-type during download for " +
-                        "documentObject [" + documentObject.toString() + "]. " +
+                        "documentObject [" + documentObject + "]. " +
                         "Setting to [" + mimeType + "].");
             }
             response.setContentType(mimeType);
@@ -411,7 +355,7 @@ public class DocumentObjectService
 
         } catch (InterruptedException | IOException e) {
             logger.error("Problem when trying to convert to archive format"
-                    + e.toString());
+                    + e);
         }
         return archiveDocumentObject;
     }
@@ -421,27 +365,25 @@ public class DocumentObjectService
     /**
      * Delete a conversion object associated with the documentObject.
      *
-     * @param documentObjectSystemID UUID of the documentObject object
-     * @param conversionSystemID     UUID of the Conversion object
+     * @param systemId           UUID of the documentObject object
+     * @param conversionSystemID UUID of the Conversion object
      */
     @Override
     @Transactional
     public void deleteConversion(
-            UUID documentObjectSystemID, UUID conversionSystemID) {
-        conversionRepository.delete(getConversionOrThrow(
-                conversionSystemID.toString()));
+            UUID systemId, UUID conversionSystemID) {
+        conversionService.deleteConversion(conversionSystemID);
     }
 
     @Override
     @Transactional
-    public void deleteEntity(@NotNull String systemId) {
+    public void deleteEntity(@NotNull final UUID systemId) {
         deleteEntity(getDocumentObjectOrThrow(systemId));
     }
 
     /**
      * Delete all objects belonging to the user identified by ownedBy
      *
-     * @return the number of objects deleted
      */
     @Override
     @Transactional
@@ -479,7 +421,7 @@ public class DocumentObjectService
     @Override
     @Transactional
     public DocumentObjectHateoas handleUpdate(
-            @NotNull final String systemId, @NotNull final Long version,
+            @NotNull final UUID systemId, @NotNull final Long version,
             @NotNull final DocumentObject incomingDocumentObject) {
 
         DocumentObject existingDocumentObject =
@@ -503,22 +445,18 @@ public class DocumentObjectService
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
         existingDocumentObject.setVersion(version);
-        documentObjectRepository.save(existingDocumentObject);
-        DocumentObjectHateoas documentObjectHateoas =
-                new DocumentObjectHateoas(existingDocumentObject);
-        documentObjectHateoasHandler
-                .addLinks(documentObjectHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent
-                (new AfterNoarkEntityUpdatedEvent(this, existingDocumentObject));
-        return documentObjectHateoas;
+        return packAsHateoas(existingDocumentObject);
     }
 
     @Override
     @Transactional
-    public ConversionHateoas handleUpdateConversionBySystemId
-            (String systemId, String subSystemId, Conversion incomingConversion) {
+    public ConversionHateoas handleUpdateConversionBySystemId(
+            @NotNull final UUID systemId,
+            @NotNull final UUID subSystemId,
+            @NotNull final Conversion incomingConversion) {
         DocumentObject documentObject = getDocumentObjectOrThrow(systemId);
-        Conversion existingConversion = getConversionOrThrow(subSystemId);
+        Conversion existingConversion =
+                conversionService.findConversionBySystemId(subSystemId);
         if (null == existingConversion.getReferenceDocumentObject()
                 || existingConversion.getReferenceDocumentObject() != documentObject) {
             String info = INFO_CANNOT_FIND_OBJECT +
@@ -539,35 +477,16 @@ public class DocumentObjectService
                 .setConversionTool(incomingConversion.getConversionTool());
         existingConversion
                 .setConversionComment(incomingConversion.getConversionComment());
-
-        ConversionHateoas conversionHateoas =
-                new ConversionHateoas(conversionRepository
-                        .save(existingConversion));
-        conversionHateoasHandler.addLinks(conversionHateoas,
-                new Authorisation());
-        setOutgoingRequestHeader(conversionHateoas);
-        return conversionHateoas;
+        return conversionService.packAsHateoas(existingConversion);
     }
 
     // All template operations
 
     @Override
     public ConversionHateoas
-    generateDefaultConversion(String systemId) {
-        DocumentObject documentObject =
-                getDocumentObjectOrThrow(systemId);
-        Conversion defaultConversion = new Conversion();
-
-        /* Propose conversion done now by logged in user */
-        defaultConversion.setConvertedDate(OffsetDateTime.now());
-        defaultConversion.setConvertedBy(getUser());
-        defaultConversion.setConvertedToFormat(documentObject.getFormat());
-
-        ConversionHateoas conversionHateoas =
-                new ConversionHateoas(defaultConversion);
-        conversionHateoasHandler.addLinksOnTemplate(conversionHateoas,
-                new Authorisation());
-        return conversionHateoas;
+    generateDefaultConversion(@NotNull final UUID systemId) {
+        return conversionService.generateDefaultConversion(systemId,
+                getDocumentObjectOrThrow(systemId));
     }
 
     @Override
@@ -579,12 +498,8 @@ public class DocumentObjectService
                 .setVariantFormat(new VariantFormat(PRODUCTION_VERSION_CODE));
         validateVariantFormat(defaultDocumentObject);
         defaultDocumentObject.setVersionNumber(1);
-
-        DocumentObjectHateoas documentObjectHateoas =
-                new DocumentObjectHateoas(defaultDocumentObject);
-        documentObjectHateoasHandler.addLinksOnTemplate(documentObjectHateoas,
-                new Authorisation());
-        return documentObjectHateoas;
+        defaultDocumentObject.setVersion(-1L, true);
+        return packAsHateoas(defaultDocumentObject);
     }
 
     /**
@@ -752,37 +667,22 @@ public class DocumentObjectService
      * that you will only ever get a valid DocumentObject back. If there is no
      * valid DocumentObject, an exception is thrown
      *
-     * @param documentObjectSystemId systemID of the documentObject to retrieve
-     * @return the documentObject with the identified systemID
+     * @param systemId systemId of the documentObject to retrieve
+     * @return the documentObject with the identified systemId
      */
     protected DocumentObject getDocumentObjectOrThrow(
-            @NotNull String documentObjectSystemId) {
+            @NotNull final UUID systemId) {
         DocumentObject documentObject =
                 documentObjectRepository.
-                        findBySystemId(UUID.fromString(documentObjectSystemId));
+                        findBySystemId(systemId);
         if (documentObject == null) {
             String info = INFO_CANNOT_FIND_OBJECT +
                     " DocumentObject, using systemId " +
-                    documentObjectSystemId;
+                    systemId;
             logger.info(info);
             throw new NoarkEntityNotFoundException(info);
         }
         return documentObject;
-    }
-
-    protected Conversion getConversionOrThrow
-            (@NotNull String conversionSystemId) {
-        Conversion conversion =
-                conversionRepository.
-                        findBySystemId(UUID.fromString(conversionSystemId));
-        if (conversion == null) {
-            String info = INFO_CANNOT_FIND_OBJECT +
-                    " Conversion, using systemId " +
-                    conversionSystemId;
-            logger.info(info);
-            throw new NoarkEntityNotFoundException(info);
-        }
-        return conversion;
     }
 
     private void validateFormat(DocumentObject documentObject) {
@@ -839,7 +739,7 @@ public class DocumentObjectService
             String mimeType = getMimeType(incoming);
             if (!mimeType.equals(documentObject.getMimeType())) {
                 logger.warn("Overriding mime-type for documentObject [" +
-                        documentObject.toString() + "]. Original was [" +
+                        documentObject + "]. Original was [" +
                         documentObject.getMimeType() + "]. Setting to [" +
                         mimeType + "].");
             }
@@ -849,7 +749,7 @@ public class DocumentObjectService
             Format format = documentObject.getFormat();
             if (null == format) {
                 logger.warn("Setting format for documentObject [" +
-                        documentObject.toString() +
+                        documentObject +
                         "] to UNKNOWN after upload.");
                 documentObject.setFormat(new Format("UNKNOWN"));
                 validateFormat(documentObject);
@@ -867,7 +767,7 @@ public class DocumentObjectService
         } catch (IOException e) {
             String msg = "When associating an uploaded file with " +
                     documentObject + " the following Exception occurred " +
-                    e.toString();
+                    e;
             logger.error(msg);
             throw new StorageException(msg);
         }
@@ -900,7 +800,7 @@ public class DocumentObjectService
 
         String extension = FilenameUtils.getExtension(
                 documentObject.getOriginalFilename());
-        // Set the filename to be the systemID of the documentObject,
+        // Set the filename to be the systemId of the documentObject,
         // effectively locking this in as one-to-one relationship
         Path incoming = Paths.get(incomingDirectoryName +
                 File.separator + documentObject.getSystemIdAsString() + "." +
@@ -964,8 +864,7 @@ public class DocumentObjectService
 
     protected Path convertFileFromStorage(
             DocumentObject productionDocumentObject,
-            DocumentObject archiveDocumentObject
-    )
+            DocumentObject archiveDocumentObject)
             throws IOException, InterruptedException {
 
         Path productionVersion = getToFile(productionDocumentObject);
@@ -996,7 +895,7 @@ public class DocumentObjectService
         String fromFileLocation = productionVersion.
                 toAbsolutePath().toString();
         String toFileLocation = " -o " +
-                archiveVersion.toAbsolutePath().toString();
+                archiveVersion.toAbsolutePath();
         String convertCommand = command + toFormat + toFileLocation + " " +
                 fromFileLocation;
         try {
@@ -1036,6 +935,15 @@ public class DocumentObjectService
         }
 
         archiveDocumentObject.setOriginalFilename(originalFilename);
+    }
+
+    public DocumentObjectHateoas packAsHateoas(
+            @NotNull final DocumentObject documentObject) {
+        DocumentObjectHateoas documentObjectHateoas =
+                new DocumentObjectHateoas(documentObject);
+        applyLinksAndHeader(documentObjectHateoas,
+                documentObjectHateoasHandler);
+        return documentObjectHateoas;
     }
 
     /**

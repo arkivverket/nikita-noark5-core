@@ -12,11 +12,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
@@ -53,12 +53,10 @@ public class EventLogHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)
     })
     @GetMapping(EVENT_LOG)
-    public ResponseEntity<EventLogHateoas> findAllEventLog(
-            HttpServletRequest request) {
+    public ResponseEntity<EventLogHateoas> findAllEventLog() {
         EventLogHateoas eventLogHateoas = eventLogService.
                 findEventLogByOwner();
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(eventLogHateoas);
     }
 
@@ -79,16 +77,13 @@ public class EventLogHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = EVENT_LOG + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<EventLogHateoas> findOne(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of eventLog to retrieve.",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         EventLogHateoas eventLogHateoas =
-            eventLogService.findSingleEventLog(systemID);
+                eventLogService.findSingleEventLog(systemID);
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(eventLogHateoas.getEntityVersion().toString())
                 .body(eventLogHateoas);
     }
 
@@ -129,7 +124,7 @@ public class EventLogHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of eventLog to update.",
                     required = true)
-            @PathVariable(SYSTEM_ID) String systemID,
+            @PathVariable(SYSTEM_ID) UUID systemID,
             @Parameter(name = "eventLog",
                     description = "Incoming eventLog object",
                     required = true)
@@ -138,8 +133,6 @@ public class EventLogHateoasController
                 eventLogService.handleUpdate(systemID,
                         parseETAG(request.getHeader(ETAG)), eventLog);
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(eventLogHateoas.getEntityVersion().toString())
                 .body(eventLogHateoas);
     }
 
@@ -164,7 +157,7 @@ public class EventLogHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the eventLog to delete",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         eventLogService.deleteEntity(systemID);
         return ResponseEntity.status(NO_CONTENT)
                 .body(DELETE_RESPONSE);

@@ -36,8 +36,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -72,9 +70,6 @@ import static utils.DocumentObjectCreator.createDocumentObjectAsJSON;
 public class GeneralTest {
 
     private MockMvc mockMvc;
-
-    @PersistenceContext
-    private EntityManager entityManager;
 
     @Autowired
     private NikitaUserDetailsService nikitaUserDetailsService;
@@ -269,17 +264,15 @@ public class GeneralTest {
                 .get(url)
                 .contextPath("/noark5v5")
                 .accept(NOARK5_V5_CONTENT_TYPE_JSON));
-
+        MockHttpServletResponse response = resultActions.andReturn().getResponse();
+        System.out.println(response.getContentAsString());
         resultActions
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$." + ENTITY_ROOT_NAME_LIST_COUNT)
                         .value(0))
                 .andExpect(jsonPath(
                         "$._links.['" + SELF + "'].['" + HREF + "']")
-                        .value(expectedUrl))
-                .andExpect(jsonPath(
-                        "$._links.['" + expectedRel +
-                                "'].['" + HREF + "']").value(expectedUrl));
+                        .value(expectedUrl));
         resultActions.andDo(document("home",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint())));
@@ -515,7 +508,7 @@ public class GeneralTest {
         System.out.println(jsonPatchWriter);
 
         resultActions = mockMvc.perform(MockMvcRequestBuilders
-                .patch(url)
+                .post(url)
                 .contextPath("/noark5v5")
                 .accept(NOARK5_V5_CONTENT_TYPE_JSON)
                 .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
@@ -684,6 +677,28 @@ public class GeneralTest {
                                 + REL_FONDS_STRUCTURE_SERIES + "']." + HREF,
                         endsWith(toSeries)));
         response = resultActions.andReturn().getResponse();
+        System.out.println(response.getContentAsString());
+    }
+
+    /**
+     * Test that it is possible to get all File
+     *
+     * @throws Exception Serialising or validation exception
+     */
+    @Test
+    @Sql("/db-tests/basic_structure.sql")
+    @WithMockCustomUser
+    public void checkGetAllFile() throws Exception {
+
+        String url = "/noark5v5/odata/api/arkivstruktur/arkiv";
+
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .contextPath("/noark5v5")
+                .accept(NOARK5_V5_CONTENT_TYPE_JSON));
+
+        MockHttpServletResponse response =
+                resultActions.andReturn().getResponse();
         System.out.println(response.getContentAsString());
     }
 }

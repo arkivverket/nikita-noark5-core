@@ -25,7 +25,6 @@ import nikita.webapp.service.interfaces.IClassService;
 import nikita.webapp.service.interfaces.IFileService;
 import nikita.webapp.service.interfaces.IRecordService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +33,6 @@ import java.util.UUID;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.*;
 
@@ -97,11 +95,10 @@ public class ClassHateoasController
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<ClassHateoas>
     createClassAssociatedWithClass(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID, description = "systemID of class to " +
                     "associate the klass with.",
                     required = true)
-            @PathVariable String systemID,
+            @PathVariable UUID systemID,
             @Parameter(name = "klass",
                     description = "Incoming class object",
                     required = true)
@@ -110,8 +107,6 @@ public class ClassHateoasController
         ClassHateoas classHateoas = classService.
                 createClassAssociatedWithClass(systemID, klass);
         return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(classHateoas.getEntityVersion().toString())
                 .body(classHateoas);
     }
 
@@ -150,7 +145,6 @@ public class ClassHateoasController
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<ScreeningMetadataHateoas>
     createScreeningMetadataBySystemId(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemId of Class to associate " +
                             "ScreeningMetadata with",
@@ -165,7 +159,6 @@ public class ClassHateoasController
                 classService.createScreeningMetadataAssociatedWithClass(
                         systemID, screeningMetadata);
         return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(screeningMetadataHateoas);
     }
 
@@ -204,7 +197,6 @@ public class ClassHateoasController
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<CrossReferenceHateoas>
     createCrossReferenceBySystemId(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemId of Class to associate " +
                             "CrossReference with",
@@ -216,7 +208,6 @@ public class ClassHateoasController
             @RequestBody CrossReference crossReference)
             throws NikitaException {
         return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(classService
                         .createCrossReferenceAssociatedWithClass(
                                 systemID, crossReference));
@@ -257,12 +248,11 @@ public class ClassHateoasController
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<FileHateoas>
     createFileAssociatedWithClass(
-            HttpServletRequest request,
-            @Parameter(name = "systemID",
+            @Parameter(name = SYSTEM_ID,
                     description = "systemID of Class to associate the file " +
                             "with.",
                     required = true)
-            @PathVariable String systemID,
+            @PathVariable UUID systemID,
             @Parameter(name = "file",
                     description = "Incoming file object",
                     required = true)
@@ -271,8 +261,6 @@ public class ClassHateoasController
         FileHateoas fileHateoas = classService.
                 createFileAssociatedWithClass(systemID, file);
         return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(fileHateoas.getEntityVersion().toString())
                 .body(fileHateoas);
     }
 
@@ -311,12 +299,11 @@ public class ClassHateoasController
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<CaseFileHateoas>
     createCaseCaseFileAssociatedWithClass(
-            HttpServletRequest request,
-            @Parameter(name = "systemID",
+            @Parameter(name = SYSTEM_ID,
                     description = "systemID of Class to associate the " +
                             "caseFile with.",
                     required = true)
-            @PathVariable String systemID,
+            @PathVariable UUID systemID,
             @Parameter(name = "caseFile",
                     description = "Incoming caseFile object",
                     required = true)
@@ -325,8 +312,6 @@ public class ClassHateoasController
         CaseFileHateoas caseFileHateoas = classService.
                 createCaseFileAssociatedWithClass(systemID, caseFile);
         return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(caseFileHateoas.getEntityVersion().toString())
                 .body(caseFileHateoas);
     }
 
@@ -365,32 +350,30 @@ public class ClassHateoasController
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<RecordHateoas>
     createRecordAssociatedWithClass(
-            @Parameter(name = "systemID",
+            @Parameter(name = SYSTEM_ID,
                     description = "systemID of Class to associate the record " +
                             "with.",
                     required = true)
-            @PathVariable String systemID,
+            @PathVariable UUID systemID,
             @Parameter(name = "record", description = "Incoming record object",
                     required = true)
             @RequestBody Record record)
             throws NikitaException {
-        return classService.
-                createRecordAssociatedWithClass(systemID, record);
+        return ResponseEntity.status(CREATED)
+                .body(classService
+                        .createRecordAssociatedWithClass(systemID, record));
     }
 
     // API - All GET Requests (CRUD - READ)
 
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<ClassHateoas> findOne(
-            HttpServletRequest request,
-            @Parameter(name = "systemID",
+            @Parameter(name = SYSTEM_ID,
                     description = "systemID of class to retrieve.",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String classSystemId) {
-        ClassHateoas classHateoas = classService.findSingleClass(classSystemId);
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        ClassHateoas classHateoas = classService.findSingleClass(systemID);
         return ResponseEntity.status(OK)
-                .eTag(classHateoas.getEntityVersion().toString())
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(classHateoas);
     }
 
@@ -410,13 +393,9 @@ public class ClassHateoasController
                     responseCode = INTERNAL_SERVER_ERROR_VAL,
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping
-    public ResponseEntity<ClassHateoas> findAllClass(
-            HttpServletRequest request) {
-        String ownedBy = SecurityContextHolder.getContext().getAuthentication()
-                .getName();
-        ClassHateoas classHateoas = classService.findAll(ownedBy);
+    public ResponseEntity<ClassHateoas> findAllClass() {
+        ClassHateoas classHateoas = classService.findAll();
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(classHateoas);
     }
 
@@ -439,14 +418,12 @@ public class ClassHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + SUB_CLASS)
     public ResponseEntity<ClassHateoas> findAllChildrenClass(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of parent Class",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         ClassHateoas classHateoas = classService.findAllChildren(systemID);
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(classHateoas);
     }
 
@@ -477,9 +454,10 @@ public class ClassHateoasController
                     description = "systemID of the classificationSystem to " +
                             "retrieve",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
-        return classService.findClassificationSystemAssociatedWithClass(
-                systemID);
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        return ResponseEntity.status(OK)
+                .body(classService
+                        .findClassificationSystemAssociatedWithClass(systemID));
     }
 
     // Retrieve all Class associated with Class identified by a systemId
@@ -505,8 +483,9 @@ public class ClassHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the class to retrieve",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
-        return classService.findClassAssociatedWithClass(systemID);
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        return ResponseEntity.status(OK)
+                .body(classService.findClassAssociatedWithClass(systemID));
     }
 
 
@@ -531,14 +510,12 @@ public class ClassHateoasController
             SLASH + SYSTEM_ID_PARAMETER + SLASH + SCREENING_METADATA)
     public ResponseEntity<ScreeningMetadataHateoas>
     getScreeningMetadataAssociatedWithClass(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the class to retrieve " +
                             "screening metadata",
                     required = true)
             @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(classService
                         .getScreeningMetadataAssociatedWithClass(systemID));
     }
@@ -561,14 +538,12 @@ public class ClassHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CLASS)
     public ResponseEntity<ClassHateoas> createDefaultClass(
-            HttpServletRequest request,
             @Parameter(
                     name = SYSTEM_ID,
                     description = "systemID of Class to associate Class with.",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(classService.generateDefaultSubClass(systemID));
     }
 
@@ -605,7 +580,6 @@ public class ClassHateoasController
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_KEYWORD,
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<KeywordHateoas> addKeywordToFile(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of File to associate the Keyword " +
                             "with",
@@ -619,8 +593,6 @@ public class ClassHateoasController
                 classService.createKeywordAssociatedWithClass(
                         systemID, keyword);
         return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(keywordHateoas.getEntityVersion().toString())
                 .body(keywordHateoas);
     }
 
@@ -643,10 +615,13 @@ public class ClassHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_KEYWORD)
     public ResponseEntity<KeywordHateoas> createDefaultKeyword(
-            HttpServletRequest request) {
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of Class to create default " +
+                            "Keyword for",
+                    required = true)
+            @PathVariable UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(classService.generateDefaultKeyword());
+                .body(classService.generateDefaultKeyword(systemID));
     }
 
 
@@ -670,13 +645,11 @@ public class ClassHateoasController
             SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_SCREENING_METADATA)
     public ResponseEntity<ScreeningMetadataHateoas>
     getDefaultScreeningMetadata(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the documentDescription",
                     required = true)
             @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(classService.getDefaultScreeningMetadata(systemID));
     }
 
@@ -698,10 +671,13 @@ public class ClassHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_FILE)
     public ResponseEntity<FileHateoas> createDefaultFile(
-            HttpServletRequest request) {
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of Class to create default File " +
+                            "for",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(fileService.generateDefaultFile());
+                .body(fileService.generateDefaultFile(systemID));
     }
 
     // Create a CaseFile object with default values
@@ -721,10 +697,8 @@ public class ClassHateoasController
                     responseCode = INTERNAL_SERVER_ERROR_VAL,
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CASE_FILE)
-    public ResponseEntity<CaseFileHateoas> createDefaultCaseFile(
-            HttpServletRequest request) {
+    public ResponseEntity<CaseFileHateoas> createDefaultCaseFile() {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(caseFileService.generateDefaultCaseFile());
     }
 
@@ -746,10 +720,13 @@ public class ClassHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_RECORD)
     public ResponseEntity<RecordHateoas> createDefaultRecord(
-            HttpServletRequest request) {
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of Class to create default " +
+                            "Record for",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(recordService.generateDefaultRecord());
+                .body(recordService.generateDefaultRecord(systemID));
     }
 
     // Get a CrossReference template
@@ -770,10 +747,13 @@ public class ClassHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_CROSS_REFERENCE)
     public ResponseEntity<CrossReferenceHateoas> getDefaultCrossReference(
-            HttpServletRequest request) {
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of Class to create default " +
+                            "CrossReference for",
+                    required = true)
+            @PathVariable UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(classService.getDefaultCrossReference());
+                .body(classService.getDefaultCrossReference(systemID));
     }
 
     // Retrieve all Records associated with a Class (paginated)
@@ -797,8 +777,9 @@ public class ClassHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the class to find associated records",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
-        return classService.findAllRecordAssociatedWithClass(systemID);
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        return ResponseEntity.status(OK)
+                .body(classService.findAllRecordAssociatedWithClass(systemID));
     }
 
     // Retrieve all Files associated with a Class (paginated)
@@ -821,8 +802,9 @@ public class ClassHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the class to retrieve",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
-        return classService.findAllFileAssociatedWithClass(systemID);
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        return ResponseEntity.status(OK)
+                .body(classService.findAllFileAssociatedWithClass(systemID));
     }
 
     // Delete a Class identified by systemID
@@ -846,7 +828,7 @@ public class ClassHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the class to delete",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         classService.deleteEntity(systemID);
         return ResponseEntity.status(NO_CONTENT)
                 .body(DELETE_RESPONSE);
@@ -913,7 +895,7 @@ public class ClassHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of class to update.",
                     required = true)
-            @PathVariable(SYSTEM_ID) String systemID,
+            @PathVariable(SYSTEM_ID) UUID systemID,
             @Parameter(name = "class",
                     description = "Incoming class object",
                     required = true)
@@ -923,8 +905,6 @@ public class ClassHateoasController
         ClassHateoas classHateoas = classService.handleUpdate(systemID,
                 parseETAG(request.getHeader(ETAG)), klass);
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(classHateoas.getEntityVersion().toString())
                 .body(classHateoas);
     }
 }

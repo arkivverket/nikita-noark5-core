@@ -6,40 +6,32 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.hateoas.admin.AdministrativeUnitHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.util.exceptions.NikitaException;
-import nikita.webapp.hateoas.interfaces.admin.IAdministrativeUnitHateoasHandler;
-import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.admin.IAdministrativeUnitService;
 import nikita.webapp.web.controller.hateoas.NoarkController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping(value = HREF_BASE_ADMIN + SLASH,
         produces = NOARK5_V5_CONTENT_TYPE_JSON)
-public class AdministrativeUnitController extends NoarkController {
+public class AdministrativeUnitController
+        extends NoarkController {
 
     private final IAdministrativeUnitService administrativeUnitService;
-    private final IAdministrativeUnitHateoasHandler
-            administrativeUnitHateoasHandler;
 
     public AdministrativeUnitController(
-            IAdministrativeUnitService administrativeUnitService,
-            IAdministrativeUnitHateoasHandler administrativeUnitHateoasHandler) {
+            IAdministrativeUnitService administrativeUnitService) {
         this.administrativeUnitService = administrativeUnitService;
-        this.administrativeUnitHateoasHandler = administrativeUnitHateoasHandler;
     }
 
     // API - All POST Requests (CRUD - CREATE)
@@ -74,19 +66,12 @@ public class AdministrativeUnitController extends NoarkController {
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @PostMapping(value = NEW_ADMINISTRATIVE_UNIT)
     public ResponseEntity<AdministrativeUnitHateoas> createAdministrativeUnit(
-            HttpServletRequest request,
             @RequestBody AdministrativeUnit administrativeUnit)
             throws NikitaException {
-        administrativeUnitService
-                .createNewAdministrativeUnitBySystem(administrativeUnit);
-        AdministrativeUnitHateoas adminHateoas =
-                new AdministrativeUnitHateoas(administrativeUnit);
-        administrativeUnitHateoasHandler
-                .addLinks(adminHateoas, new Authorisation());
         return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(administrativeUnit.getVersion().toString())
-                .body(adminHateoas);
+                .body(administrativeUnitService
+                        .createNewAdministrativeUnitBySystem(
+                                administrativeUnit));
     }
 
     // API - All GET Requests (CRUD - READ)
@@ -110,16 +95,9 @@ public class AdministrativeUnitController extends NoarkController {
                     responseCode = INTERNAL_SERVER_ERROR_VAL,
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = ADMINISTRATIVE_UNIT)
-    public ResponseEntity<AdministrativeUnitHateoas>
-    findAll(HttpServletRequest request) {
-        AdministrativeUnitHateoas adminHateoas =
-                new AdministrativeUnitHateoas((List<INoarkEntity>) (List)
-                        administrativeUnitService.findAll());
-        administrativeUnitHateoasHandler
-                .addLinks(adminHateoas, new Authorisation());
+    public ResponseEntity<AdministrativeUnitHateoas> findAll() {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(adminHateoas);
+                .body(administrativeUnitService.findAll());
     }
 
     // Retrieves a given administrativeUnit identified by a systemId
@@ -152,19 +130,9 @@ public class AdministrativeUnitController extends NoarkController {
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = ADMINISTRATIVE_UNIT + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<AdministrativeUnitHateoas>
-    findBySystemId(@PathVariable(SYSTEM_ID) final String systemId,
-                   HttpServletRequest request) {
-        AdministrativeUnit administrativeUnit =
-                administrativeUnitService.findBySystemId(
-                        UUID.fromString(systemId));
-        AdministrativeUnitHateoas adminHateoas =
-                new AdministrativeUnitHateoas(administrativeUnit);
-        administrativeUnitHateoasHandler
-                .addLinks(adminHateoas, new Authorisation());
+    findBySystemId(@PathVariable(SYSTEM_ID) final UUID systemId) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(administrativeUnit.getVersion().toString())
-                .body(adminHateoas);
+                .body(administrativeUnitService.findBySystemId(systemId));
     }
 
     // Create a suggested administrativeUnit(like a template) with default
@@ -190,17 +158,9 @@ public class AdministrativeUnitController extends NoarkController {
     @GetMapping(value = NEW_ADMINISTRATIVE_UNIT)
     public ResponseEntity<AdministrativeUnitHateoas>
     getAdministrativeUnitTemplate(HttpServletRequest request) {
-        AdministrativeUnit administrativeUnit = new AdministrativeUnit();
-        administrativeUnit.setShortName("kortnavn på administrativtenhet");
-        administrativeUnit.setAdministrativeUnitName(
-                "Formell navn på administrativtenhet");
-        AdministrativeUnitHateoas adminHateoas =
-                new AdministrativeUnitHateoas(administrativeUnit);
-        administrativeUnitHateoasHandler
-                .addLinksOnTemplate(adminHateoas, new Authorisation());
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(adminHateoas);
+                .body(administrativeUnitService
+                        .generateDefaultAdministrativeUnit());
     }
 
     // API - All PUT Requests (CRUD - UPDATE)
@@ -236,21 +196,15 @@ public class AdministrativeUnitController extends NoarkController {
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of documentDescription to update.",
                     required = true)
-            @PathVariable(SYSTEM_ID) String systemID,
+            @PathVariable(SYSTEM_ID) UUID systemID,
             @Parameter(name = "administrativeUnit",
                     description = "Incoming administrativeUnit object",
                     required = true)
             @RequestBody AdministrativeUnit administrativeUnit)
             throws NikitaException {
-        administrativeUnitService.update(systemID,
-                parseETAG(request.getHeader(ETAG)), administrativeUnit);
-        AdministrativeUnitHateoas adminHateoas =
-                new AdministrativeUnitHateoas(administrativeUnit);
-        administrativeUnitHateoasHandler
-                .addLinks(adminHateoas, new Authorisation());
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(adminHateoas);
+                .body(administrativeUnitService.update(systemID,
+                        parseETAG(request.getHeader(ETAG)), administrativeUnit));
     }
 
     // Delete all AdministrativeUnit
@@ -297,7 +251,7 @@ public class AdministrativeUnitController extends NoarkController {
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of AdministrativeUnit to delete.",
                     required = true)
-            @PathVariable(SYSTEM_ID) String systemID) {
+            @PathVariable(SYSTEM_ID) UUID systemID) {
         administrativeUnitService.deleteEntity(systemID);
         return ResponseEntity.status(NO_CONTENT).
                 body(DELETE_RESPONSE);

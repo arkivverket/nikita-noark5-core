@@ -1,6 +1,7 @@
 package nikita.webapp.odata;
 
 import nikita.common.model.nikita.Pair;
+import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -27,16 +28,16 @@ public class HQLStatementBuilder {
     private final StringBuilder orderBy = new StringBuilder();
     private final Set<String> entityList = new TreeSet<>();
 
-    public Map<String, StringBuilder> bsmParameters = new HashMap<>();
+    public final Map<String, StringBuilder> bsmParameters = new HashMap<>();
     // Setting a hard limit of 1000 unless overridden
-    private AtomicInteger limitHowMany = new AtomicInteger(1000);
+    private AtomicInteger limitHowMany = new AtomicInteger(Integer.MAX_VALUE);
     // Always start at offset 0 unless overridden
     private AtomicInteger limitOffset = new AtomicInteger(0);
     private String fromEntity = "";
     private String fromEntityAlias = "";
     private Boolean selectCount = false;
 
-    Pattern uuidPattern = Pattern.compile(
+    private final Pattern uuidPattern = Pattern.compile(
             "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}");
 
     public HQLStatementBuilder() {
@@ -196,7 +197,7 @@ public class HQLStatementBuilder {
             for (String s : entityList) {
                 join.add(s);
             }
-            from.insert(0, join.toString() + " ");
+            from.insert(0, join + " ");
         }
 
         // For JOIN queries it is important to state the entity you want to
@@ -211,8 +212,8 @@ public class HQLStatementBuilder {
             }
         }
 
-        String query = select.toString() + " FROM " + this.fromEntity + " AS " +
-                this.fromEntityAlias + " " + from.toString();
+        String query = select + " FROM " + this.fromEntity + " AS " +
+                this.fromEntityAlias + " " + from;
 
         if (where.length() > 0) {
             String whereString = where.toString();
@@ -236,6 +237,18 @@ public class HQLStatementBuilder {
             query += orderBy.toString();
         }
 
+        /*
+         When refactoring code so that we can use OData for sub-queries
+         e.g., arkiv/systemID/arkivdel it was noticed that " and" is
+         appearing at the end of the query and causing a problem with the HQL.
+         Prior to this, nikita only allowed sub-queries with a filter clause
+         and in that case the " and" was required. A simple fix is to remove
+         this now, but the ideal solution would be to revisit the code and
+         only add an " and" if it is necessary.
+         */
+        if (query.endsWith(" and ")) {
+            query = query.substring(0, query.length() - 5);
+        }
         return query.stripTrailing().stripLeading();
     }
 
@@ -243,8 +256,9 @@ public class HQLStatementBuilder {
         return processQuery().stripTrailing();
     }
 
-    public Query getQuery(Session session) {
-        Query query = session.createQuery(processQuery());
+    public Query<INoarkEntity> getQuery(Session session) {
+        Query<INoarkEntity> query = (Query<INoarkEntity>)
+                session.createQuery(processQuery());
 
         for (Map.Entry<String, Object> entry :
                 parameters.entrySet()) {
@@ -302,14 +316,18 @@ public class HQLStatementBuilder {
 
     /**
      * Make a note of the entityName e.g., Part and the original
-     * originalEntityName e.g., so that we can allow higher layers that
-     * understand the domain model the ability fix the inheritance
+     * originalEntityName e.g., PartPerson, so that we can allow higher layers
+     * that understand the domain model the ability fix the inheritance
      *
-     * @param entityName
-     * @param originalEntityName
+     * @param entityName         The name of the entity e.g., Part
+     * @param originalEntityName The name of the entity e.g., PartPerson
      */
     public void addPotentialTypeMapping(
             String entityName, String originalEntityName) {
         typeMappings.put(originalEntityName, entityName);
+    }
+
+    public String getFromEntity() {
+        return fromEntity;
     }
 }

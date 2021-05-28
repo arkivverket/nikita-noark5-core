@@ -35,7 +35,7 @@ public class KeywordDeserializer
         ObjectNode objectNode = mapper.readTree(jsonParser);
 
         // Deserialize systemID
-        deserialiseNoarkSystemIdEntity(keyword, objectNode, errors);
+        deserialiseNoarkSystemIdEntity(keyword, objectNode);
         deserialiseNoarkCreateEntity(keyword, objectNode, errors);
 
         // Deserialize forfatter

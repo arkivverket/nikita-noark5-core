@@ -23,7 +23,6 @@ import java.util.UUID;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.*;
 
@@ -83,9 +82,6 @@ public class FondsHateoasController
         validateForCreate(fonds);
         FondsHateoas fondsHateoas = fondsService.createNewFonds(fonds);
         return ResponseEntity.status(CREATED)
-                .allow(
-                        getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(fonds.getVersion().toString())
                 .body(fondsHateoas);
     }
 
@@ -122,7 +118,7 @@ public class FondsHateoasController
                     description = "systemID of parent fonds to associate the fonds " +
                             "with.",
                     required = true)
-            @PathVariable(SYSTEM_ID) String systemID,
+            @PathVariable(SYSTEM_ID) UUID systemID,
             @Parameter(name = "fonds",
                     description = "Incoming fonds object",
                     required = true)
@@ -132,9 +128,6 @@ public class FondsHateoasController
         FondsHateoas fondsHateoas = fondsService
                 .createFondsAssociatedWithFonds(systemID, fonds);
         return ResponseEntity.status(CREATED)
-                .allow(
-                        getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(fonds.getVersion().toString())
                 .body(fondsHateoas);
     }
 
@@ -181,7 +174,7 @@ public class FondsHateoasController
                     description = "systemID of fonds to associate the series " +
                             "with.",
                     required = true)
-            @PathVariable(SYSTEM_ID) String systemID,
+            @PathVariable(SYSTEM_ID) UUID systemID,
             @Parameter(
                     name = "series",
                     description = "Incoming series object",
@@ -189,13 +182,8 @@ public class FondsHateoasController
             @RequestBody Series series)
             throws NikitaException {
         validateForCreate(series);
-        SeriesHateoas seriesHateoas =
-                fondsService.createSeriesAssociatedWithFonds(systemID, series);
         return ResponseEntity.status(CREATED)
-                .allow(
-                        getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(seriesHateoas.getEntityVersion().toString())
-                .body(seriesHateoas);
+                .body(fondsService.createSeriesAssociatedWithFonds(systemID, series));
     }
 
     // Create a FondsCreator and associate it with the Fonds identified by systemId
@@ -244,23 +232,17 @@ public class FondsHateoasController
                     description = "systemID of fonds to associate the series " +
                             "with.",
                     required = true)
-            @PathVariable(SYSTEM_ID) String systemID,
+            @PathVariable(SYSTEM_ID) UUID systemID,
             @Parameter(
                     name = "fondsCreator",
                     description = "Incoming fondsCreator object",
                     required = true)
             @RequestBody FondsCreator fondsCreator)
             throws NikitaException {
-
         validateForCreate(fondsCreator);
-        FondsCreatorHateoas fondsCreatorHateoas = fondsService
-                .createFondsCreatorAssociatedWithFonds(systemID, fondsCreator);
-
         return ResponseEntity.status(CREATED)
-                .allow(
-                        getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(fondsCreatorHateoas.getEntityVersion().toString())
-                .body(fondsCreatorHateoas);
+                .body(fondsService
+                        .createFondsCreatorAssociatedWithFonds(systemID, fondsCreator));
     }
 
     // Create a StorageLocation
@@ -293,7 +275,6 @@ public class FondsHateoasController
             @RequestBody StorageLocation storageLocation)
             throws NikitaException {
         return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(fondsService
                         .createStorageLocationAssociatedWithFonds(
                                 systemID, storageLocation));
@@ -320,12 +301,9 @@ public class FondsHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of fonds to retrieve.",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         FondsHateoas fondsHateoas = fondsService.findSingleFonds(systemID);
         return ResponseEntity.status(OK)
-                .allow(
-                        getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(fondsHateoas.getEntityVersion().toString())
                 .body(fondsHateoas);
     }
 
@@ -354,9 +332,8 @@ public class FondsHateoasController
                     name = SYSTEM_ID,
                     description = "systemID of fonds to associate Series with.",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(fondsService.generateDefaultSeries(systemID));
     }
 
@@ -386,8 +363,10 @@ public class FondsHateoasController
                     description = "systemID of fonds you want retrieve " +
                             "associated FondsCreator objects for.",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
-        return fondsService.findFondsCreatorAssociatedWithFonds(systemID);
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        return ResponseEntity.status(OK)
+                .body(fondsService
+                        .findFondsCreatorAssociatedWithFonds(systemID));
     }
 
     // Get all Series associated with Fonds identified by systemId
@@ -416,10 +395,9 @@ public class FondsHateoasController
                     description = "systemID of Fonds that has Series " +
                             "associated with it.",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
 
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(fondsService.findSeriesAssociatedWithFonds(systemID));
     }
 
@@ -443,10 +421,9 @@ public class FondsHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of parent Fonds",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         FondsHateoas fondsHateoas = fondsService.findAllChildren(systemID);
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(fondsHateoas);
     }
 
@@ -473,7 +450,6 @@ public class FondsHateoasController
     public ResponseEntity<FondsHateoas> findAllFonds(
             HttpServletRequest request) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(fondsService.findAllFonds());
     }
 
@@ -508,10 +484,9 @@ public class FondsHateoasController
                     description = "systemID of fonds to associate the series " +
                             "with.",
                     required = true)
-            @PathVariable(SYSTEM_ID) String systemID
+            @PathVariable(SYSTEM_ID) UUID systemID
     ) throws NikitaException {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(fondsService.generateDefaultFonds(systemID));
     }
 
@@ -541,7 +516,6 @@ public class FondsHateoasController
                     required = true)
             @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(fondsService.getDefaultStorageLocation(systemID));
     }
 
@@ -571,7 +545,6 @@ public class FondsHateoasController
             HttpServletRequest request
     ) throws NikitaException {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(fondsService.generateDefaultFonds(null));
     }
 
@@ -614,20 +587,16 @@ public class FondsHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of fonds to update.",
                     required = true)
-            @PathVariable(SYSTEM_ID) String systemID,
+            @PathVariable(SYSTEM_ID) UUID systemID,
             @Parameter(name = "fonds",
                     description = "Incoming fonds object",
                     required = true)
             @RequestBody Fonds fonds) throws NikitaException {
-
         validateForUpdate(fonds);
         FondsHateoas fondsHateoas =
                 fondsService.handleUpdate(systemID,
                         parseETAG(request.getHeader(ETAG)), fonds);
-
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(fondsHateoas.getEntityVersion().toString())
                 .body(fondsHateoas);
     }
 
@@ -653,7 +622,7 @@ public class FondsHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the series to delete",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         fondsService.deleteEntity(systemID);
         return ResponseEntity.status(NO_CONTENT)
                 .body(DELETE_RESPONSE);

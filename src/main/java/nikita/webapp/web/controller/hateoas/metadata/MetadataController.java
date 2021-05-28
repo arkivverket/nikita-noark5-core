@@ -17,6 +17,7 @@ import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.CODE;
 import static nikita.common.config.N5ResourceMappings.CODE_PARAMETER;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping(value = HREF_BASE_METADATA + SLASH,
@@ -58,10 +59,11 @@ public class MetadataController {
     @PostMapping(value = "*")
     public ResponseEntity<MetadataHateoas> createMetadata(
             @RequestBody Metadata metadata)
-            throws NikitaException, ClassNotFoundException,
-            InvocationTargetException, NoSuchMethodException,
-            InstantiationException, IllegalAccessException {
-        return metadataService.createNewMetadataEntity(metadata);
+            throws NikitaException, InvocationTargetException,
+            NoSuchMethodException, InstantiationException,
+            IllegalAccessException {
+        return ResponseEntity.status(CREATED)
+                .body(metadataService.createNewMetadataEntity(metadata));
     }
 
     // API - All GET Requests (CRUD - READ)
@@ -86,7 +88,7 @@ public class MetadataController {
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = "**")
     public ResponseEntity<MetadataHateoas> findAll() {
-        return metadataService.findAll();
+        return ResponseEntity.status(OK).body(metadataService.findAll());
     }
 
     // Retrieves a given fondsStatus identified by a code
@@ -120,7 +122,8 @@ public class MetadataController {
     @GetMapping(value = "*" + SLASH + CODE_PARAMETER)
     public ResponseEntity<MetadataHateoas> findByCode(
             @PathVariable(CODE) final String code) {
-        return metadataService.findMetadataByCodeOrThrow(code);
+        return ResponseEntity.status(OK).body(
+                metadataService.findMetadataByCodeOrThrow(code));
     }
 
     // Create a suggested fondsStatus(like a template) with default values
@@ -144,8 +147,9 @@ public class MetadataController {
                     responseCode = INTERNAL_SERVER_ERROR_VAL,
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = NEW_ANYTHING)
-    public ResponseEntity<String> getMetadataTemplate() {
-        return metadataService.generateTemplateMetadata();
+    public ResponseEntity<MetadataHateoas> getMetadataTemplate() {
+        return ResponseEntity.status(OK).body(
+                metadataService.generateTemplateMetadata());
     }
 
     // API - All PUT Requests (CRUD - UPDATE)
@@ -181,7 +185,8 @@ public class MetadataController {
                     required = true)
             @PathVariable(CODE) final String code,
             @RequestBody Metadata metadata) {
-        return metadataService.updateMetadataEntity(code, metadata);
+        return ResponseEntity.status(OK).body(
+                metadataService.updateMetadataEntity(code, metadata));
     }
 
     // API - All DELETE Requests (CRUD - DELETE)
@@ -208,6 +213,7 @@ public class MetadataController {
                     description = "Code of metadata object to delete.",
                     required = true)
             @PathVariable(CODE) final String code) {
-        return metadataService.deleteMetadataEntity(code);
+        return ResponseEntity.status(NO_CONTENT).body(
+                metadataService.deleteMetadataEntity(code));
     }
 }

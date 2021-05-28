@@ -9,27 +9,21 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.DocumentFlowHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.PrecedenceHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.SignOffHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.secondary.DocumentFlow;
 import nikita.common.model.noark5.v5.secondary.Precedence;
 import nikita.common.model.noark5.v5.secondary.SignOff;
 import nikita.common.util.exceptions.NikitaException;
-import nikita.webapp.hateoas.interfaces.IRegistryEntryHateoasHandler;
-import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.IRegistryEntryService;
 import nikita.webapp.web.controller.hateoas.NoarkController;
-import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.*;
 
@@ -40,16 +34,10 @@ public class RegistryEntryHateoasController
         extends NoarkController {
 
     private final IRegistryEntryService registryEntryService;
-    private final IRegistryEntryHateoasHandler registryEntryHateoasHandler;
-    private final ApplicationEventPublisher applicationEventPublisher;
 
     public RegistryEntryHateoasController(
-            IRegistryEntryService registryEntryService,
-            IRegistryEntryHateoasHandler registryEntryHateoasHandler,
-            ApplicationEventPublisher applicationEventPublisher) {
+            IRegistryEntryService registryEntryService) {
         this.registryEntryService = registryEntryService;
-        this.registryEntryHateoasHandler = registryEntryHateoasHandler;
-        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     // API - All POST Requests (CRUD - CREATE)
@@ -95,7 +83,7 @@ public class RegistryEntryHateoasController
                     description = "systemID of registry entry to associate " +
                             "the document flow with.",
                     required = true)
-            @PathVariable String systemID,
+            @PathVariable UUID systemID,
             @Parameter(name = "documentFlow",
                     description = "Incoming documentFlow object",
                     required = true)
@@ -149,7 +137,7 @@ public class RegistryEntryHateoasController
                     description = "systemId of registry entry to associate " +
                             "the signOff with.",
                     required = true)
-            @PathVariable(SYSTEM_ID) String systemID,
+            @PathVariable(SYSTEM_ID) UUID systemID,
             @Parameter(name = "signOff",
                     description = "Incoming signOff object",
                     required = true)
@@ -158,8 +146,6 @@ public class RegistryEntryHateoasController
         SignOffHateoas signOffHateoas = registryEntryService
                 .createSignOffAssociatedWithRegistryEntry(systemID, signOff);
         return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(signOffHateoas.getEntityVersion().toString())
                 .body(signOffHateoas);
     }
 
@@ -204,7 +190,7 @@ public class RegistryEntryHateoasController
                     description = "systemId of record to associate the " +
                             "Precedence with.",
                     required = true)
-            @PathVariable(SYSTEM_ID) String systemID,
+            @PathVariable(SYSTEM_ID) UUID systemID,
             @Parameter(name = "Precedence",
                     description = "Incoming Precedence object",
                     required = true)
@@ -239,9 +225,8 @@ public class RegistryEntryHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the registryEntry",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(registryEntryService.
                         generateDefaultDocumentFlow(systemID));
     }
@@ -270,11 +255,11 @@ public class RegistryEntryHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the registryEntry",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID,
+            @PathVariable(SYSTEM_ID) final UUID systemID,
             @Parameter(name = "subSystemID",
                     description = "systemID of the SignOff",
                     required = true)
-            @PathVariable("subSystemID") final String subSystemID) {
+            @PathVariable("subSystemID") final UUID subSystemID) {
         return ResponseEntity.status(OK)
                 .body(registryEntryService
                         .findSignOffAssociatedWithRegistryEntry
@@ -303,9 +288,8 @@ public class RegistryEntryHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemId of record to associate the SignOff with.",
                     required = true)
-            @PathVariable(SYSTEM_ID) String systemID) {
+            @PathVariable(SYSTEM_ID) UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(registryEntryService.generateDefaultSignOff(systemID));
     }
 
@@ -333,9 +317,8 @@ public class RegistryEntryHateoasController
                     description = "systemId of record to associate the " +
                             "Precedence with.",
                     required = true)
-            @PathVariable(SYSTEM_ID) String systemID) {
+            @PathVariable(SYSTEM_ID) UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(registryEntryService.
                         generateDefaultPrecedence(systemID));
     }
@@ -364,7 +347,7 @@ public class RegistryEntryHateoasController
                     description = "systemID of the file to retrieve " +
                             "associated RegistryEntry",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity
                 .status(OK)
                 .body(registryEntryService.
@@ -397,9 +380,8 @@ public class RegistryEntryHateoasController
                     description = "systemID of the signOff to retrieve " +
                             "associated Record",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(registryEntryService
                         .findAllSignOffAssociatedWithRegistryEntry(systemID));
     }
@@ -427,7 +409,7 @@ public class RegistryEntryHateoasController
                     description = "systemID of the registryEntry to retrieve " +
                             "associated Precedence",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity
                 .status(OK)
                 .body(registryEntryService.
@@ -453,21 +435,13 @@ public class RegistryEntryHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<RegistryEntryHateoas> findOneRegistryEntryBySystemId(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the registryEntry to retrieve",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String registryEntrySystemId) {
-        RegistryEntry registryEntry = registryEntryService
-                .findBySystemId(registryEntrySystemId);
-        RegistryEntryHateoas registryEntryHateoas = new
-                RegistryEntryHateoas(registryEntry);
-        registryEntryHateoasHandler.addLinks(
-                registryEntryHateoas, new Authorisation());
+            @PathVariable(SYSTEM_ID) final UUID registryEntrySystemId) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(registryEntry.getVersion().toString())
-                .body(registryEntryHateoas);
+                .body(registryEntryService
+                        .findBySystemId(registryEntrySystemId));
     }
 
     // Get all registryEntry
@@ -491,14 +465,8 @@ public class RegistryEntryHateoasController
     @GetMapping
     public ResponseEntity<RegistryEntryHateoas> findAllRegistryEntry(
             HttpServletRequest request) {
-        RegistryEntryHateoas registryEntryHateoas = new
-                RegistryEntryHateoas((List<INoarkEntity>) (List)
-                registryEntryService.findAllRegistryEntry());
-        registryEntryHateoasHandler.addLinks(registryEntryHateoas,
-                new Authorisation());
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(registryEntryHateoas);
+                .body(registryEntryService.findAllRegistryEntry());
     }
 
     // Delete a Record identified by systemID
@@ -523,7 +491,7 @@ public class RegistryEntryHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the record to delete",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         registryEntryService.deleteEntity(systemID);
         return ResponseEntity.status(NO_CONTENT)
                 .body(DELETE_RESPONSE);
@@ -590,28 +558,18 @@ public class RegistryEntryHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemId of registryEntry to update",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID,
+            @PathVariable(SYSTEM_ID) final UUID systemID,
             @Parameter(name = "RegistryEntry",
                     description = "Incoming registryEntry object",
                     required = true)
             @RequestBody RegistryEntry registryEntry)
             throws NikitaException {
         validateForUpdate(registryEntry);
-        RegistryEntry updatedRegistryEntry =
-                registryEntryService
+        return ResponseEntity.status(OK)
+                .body(registryEntryService
                         .handleUpdate(systemID,
                                 parseETAG(request.getHeader(ETAG)),
-                                registryEntry);
-        RegistryEntryHateoas registryEntryHateoas =
-                new RegistryEntryHateoas(updatedRegistryEntry);
-        registryEntryHateoasHandler.addLinks(
-                registryEntryHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityUpdatedEvent(this, updatedRegistryEntry));
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(updatedRegistryEntry.getVersion().toString())
-                .body(registryEntryHateoas);
+                                registryEntry));
     }
 
     // PUT [contextPath][api]/sakarkiv/journalpost/{systemID}/avskrivning/{subSystemID}
@@ -639,11 +597,11 @@ public class RegistryEntryHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the registryEntry",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID,
+            @PathVariable(SYSTEM_ID) final UUID systemID,
             @Parameter(name = "subSystemID",
                     description = "systemID of the SignOff",
                     required = true)
-            @PathVariable("subSystemID") final String subSystemID,
+            @PathVariable("subSystemID") final UUID subSystemID,
             @Parameter(name = "SignOff",
                     description = "Incoming signOff object",
                     required = true)
@@ -653,8 +611,6 @@ public class RegistryEntryHateoasController
                         subSystemID, parseETAG(request.getHeader(ETAG)),
                         signOff);
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(signOffHateoas.getEntityVersion().toString())
                 .body(signOffHateoas);
     }
 
@@ -682,11 +638,11 @@ public class RegistryEntryHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the registryEntry",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID,
+            @PathVariable(SYSTEM_ID) final UUID systemID,
             @Parameter(name = "subSystemID",
                     description = "systemID of the SignOff",
                     required = true)
-            @PathVariable("subSystemID") final String subSystemID) {
+            @PathVariable("subSystemID") final UUID subSystemID) {
         registryEntryService.deleteSignOff(systemID, subSystemID);
         return ResponseEntity.status(NO_CONTENT)
                 .body(DELETE_RESPONSE);

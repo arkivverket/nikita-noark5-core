@@ -97,6 +97,16 @@ public class NoarkEntity
         }
     }
 
+    /**
+     * Utility method to set version of a default/template object e.g., a
+     * Default File object. Such an object will not have a version value as
+     * it is never persisted to the database. override must be set to true if
+     * you want to manually assign a value. This is also for readability in
+     * the code.
+     *
+     * @param version  the value to set, should be -1
+     * @param override that it is OK to override the value
+     */
     @Override
     public void setVersion(Long version, Boolean override) {
         if (override) {

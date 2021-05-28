@@ -15,37 +15,16 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static nikita.common.config.ErrorMessagesConstants.MALFORMED_PAYLOAD;
 import static nikita.common.config.HATEOASConstants.LINKS;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 
 /**
- * Created by tsodring on 1/6/17.
- * <p>
  * Deserialise an incoming RegistryEntry JSON object.
- * <p>
- * Having a own deserialiser is done to have more fine grained control over the
- * input. This allows us to be less strict with property names, allowing for
- * both English and Norwegian property names
- * <p>
- * Note this implementation expects that the RegistryEntry object to deserialise
- * is in compliance with the Noark standard where certain properties i.e.
- * createdBy and createdDate are set by the core, not the caller. This
- * deserializer will not enforce this and will deserialize a registryEntry
- * object correctly. This is because e.g the import interface will require
- * such functionality.
- * <p>
- * - Testing of compliance of properties is handled by the core, either in
- * RegistryEntryController or RegistryEntryService
- * <p>
- * <p>
- * Note:
- * - Unknown property values in the JSON will trigger an exception
- * - Missing obligatory property values in the JSON will trigger an exception
  */
-
 public class RegistryEntryDeserializer
-        extends JsonDeserializer {
+        extends JsonDeserializer<RegistryEntry> {
 
     private static final Logger logger =
             LoggerFactory.getLogger(RegistryEntryDeserializer.class);
@@ -196,10 +175,8 @@ public class RegistryEntryDeserializer
         // Check that there are no additional values left after processing
         // the tree. If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {
-            errors.append("The journalpost you tried to create is malformed. " +
-                          "The following fields are not recognised as " +
-                          "journalpost fields "+
-                          "[" + checkNodeObjectEmpty(objectNode) + "]. ");
+            errors.append(String.format(MALFORMED_PAYLOAD,
+                    REGISTRY_ENTRY, checkNodeObjectEmpty(objectNode)));
         }
         if (0 < errors.length())
             throw new NikitaMalformedInputDataException(errors.toString());

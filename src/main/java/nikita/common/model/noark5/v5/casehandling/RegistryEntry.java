@@ -398,12 +398,6 @@ public class RegistryEntry
     }
 
     @Override
-    public void setReferenceDocumentFlow(
-            List<DocumentFlow> referenceDocumentFlow) {
-        this.referenceDocumentFlow = referenceDocumentFlow;
-    }
-
-    @Override
     public void addDocumentFlow(DocumentFlow documentFlow) {
         this.referenceDocumentFlow.add(documentFlow);
         documentFlow.setReferenceRegistryEntry(this);
@@ -423,12 +417,12 @@ public class RegistryEntry
     @Override
     public void addSignOff(SignOff signOff) {
         this.referenceSignOff.add(signOff);
-        signOff.getReferenceRecord().add(this);
+        signOff.getReferenceRegistryEntry().add(this);
     }
 
     public void removeSignOff(SignOff signOff) {
         this.referenceSignOff.remove(signOff);
-        signOff.getReferenceRecord().remove(this);
+        signOff.getReferenceRegistryEntry().remove(this);
     }
 
     @Override

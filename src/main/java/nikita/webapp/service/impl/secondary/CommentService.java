@@ -9,10 +9,10 @@ import nikita.common.model.noark5.v5.secondary.Comment;
 import nikita.common.repository.n5v5.secondary.ICommentRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.secondary.ICommentHateoasHandler;
-import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
+import nikita.webapp.service.interfaces.odata.IODataService;
 import nikita.webapp.service.interfaces.secondary.ICommentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,11 +42,12 @@ public class CommentService
     public CommentService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IODataService odataService,
             IPatchService patchService,
             IMetadataService metadataService,
             ICommentRepository commentRepository,
             ICommentHateoasHandler commentHateoasHandler) {
-        super(entityManager, applicationEventPublisher, patchService);
+        super(entityManager, applicationEventPublisher, patchService, odataService);
         this.metadataService = metadataService;
         this.commentRepository = commentRepository;
         this.commentHateoasHandler = commentHateoasHandler;
@@ -56,63 +57,53 @@ public class CommentService
 
     @Override
     @Transactional
-    public CommentHateoas createNewComment(Comment comment, File file) {
+    public CommentHateoas createNewComment(@NotNull final Comment comment,
+                                           @NotNull final File file) {
         checkCommentType(comment);
         if (null == comment.getCommentDate())
             comment.setCommentDate(OffsetDateTime.now());
         file.addComment(comment);
-        comment = commentRepository.save(comment);
-        CommentHateoas commentHateoas = new CommentHateoas(comment);
-        commentHateoasHandler.addLinks(commentHateoas, new Authorisation());
-        return commentHateoas;
+        return packAsHateoas(commentRepository.save(comment));
     }
 
     @Override
     @Transactional
-    public CommentHateoas createNewComment(Comment comment, Record record) {
+    public CommentHateoas createNewComment(@NotNull final Comment comment,
+                                           @NotNull final Record record) {
         checkCommentType(comment);
         if (null == comment.getCommentDate())
             comment.setCommentDate(OffsetDateTime.now());
         comment.addRecord(record);
-        comment = commentRepository.save(comment);
-        CommentHateoas commentHateoas = new CommentHateoas(comment);
-        commentHateoasHandler.addLinks(commentHateoas, new Authorisation());
-        return commentHateoas;
+        return packAsHateoas(commentRepository.save(comment));
     }
 
     @Override
     @Transactional
-    public CommentHateoas createNewComment
-            (Comment comment, DocumentDescription documentDescription) {
+    public CommentHateoas createNewComment(
+            @NotNull final Comment comment,
+            @NotNull final DocumentDescription documentDescription) {
         checkCommentType(comment);
         if (null == comment.getCommentDate())
             comment.setCommentDate(OffsetDateTime.now());
         comment.addDocumentDescription(documentDescription);
-        comment = commentRepository.save(comment);
-        CommentHateoas commentHateoas = new CommentHateoas(comment);
-        commentHateoasHandler.addLinks(commentHateoas, new Authorisation());
-        return commentHateoas;
+        return packAsHateoas(commentRepository.save(comment));
     }
 
     // All READ methods
 
     @Override
-    public CommentHateoas findSingleComment(UUID commentSystemId) {
-        Comment existingComment = getCommentOrThrow(commentSystemId);
-
-        CommentHateoas commentHateoas =
-                new CommentHateoas(commentRepository.save(existingComment));
-        commentHateoasHandler.addLinks(commentHateoas, new Authorisation());
-        return commentHateoas;
+    public CommentHateoas findSingleComment(
+            @NotNull final UUID commentSystemId) {
+        return packAsHateoas(getCommentOrThrow(commentSystemId));
     }
 
     // All UPDATE methods
 
     @Override
     @Transactional
-    public CommentHateoas handleUpdate(@NotNull UUID commentSystemId,
-                                       @NotNull Long version,
-                                       @NotNull Comment incomingComment) {
+    public CommentHateoas handleUpdate(@NotNull final UUID commentSystemId,
+                                       @NotNull final Long version,
+                                       @NotNull final Comment incomingComment) {
         Comment existingComment = getCommentOrThrow(commentSystemId);
 
         /* Only check if it changed, in case it has a historical value */
@@ -130,19 +121,15 @@ public class CommentService
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
         existingComment.setVersion(version);
-
-        CommentHateoas commentHateoas =
-                new CommentHateoas(commentRepository.save(existingComment));
-        commentHateoasHandler.addLinks(commentHateoas, new Authorisation());
-        return commentHateoas;
+        return packAsHateoas(existingComment);
     }
 
     // All DELETE methods
 
     @Override
     @Transactional
-    public void deleteComment(UUID systemID) {
-        Comment comment = getCommentOrThrow(systemID);
+    public void deleteComment(@NotNull final UUID systemId) {
+        Comment comment = getCommentOrThrow(systemId);
         for (DocumentDescription documentDescription :
                 comment.getReferenceDocumentDescription()) {
             comment.removeDocumentDescription(documentDescription);
@@ -159,19 +146,23 @@ public class CommentService
     // All template methods
 
     @Override
-    public CommentHateoas generateDefaultComment() {
+    public CommentHateoas generateDefaultComment(@NotNull final UUID systemId) {
         Comment defaultComment = new Comment();
         defaultComment.setCommentDate(OffsetDateTime.now());
         defaultComment.setCommentRegisteredBy(getUser());
-        CommentHateoas commentHateoas = new CommentHateoas(defaultComment);
-        commentHateoasHandler.addLinksOnTemplate(commentHateoas,
-                new Authorisation());
-        return commentHateoas;
+        defaultComment.setVersion(-1L, true);
+        return packAsHateoas(defaultComment);
     }
 
     // All helper methods
 
-    protected Comment getCommentOrThrow(@NotNull UUID commentSystemId) {
+    private CommentHateoas packAsHateoas(Comment comment) {
+        CommentHateoas commentHateoas = new CommentHateoas(comment);
+        applyLinksAndHeader(commentHateoas, commentHateoasHandler);
+        return commentHateoas;
+    }
+
+    protected Comment getCommentOrThrow(@NotNull final UUID commentSystemId) {
         Comment comment = commentRepository.findBySystemId(commentSystemId);
         if (comment == null) {
             String info = INFO_CANNOT_FIND_OBJECT +

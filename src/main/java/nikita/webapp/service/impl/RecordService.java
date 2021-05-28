@@ -1,5 +1,7 @@
 package nikita.webapp.service.impl;
 
+import nikita.common.model.nikita.NikitaPage;
+import nikita.common.model.nikita.PatchMerge;
 import nikita.common.model.nikita.PatchObjects;
 import nikita.common.model.noark5.bsm.BSMBase;
 import nikita.common.model.noark5.v5.DocumentDescription;
@@ -8,13 +10,9 @@ import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartIn
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartUnit;
 import nikita.common.model.noark5.v5.hateoas.*;
-import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartHateoas;
-import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInternalHateoas;
-import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartPersonHateoas;
-import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartUnitHateoas;
+import nikita.common.model.noark5.v5.hateoas.casehandling.*;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
 import nikita.common.model.noark5.v5.hateoas.secondary.*;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.md_other.BSMMetadata;
 import nikita.common.model.noark5.v5.metadata.Metadata;
 import nikita.common.model.noark5.v5.nationalidentifier.*;
@@ -22,24 +20,17 @@ import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.repository.n5v5.IDocumentDescriptionRepository;
 import nikita.common.repository.n5v5.IRecordRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
-import nikita.webapp.hateoas.interfaces.*;
-import nikita.webapp.hateoas.interfaces.nationalidentifier.INationalIdentifierHateoasHandler;
-import nikita.webapp.hateoas.interfaces.secondary.*;
-import nikita.webapp.security.Authorisation;
+import nikita.webapp.hateoas.interfaces.IRecordHateoasHandler;
 import nikita.webapp.service.application.IPatchService;
-import nikita.webapp.service.interfaces.IBSMService;
-import nikita.webapp.service.interfaces.IDocumentDescriptionService;
-import nikita.webapp.service.interfaces.INationalIdentifierService;
-import nikita.webapp.service.interfaces.IRecordService;
+import nikita.webapp.service.interfaces.*;
+import nikita.webapp.service.interfaces.casehandling.IRecordNoteService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
+import nikita.webapp.service.interfaces.odata.IODataService;
 import nikita.webapp.service.interfaces.secondary.*;
-import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
-import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,17 +38,13 @@ import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 import static java.time.OffsetDateTime.now;
 import static java.util.List.copyOf;
 import static nikita.common.config.Constants.*;
-import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateScreening;
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
 
 @Service
 public class RecordService
@@ -71,11 +58,6 @@ public class RecordService
     private final IRecordRepository recordRepository;
     private final IBSMService bsmService;
     private final IRecordHateoasHandler recordHateoasHandler;
-    private final IFileHateoasHandler fileHateoasHandler;
-    private final ISeriesHateoasHandler seriesHateoasHandler;
-    private final IClassHateoasHandler classHateoasHandler;
-    private final IDocumentDescriptionHateoasHandler
-            documentDescriptionHateoasHandler;
     private final IDocumentDescriptionRepository documentDescriptionRepository;
     private final IAuthorService authorService;
     private final IKeywordService keywordService;
@@ -83,30 +65,22 @@ public class RecordService
     private final ICommentService commentService;
     private final ICorrespondencePartService correspondencePartService;
     private final IMetadataService metadataService;
+    private final IRecordNoteService recordNoteService;
+    private final IRegistryEntryService registryEntryService;
     private final INationalIdentifierService nationalIdentifierService;
     private final IPartService partService;
-    private final ICorrespondencePartHateoasHandler correspondencePartHateoasHandler;
-    private final INationalIdentifierHateoasHandler nationalIdentifierHateoasHandler;
-    private final IPartHateoasHandler partHateoasHandler;
-    private final IAuthorHateoasHandler authorHateoasHandler;
-    private final ICommentHateoasHandler commentHateoasHandler;
     private final IScreeningMetadataService screeningMetadataService;
-    private final IScreeningMetadataHateoasHandler screeningMetadataHateoasHandler;
     private final IStorageLocationService storageLocationService;
 
     public RecordService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IODataService odataService,
             IPatchService patchService,
             IDocumentDescriptionService documentDescriptionService,
             IRecordRepository recordRepository,
             IBSMService bsmService,
             IRecordHateoasHandler recordHateoasHandler,
-            IFileHateoasHandler fileHateoasHandler,
-            ISeriesHateoasHandler seriesHateoasHandler,
-            IClassHateoasHandler classHateoasHandler,
-            IDocumentDescriptionHateoasHandler
-                    documentDescriptionHateoasHandler,
             IDocumentDescriptionRepository documentDescriptionRepository,
             IAuthorService authorService,
             IKeywordService keywordService,
@@ -114,27 +88,15 @@ public class RecordService
             ICommentService commentService,
             ICorrespondencePartService correspondencePartService,
             IMetadataService metadataService,
-            INationalIdentifierService nationalIdentifierService,
+            IRecordNoteService recordNoteService, IRegistryEntryService registryEntryService, INationalIdentifierService nationalIdentifierService,
             IPartService partService,
-            ICorrespondencePartHateoasHandler correspondencePartHateoasHandler,
-            INationalIdentifierHateoasHandler nationalIdentifierHateoasHandler,
-            IPartHateoasHandler partHateoasHandler,
-            IAuthorHateoasHandler authorHateoasHandler,
-            ICommentHateoasHandler commentHateoasHandler,
             IScreeningMetadataService screeningMetadataService,
-            IScreeningMetadataHateoasHandler screeningMetadataHateoasHandler,
             IStorageLocationService storageLocationService) {
-        super(entityManager, applicationEventPublisher, patchService);
+        super(entityManager, applicationEventPublisher, patchService, odataService);
         this.documentDescriptionService = documentDescriptionService;
         this.recordRepository = recordRepository;
         this.bsmService = bsmService;
-        this.entityManager = entityManager;
         this.recordHateoasHandler = recordHateoasHandler;
-        this.fileHateoasHandler = fileHateoasHandler;
-        this.seriesHateoasHandler = seriesHateoasHandler;
-        this.classHateoasHandler = classHateoasHandler;
-        this.documentDescriptionHateoasHandler =
-                documentDescriptionHateoasHandler;
         this.documentDescriptionRepository = documentDescriptionRepository;
         this.authorService = authorService;
         this.keywordService = keywordService;
@@ -142,15 +104,11 @@ public class RecordService
         this.commentService = commentService;
         this.correspondencePartService = correspondencePartService;
         this.metadataService = metadataService;
+        this.recordNoteService = recordNoteService;
+        this.registryEntryService = registryEntryService;
         this.nationalIdentifierService = nationalIdentifierService;
         this.partService = partService;
-        this.correspondencePartHateoasHandler = correspondencePartHateoasHandler;
-        this.nationalIdentifierHateoasHandler = nationalIdentifierHateoasHandler;
-        this.partHateoasHandler = partHateoasHandler;
-        this.authorHateoasHandler = authorHateoasHandler;
-        this.commentHateoasHandler = commentHateoasHandler;
         this.screeningMetadataService = screeningMetadataService;
-        this.screeningMetadataHateoasHandler = screeningMetadataHateoasHandler;
         this.storageLocationService = storageLocationService;
     }
 
@@ -158,25 +116,35 @@ public class RecordService
 
     @Override
     @Transactional
-    public ResponseEntity<RecordHateoas> save(Record record) {
+    public RecordHateoas save(@NotNull final Record record) {
         validateDocumentMedium(metadataService, record);
         validateScreening(metadataService, record);
         bsmService.validateBSMList(record.getReferenceBSMBase());
-        RecordHateoas recordHateoas =
-                new RecordHateoas(recordRepository.save(record));
-        recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
-        return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(recordHateoas.getEntityVersion().toString())
-                .body(recordHateoas);
+        return packAsHateoas(recordRepository.save(record));
+    }
+
+    @Override
+    public RecordNoteHateoas expandToRecordNote(
+            @NotNull final UUID systemId,
+            @NotNull final PatchMerge patchMerge) {
+        return recordNoteService.expandRecordToRecordNote(
+                getRecordOrThrow(systemId), patchMerge);
+    }
+
+    @Override
+    public RegistryEntryHateoas expandToRegistryEntry(
+            @NotNull final UUID systemId,
+            @NotNull final PatchMerge patchMerge) {
+        return registryEntryService.expandRecordToRegistryEntry(
+                getRecordOrThrow(systemId), patchMerge);
     }
 
     @Override
     @Transactional
     public DocumentDescriptionHateoas
     createDocumentDescriptionAssociatedWithRecord(
-            String systemID, DocumentDescription documentDescription) {
-        Record record = getRecordOrThrow(systemID);
+            UUID systemId, DocumentDescription documentDescription) {
+        Record record = getRecordOrThrow(systemId);
         validateDocumentMedium(metadataService, documentDescription);
         validateScreening(metadataService, documentDescription);
         // Adding 1 as documentNumber starts at 1, not 0
@@ -187,22 +155,14 @@ public class RecordService
         record.addDocumentDescription(documentDescription);
         documentDescription.setDocumentNumber((int) documentNumber);
 
-        DocumentDescriptionHateoas documentDescriptionHateoas =
-                new DocumentDescriptionHateoas(
-                        documentDescriptionService.save(documentDescription));
-        documentDescriptionHateoasHandler.addLinks(
-                documentDescriptionHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(new
-                AfterNoarkEntityCreatedEvent(this, documentDescription));
-
-        return documentDescriptionHateoas;
+        return documentDescriptionService.save(documentDescription);
     }
 
     /**
      * Create a CorrespondencePartPerson object and associate it with the
      * identified record
      *
-     * @param systemID           The systemId of the record object you want to
+     * @param systemId           The systemId of the record object you want to
      *                           create an associated correspondencePartPerson for
      * @param correspondencePart The incoming correspondencePartPerson
      * @return The persisted CorrespondencePartPerson object wrapped as a
@@ -212,37 +172,37 @@ public class RecordService
     @Transactional
     public CorrespondencePartPersonHateoas
     createCorrespondencePartPersonAssociatedWithRecord(
-            @NotNull final String systemID,
+            @NotNull final UUID systemId,
             @NotNull final CorrespondencePartPerson correspondencePart) {
         return correspondencePartService.
                 createNewCorrespondencePartPerson(correspondencePart,
-                        getRecordOrThrow(systemID));
+                        getRecordOrThrow(systemId));
     }
 
     @Override
     @Transactional
     public PartPersonHateoas
     createPartPersonAssociatedWithRecord(
-            @NotNull String systemID, @NotNull PartPerson partPerson) {
+            @NotNull final UUID systemId, @NotNull final PartPerson partPerson) {
         return partService.
                 createNewPartPerson(partPerson,
-                        getRecordOrThrow(systemID));
+                        getRecordOrThrow(systemId));
     }
 
     @Override
     @Transactional
     public PartUnitHateoas
     createPartUnitAssociatedWithRecord(
-            @NotNull String systemID, @NotNull PartUnit partUnit) {
+            @NotNull final UUID systemId, @NotNull final PartUnit partUnit) {
         return partService.
-                createNewPartUnit(partUnit, getRecordOrThrow(systemID));
+                createNewPartUnit(partUnit, getRecordOrThrow(systemId));
     }
 
     /**
      * Create a CorrespondencePartInternal object and associate it with the
      * identified record
      *
-     * @param systemID           The systemId of the record object you want to
+     * @param systemId           The systemId of the record object you want to
      *                           create an associated correspondencePartInternal for
      * @param correspondencePart The incoming correspondencePartInternal
      * @return The persisted CorrespondencePartInternal object wrapped as a
@@ -252,17 +212,18 @@ public class RecordService
     @Transactional
     public CorrespondencePartInternalHateoas
     createCorrespondencePartInternalAssociatedWithRecord(
-            String systemID, CorrespondencePartInternal correspondencePart) {
+            @NotNull final UUID systemId,
+            @NotNull final CorrespondencePartInternal correspondencePart) {
         return correspondencePartService.
                 createNewCorrespondencePartInternal(correspondencePart,
-                        getRecordOrThrow(systemID));
+                        getRecordOrThrow(systemId));
     }
 
     /**
      * Create a CorrespondencePartUnit object and associate it with the
      * identified record
      *
-     * @param systemID           The systemId of the record object you want to
+     * @param systemId           The systemId of the record object you want to
      *                           create an associated correspondencePartUnit for
      * @param correspondencePart The incoming correspondencePartUnit
      * @return The persisted CorrespondencePartUnit object wrapped as a
@@ -272,95 +233,101 @@ public class RecordService
     @Transactional
     public CorrespondencePartUnitHateoas
     createCorrespondencePartUnitAssociatedWithRecord(
-            String systemID, CorrespondencePartUnit correspondencePart) {
+            @NotNull final UUID systemId,
+            @NotNull final CorrespondencePartUnit correspondencePart) {
         return correspondencePartService.
                 createNewCorrespondencePartUnit(correspondencePart,
-                        getRecordOrThrow(systemID));
+                        getRecordOrThrow(systemId));
     }
 
     @Override
     @Transactional
     public BuildingHateoas
     createBuildingAssociatedWithRecord(
-            @NotNull String systemID, @NotNull Building building) {
+            @NotNull final UUID systemId, @NotNull final Building building) {
         return nationalIdentifierService.
-                createNewBuilding(building, getRecordOrThrow(systemID));
+                createNewBuilding(building, getRecordOrThrow(systemId));
     }
 
     @Override
     @Transactional
     public CadastralUnitHateoas
     createCadastralUnitAssociatedWithRecord(
-            @NotNull String systemID, @NotNull CadastralUnit cadastralUnit) {
+            @NotNull final UUID systemId,
+            @NotNull final CadastralUnit cadastralUnit) {
         return nationalIdentifierService.
-                createNewCadastralUnit(cadastralUnit, getRecordOrThrow(systemID));
+                createNewCadastralUnit(cadastralUnit, getRecordOrThrow(systemId));
     }
 
     @Override
     @Transactional
     public DNumberHateoas
     createDNumberAssociatedWithRecord(
-            @NotNull String systemID, @NotNull DNumber dNumber) {
+            @NotNull final UUID systemId, @NotNull final DNumber dNumber) {
         return nationalIdentifierService.
-                createNewDNumber(dNumber, getRecordOrThrow(systemID));
+                createNewDNumber(dNumber, getRecordOrThrow(systemId));
     }
 
     @Override
     @Transactional
     public PlanHateoas
     createPlanAssociatedWithRecord(
-            @NotNull String systemID, @NotNull Plan plan) {
+            @NotNull final UUID systemId, @NotNull final Plan plan) {
         return nationalIdentifierService.
-                createNewPlan(plan, getRecordOrThrow(systemID));
+                createNewPlan(plan, getRecordOrThrow(systemId));
     }
 
     @Override
     public PositionHateoas
     createPositionAssociatedWithRecord(
-            @NotNull String systemID, @NotNull Position position) {
+            @NotNull final UUID systemId, @NotNull final Position position) {
         return nationalIdentifierService.
-                createNewPosition(position, getRecordOrThrow(systemID));
+                createNewPosition(position, getRecordOrThrow(systemId));
     }
 
     @Override
     @Transactional
     public SocialSecurityNumberHateoas
     createSocialSecurityNumberAssociatedWithRecord(
-            @NotNull String systemID,
-            @NotNull SocialSecurityNumber socialSecurityNumber) {
+            @NotNull final UUID systemId,
+            @NotNull final SocialSecurityNumber socialSecurityNumber) {
         return nationalIdentifierService
                 .createNewSocialSecurityNumber(socialSecurityNumber,
-                        getRecordOrThrow(systemID));
+                        getRecordOrThrow(systemId));
     }
 
     @Override
     @Transactional
     public UnitHateoas
     createUnitAssociatedWithRecord(
-            @NotNull String systemID, @NotNull Unit unit) {
+            @NotNull final UUID systemId, @NotNull final Unit unit) {
         return nationalIdentifierService.
-                createNewUnit(unit, getRecordOrThrow(systemID));
+                createNewUnit(unit, getRecordOrThrow(systemId));
     }
 
     @Override
     @Transactional
-    public CommentHateoas createCommentAssociatedWithRecord
-            (String systemID, Comment comment) {
+    public CommentHateoas createCommentAssociatedWithRecord(
+            @NotNull final UUID systemId, @NotNull final Comment comment) {
         return commentService.createNewComment
-                (comment, getRecordOrThrow(systemID));
+                (comment, getRecordOrThrow(systemId));
     }
 
     @Override
+    @Transactional
     public KeywordHateoas createKeywordAssociatedWithRecord(
-            UUID systemId, Keyword keyword) {
-        Record record = getRecordOrThrow(systemId.toString());
-        return keywordService.createKeywordAssociatedWithRecord(keyword, record);
+            @NotNull final UUID systemId, @NotNull final Keyword keyword) {
+        return keywordService
+                .createKeywordAssociatedWithRecord(keyword,
+                        getRecordOrThrow(systemId));
     }
 
     @Override
+    @Transactional
     public ScreeningMetadataHateoas createScreeningMetadataAssociatedWithRecord(
-            UUID systemId, Metadata screeningMetadata) {
-        Record record = getRecordOrThrow(systemId.toString());
+            @NotNull final UUID systemId,
+            @NotNull final Metadata screeningMetadata) {
+        Record record = getRecordOrThrow(systemId);
         if (null == record.getReferenceScreening()) {
             throw new NoarkEntityNotFoundException(INFO_CANNOT_FIND_OBJECT +
                     " Screening, associated with Record with systemId " +
@@ -373,7 +340,8 @@ public class RecordService
     @Override
     @Transactional
     public StorageLocationHateoas createStorageLocationAssociatedWithRecord(
-            UUID systemId, StorageLocation storageLocation) {
+            @NotNull final UUID systemId,
+            @NotNull final StorageLocation storageLocation) {
         Record record = getRecordOrThrow(systemId);
         return storageLocationService
                 .createStorageLocationAssociatedWithRecord(
@@ -381,53 +349,50 @@ public class RecordService
     }
 
     @Override
+    @Transactional
     public CrossReferenceHateoas createCrossReferenceAssociatedWithRecord(
             @NotNull final UUID systemId,
-            final CrossReference crossReference) {
+            @NotNull final CrossReference crossReference) {
         return crossReferenceService.createCrossReferenceAssociatedWithRecord(
                 crossReference, getRecordOrThrow(systemId));
     }
 
-    // All READ operations
-
-    public List<Record> findAll() {
-        return recordRepository.findAll();
+    /**
+     * Create a RegistryEntryExpansionHateoas that can be used when expanding a
+     * File to a RegistryEntry. None of the File attributes should be present in
+     * the returned payload. So we have a special approach that can be used to
+     * achieve this.
+     *
+     * @return RegistryEntryExpansionHateoas
+     */
+    @Override
+    public RegistryEntryExpansionHateoas
+    generateDefaultValuesToExpandToRegistryEntry(@NotNull final UUID systemId) {
+        return registryEntryService
+                .generateDefaultExpandedRegistryEntry(systemId);
     }
 
     /**
-     * Retrieve all record associated with the documentDescription identified by
-     * the documentDescriptions systemId.
+     * Create a RecordNoteExpansionHateoas that can be used when expanding a
+     * File to a RecordNote. None of the File attributes should be present in
+     * the returned payload. So we have a special approach that can be used to
+     * achieve this.
      *
-     * @param systemId systemId of the associated documentDescription
-     * @return The list of record packed as a ResponseEntity
+     * @return RecordNoteExpansionHateoas
      */
     @Override
-    @SuppressWarnings("unchecked")
-    public ResponseEntity<RecordHateoas>
-    findByReferenceDocumentDescription(@NotNull final String systemId) {
-        RecordHateoas recordHateoas = new RecordHateoas(
-                (List<INoarkEntity>) (List)
-                        recordRepository.
-                                findAllByReferenceDocumentDescription(
-                                        documentDescriptionService.
-                                                findDocumentDescriptionBySystemId(
-                                                        systemId)));
-        recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .body(recordHateoas);
+    public RecordNoteExpansionHateoas
+    generateDefaultValuesToExpandToRecordNote(@NotNull final UUID systemId) {
+        return recordNoteService.generateDefaultExpandedRecordNote(systemId);
     }
 
+    // All READ operations
+
     @Override
-    @SuppressWarnings("unchecked")
-    public AuthorHateoas findAllAuthorWithRecordBySystemId(String systemId) {
-        Record record = getRecordOrThrow(systemId);
-        AuthorHateoas authorHateoas =
-                new AuthorHateoas((List<INoarkEntity>)
-                        (List) record.getReferenceAuthor());
-        authorHateoasHandler.addLinks(authorHateoas, new Authorisation());
-        setOutgoingRequestHeader(authorHateoas);
-        return authorHateoas;
+    public AuthorHateoas findAllAuthorWithRecordBySystemId(
+            @NotNull final UUID systemId) {
+        getRecordOrThrow(systemId);
+        return (AuthorHateoas) odataService.processODataQueryGet();
     }
 
     /**
@@ -435,20 +400,12 @@ public class RecordService
      * the records systemId.
      *
      * @param systemId systemId of the record
-     * @return The parent File packed as a ResponseEntity
+     * @return The parent File packed as a FileHateoas
      */
     @Override
-    public ResponseEntity<FileHateoas>
-    findFileAssociatedWithRecord(@NotNull final String systemId) {
-        FileHateoas fileHateoas = new FileHateoas(
-                recordRepository.
-                        findBySystemId(
-                                UUID.fromString(systemId)).getReferenceFile());
-        fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(fileHateoas.getEntityVersion().toString())
-                .body(fileHateoas);
+    public FileHateoas
+    findFileAssociatedWithRecord(@NotNull final UUID systemId) {
+        return (FileHateoas) odataService.processODataQueryGet();
     }
 
     /**
@@ -456,20 +413,12 @@ public class RecordService
      * the records systemId.
      *
      * @param systemId systemId of the record
-     * @return The parent Class packed as a ResponseEntity
+     * @return The parent Class packed as a ClassHateoas
      */
     @Override
-    public ResponseEntity<ClassHateoas>
-    findClassAssociatedWithRecord(@NotNull final String systemId) {
-        ClassHateoas classHateoas = new ClassHateoas(
-                recordRepository.findBySystemId(UUID.fromString(systemId)).
-                        getReferenceClass());
-
-        classHateoasHandler.addLinks(classHateoas, new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(classHateoas.getEntityVersion().toString())
-                .body(classHateoas);
+    public ClassHateoas
+    findClassAssociatedWithRecord(@NotNull final UUID systemId) {
+        return (ClassHateoas) odataService.processODataQueryGet();
     }
 
     /**
@@ -477,94 +426,83 @@ public class RecordService
      * the records systemId.
      *
      * @param systemId systemId of the record
-     * @return The parent Series packed as a ResponseEntity
+     * @return The parent Series packed as a SeriesHateoas
      */
     @Override
-    public ResponseEntity<SeriesHateoas>
-    findSeriesAssociatedWithRecord(@NotNull final String systemId) {
-        SeriesHateoas seriesHateoas = new SeriesHateoas(
-                recordRepository.findBySystemId(UUID.fromString(systemId)).
-                        getReferenceSeries());
-
-        seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(seriesHateoas.getEntityVersion().toString())
-                .body(seriesHateoas);
-    }
-
-    public Record findBySystemId(String systemId) {
-        return getRecordOrThrow(systemId);
+    public SeriesHateoas
+    findSeriesAssociatedWithRecord(@NotNull final UUID systemId) {
+        return (SeriesHateoas) odataService.processODataQueryGet();
     }
 
     @Override
-    public List<Record> findByOwnedBy() {
-        return recordRepository.findByOwnedBy(getUser());
+    public RecordHateoas findBySystemId(@NotNull final UUID systemId) {
+        return packAsHateoas(getRecordOrThrow(systemId));
     }
 
+    @Override
+    public RecordHateoas findAll() {
+        return (RecordHateoas) odataService.processODataQueryGet();
+    }
 
     @Override
     public ScreeningMetadataHateoas
-    getScreeningMetadataAssociatedWithRecord(UUID recordSystemId) {
-        Screening screening = getRecordOrThrow(recordSystemId)
+    getScreeningMetadataAssociatedWithRecord(@NotNull final UUID systemId) {
+        Screening screening = getRecordOrThrow(systemId)
                 .getReferenceScreening();
         if (null == screening) {
             throw new NoarkEntityNotFoundException(
                     INFO_CANNOT_FIND_OBJECT + " Screening, using systemId " +
-                            recordSystemId);
+                            systemId);
         }
-        Set<ScreeningMetadataLocal> screeningMetadata =
-                screening.getReferenceScreeningMetadata();
-        ScreeningMetadataHateoas screeningMetadataHateoas =
-                new ScreeningMetadataHateoas(copyOf(screeningMetadata));
-        screeningMetadataHateoasHandler.addLinks(screeningMetadataHateoas,
-                new Authorisation());
-        return screeningMetadataHateoas;
+        if (null == screening) {
+            throw new NoarkEntityNotFoundException(
+                    INFO_CANNOT_FIND_OBJECT + " Screening, using systemId " +
+                            systemId);
+        }
+        NikitaPage page = new
+                NikitaPage(copyOf(screening.getReferenceScreeningMetadata()));
+        return new ScreeningMetadataHateoas(page);
     }
 
     @Override
     public CommentHateoas getCommentAssociatedWithRecord(
-            @NotNull final String systemID) {
-        CommentHateoas commentHateoas =
-                new CommentHateoas(List.copyOf(
-                        getRecordOrThrow(systemID).getReferenceComment()));
-        commentHateoasHandler.addLinks(commentHateoas, new Authorisation());
-        return commentHateoas;
+            @NotNull final UUID systemId) {
+        // Make sure the record exists
+        getRecordOrThrow(systemId);
+        return (CommentHateoas) odataService.processODataQueryGet();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    public DocumentDescriptionHateoas
+    getDocumentDescriptionAssociatedWithRecord(@NotNull final UUID systemId) {
+        // Make sure the record exists
+        getRecordOrThrow(systemId);
+        return (DocumentDescriptionHateoas) odataService.processODataQueryGet();
+    }
+
+    @Override
     public CorrespondencePartHateoas
     getCorrespondencePartAssociatedWithRecord(
-            final String systemID) {
-        CorrespondencePartHateoas correspondencePartHateoas =
-            new CorrespondencePartHateoas(
-                (List<INoarkEntity>) (List) getRecordOrThrow(systemID).
-                        getReferenceCorrespondencePart());
-        correspondencePartHateoasHandler.addLinks(
-                correspondencePartHateoas, new Authorisation());
-        return correspondencePartHateoas;
+            @NotNull final UUID systemId) {
+        // Make sure the record exists
+        getRecordOrThrow(systemId);
+        return (CorrespondencePartHateoas) odataService.processODataQueryGet();
     }
 
     @Override
     public PartHateoas
-    getPartAssociatedWithRecord(final String systemID) {
-        PartHateoas partHateoas = new PartHateoas(List.copyOf(
-                getRecordOrThrow(systemID).getReferencePart()));
-        partHateoasHandler.addLinks(partHateoas, new Authorisation());
-        return partHateoas;
+    getPartAssociatedWithRecord(@NotNull final UUID systemId) {
+        // Make sure the record exists
+        getRecordOrThrow(systemId);
+        return (PartHateoas) odataService.processODataQueryGet();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public NationalIdentifierHateoas getNationalIdentifierAssociatedWithRecord(
-            @NotNull final String systemID) {
-        NationalIdentifierHateoas niHateoas = new NationalIdentifierHateoas(
-                (List<INoarkEntity>) (List) getRecordOrThrow(systemID).
-                        getReferenceNationalIdentifier());
-        nationalIdentifierHateoasHandler
-            .addLinks(niHateoas, new Authorisation());
-        return niHateoas;
+            @NotNull final UUID systemId) {
+        // Make sure the record exists
+        getRecordOrThrow(systemId);
+        return (NationalIdentifierHateoas) odataService.processODataQueryGet();
     }
 
     /**
@@ -576,7 +514,7 @@ public class RecordService
      * @return BSMMetadata object corresponding to the name
      */
     @Override
-    protected Optional<BSMMetadata> findBSMByName(String name) {
+    protected Optional<BSMMetadata> findBSMByName(@NotNull final String name) {
         return bsmService.findBSMByName(name);
     }
 
@@ -603,18 +541,18 @@ public class RecordService
      * fields that are updatable. It's also unclear how to set the archivedBy
      * value.
      *
-     * @param recordSystemId The systemId of the record object to retrieve
+     * @param systemId       The systemId of the record object to retrieve
      * @param version        The last known version number (derived from an ETAG)
      * @param incomingRecord The incoming record object
      * @return The updatedRecord after it is persisted
      */
     @Override
     @Transactional
-    public Record handleUpdate(@NotNull final String recordSystemId,
-                               @NotNull final Long version,
-                               @NotNull final Record incomingRecord) {
+    public RecordHateoas handleUpdate(@NotNull final UUID systemId,
+                                      @NotNull final Long version,
+                                      @NotNull final Record incomingRecord) {
         bsmService.validateBSMList(incomingRecord.getReferenceBSMBase());
-        Record existingRecord = getRecordOrThrow(recordSystemId);
+        Record existingRecord = getRecordOrThrow(systemId);
         // Here copy all the values you are allowed to copy ....
         updateTitleAndDescription(incomingRecord, existingRecord);
         if (null != incomingRecord.getDocumentMedium()) {
@@ -624,23 +562,15 @@ public class RecordService
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
         existingRecord.setVersion(version);
-        recordRepository.save(existingRecord);
-        return existingRecord;
+        return packAsHateoas(existingRecord);
     }
 
     @Override
     @Transactional
-    public ResponseEntity<RecordHateoas> handleUpdate(
-            UUID systemID, PatchObjects patchObjects) {
-        Record record = (Record) handlePatch(systemID, patchObjects);
-        RecordHateoas recordHateoas = new RecordHateoas(record);
-        recordHateoasHandler.addLinks(recordHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityUpdatedEvent(this, record));
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(recordHateoas.getEntityVersion().toString())
-                .body(recordHateoas);
+    public RecordHateoas handleUpdate(
+            @NotNull final UUID systemId,
+            @NotNull final PatchObjects patchObjects) {
+        return packAsHateoas((Record) handlePatch(systemId, patchObjects));
     }
 
     /**
@@ -654,15 +584,16 @@ public class RecordService
     @Override
     @Transactional
     public AuthorHateoas associateAuthorWithRecord(
-            String systemId, Author author) {
+            @NotNull final UUID systemId,
+            @NotNull final Author author) {
         return authorService.associateAuthorWithRecord
                 (author, getRecordOrThrow(systemId));
     }
 
     @Override
     @Transactional
-    public Object associateBSM(@NotNull UUID systemId,
-                               @NotNull List<BSMBase> bsm) {
+    public Object associateBSM(@NotNull final UUID systemId,
+                               @NotNull final List<BSMBase> bsm) {
         Record record = getRecordOrThrow(systemId);
         record.addReferenceBSMBase(bsm);
         return record;
@@ -672,8 +603,8 @@ public class RecordService
 
     @Override
     @Transactional
-    public void deleteRecord(@NotNull UUID systemID) {
-        Record record = getRecordOrThrow(systemID);
+    public void deleteRecord(@NotNull final UUID systemId) {
+        Record record = getRecordOrThrow(systemId);
         recordRepository.delete(record);
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityDeletedEvent(this, record));
@@ -681,13 +612,11 @@ public class RecordService
 
     /**
      * Delete all objects belonging to the user identified by ownedBy
-     *
-     * @return the number of objects deleted
      */
     @Override
     @Transactional
-    public long deleteAllByOwnedBy() {
-        return recordRepository.deleteByOwnedBy(getUser());
+    public void deleteAllByOwnedBy() {
+        recordRepository.deleteByOwnedBy(getUser());
     }
 
     // All template methods
@@ -704,31 +633,30 @@ public class RecordService
      * CorrespondencePartUnitHateoas object
      */
     @Override
-    public RecordHateoas
-    generateDefaultRecord() {
+    public RecordHateoas generateDefaultRecord(@NotNull final UUID systemId) {
         Record defaultRecord = new Record();
         defaultRecord.setArchivedBy(TEST_USER_CASE_HANDLER_2);
         defaultRecord.setArchivedDate(now());
         defaultRecord.setTitle(TEST_TITLE);
         defaultRecord.setDescription(TEST_DESCRIPTION);
-        RecordHateoas recordHateoas = new RecordHateoas(defaultRecord);
-        recordHateoasHandler.addLinksOnTemplate(recordHateoas, new Authorisation());
-        return recordHateoas;
+        defaultRecord.setVersion(-1L, true);
+        return packAsHateoas(defaultRecord);
     }
 
     @Override
-    public ScreeningMetadataHateoas getDefaultScreeningMetadata(UUID systemId) {
+    public ScreeningMetadataHateoas getDefaultScreeningMetadata(
+            @NotNull final UUID systemId) {
         return screeningMetadataService.getDefaultScreeningMetadata(systemId);
     }
 
     @Override
-    public KeywordHateoas generateDefaultKeyword() {
-        return keywordService.generateDefaultKeyword();
+    public KeywordHateoas generateDefaultKeyword(@NotNull final UUID systemId) {
+        return keywordService.generateDefaultKeyword(systemId);
     }
 
     @Override
-    public CommentHateoas generateDefaultComment() {
-        return commentService.generateDefaultComment();
+    public CommentHateoas generateDefaultComment(@NotNull final UUID systemId) {
+        return commentService.generateDefaultComment(systemId);
     }
 
     /**
@@ -739,17 +667,16 @@ public class RecordService
      * user and the business area they are working with. A generic Noark core
      * like this does not have scope for that kind of functionality.
      *
-     * @param recordSystemId The systemId of the record object
-     *                       you wish to create a templated object for
+     * @param systemId The systemId of the record object
+     *                 you wish to create a templated object for
      * @return the CorrespondencePartUnit object wrapped as a
      * CorrespondencePartUnitHateoas object
      */
     @Override
     public CorrespondencePartInternalHateoas
-    generateDefaultCorrespondencePartInternal(
-            String recordSystemId) {
+    generateDefaultCorrespondencePartInternal(@NotNull final UUID systemId) {
         return correspondencePartService.
-                generateDefaultCorrespondencePartInternal(recordSystemId);
+                generateDefaultCorrespondencePartInternal(systemId);
     }
 
     /**
@@ -760,17 +687,16 @@ public class RecordService
      * user and the business area they are working with. A generic Noark core
      * like this does not have scope for that kind of functionality.
      *
-     * @param recordSystemId The systemId of the record object
-     *                       you wish to create a templated object for
+     * @param systemId The systemId of the record object
+     *                 you wish to create a templated object for
      * @return the CorrespondencePartUnit object wrapped as a
      * CorrespondencePartUnitHateoas object
      */
     @Override
     public CorrespondencePartPersonHateoas
-    generateDefaultCorrespondencePartPerson(
-            String recordSystemId) {
+    generateDefaultCorrespondencePartPerson(@NotNull final UUID systemId) {
         return correspondencePartService.
-                generateDefaultCorrespondencePartPerson(recordSystemId);
+                generateDefaultCorrespondencePartPerson(systemId);
     }
 
     /**
@@ -781,16 +707,15 @@ public class RecordService
      * user and the business area they are working with. A generic Noark core
      * like this does not have scope for that kind of functionality.
      *
-     * @param recordSystemId The systemId of the record object
-     *                       you wish to create a templated object for
+     * @param systemId The systemId of the record object
+     *                 you wish to create a templated object for
      * @return the PartUnit object wrapped as a
      * PartUnitHateoas object
      */
     @Override
     public PartPersonHateoas
-    generateDefaultPartPerson(
-            String recordSystemId) {
-        return partService.generateDefaultPartPerson(recordSystemId);
+    generateDefaultPartPerson(@NotNull final UUID systemId) {
+        return partService.generateDefaultPartPerson(systemId);
     }
 
     /**
@@ -801,16 +726,16 @@ public class RecordService
      * user and the business area they are working with. A generic Noark core
      * like this does not have scope for that kind of functionality.
      *
-     * @param recordSystemId The systemId of the record object
-     *                       you wish to create a templated object for
+     * @param systemId The systemId of the record object
+     *                 you wish to create a templated object for
      * @return the PartUnit object wrapped as a
      * PartUnitHateoas object
      */
     @Override
     public PartUnitHateoas
     generateDefaultPartUnit(
-            String recordSystemId) {
-        return partService.generateDefaultPartUnit(recordSystemId);
+            UUID systemId) {
+        return partService.generateDefaultPartUnit(systemId);
     }
 
     /**
@@ -821,82 +746,81 @@ public class RecordService
      * user and the business area they are working with. A generic Noark core
      * like this does not have scope for that kind of functionality.
      *
-     * @param recordSystemId The systemId of the record object
-     *                       you wish to create a templated object for
+     * @param systemId The systemId of the record object
+     *                 you wish to create a templated object for
      * @return the CorrespondencePartUnit object wrapped as a
      * CorrespondencePartUnitHateoas object
      */
     @Override
     public CorrespondencePartUnitHateoas generateDefaultCorrespondencePartUnit(
-            String recordSystemId) {
+            @NotNull final UUID systemId) {
         return correspondencePartService.
-                generateDefaultCorrespondencePartUnit(
-                        recordSystemId);
+                generateDefaultCorrespondencePartUnit(systemId);
     }
 
     @Override
-    public AuthorHateoas generateDefaultAuthor(String systemID) {
-        return authorService.generateDefaultAuthor();
+    public AuthorHateoas generateDefaultAuthor(@NotNull final UUID systemId) {
+        return authorService.generateDefaultAuthor(systemId);
     }
 
     @Override
-    public BuildingHateoas generateDefaultBuilding() {
-        return nationalIdentifierService.generateDefaultBuilding();
+    public BuildingHateoas generateDefaultBuilding(
+            @NotNull final UUID systemId) {
+        return nationalIdentifierService.generateDefaultBuilding(systemId);
     }
 
     @Override
-    public CadastralUnitHateoas generateDefaultCadastralUnit() {
-        return nationalIdentifierService.generateDefaultCadastralUnit();
+    public CadastralUnitHateoas generateDefaultCadastralUnit(
+            @NotNull final UUID systemId) {
+        return nationalIdentifierService.generateDefaultCadastralUnit(systemId);
     }
 
     @Override
-    public DNumberHateoas generateDefaultDNumber() {
-        return nationalIdentifierService.generateDefaultDNumber();
+    public DNumberHateoas generateDefaultDNumber(@NotNull final UUID systemId) {
+        return nationalIdentifierService.generateDefaultDNumber(systemId);
     }
 
     @Override
-    public PlanHateoas generateDefaultPlan() {
-        return nationalIdentifierService.generateDefaultPlan();
+    public PlanHateoas generateDefaultPlan(@NotNull final UUID systemId) {
+        return nationalIdentifierService.generateDefaultPlan(systemId);
     }
 
     @Override
-    public PositionHateoas generateDefaultPosition() {
-        return nationalIdentifierService.generateDefaultPosition();
+    public PositionHateoas generateDefaultPosition(
+            @NotNull final UUID systemId) {
+        return nationalIdentifierService.generateDefaultPosition(systemId);
     }
 
     @Override
-    public SocialSecurityNumberHateoas generateDefaultSocialSecurityNumber() {
-        return nationalIdentifierService.generateDefaultSocialSecurityNumber();
+    public SocialSecurityNumberHateoas generateDefaultSocialSecurityNumber(
+            @NotNull final UUID systemId) {
+        return nationalIdentifierService
+                .generateDefaultSocialSecurityNumber(systemId);
     }
 
     @Override
-    public UnitHateoas generateDefaultUnit() {
-        return nationalIdentifierService.generateDefaultUnit();
+    public UnitHateoas generateDefaultUnit(@NotNull final UUID systemId) {
+        return nationalIdentifierService.generateDefaultUnit(systemId);
     }
 
     @Override
-    public StorageLocationHateoas getDefaultStorageLocation(UUID systemId) {
+    public StorageLocationHateoas getDefaultStorageLocation(
+            @NotNull final UUID systemId) {
         return storageLocationService.getDefaultStorageLocation(systemId);
     }
 
     @Override
-    public CrossReferenceHateoas getDefaultCrossReference() {
-        return crossReferenceService.getDefaultCrossReference();
+    public CrossReferenceHateoas getDefaultCrossReference(
+            @NotNull final UUID systemId) {
+        return crossReferenceService.getDefaultCrossReference(systemId);
     }
 
     // All HELPER operations
 
-    /**
-     * Internal helper method. Rather than having a find and try catch in
-     * multiple methods, we have it here once. If you call this, be aware
-     * that you will only ever get a valid Record back. If there is no valid
-     * Record, an exception is thrown
-     *
-     * @param systemID the systemId of the record you want to retrieve
-     * @return the record
-     */
-    protected Record getRecordOrThrow(@NotNull String systemID) {
-        return getRecordOrThrow(UUID.fromString(systemID));
+    public RecordHateoas packAsHateoas(@NotNull final Record record) {
+        RecordHateoas recordHateoas = new RecordHateoas(record);
+        applyLinksAndHeader(recordHateoas, recordHateoasHandler);
+        return recordHateoas;
     }
 
     /**
@@ -905,15 +829,15 @@ public class RecordService
      * that you will only ever get a valid Record back. If there is no valid
      * Record, an exception is thrown
      *
-     * @param systemID the systemId of the record you want to retrieve
+     * @param systemId the systemId of the record you want to retrieve
      * @return the record
      */
-    protected Record getRecordOrThrow(@NotNull UUID systemID) {
+    protected Record getRecordOrThrow(@NotNull final UUID systemId) {
         Record record =
-                recordRepository.findBySystemId(systemID);
+                recordRepository.findBySystemId(systemId);
         if (record == null) {
             String info = INFO_CANNOT_FIND_OBJECT +
-                    " Record, using systemId " + systemID;
+                    " Record, using systemId " + systemId;
             logger.info(info);
             throw new NoarkEntityNotFoundException(info);
         }

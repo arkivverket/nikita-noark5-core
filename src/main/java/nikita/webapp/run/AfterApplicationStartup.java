@@ -1,5 +1,6 @@
 package nikita.webapp.run;
 
+import nikita.webapp.util.DomainModelMapper;
 import nikita.webapp.util.InternalNameTranslator;
 import nikita.webapp.util.MetadataInsert;
 import nikita.webapp.util.UserStartupImport;
@@ -47,6 +48,7 @@ public class AfterApplicationStartup {
     private final RequestMappingHandlerMapping handlerMapping;
     private final ApplicationContext applicationContext;
     private final InternalNameTranslator internalNameTranslator;
+    private final DomainModelMapper domainModelMapper;
     private final UserStartupImport userStartupImport;
     private final MetadataInsert metadataInsert;
 
@@ -68,12 +70,14 @@ public class AfterApplicationStartup {
                                    UserStartupImport userStartupImport,
                                    MetadataInsert metadataInsert,
                                    ApplicationContext applicationContext,
-                                   InternalNameTranslator internalNameTranslator) {
+                                   InternalNameTranslator internalNameTranslator,
+                                   DomainModelMapper domainModelMapper) {
         this.handlerMapping = handlerMapping;
         this.userStartupImport = userStartupImport;
         this.metadataInsert = metadataInsert;
         this.applicationContext = applicationContext;
         this.internalNameTranslator = internalNameTranslator;
+        this.domainModelMapper = domainModelMapper;
     }
 
     /**
@@ -86,10 +90,12 @@ public class AfterApplicationStartup {
     public void afterApplicationStarts() {
         mapEndpointsWithHttpMethods();
         mapProductionToArchiveMimeTypes();
+        mapDomainModelClasses();
         populateTranslatedNames();
         setDefaultMimeTypesAsConvertible();
 
         metadataInsert.populateMetadataEntities();
+
         if (createDirectoryStore) {
             createDirectoryStoreIfNotExists();
         }
@@ -100,6 +106,10 @@ public class AfterApplicationStartup {
             userStartupImport.addUserAdmin();
             userStartupImport.addUserRecordKeeper();
         }
+    }
+
+    private void mapDomainModelClasses() {
+        domainModelMapper.mapDomainModelClasses();
     }
 
     private void populateTranslatedNames() {
@@ -178,7 +188,7 @@ public class AfterApplicationStartup {
                 handlerMapping.getHandlerMethods().entrySet()) {
 
             RequestMappingInfo requestMappingInfo = entry.getKey();
-            // Assuming there is always a non-null value
+            assert requestMappingInfo.getPatternsCondition() != null;
             String servletPaths = requestMappingInfo.getPatternsCondition().toString();
             // Typically the servletPaths looks like [ /api/arkivstruktur/arkiv ]
             // If it contains two more it looks like
@@ -206,34 +216,30 @@ public class AfterApplicationStartup {
                     }
 
                     Set<RequestMethod> httpMethodRequests = requestMappingInfo.getMethodsCondition().getMethods();
-                    if (null != httpMethodRequests) {
-                        // RequestMethod and HTTPMethod are different types, have to convert them here
-                        Set<HttpMethod> httpMethods = new TreeSet<>();
-                        for (RequestMethod requestMethod : httpMethodRequests) {
-                            if (requestMethod.equals(RequestMethod.GET)) {
-                                httpMethods.add(GET);
-                            } else if (requestMethod.equals(RequestMethod.DELETE)) {
-                                httpMethods.add(DELETE);
-                            } else if (requestMethod.equals(RequestMethod.OPTIONS)) {
-                                httpMethods.add(OPTIONS);
-                            } else if (requestMethod.equals(RequestMethod.HEAD)) {
-                                httpMethods.add(HEAD);
-                            } else if (requestMethod.equals(RequestMethod.PATCH)) {
-                                httpMethods.add(PATCH);
-                            } else if (requestMethod.equals(RequestMethod.POST)) {
-                                httpMethods.add(POST);
-                            } else if (requestMethod.equals(RequestMethod.PUT)) {
-                                httpMethods.add(PUT);
-                            } else if (requestMethod.equals(RequestMethod
-                                    .TRACE)) {
-                                httpMethods.add(TRACE);
-                            }
+                    // RequestMethod and HTTPMethod are different types, have to convert them here
+                    Set<HttpMethod> httpMethods = new TreeSet<>();
+                    for (RequestMethod requestMethod : httpMethodRequests) {
+                        if (requestMethod.equals(RequestMethod.GET)) {
+                            httpMethods.add(GET);
+                        } else if (requestMethod.equals(RequestMethod.DELETE)) {
+                            httpMethods.add(DELETE);
+                        } else if (requestMethod.equals(RequestMethod.OPTIONS)) {
+                            httpMethods.add(OPTIONS);
+                        } else if (requestMethod.equals(RequestMethod.HEAD)) {
+                            httpMethods.add(HEAD);
+                        } else if (requestMethod.equals(RequestMethod.PATCH)) {
+                            httpMethods.add(PATCH);
+                        } else if (requestMethod.equals(RequestMethod.POST)) {
+                            httpMethods.add(POST);
+                        } else if (requestMethod.equals(RequestMethod.PUT)) {
+                            httpMethods.add(PUT);
+                        } else if (requestMethod.equals(RequestMethod
+                                .TRACE)) {
+                            httpMethods.add(TRACE);
                         }
-                        logger.info("Adding " + servletPath + " methods " + httpMethods);
-                        addRequestToMethodMap(servletPath, httpMethods);
-                    } else {
-                        logger.warn("Missing HTTP Methods for the following servletPath [" + servletPath + "]");
                     }
+                    logger.info("Adding " + servletPath + " methods " + httpMethods);
+                    addRequestToMethodMap(servletPath, httpMethods);
                 }
             }
         }

@@ -11,64 +11,68 @@ import nikita.common.model.noark5.v5.hateoas.secondary.ScreeningMetadataHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.StorageLocationHateoas;
 import nikita.common.model.noark5.v5.metadata.Metadata;
 import nikita.common.model.noark5.v5.secondary.StorageLocation;
-import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 public interface ISeriesService {
 
-
     // -- All CREATE operations
-    Series save(Series series);
+    SeriesHateoas save(@NotNull final Series series);
 
     StorageLocationHateoas createStorageLocationAssociatedWithSeries(
-            @NotNull final UUID seriesSystemId,
+            @NotNull final UUID systemId,
             @NotNull final StorageLocation storageLocation);
 
-    File createFileAssociatedWithSeries(String seriesSystemId, File file);
+    FileHateoas createFileAssociatedWithSeries(
+            @NotNull final UUID systemId,
+            @NotNull final File file);
 
-    CaseFile createCaseFileAssociatedWithSeries(String seriesSystemId,
-                                                CaseFile caseFile);
+    CaseFileHateoas createCaseFileAssociatedWithSeries(
+            @NotNull final UUID systemId,
+            @NotNull final CaseFile caseFile);
 
     ClassificationSystemHateoas createClassificationSystem(
-            String systemId,
-            ClassificationSystem classificationSystem);
+            @NotNull final UUID systemId,
+            @NotNull final ClassificationSystem classificationSystem);
 
-    void checkSeriesStatusUponCreation(Series series);
+    void checkSeriesStatusUponCreation(@NotNull final Series series);
 
     // -- All READ operations
-    ResponseEntity<SeriesHateoas> findAll();
+    SeriesHateoas findAll();
 
-    ResponseEntity<CaseFileHateoas>
-    findCaseFilesBySeries(@NotNull String systemId);
+    CaseFileHateoas
+    findCaseFilesBySeries(
+            @NotNull final UUID systemId);
 
     // systemId
-    ResponseEntity<SeriesHateoas> findBySystemId(@NotNull String systemId);
+    SeriesHateoas findBySystemId(
+            @NotNull final UUID systemId);
 
-    ResponseEntity<RecordHateoas> findAllRecordAssociatedWithSeries(
-            String systemId);
+    RecordHateoas findAllRecordAssociatedWithSeries(
+            @NotNull final UUID systemId);
 
-    ResponseEntity<FileHateoas> findAllFileAssociatedWithSeries(
-            String systemId);
+    FileHateoas findAllFileAssociatedWithSeries(
+            @NotNull final UUID systemId);
 
-    ResponseEntity<ClassificationSystemHateoas>
-    findClassificationSystemAssociatedWithSeries(String systemId);
+    ClassificationSystemHateoas
+    findClassificationSystemAssociatedWithSeries(
+            @NotNull final UUID systemId);
 
-    ResponseEntity<FondsHateoas> findFondsAssociatedWithSeries(
-            @NotNull final String systemId);
+    FondsHateoas findFondsAssociatedWithSeries(
+            @NotNull final UUID systemId);
 
     // All UPDATE operations
-    Series handleUpdate(@NotNull final String systemId,
-                        @NotNull final Long version,
-                        @NotNull final Series incomingSeries);
+    SeriesHateoas handleUpdate(@NotNull final UUID systemId,
+                               @NotNull final Long version,
+                               @NotNull final Series incomingSeries);
 
-    void updateSeriesReferences(Series series);
+    void updateSeriesReferences(@NotNull final Series series);
 
     // All DELETE operations
-    void deleteEntity(@NotNull String systemId);
+    void deleteEntity(@NotNull final UUID systemId);
 
-    long deleteAllByOwnedBy();
+    void deleteAllByOwnedBy();
 
     ScreeningMetadataHateoas getScreeningMetadataAssociatedWithSeries(
             @NotNull final UUID systemId);
@@ -78,8 +82,10 @@ public interface ISeriesService {
             @NotNull final Metadata screeningMetadata);
 
     ScreeningMetadataHateoas getDefaultScreeningMetadata(
-            @NotNull final UUID systemID);
+            @NotNull final UUID systemId);
 
     StorageLocationHateoas getDefaultStorageLocation(
-            @NotNull final UUID systemID);
+            @NotNull final UUID systemId);
+
+    SeriesHateoas generateDefaultSeries(@NotNull final UUID systemId);
 }

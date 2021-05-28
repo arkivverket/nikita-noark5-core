@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import nikita.common.model.noark5.v5.interfaces.entities.IMetadataEntity;
 import nikita.common.model.noark5.v5.metadata.Country;
 import nikita.common.model.noark5.v5.nationalidentifier.Plan;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
@@ -15,14 +14,13 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static nikita.common.config.ErrorMessagesConstants.MALFORMED_PAYLOAD;
 import static nikita.common.config.HATEOASConstants.LINKS;
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.Hateoas.Deserialize.checkNodeObjectEmpty;
-import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserialiseMetadataValue;
-import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserialiseNoarkSystemIdEntity;
+import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 
 public class PlanDeserializer
-        extends JsonDeserializer {
+        extends JsonDeserializer<Plan> {
 
     private static final Logger logger =
             LoggerFactory.getLogger(PlanDeserializer.class);
@@ -39,7 +37,7 @@ public class PlanDeserializer
         ObjectNode objectNode = mapper.readTree(jsonParser);
 
         // Deserialize systemID
-        deserialiseNoarkSystemIdEntity(plan, objectNode, errors);
+        deserialiseNoarkSystemIdEntity(plan, objectNode);
 
         // Deserialize kommunenummer
         JsonNode currentNode = objectNode.get(MUNICIPALITY_NUMBER);
@@ -81,11 +79,8 @@ public class PlanDeserializer
         // Check that there are no additional values left after processing the
         // tree. If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {
-            errors.append("The plan you tried to create is malformed. The");
-            errors.append(" following fields are not recognised as plan ");
-            errors.append(" fields [");
-            errors.append(checkNodeObjectEmpty(objectNode));
-            errors.append("]. ");
+            errors.append(String.format(MALFORMED_PAYLOAD,
+                    PLAN, checkNodeObjectEmpty(objectNode)));
         }
         if (0 < errors.length())
             throw new NikitaMalformedInputDataException(errors.toString());

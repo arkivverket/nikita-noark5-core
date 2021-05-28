@@ -13,21 +13,16 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static nikita.common.config.ErrorMessagesConstants.MALFORMED_PAYLOAD;
 import static nikita.common.config.HATEOASConstants.LINKS;
-import static nikita.common.util.CommonUtils.Hateoas.Deserialize.checkNodeObjectEmpty;
-import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserialiseClassificationSystemType;
-import static nikita.common.util.CommonUtils.Hateoas.Deserialize.deserialiseNoarkGeneralEntity;
+import static nikita.common.config.N5ResourceMappings.CLASSIFICATION_SYSTEM;
+import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 
 /**
- * Created by tsodring on 1/6/17.
- * <p>
  * Deserialise an incoming ClassificationSystem JSON object.
- *
- * Note:
- * - Unknown property values in the JSON will trigger an exception
- * - Missing obligatory property values in the JSON will trigger an exception
  */
-public class ClassificationSystemDeserializer extends JsonDeserializer {
+public class ClassificationSystemDeserializer
+        extends JsonDeserializer<ClassificationSystem> {
 
     private static final Logger logger =
             LoggerFactory.getLogger(ClassificationSystemDeserializer.class);
@@ -58,10 +53,8 @@ public class ClassificationSystemDeserializer extends JsonDeserializer {
         // Check that there are no additional values left after processing the tree
         // If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {
-            errors.append("The klassifikasjonssystem you tried to create is " +
-                          "malformed. The following fields are not recognised " +
-                          "as klassifikasjonssystem fields " +
-                          "[" + checkNodeObjectEmpty(objectNode) + "].");
+            errors.append(String.format(MALFORMED_PAYLOAD,
+                    CLASSIFICATION_SYSTEM, checkNodeObjectEmpty(objectNode)));
         }
 
         if (0 < errors.length())

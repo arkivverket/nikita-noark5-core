@@ -11,28 +11,19 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RecordNoteHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.PrecedenceHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.secondary.Precedence;
 import nikita.common.util.exceptions.NikitaException;
-import nikita.common.util.exceptions.NoarkEntityNotFoundException;
-import nikita.webapp.hateoas.interfaces.ICaseFileHateoasHandler;
-import nikita.webapp.hateoas.interfaces.IRegistryEntryHateoasHandler;
-import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.ICaseFileService;
 import nikita.webapp.web.controller.hateoas.NoarkController;
-import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
-import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.*;
 
@@ -43,19 +34,10 @@ public class CaseFileHateoasController
         extends NoarkController {
 
     private final ICaseFileService caseFileService;
-    private final ICaseFileHateoasHandler caseFileHateoasHandler;
-    private final IRegistryEntryHateoasHandler registryEntryHateoasHandler;
-    private final ApplicationEventPublisher applicationEventPublisher;
 
     public CaseFileHateoasController(
-            ICaseFileService caseFileService,
-            ICaseFileHateoasHandler caseFileHateoasHandler,
-            IRegistryEntryHateoasHandler registryEntryHateoasHandler,
-            ApplicationEventPublisher applicationEventPublisher) {
+            ICaseFileService caseFileService) {
         this.caseFileService = caseFileService;
-        this.caseFileHateoasHandler = caseFileHateoasHandler;
-        this.registryEntryHateoasHandler = registryEntryHateoasHandler;
-        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     // API - All POST Requests (CRUD - CREATE)
@@ -92,12 +74,14 @@ public class CaseFileHateoasController
                     description = "systemID of CaseFile to associate the " +
                             "CaseFile with",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID,
+            @PathVariable(SYSTEM_ID) final UUID systemID,
             @Parameter(name = "CaseFile",
                     description = "Incoming caseFile object",
                     required = true)
             @RequestBody CaseFile caseFile) {
-        return caseFileService.createCaseFileToCaseFile(systemID, caseFile);
+        return ResponseEntity.status(CREATED)
+                .body(caseFileService
+                        .createCaseFileToCaseFile(systemID, caseFile));
     }
 
     // Create a CaseFile entity
@@ -133,12 +117,14 @@ public class CaseFileHateoasController
                     description = "systemID of file to associate the " +
                             "recordNote with",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID,
+            @PathVariable(SYSTEM_ID) final UUID systemID,
             @Parameter(name = "RecordNote",
                     description = "Incoming recordNote object",
                     required = true)
             @RequestBody RecordNote recordNote) {
-        return caseFileService.createRecordNoteToCaseFile(systemID, recordNote);
+        return ResponseEntity.status(CREATED)
+                .body(caseFileService.createRecordNoteToCaseFile(
+                        systemID, recordNote));
     }
 
     // Create a RegistryEntry entity
@@ -178,30 +164,19 @@ public class CaseFileHateoasController
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<RegistryEntryHateoas>
     createRegistryEntryAssociatedWithFile(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of file to associate the record " +
                             "with",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID,
+            @PathVariable(SYSTEM_ID) final UUID systemID,
             @Parameter(name = "RegistryEntry",
                     description = "Incoming registryEntry object",
                     required = true)
             @RequestBody RegistryEntry registryEntry) {
-        RegistryEntry createdRegistryEntry =
-                caseFileService.
-                        createRegistryEntryAssociatedWithCaseFile(systemID,
-                                registryEntry);
-        RegistryEntryHateoas registryEntryHateoas =
-                new RegistryEntryHateoas(createdRegistryEntry);
-        registryEntryHateoasHandler
-                .addLinks(registryEntryHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityCreatedEvent(this, createdRegistryEntry));
         return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(createdRegistryEntry.getVersion().toString())
-                .body(registryEntryHateoas);
+                .body(caseFileService.
+                        createRegistryEntryAssociatedWithCaseFile(systemID,
+                                registryEntry));
     }
 
     // POST [contextPath][api]/sakarkiv/saksmappe/{systemId}/ny-presedens
@@ -244,7 +219,7 @@ public class CaseFileHateoasController
                     description = "systemID of file to associate the " +
                             "Precedence with.",
                     required = true)
-            @PathVariable(SYSTEM_ID) String systemID,
+            @PathVariable(SYSTEM_ID) UUID systemID,
             @Parameter(name = "Precedence",
                     description = "Incoming Precedence object",
                     required = true)
@@ -280,8 +255,9 @@ public class CaseFileHateoasController
                     description = "systemID of the caseFile to retrieve a " +
                             "template RegistryEntry",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
-        return caseFileService.generateDefaultRegistryEntry(systemID);
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        return ResponseEntity.status(OK)
+                .body(caseFileService.generateDefaultRegistryEntry(systemID));
     }
 
     // Create a RecordNote object with default values
@@ -307,8 +283,9 @@ public class CaseFileHateoasController
                     description = "systemID of the caseFile to retrieve a " +
                             "template RecordNote",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
-        return caseFileService.generateDefaultRecordNote(systemID);
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        return ResponseEntity.status(OK)
+                .body(caseFileService.generateDefaultRecordNote(systemID));
     }
 
     // Retrieve a single casefile identified by systemId
@@ -330,22 +307,12 @@ public class CaseFileHateoasController
 
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<CaseFileHateoas> findOneCaseFileBySystemId(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the caseFile to retrieve",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String caseFileSystemId) {
-        CaseFile caseFile = caseFileService.findBySystemId(caseFileSystemId);
-        if (caseFile == null) {
-            throw new NoarkEntityNotFoundException(caseFileSystemId);
-        }
-        CaseFileHateoas caseFileHateoas = new
-                CaseFileHateoas(caseFile);
-        caseFileHateoasHandler.addLinks(caseFileHateoas, new Authorisation());
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(caseFile.getVersion().toString())
-                .body(caseFileHateoas);
+                .body(caseFileService.findBySystemId(systemID));
     }
 
     // Retrieve all RegistryEntry associated with a casefile identified by
@@ -372,8 +339,9 @@ public class CaseFileHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the caseFile to retrieve",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
-        return caseFileService.findAllRegistryEntryToCaseFile(systemID);
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        return ResponseEntity.status(OK)
+                .body(caseFileService.findAllRegistryEntryToCaseFile(systemID));
     }
 
     // Retrieve all RecordNote associated with a casefile identified by systemId
@@ -399,8 +367,9 @@ public class CaseFileHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the caseFile to retrieve",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
-        return caseFileService.findAllRecordNoteToCaseFile(systemID);
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        return ResponseEntity.status(OK)
+                .body(caseFileService.findAllRecordNoteToCaseFile(systemID));
     }
 
     @Operation(summary = "Retrieves multiple CaseFile entities limited by " +
@@ -419,16 +388,9 @@ public class CaseFileHateoasController
                     responseCode = INTERNAL_SERVER_ERROR_VAL,
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping
-    public ResponseEntity<CaseFileHateoas> findAllCaseFile(
-            HttpServletRequest request) {
-        CaseFileHateoas caseFileHateoas = new
-                CaseFileHateoas((List<INoarkEntity>) (List)
-                caseFileService.findAllCaseFile());
-
-        caseFileHateoasHandler.addLinks(caseFileHateoas, new Authorisation());
+    public ResponseEntity<CaseFileHateoas> findAll() {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(caseFileHateoas);
+                .body(caseFileService.findAll());
     }
 
     // GET [contextPath][api]/sakarkiv/saksmappe/{systemID}/presedens
@@ -454,7 +416,7 @@ public class CaseFileHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the caseFile to retrieve",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity
                 .status(OK)
                 .body(caseFileService.
@@ -479,14 +441,12 @@ public class CaseFileHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_PRECEDENCE)
     public ResponseEntity<PrecedenceHateoas> createDefaultPrecedence(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of file to associate the " +
                             "Precedence with.",
                     required = true)
-            @PathVariable(SYSTEM_ID) String systemID) {
+            @PathVariable(SYSTEM_ID) UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(caseFileService.
                         generateDefaultPrecedence(systemID));
     }
@@ -513,7 +473,7 @@ public class CaseFileHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the caseFile to delete",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         caseFileService.deleteEntity(systemID);
         return ResponseEntity.status(NO_CONTENT)
                 .body(DELETE_RESPONSE);
@@ -579,23 +539,14 @@ public class CaseFileHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of caseFile to update",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID,
+            @PathVariable(SYSTEM_ID) final UUID systemID,
             @Parameter(name = "CaseFile",
                     description = "Incoming caseFile object",
                     required = true)
             @RequestBody CaseFile caseFile) throws NikitaException {
         validateForUpdate(caseFile);
-
-        CaseFile updatedCaseFile =
-                caseFileService.handleUpdate(
-                        systemID, parseETAG(request.getHeader(ETAG)), caseFile);
-        CaseFileHateoas caseFileHateoas = new CaseFileHateoas(updatedCaseFile);
-        caseFileHateoasHandler.addLinks(caseFileHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityUpdatedEvent(this, updatedCaseFile));
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(updatedCaseFile.getVersion().toString())
-                .body(caseFileHateoas);
+                .body(caseFileService.handleUpdate(
+                        systemID, parseETAG(request.getHeader(ETAG)), caseFile));
     }
 }

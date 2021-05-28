@@ -128,7 +128,7 @@ public class SequenceNumberGeneratorService
         Integer sequenceNumber = nextSequence.getCaseFileSequenceNumber();
         // increment and save the value
         nextSequence.incrementCaseFileByOne();
-        numberGeneratorRepository.save(nextSequence);
+        //numberGeneratorRepository.save(nextSequence);
         return sequenceNumber;
     }
 
@@ -144,7 +144,7 @@ public class SequenceNumberGeneratorService
         Integer sequenceNumber = nextSequence.getRecordSequenceNumber();
         // increment and save the value
         nextSequence.incrementRecordByOne();
-        numberGeneratorRepository.save(nextSequence);
+        //numberGeneratorRepository.save(nextSequence);
         return sequenceNumber;
     }
 

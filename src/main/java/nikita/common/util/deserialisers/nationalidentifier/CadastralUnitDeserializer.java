@@ -13,12 +13,13 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static nikita.common.config.ErrorMessagesConstants.MALFORMED_PAYLOAD;
 import static nikita.common.config.HATEOASConstants.LINKS;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 
 public class CadastralUnitDeserializer
-        extends JsonDeserializer {
+        extends JsonDeserializer<CadastralUnit> {
 
     private static final Logger logger =
             LoggerFactory.getLogger(CadastralUnitDeserializer.class);
@@ -35,7 +36,7 @@ public class CadastralUnitDeserializer
         ObjectNode objectNode = mapper.readTree(jsonParser);
 
         // Deserialize systemID
-        deserialiseNoarkSystemIdEntity(cadastralUnit, objectNode, errors);
+        deserialiseNoarkSystemIdEntity(cadastralUnit, objectNode);
 
         // Deserialize kommunenummer
         JsonNode currentNode = objectNode.get(MUNICIPALITY_NUMBER);
@@ -74,11 +75,8 @@ public class CadastralUnitDeserializer
         // Check that there are no additional values left after processing the
         // tree. If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {
-            errors.append("The cadastralUnit you tried to create is malformed");
-            errors.append(". The following fields are not recognised as ");
-            errors.append("cadastralUnit fields [");
-            errors.append(checkNodeObjectEmpty(objectNode));
-            errors.append("]. ");
+            errors.append(String.format(MALFORMED_PAYLOAD,
+                    CADASTRAL_UNIT, checkNodeObjectEmpty(objectNode)));
         }
         if (0 < errors.length())
             throw new NikitaMalformedInputDataException(errors.toString());

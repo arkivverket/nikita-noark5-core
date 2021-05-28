@@ -1,26 +1,22 @@
 package nikita.common.model.noark5.v5.hateoas;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import nikita.common.config.N5ResourceMappings;
+import nikita.common.model.nikita.NikitaPage;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.util.serializers.noark5v5.hateoas.DocumentDescriptionHateoasSerializer;
 
-import java.util.List;
+import static nikita.common.config.N5ResourceMappings.DOCUMENT_DESCRIPTION;
 
-/**
- * Created by tsodring on 12/9/16.
- * <p>
- * Using composition rather than inheritance. Although this class is really only a placeholder for the DocumentDescription object
- * along with the hateoas links. It's not intended that you will manipulate the DocumentDescription object from here.
- */
 @JsonSerialize(using = DocumentDescriptionHateoasSerializer.class)
-public class DocumentDescriptionHateoas extends HateoasNoarkObject implements IHateoasNoarkObject {
+public class DocumentDescriptionHateoas
+        extends HateoasNoarkObject
+        implements IHateoasNoarkObject {
 
     public DocumentDescriptionHateoas(INoarkEntity entity) {
         super(entity);
     }
 
-    public DocumentDescriptionHateoas(List<INoarkEntity> entityList) {
-        super(entityList, N5ResourceMappings.DOCUMENT_DESCRIPTION);
+    public DocumentDescriptionHateoas(NikitaPage page) {
+        super(page, DOCUMENT_DESCRIPTION);
     }
 }

@@ -30,7 +30,7 @@ public interface IStorageLocationService {
 
     StorageLocationHateoas findBySystemId(@NotNull final UUID systemId);
 
-    StorageLocationHateoas findAllByOwner();
+    StorageLocationHateoas findAll();
 
     StorageLocationHateoas updateStorageLocationBySystemId(
             @NotNull final UUID systemId,

@@ -24,6 +24,8 @@ public final class N5ResourceMappings {
     public static final String REGISTRATION = "registrering";
     public static final String REGISTRY_ENTRY = "journalpost";
     public static final String RECORD_NOTE = "arkivnotat";
+    public static final String RECORD_NOTE_ENG = "record_note";
+    public static final String RECORD_NOTE_OBJECT = "RecordNote";
     public static final String DOCUMENT_DESCRIPTION = "dokumentbeskrivelse";
     public static final String DOCUMENT_OBJECT = "dokumentobjekt";
     public static final String STORAGE_LOCATION = "oppbevaringssted";
@@ -220,6 +222,10 @@ public final class N5ResourceMappings {
     public static final String CORRESPONDENCE_PART_TYPE = "korrespondanseparttype";
     public static final String CORRESPONDENCE_PART_NAME = "navn";
     public static final String NATIONAL_IDENTIFIER = "nasjonalidentifikator";
+    public static final String NATIONAL_IDENTIFIER_ENG =
+            "national_identifier";
+    public static final String NATIONAL_IDENTIFIER_OBJECT =
+            "NationalIdentifier";
     public static final String PERSON_IDENTIFIER = "personidentifikator";
     public static final String UNIT_IDENTIFIER = "enhetsidentifikator";
     public static final String POST_CODE = "postnummer";
@@ -511,6 +517,10 @@ public final class N5ResourceMappings {
     public static final String NEW_RIGHT = NEW + DASH + RIGHT;
 
     public static final String ADMINISTRATIVE_UNIT = "administrativenhet";
+    public static final String ADMINISTRATIVE_UNIT_ENG =
+            "administrative_unit";
+    public static final String ADMINISTRATIVE_UNIT_OBJECT =
+            "AdministrativeUnit";
     public static final String ADMINISTRATIVE_UNIT_FIELD = "administrativEnhet";
     public static final String NEW_ADMINISTRATIVE_UNIT = NEW + DASH + ADMINISTRATIVE_UNIT;
 
@@ -532,6 +542,10 @@ public final class N5ResourceMappings {
     public static final String NEW_VALUE = "nyVerdi";
 
     public static final String EVENT_LOG = "hendelseslogg";
+    public static final String EVENT_LOG_ENG = "event_log";
+    public static final String EVENT_LOG_OBJECT = "EventLog";
+    public static final String CHANGE_LOG_ENG = "change_log";
+    public static final String CHANGE_LOG_OBJECT = "ChangeLog";
     public static final String NEW_EVENT_LOG = NEW + EVENT_LOG;
     public static final String EVENT_DATE = "hendelseDato";
 
@@ -595,7 +609,7 @@ public final class N5ResourceMappings {
     public static final String CONTACT_INFORMATION_ENG = "contact_information";
     public static final String CONTACT_PERSON_ENG = "contact_person";
     public static final String CONVERSION_COMMENT_ENG = "conversion_comment";
-    public static final String CONVERSION_ENG = "konvertering";
+    public static final String CONVERSION_ENG = "conversion";
     public static final String CONVERSION_TOOL_ENG = "conversion_tool";
     public static final String CONVERTED_BY_ENG = "converted_by";
     public static final String CONVERTED_DATE_ENG = "converted_date";
@@ -793,8 +807,9 @@ public final class N5ResourceMappings {
     public static final String SIGN_OFF_METHOD_ENG = "sign_of_method";
     public static final String SOCIAL_SECURITY_NUMBER_ENG =
             "social_security_number";
-    public static final String SUB_CLASS_ENG = "underklasse";
-    public static final String SUB_FONDS_ENG = "underarkiv";
+    public static final String SUB_CLASS_ENG = "subclass";
+    public static final String SUB_FILE_ENG = "subfile";
+    public static final String SUB_FONDS_ENG = "subfonds";
     public static final String SUB_HOLDING_NUMBER_ENG = "sub_holding_number";
     public static final String SYSTEM_ID_ENG = "system_id";
     public static final String TELEPHONE_NUMBER_ENG = "telephone_number";
@@ -868,16 +883,19 @@ public final class N5ResourceMappings {
     public static final String CONTACT_INFORMATION_ENG_OBJECT = "kontaktinformasjon";
     public static final String CONTACT_PERSON_ENG_OBJECT = "contactPerson";
     public static final String CONVERSION_COMMENT_ENG_OBJECT = "conversionComment";
-    public static final String CONVERSION_ENG_OBJECT = "konvertering";
+    public static final String CONVERSION_ENG_OBJECT = "Conversion";
     public static final String CONVERSION_TOOL_ENG_OBJECT = "conversionTool";
     public static final String CONVERTED_BY_ENG_OBJECT = "convertedBy";
     public static final String CONVERTED_DATE_ENG_OBJECT = "convertedDate";
     public static final String CONVERTED_FROM_FORMAT_ENG_OBJECT = "convertedFromFormat";
     public static final String CONVERTED_TO_FORMAT_ENG_OBJECT = "convertedToFormat";
-    public static final String CORRESPONDENCE_PART_ENG_OBJECT = "korrespondansepart";
-    public static final String CORRESPONDENCE_PART_INTERNAL_ENG_OBJECT = "korrespondansepartintern";
+    public static final String CORRESPONDENCE_PART_ENG_OBJECT =
+            "CorrespondencePart";
+    public static final String CORRESPONDENCE_PART_INTERNAL_ENG_OBJECT =
+            "CorrespondencePartInternal";
     public static final String CORRESPONDENCE_PART_NAME_ENG_OBJECT = "name";
-    public static final String CORRESPONDENCE_PART_PERSON_ENG_OBJECT = "korrespondansepartperson";
+    public static final String CORRESPONDENCE_PART_PERSON_ENG_OBJECT =
+            "CorrespondencePartPerson";
     public static final String CORRESPONDENCE_PART_TYPE_ENG_OBJECT =
             "CorrespondencePartType";
     public static final String CORRESPONDENCE_PART_UNIT_ENG_OBJECT =
@@ -917,7 +935,7 @@ public final class N5ResourceMappings {
             "DocumentDescription";
     public static final String DOCUMENT_DESCRIPTION_STATUS_ENG_OBJECT = "dokumentstatus";
     public static final String DOCUMENT_DESCRIPTION_EXTERNAL_REFERENCE_ENG_OBJECT = "externalReference";
-    public static final String DOCUMENT_FLOW_ENG_OBJECT = "dokumentflyt";
+    public static final String DOCUMENT_FLOW_OBJECT = "DocumentFlow";
     public static final String DOCUMENT_FLOW_FLOW_COMMENT_ENG_OBJECT = "flowComment";
     public static final String DOCUMENT_FLOW_FLOW_FROM_ENG_OBJECT = "flowFrom";
     public static final String DOCUMENT_FLOW_FLOW_RECEIVED_DATE_ENG_OBJECT = "flowReceivedDate";
@@ -1013,7 +1031,7 @@ public final class N5ResourceMappings {
     public static final String PRECEDENCE_APPROVED_DATE_ENG_OBJECT = "precedenceApprovedDate";
     public static final String PRECEDENCE_AUTHORITY_ENG_OBJECT = "precedenceAuthority";
     public static final String PRECEDENCE_DATE_ENG_OBJECT = "precedenceDate";
-    public static final String PRECEDENCE_ENG_OBJECT = "precedence";
+    public static final String PRECEDENCE_ENG_OBJECT = "Precedence";
     public static final String PRECEDENCE_SOURCE_OF_LAW_ENG_OBJECT = "sourceOfLaw";
     public static final String PRECEDENCE_REFERENCE_APPROVED_BY_ENG_OBJECT = "referencePrecedenceApprovedBySystemID";
     public static final String PRECEDENCE_PRECEDENCE_STATUS_ENG_OBJECT =
@@ -1068,14 +1086,15 @@ public final class N5ResourceMappings {
     public static final String SIGN_OFF_ENG_OBJECT = "SignOff";
     public static final String STORAGE_LOCATION_ENG_OBJECT = "StorageLocation";
     public static final String SIGN_OFF_METHOD_ENG_OBJECT = "avskrivningsmaate";
-    public static final String SUB_CLASS_ENG_OBJECT = "underklasse";
-    public static final String SUB_FONDS_ENG_OBJECT = "underarkiv";
+    public static final String SUB_CLASS_ENG_OBJECT = "Class";
+    public static final String SUB_FILE_ENG_OBJECT = "File";
+    public static final String SUB_FONDS_ENG_OBJECT = "Fonds";
     public static final String SUB_HOLDING_NUMBER_ENG_OBJECT = "subHoldingNumber";
     public static final String SYSTEM_ID_ENG_OBJECT = "systemId";
     public static final String TELEPHONE_NUMBER_ENG_OBJECT = "telephoneNumber";
     public static final String TITLE_ENG_OBJECT = "title";
-    public static final String USER_ENG_OBJECT = "bruker";
-    public static final String USER_NAME_ENG_OBJECT = "brukerNavn";
+    public static final String USER_ENG_OBJECT = "User";
+    public static final String USER_NAME_ENG_OBJECT = "userName";
     public static final String VARIANT_FORMAT_ENG_OBJECT = "variantFormat";
     public static final String X_ENG_OBJECT = "x";
     public static final String Y_ENG_OBJECT = "y";

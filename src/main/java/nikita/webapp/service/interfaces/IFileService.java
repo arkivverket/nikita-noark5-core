@@ -17,7 +17,6 @@ import nikita.common.model.noark5.v5.hateoas.secondary.*;
 import nikita.common.model.noark5.v5.metadata.Metadata;
 import nikita.common.model.noark5.v5.nationalidentifier.*;
 import nikita.common.model.noark5.v5.secondary.*;
-import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -26,29 +25,36 @@ import java.util.UUID;
 public interface IFileService {
 
     // -- All CREATE operations
-    File createFile(File file);
+    FileHateoas createFile(@NotNull final File file);
 
     CaseFileHateoas expandToCaseFile(
-            @NotNull final UUID systemId, @NotNull final PatchMerge patchMerge);
+            @NotNull final UUID systemId,
+            @NotNull final PatchMerge patchMerge);
 
-    FileHateoas createFileAssociatedWithFile(String systemId, File file);
+    FileHateoas createFileAssociatedWithFile(
+            @NotNull final UUID systemId,
+            @NotNull final File file);
 
     CommentHateoas createCommentAssociatedWithFile
-            (String systemID, Comment comment);
+            (@NotNull final UUID systemId,
+             @NotNull final Comment comment);
 
     PartPersonHateoas createPartPersonAssociatedWithFile(
-            String systemID, PartPerson partPerson);
+            @NotNull final UUID systemId,
+            @NotNull final PartPerson partPerson);
 
     PartUnitHateoas createPartUnitAssociatedWithFile(
-            String systemID, PartUnit partUnit);
+            @NotNull final UUID systemId,
+            @NotNull final PartUnit partUnit);
 
     KeywordHateoas createKeywordAssociatedWithFile(
-            @NotNull final UUID systemId, @NotNull final Keyword keyword);
+            @NotNull final UUID systemId,
+            @NotNull final Keyword keyword);
 
-    FileHateoas save(File file);
+    FileHateoas save(@NotNull final File file);
 
-    ResponseEntity<RecordHateoas> createRecordAssociatedWithFile(
-            @NotNull final String fileSystemId,
+    RecordHateoas createRecordAssociatedWithFile(
+            @NotNull final UUID systemId,
             @NotNull final Record record);
 
     StorageLocationHateoas createStorageLocationAssociatedWithFile(
@@ -57,120 +63,128 @@ public interface IFileService {
 
     // -- All READ operations
 
-    PartPersonHateoas generateDefaultPartPerson(String systemID);
+    PartPersonHateoas generateDefaultPartPerson(@NotNull final UUID systemId);
 
-    PartUnitHateoas generateDefaultPartUnit(String systemID);
+    PartUnitHateoas generateDefaultPartUnit(@NotNull final UUID systemId);
 
     CaseFileExpansionHateoas generateDefaultValuesToExpandToCaseFile(
             @NotNull final UUID systemId);
 
     BuildingHateoas
     createBuildingAssociatedWithFile(
-            @NotNull String systemID, @NotNull Building building);
+            @NotNull final UUID systemId, @NotNull Building building);
 
     CadastralUnitHateoas
     createCadastralUnitAssociatedWithFile(
-            @NotNull String systemID, @NotNull CadastralUnit cadastralUnit);
+            @NotNull final UUID systemId,
+            @NotNull final CadastralUnit cadastralUnit);
 
     DNumberHateoas
     createDNumberAssociatedWithFile(
-            @NotNull String systemID, @NotNull DNumber dNumber);
+            @NotNull final UUID systemId,
+            @NotNull final DNumber dNumber);
 
     PlanHateoas
     createPlanAssociatedWithFile(
-            @NotNull String systemID, @NotNull Plan plan);
+            @NotNull final UUID systemId,
+            @NotNull final Plan plan);
 
     PositionHateoas
     createPositionAssociatedWithFile(
-            @NotNull String systemID, @NotNull Position position);
+            @NotNull final UUID systemId,
+            @NotNull final Position position);
 
     SocialSecurityNumberHateoas
     createSocialSecurityNumberAssociatedWithFile
-            (@NotNull String systemID,
-             @NotNull SocialSecurityNumber socialSecurityNumber);
+            (@NotNull final UUID systemId,
+             @NotNull final SocialSecurityNumber socialSecurityNumber);
 
     UnitHateoas
     createUnitAssociatedWithFile(
-            @NotNull String systemID, @NotNull Unit unit);
+            @NotNull final UUID systemId, @NotNull final Unit unit);
 
-    List<File> findAll();
+    FileHateoas findAllChildren(@NotNull final UUID systemId);
 
-    FileHateoas findAllChildren(@NotNull String systemId);
+    RecordHateoas findAllRecords(@NotNull final UUID systemId);
 
-    File findBySystemId(String systemId);
+    FileHateoas findBySystemId(@NotNull final UUID systemId);
 
-    File getFileOrThrow(@NotNull String systemId);
+    FileHateoas findAll();
 
-    File getFileOrThrow(@NotNull UUID systemId);
+    ClassHateoas
+    findClassAssociatedWithFile(@NotNull final UUID systemId);
 
-    List<File> findByOwnedBy(String ownedBy);
+    SeriesHateoas
+    findSeriesAssociatedWithFile(@NotNull final UUID systemId);
 
-    ResponseEntity<ClassHateoas>
-    findClassAssociatedWithFile(@NotNull final String systemId);
+    CommentHateoas getCommentAssociatedWithFile(
+            @NotNull final UUID systemId);
 
-    ResponseEntity<SeriesHateoas>
-    findSeriesAssociatedWithFile(@NotNull final String systemId);
+    PartHateoas getPartAssociatedWithFile(@NotNull final UUID systemId);
 
-    CommentHateoas getCommentAssociatedWithFile
-            (@NotNull final String systemID);
+    KeywordHateoas getKeywordAssociatedWithFile(@NotNull final UUID systemId);
 
-    PartHateoas getPartAssociatedWithFile(@NotNull final String systemID);
+    StorageLocationHateoas getStorageLocationAssociatedWithFile(
+            @NotNull final UUID systemId);
 
-    NationalIdentifierHateoas getNationalIdentifierAssociatedWithFile
-            (@NotNull final String systemID);
+    NationalIdentifierHateoas getNationalIdentifierAssociatedWithFile(
+            @NotNull final UUID systemId);
 
     ScreeningMetadataHateoas getScreeningMetadataAssociatedWithFile(
-            @NotNull final UUID fileSystemId);
+            @NotNull final UUID systemId);
 
-    CommentHateoas generateDefaultComment();
+    CommentHateoas generateDefaultComment(@NotNull final UUID systemId);
 
-    BuildingHateoas generateDefaultBuilding();
+    BuildingHateoas generateDefaultBuilding(@NotNull final UUID systemId);
 
-    CadastralUnitHateoas generateDefaultCadastralUnit();
+    CadastralUnitHateoas generateDefaultCadastralUnit(@NotNull final UUID systemId);
 
-    DNumberHateoas generateDefaultDNumber();
+    DNumberHateoas generateDefaultDNumber(@NotNull final UUID systemId);
 
-    PlanHateoas generateDefaultPlan();
+    PlanHateoas generateDefaultPlan(@NotNull final UUID systemId);
 
-    PositionHateoas generateDefaultPosition();
+    PositionHateoas generateDefaultPosition(@NotNull final UUID systemId);
 
-    Object associateBSM(@NotNull UUID systemId,
-                        @NotNull List<BSMBase> bsm);
+    Object associateBSM(@NotNull final UUID systemId,
+                        @NotNull final List<BSMBase> bsm);
 
-    SocialSecurityNumberHateoas generateDefaultSocialSecurityNumber();
+    SocialSecurityNumberHateoas generateDefaultSocialSecurityNumber(
+            @NotNull final UUID systemId);
 
-    UnitHateoas generateDefaultUnit();
+    UnitHateoas generateDefaultUnit(@NotNull final UUID systemId);
 
     // -- All UPDATE operations
-    File handleUpdate(@NotNull String systemId,
-                      @NotNull Long version,
-                      @NotNull File file);
+    FileHateoas handleUpdate(
+            @NotNull final UUID systemId,
+            @NotNull final Long version,
+            @NotNull final File file);
 
     // -- All DELETE operations
-    void deleteEntity(@NotNull String systemId);
+    void deleteEntity(@NotNull final UUID systemId);
 
-    FileHateoas generateDefaultFile();
+    FileHateoas generateDefaultFile(@NotNull final UUID systemId);
 
-    long deleteAllByOwnedBy();
+    void deleteAllByOwnedBy();
 
-    ResponseEntity<FileHateoas> handleUpdate(
-            UUID systemID, PatchObjects patchObjects);
+    FileHateoas handleUpdate(
+            @NotNull final UUID systemId,
+            @NotNull final PatchObjects patchObjects);
 
     ScreeningMetadataHateoas createScreeningMetadataAssociatedWithFile(
-            @NotNull final UUID systemID,
+            @NotNull final UUID systemId,
             @NotNull final Metadata screeningMetadata);
 
     CrossReferenceHateoas createCrossReferenceAssociatedWithFile(
             @NotNull final UUID systemId,
-            @NotNull CrossReference crossReference);
+            @NotNull final CrossReference crossReference);
 
     ScreeningMetadataHateoas getDefaultScreeningMetadata(
-            @NotNull final UUID systemID);
+            @NotNull final UUID systemId);
 
-    KeywordHateoas generateDefaultKeyword();
+    KeywordHateoas generateDefaultKeyword(@NotNull final UUID systemId);
 
     StorageLocationHateoas getDefaultStorageLocation(
-            @NotNull final UUID systemID);
+            @NotNull final UUID systemId);
 
-    CrossReferenceHateoas getDefaultCrossReference();
+    CrossReferenceHateoas getDefaultCrossReference(@NotNull final UUID systemId);
 }

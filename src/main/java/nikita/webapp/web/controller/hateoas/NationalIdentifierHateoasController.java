@@ -7,18 +7,16 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
 import nikita.common.model.noark5.v5.nationalidentifier.*;
 import nikita.common.util.exceptions.NikitaException;
-import nikita.webapp.hateoas.interfaces.nationalidentifier.INationalIdentifierHateoasHandler;
-import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.interfaces.INationalIdentifierService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.UUID;
 
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
@@ -29,20 +27,17 @@ import static org.springframework.http.HttpStatus.OK;
 public class NationalIdentifierHateoasController
         extends NoarkController {
 
-    private final INationalIdentifierHateoasHandler nationalIdentifierHateoasHandler;
     private final INationalIdentifierService nationalIdentifierService;
 
     public NationalIdentifierHateoasController(
-            INationalIdentifierHateoasHandler nationalIdentifierHateoasHandler,
             INationalIdentifierService nationalIdentifierService) {
-        this.nationalIdentifierHateoasHandler = nationalIdentifierHateoasHandler;
         this.nationalIdentifierService = nationalIdentifierService;
     }
 
     // API - All GET Requests (CRUD - READ)
 
-    // GET [contextPath][api]/arkivstruktur/bygning/{systemId}
-    @Operation(summary = "Retrieves a single Building entity given a systemId")
+    // GET [contextPath][api]/arkivstruktur/bygning/{systemID}
+    @Operation(summary = "Retrieves a single Building entity given a systemID")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = OK_VAL,
@@ -57,25 +52,16 @@ public class NationalIdentifierHateoasController
                     responseCode = INTERNAL_SERVER_ERROR_VAL,
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = BUILDING + SLASH + SYSTEM_ID_PARAMETER)
-    public ResponseEntity<BuildingHateoas> findOneBuildingBySystemId(
-            HttpServletRequest request,
+    public ResponseEntity<BuildingHateoas> findBuildingBySystemId(
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the Building to retrieve",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemId) {
-        Building building =
-                (Building) nationalIdentifierService.findBySystemId(systemId);
-        BuildingHateoas buildingHateoas =
-                new BuildingHateoas(building);
-        nationalIdentifierHateoasHandler
-                .addLinks(buildingHateoas, new Authorisation());
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(building.getVersion().toString())
-                .body(buildingHateoas);
+                .body(nationalIdentifierService.findBuildingBySystemId(systemID));
     }
 
-    // GET [contextPath][api]/arkivstruktur/matrikkel/{systemId}
+    // GET [contextPath][api]/arkivstruktur/matrikkel/{systemID}
     @Operation(summary = "Retrieves a single CadastralUnit entity given a " +
             "systemID")
     @ApiResponses(value = {
@@ -92,26 +78,18 @@ public class NationalIdentifierHateoasController
                     responseCode = INTERNAL_SERVER_ERROR_VAL,
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = CADASTRAL_UNIT + SLASH + SYSTEM_ID_PARAMETER)
-    public ResponseEntity<CadastralUnitHateoas> findOneCadastralUnitBySystemId(
-            HttpServletRequest request,
+    public ResponseEntity<CadastralUnitHateoas> findCadastralUnitBySystemId(
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the CadastralUnit to retrieve",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemId) {
-        CadastralUnit cadastralUnit =
-                (CadastralUnit) nationalIdentifierService.findBySystemId(systemId);
-        CadastralUnitHateoas cadastralUnitHateoas =
-                new CadastralUnitHateoas(cadastralUnit);
-        nationalIdentifierHateoasHandler
-                .addLinks(cadastralUnitHateoas, new Authorisation());
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(cadastralUnit.getVersion().toString())
-                .body(cadastralUnitHateoas);
+                .body(nationalIdentifierService
+                        .findCadastralUnitBySystemId(systemID));
     }
 
-    // GET [contextPath][api]/arkivstruktur/dnummer/{systemId}
-    @Operation(summary = "Retrieves a single DNumber entity given a systemId")
+    // GET [contextPath][api]/arkivstruktur/dnummer/{systemID}
+    @Operation(summary = "Retrieves a single DNumber entity given a systemID")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = OK_VAL,
@@ -127,25 +105,16 @@ public class NationalIdentifierHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = D_NUMBER + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<DNumberHateoas> findOneDNumberBySystemId(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the DNumber to retrieve",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemId) {
-        DNumber dNumber =
-                (DNumber) nationalIdentifierService.findBySystemId(systemId);
-        DNumberHateoas dNumberHateoas =
-                new DNumberHateoas(dNumber);
-        nationalIdentifierHateoasHandler
-                .addLinks(dNumberHateoas, new Authorisation());
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(dNumber.getVersion().toString())
-                .body(dNumberHateoas);
+                .body(nationalIdentifierService.findDNumberBySystemId(systemID));
     }
 
-    // GET [contextPath][api]/arkivstruktur/plan/{systemId}
-    @Operation(summary = "Retrieves a single Plan entity given a systemId")
+    // GET [contextPath][api]/arkivstruktur/plan/{systemID}
+    @Operation(summary = "Retrieves a single Plan entity given a systemID")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = OK_VAL,
@@ -160,26 +129,17 @@ public class NationalIdentifierHateoasController
                     responseCode = INTERNAL_SERVER_ERROR_VAL,
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = PLAN + SLASH + SYSTEM_ID_PARAMETER)
-    public ResponseEntity<PlanHateoas> findOnePlanBySystemId(
-            HttpServletRequest request,
+    public ResponseEntity<PlanHateoas> findPlanBySystemId(
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the Plan to retrieve",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemId) {
-        Plan plan =
-                (Plan) nationalIdentifierService.findBySystemId(systemId);
-        PlanHateoas planHateoas =
-                new PlanHateoas(plan);
-        nationalIdentifierHateoasHandler
-                .addLinks(planHateoas, new Authorisation());
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(plan.getVersion().toString())
-                .body(planHateoas);
+                .body(nationalIdentifierService.findPlanBySystemId(systemID));
     }
 
-    // GET [contextPath][api]/arkivstruktur/posisjon/{systemId}
-    @Operation(summary = "Retrieves a single Position entity given a systemId")
+    // GET [contextPath][api]/arkivstruktur/posisjon/{systemID}
+    @Operation(summary = "Retrieves a single Position entity given a systemID")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = OK_VAL,
@@ -194,26 +154,19 @@ public class NationalIdentifierHateoasController
                     responseCode = INTERNAL_SERVER_ERROR_VAL,
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = POSITION + SLASH + SYSTEM_ID_PARAMETER)
-    public ResponseEntity<PositionHateoas> findOnePositionBySystemId(
-            HttpServletRequest request,
+    public ResponseEntity<PositionHateoas> findPositionBySystemId(
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the position to retrieve",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemId) {
-        Position position =
-                (Position) nationalIdentifierService.findBySystemId(systemId);
-        PositionHateoas positionHateoas = new PositionHateoas(position);
-        nationalIdentifierHateoasHandler
-                .addLinks(positionHateoas, new Authorisation());
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(position.getVersion().toString())
-                .body(positionHateoas);
+                .body(nationalIdentifierService
+                        .findPositionBySystemId(systemID));
     }
 
-    // GET [contextPath][api]/arkivstruktur/foedselsnummer/{systemId}
+    // GET [contextPath][api]/arkivstruktur/foedselsnummer/{systemID}
     @Operation(summary = "Retrieves a single SocialSecurityNumber entity " +
-            "given a systemId")
+            "given a systemID")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = OK_VAL,
@@ -230,27 +183,18 @@ public class NationalIdentifierHateoasController
     @GetMapping(value = SOCIAL_SECURITY_NUMBER + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<SocialSecurityNumberHateoas>
     findOneSocialSecurityNumberBySystemId(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the socialSecurityNumber to " +
                             "retrieve",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemId) {
-        SocialSecurityNumber socialSecurityNumber =
-                (SocialSecurityNumber) nationalIdentifierService
-                        .findBySystemId(systemId);
-        SocialSecurityNumberHateoas socialSecurityNumberHateoas =
-                new SocialSecurityNumberHateoas(socialSecurityNumber);
-        nationalIdentifierHateoasHandler
-                .addLinks(socialSecurityNumberHateoas, new Authorisation());
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(socialSecurityNumber.getVersion().toString())
-                .body(socialSecurityNumberHateoas);
+                .body(nationalIdentifierService
+                        .findSocialSecurityNumberBySystemId(systemID));
     }
 
-    // GET [contextPath][api]/arkivstruktur/enhetsidentifikator/{systemId}
-    @Operation(summary = "Retrieves a single Unit entity given a systemId")
+    // GET [contextPath][api]/arkivstruktur/enhetsidentifikator/{systemID}
+    @Operation(summary = "Retrieves a single Unit entity given a systemID")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = OK_VAL,
@@ -265,25 +209,17 @@ public class NationalIdentifierHateoasController
                     responseCode = INTERNAL_SERVER_ERROR_VAL,
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = NI_UNIT + SLASH + SYSTEM_ID_PARAMETER)
-    public ResponseEntity<UnitHateoas> findOneUnitBySystemId(
-            HttpServletRequest request,
+    public ResponseEntity<UnitHateoas> findUnitBySystemId(
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the unit to retrieve",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemId) {
-        Unit unit =
-                (Unit) nationalIdentifierService.findBySystemId(systemId);
-        UnitHateoas unitHateoas = new UnitHateoas(unit);
-        nationalIdentifierHateoasHandler
-                .addLinks(unitHateoas, new Authorisation());
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(unit.getVersion().toString())
-                .body(unitHateoas);
+                .body(nationalIdentifierService.findUnitBySystemId(systemID));
     }
 
-    // PUT [contextPath][api]/casehandling/building/{systemId}
-    @Operation(summary = "Updates a Building identified by a given systemId",
+    // PUT [contextPath][api]/casehandling/building/{systemID}
+    @Operation(summary = "Updates a Building identified by a given systemID",
             description = "Returns the newly updated nationalIdentifierPerson")
     @ApiResponses(value = {
             @ApiResponse(
@@ -318,27 +254,20 @@ public class NationalIdentifierHateoasController
                     description = "systemID of nationalIdentifierPerson to " +
                             "update",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID,
+            @PathVariable(SYSTEM_ID) final UUID systemID,
             @Parameter(name = "Building",
                     description = "Incoming nationalIdentifierPerson object",
                     required = true)
             @RequestBody Building building) throws NikitaException {
         validateForUpdate(building);
-        Building updatedBuilding =
-                nationalIdentifierService
-                        .updateBuilding(systemID,
-                                parseETAG(request.getHeader(ETAG)), building);
-        BuildingHateoas buildingHateoas = new BuildingHateoas(updatedBuilding);
-        nationalIdentifierHateoasHandler
-                .addLinks(buildingHateoas, new Authorisation());
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(updatedBuilding.getVersion().toString())
-                .body(buildingHateoas);
+                .body(nationalIdentifierService
+                        .updateBuilding(systemID,
+                                parseETAG(request.getHeader(ETAG)), building));
     }
 
-    // PUT [contextPath][api]/casehandling/matrikkel/{systemId}
-    @Operation(summary = "Updates a CadastralUnit identified by a given systemId",
+    // PUT [contextPath][api]/casehandling/matrikkel/{systemID}
+    @Operation(summary = "Updates a CadastralUnit identified by a given systemID",
             description = "Returns the newly updated nationalIdentifierPerson")
     @ApiResponses(value = {
             @ApiResponse(
@@ -373,30 +302,21 @@ public class NationalIdentifierHateoasController
                     description = "systemID of nationalIdentifierPerson to " +
                             "update",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID,
+            @PathVariable(SYSTEM_ID) final UUID systemID,
             @Parameter(name = "CadastralUnit",
                     description = "Incoming nationalIdentifierPerson object",
                     required = true)
             @RequestBody CadastralUnit cadastralUnit) throws NikitaException {
         validateForUpdate(cadastralUnit); // TODO no-op
-
-        CadastralUnit updatedCadastralUnit =
-                nationalIdentifierService
+        return ResponseEntity.status(OK)
+                .body(nationalIdentifierService
                         .updateCadastralUnit(systemID,
                                 parseETAG(request.getHeader(ETAG)),
-                                cadastralUnit);
-        CadastralUnitHateoas cadastralUnitHateoas =
-                new CadastralUnitHateoas(updatedCadastralUnit);
-        nationalIdentifierHateoasHandler
-                .addLinks(cadastralUnitHateoas, new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(updatedCadastralUnit.getVersion().toString())
-                .body(cadastralUnitHateoas);
+                                cadastralUnit));
     }
 
-    // PUT [contextPath][api]/arkivstruktur/dnummer/{systemId}
-    @Operation(summary = "Updates a DNumber identified by a given systemId",
+    // PUT [contextPath][api]/arkivstruktur/dnummer/{systemID}
+    @Operation(summary = "Updates a DNumber identified by a given systemID",
             description = "Returns the newly updated nationalIdentifierPerson")
     @ApiResponses(value = {
             @ApiResponse(
@@ -431,26 +351,20 @@ public class NationalIdentifierHateoasController
                     description = "systemID of nationalIdentifierPerson to " +
                             "update",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID,
+            @PathVariable(SYSTEM_ID) final UUID systemID,
             @Parameter(name = "DNumber",
                     description = "Incoming nationalIdentifierPerson object",
                     required = true)
             @RequestBody DNumber dNumber) throws NikitaException {
         validateForUpdate(dNumber);
-        DNumber updatedDNumber =
-                nationalIdentifierService.updateDNumber
-                        (systemID, parseETAG(request.getHeader(ETAG)), dNumber);
-        DNumberHateoas dNumberHateoas = new DNumberHateoas(updatedDNumber);
-        nationalIdentifierHateoasHandler
-                .addLinks(dNumberHateoas, new Authorisation());
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(updatedDNumber.getVersion().toString())
-                .body(dNumberHateoas);
+                .body(nationalIdentifierService
+                        .updateDNumber(systemID,
+                                parseETAG(request.getHeader(ETAG)), dNumber));
     }
 
-    // PUT [contextPath][api]/arkivstruktur/plan/{systemId}
-    @Operation(summary = "Updates a Plan identified by a given systemId",
+    // PUT [contextPath][api]/arkivstruktur/plan/{systemID}
+    @Operation(summary = "Updates a Plan identified by a given systemID",
             description = "Returns the newly updated nationalIdentifierPerson")
     @ApiResponses(value = {
             @ApiResponse(
@@ -485,26 +399,19 @@ public class NationalIdentifierHateoasController
                     description = "systemID of nationalIdentifierPerson to " +
                             "update",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID,
+            @PathVariable(SYSTEM_ID) final UUID systemID,
             @Parameter(name = "Plan",
                     description = "Incoming nationalIdentifierPerson object",
                     required = true)
             @RequestBody Plan plan) throws NikitaException {
         validateForUpdate(plan);
-        Plan updatedPlan =
-                nationalIdentifierService.updatePlan
-                        (systemID, parseETAG(request.getHeader(ETAG)), plan);
-        PlanHateoas planHateoas = new PlanHateoas(updatedPlan);
-        nationalIdentifierHateoasHandler
-                .addLinks(planHateoas, new Authorisation());
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(updatedPlan.getVersion().toString())
-                .body(planHateoas);
+                .body(nationalIdentifierService.updatePlan
+                        (systemID, parseETAG(request.getHeader(ETAG)), plan));
     }
 
-    // PUT [contextPath][api]/arkivstruktur/posisjon/{systemId}
-    @Operation(summary = "Updates a Position identified by a given systemId",
+    // PUT [contextPath][api]/arkivstruktur/posisjon/{systemID}
+    @Operation(summary = "Updates a Position identified by a given systemID",
             description = "Returns the newly updated position")
     @ApiResponses(value = {
             @ApiResponse(
@@ -538,26 +445,20 @@ public class NationalIdentifierHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of position to update",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID,
+            @PathVariable(SYSTEM_ID) final UUID systemID,
             @Parameter(name = "Position",
                     description = "Incoming position object",
                     required = true)
             @RequestBody Position position) throws NikitaException {
         validateForUpdate(position);
-        Position updatedPosition = nationalIdentifierService.updatePosition
-                (systemID, parseETAG(request.getHeader(ETAG)), position);
-        PositionHateoas positionHateoas = new PositionHateoas(updatedPosition);
-        nationalIdentifierHateoasHandler
-                .addLinks(positionHateoas, new Authorisation());
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(updatedPosition.getVersion().toString())
-                .body(positionHateoas);
+                .body(nationalIdentifierService.updatePosition
+                        (systemID, parseETAG(request.getHeader(ETAG)), position));
     }
 
-    // PUT [contextPath][api]/arkivstruktur/foedselsnummer/{systemId}
+    // PUT [contextPath][api]/arkivstruktur/foedselsnummer/{systemID}
     @Operation(summary = "Updates a SocialSecurityNumber identified by a " +
-            "given systemId",
+            "given systemID",
             description = "Returns the newly updated socialSecurityNumber")
     @ApiResponses(value = {
             @ApiResponse(
@@ -592,29 +493,21 @@ public class NationalIdentifierHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of socialSecurityNumber to update",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID,
+            @PathVariable(SYSTEM_ID) final UUID systemID,
             @Parameter(name = "SocialSecurityNumber",
                     description = "Incoming socialSecurityNumber object",
                     required = true)
             @RequestBody SocialSecurityNumber socialSecurityNumber)
             throws NikitaException {
         validateForUpdate(socialSecurityNumber);
-        SocialSecurityNumber updatedSocialSecurityNumber =
-                nationalIdentifierService.updateSocialSecurityNumber
-                        (systemID, parseETAG(
-                                request.getHeader(ETAG)), socialSecurityNumber);
-        SocialSecurityNumberHateoas socialSecurityNumberHateoas =
-                new SocialSecurityNumberHateoas(updatedSocialSecurityNumber);
-        nationalIdentifierHateoasHandler
-                .addLinks(socialSecurityNumberHateoas, new Authorisation());
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(updatedSocialSecurityNumber.getVersion().toString())
-                .body(socialSecurityNumberHateoas);
+                .body(nationalIdentifierService.updateSocialSecurityNumber
+                        (systemID, parseETAG(
+                                request.getHeader(ETAG)), socialSecurityNumber));
     }
 
-    // PUT [contextPath][api]/arkivstruktur/enhetsidentifikator/{systemId}
-    @Operation(summary = "Updates a Unit identified by a given systemId",
+    // PUT [contextPath][api]/arkivstruktur/enhetsidentifikator/{systemID}
+    @Operation(summary = "Updates a Unit identified by a given systemID",
             description = "Returns the newly updated unit")
     @ApiResponses(value = {
             @ApiResponse(
@@ -648,21 +541,15 @@ public class NationalIdentifierHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of unit to update",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID,
+            @PathVariable(SYSTEM_ID) final UUID systemID,
             @Parameter(name = "Unit",
                     description = "Incoming unit object",
                     required = true)
             @RequestBody Unit unit) throws NikitaException {
         validateForUpdate(unit);
-        Unit updatedUnit = nationalIdentifierService.updateUnit
-                (systemID, parseETAG(request.getHeader(ETAG)), unit);
-        UnitHateoas unitHateoas = new UnitHateoas(updatedUnit);
-        nationalIdentifierHateoasHandler
-                .addLinks(unitHateoas, new Authorisation());
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(updatedUnit.getVersion().toString())
-                .body(unitHateoas);
+                .body(nationalIdentifierService.updateUnit
+                        (systemID, parseETAG(request.getHeader(ETAG)), unit));
     }
 
     // Delete a building identified by systemID
@@ -687,7 +574,7 @@ public class NationalIdentifierHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the building to delete",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         nationalIdentifierService.deleteBuilding(systemID);
         return ResponseEntity.status(NO_CONTENT)
                 .body(DELETE_RESPONSE);
@@ -715,7 +602,7 @@ public class NationalIdentifierHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the cadastralUnit to delete",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         nationalIdentifierService.deleteCadastralUnit(systemID);
         return ResponseEntity.status(NO_CONTENT)
                 .body(DELETE_RESPONSE);
@@ -743,7 +630,7 @@ public class NationalIdentifierHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the dnumber to delete",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         nationalIdentifierService.deleteDNumber(systemID);
         return ResponseEntity.status(NO_CONTENT)
                 .body(DELETE_RESPONSE);
@@ -770,7 +657,7 @@ public class NationalIdentifierHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the plan to delete",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         nationalIdentifierService.deletePlan(systemID);
         return ResponseEntity.status(NO_CONTENT)
                 .body(DELETE_RESPONSE);
@@ -798,7 +685,7 @@ public class NationalIdentifierHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the position to delete",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         nationalIdentifierService.deletePosition(systemID);
         return ResponseEntity.status(NO_CONTENT)
                 .body(DELETE_RESPONSE);
@@ -828,7 +715,7 @@ public class NationalIdentifierHateoasController
                     description = "systemID of the socialSecurityNumber to " +
                             "delete",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         nationalIdentifierService.deleteSocialSecurityNumber(systemID);
         return ResponseEntity.status(NO_CONTENT)
                 .body(DELETE_RESPONSE);
@@ -855,7 +742,7 @@ public class NationalIdentifierHateoasController
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the unit to delete",
                     required = true)
-            @PathVariable(SYSTEM_ID) final String systemID) {
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
         nationalIdentifierService.deleteUnit(systemID);
         return ResponseEntity.status(NO_CONTENT)
                 .body(DELETE_RESPONSE);

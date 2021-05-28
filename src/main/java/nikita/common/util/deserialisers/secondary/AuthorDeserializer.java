@@ -13,12 +13,14 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static nikita.common.config.ErrorMessagesConstants.MALFORMED_PAYLOAD;
 import static nikita.common.config.HATEOASConstants.LINKS;
 import static nikita.common.config.N5ResourceMappings.AUTHOR;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 
 public class AuthorDeserializer
-        extends JsonDeserializer {
+        extends JsonDeserializer<Author> {
+
     private static final Logger logger =
             LoggerFactory.getLogger(AuthorDeserializer.class);
     private static final ObjectMapper mapper = new ObjectMapper();
@@ -33,7 +35,7 @@ public class AuthorDeserializer
         ObjectNode objectNode = mapper.readTree(jsonParser);
 
         // Deserialize systemID
-        deserialiseNoarkSystemIdEntity(author, objectNode, errors);
+        deserialiseNoarkSystemIdEntity(author, objectNode);
         deserialiseNoarkCreateEntity(author, objectNode, errors);
 
         // Deserialize forfatter
@@ -52,11 +54,8 @@ public class AuthorDeserializer
         // Check that there are no additional values left after processing the
         // tree. If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {
-            errors.append("The author you tried to create is malformed. The");
-            errors.append(" following fields are not recognised as author ");
-            errors.append(" fields [");
-            errors.append(checkNodeObjectEmpty(objectNode));
-            errors.append("]. ");
+            errors.append(String.format(MALFORMED_PAYLOAD,
+                    AUTHOR, checkNodeObjectEmpty(objectNode)));
         }
         if (0 < errors.length())
             throw new NikitaMalformedInputDataException(errors.toString());

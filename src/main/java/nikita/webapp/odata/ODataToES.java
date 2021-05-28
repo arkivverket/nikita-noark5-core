@@ -80,9 +80,11 @@ public class ODataToES {
 
 
     public void processNikitaObjects(
-            String parentResource, String resource, String systemId, String loggedInUser) {
+            String parentResource, String resource, String systemId,
+            String loggedInUser) {
         logger.error("processNikitaObjects ES not implemented");
     }
+
     /**
      * processStartsWith
      * <p>

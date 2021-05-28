@@ -12,22 +12,10 @@ import java.util.UUID;
 public interface IRecordRepository extends
         PagingAndSortingRepository<Record, UUID> {
 
-    // -- All SAVE operations
-    @Override
-    Record save(Record record);
-
-    // -- All READ operations
-    @Override
-    List<Record> findAll();
-
     List<Record> findAllByReferenceDocumentDescription(
             DocumentDescription documentDescription);
 
-    // systemId
     Record findBySystemId(UUID systemId);
-
-    // ownedBy
-    List<Record> findByOwnedBy(String ownedBy);
 
     long deleteByOwnedBy(String ownedBy);
 }

@@ -4,18 +4,17 @@ import nikita.common.model.noark5.v5.admin.User;
 import nikita.common.model.noark5.v5.casehandling.RecordNote;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.hateoas.secondary.DocumentFlowHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.metadata.FlowStatus;
 import nikita.common.model.noark5.v5.secondary.DocumentFlow;
 import nikita.common.repository.n5v5.secondary.IDocumentFlowRepository;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.secondary.IDocumentFlowHateoasHandler;
-import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.IUserService;
 import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
+import nikita.webapp.service.interfaces.odata.IODataService;
 import nikita.webapp.service.interfaces.secondary.IDocumentFlowService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
@@ -50,42 +48,29 @@ public class DocumentFlowService
     public DocumentFlowService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IODataService odataService,
             IPatchService patchService,
             IUserService userService,
             IMetadataService metadataService,
             IDocumentFlowRepository documentFlowRepository,
             IDocumentFlowHateoasHandler documentFlowHateoasHandler) {
-        super(entityManager, applicationEventPublisher, patchService);
+        super(entityManager, applicationEventPublisher, patchService, odataService);
         this.userService = userService;
         this.metadataService = metadataService;
         this.documentFlowRepository = documentFlowRepository;
         this.documentFlowHateoasHandler = documentFlowHateoasHandler;
     }
-
     // All READ methods
 
     @Override
-    public DocumentFlowHateoas findBySystemId(String documentFlowSystemId) {
-        DocumentFlowHateoas documentFlowHateoas =
-                new DocumentFlowHateoas(getDocumentFlowOrThrow(documentFlowSystemId));
-        documentFlowHateoasHandler.addLinks(documentFlowHateoas,
-                new Authorisation());
-        setOutgoingRequestHeader(documentFlowHateoas);
-        return documentFlowHateoas;
+    public DocumentFlowHateoas findBySystemId(@NotNull final UUID systemId) {
+        return packAsHateoas(getDocumentFlowOrThrow(systemId));
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public DocumentFlowHateoas findAllByOwner() {
-        DocumentFlowHateoas documentFlowHateoas =
-                new DocumentFlowHateoas((List<INoarkEntity>) (List)
-                        documentFlowRepository.findByOwnedBy(getUser()));
-        documentFlowHateoasHandler.addLinks(documentFlowHateoas,
-                new Authorisation());
-        setOutgoingRequestHeader(documentFlowHateoas);
-        return documentFlowHateoas;
+    public DocumentFlowHateoas findAll() {
+        return (DocumentFlowHateoas) odataService.processODataQueryGet();
     }
-
     // All update methods
 
     @Override
@@ -98,50 +83,37 @@ public class DocumentFlowService
         documentFlow.setReferenceRegistryEntry(registryEntry);
         documentFlow = documentFlowRepository.save(documentFlow);
         registryEntry.addDocumentFlow(documentFlow);
-        DocumentFlowHateoas documentFlowHateoas =
-            new DocumentFlowHateoas(documentFlow);
-        documentFlowHateoasHandler.addLinks(documentFlowHateoas,
-                                            new Authorisation());
-        setOutgoingRequestHeader(documentFlowHateoas);
-        return documentFlowHateoas;
+        return packAsHateoas(documentFlow);
     }
 
     @Override
     @Transactional
-    public DocumentFlowHateoas associateDocumentFlowWithRecordNote
-        (DocumentFlow documentFlow, RecordNote recordNote) {
+    public DocumentFlowHateoas associateDocumentFlowWithRecordNote(
+            @NotNull final DocumentFlow documentFlow,
+            @NotNull final RecordNote recordNote) {
         validateFlowStatus(documentFlow);
         checkFlowSentDate(documentFlow);
         createUserReferences(documentFlow);
         documentFlow.setReferenceRecordNote(recordNote);
-        documentFlow = documentFlowRepository.save(documentFlow);
-        recordNote.addDocumentFlow(documentFlow);
-        DocumentFlowHateoas documentFlowHateoas =
-            new DocumentFlowHateoas(documentFlow);
-        documentFlowHateoasHandler.addLinks(documentFlowHateoas,
-                                            new Authorisation());
-        setOutgoingRequestHeader(documentFlowHateoas);
-        return documentFlowHateoas;
+        return packAsHateoas(documentFlowRepository.save(documentFlow));
     }
 
     @Override
     @Transactional
-    public DocumentFlowHateoas updateDocumentFlowBySystemId
-        (String systemId, Long version, DocumentFlow incoming) {
+    public DocumentFlowHateoas updateDocumentFlowBySystemId(
+            @NotNull final UUID systemId, @NotNull final Long version,
+            @NotNull final DocumentFlow incoming) {
         DocumentFlow existing = getDocumentFlowOrThrow(systemId);
-
         existing.setFlowReceivedDate(incoming.getFlowReceivedDate());
         existing.setFlowStatus(incoming.getFlowStatus());
         existing.setFlowComment(incoming.getFlowComment());
-
         /* Only allow 'sent' date to be set during creation
-	existing.setFlowSentDate(incoming.getFlowSentDate());
-	*/
-
+	        existing.setFlowSentDate(incoming.getFlowSentDate());
+	    */
         User to = userService.validateUserReference
-            (DOCUMENT_FLOW_FLOW_TO, incoming.getReferenceFlowTo(),
-             incoming.getFlowTo(),
-             incoming.getReferenceFlowToSystemID());
+                (DOCUMENT_FLOW_FLOW_TO, incoming.getReferenceFlowTo(),
+                        incoming.getFlowTo(),
+                        incoming.getReferenceFlowToSystemID());
         existing.setReferenceFlowTo(to);
         if (null != to) {
             existing.setFlowTo(to.getUsername());
@@ -166,38 +138,29 @@ public class DocumentFlowService
                 (incoming.getReferenceFlowFromSystemID());
         }
         */
-
         existing.setVersion(version);
-        DocumentFlowHateoas documentFlowHateoas =
-            new DocumentFlowHateoas(documentFlowRepository.save(existing));
-        documentFlowHateoasHandler.addLinks(documentFlowHateoas,
-                                            new Authorisation());
-        setOutgoingRequestHeader(documentFlowHateoas);
-        return documentFlowHateoas;
+        return packAsHateoas(existing);
     }
-
     // All DELETE methods
 
     @Override
-    public void deleteDocumentFlowBySystemId(String systemID) {
-        documentFlowRepository.delete(getDocumentFlowOrThrow(systemID));
+    public void deleteDocumentFlowBySystemId(@NotNull final UUID systemId) {
+        documentFlowRepository.delete(getDocumentFlowOrThrow(systemId));
     }
 
     @Override
     public void deleteDocumentFlow(DocumentFlow documentFlow) {
         documentFlowRepository.delete(documentFlow);
     }
-
     // All template methods
 
     public DocumentFlowHateoas generateDefaultDocumentFlow() {
         DocumentFlow template = new DocumentFlow();
-
         template.setFlowSentDate(OffsetDateTime.now());
-
-        template.setFlowStatus(new FlowStatus(TEMPLATE_DOCUMENT_FLOW_FLOW_STATUS_CODE));
+        template.setFlowStatus(new FlowStatus(
+                TEMPLATE_DOCUMENT_FLOW_FLOW_STATUS_CODE));
+        template.setVersion(-1L, true);
         validateFlowStatus(template);
-
         // Propose current user as the sender / creator of the flow record
         User u = userService.userGetByUsername(getUser());
         if (null != u) {
@@ -208,14 +171,8 @@ public class DocumentFlowService
             String info = "Unable to find User object for current user when generating template!";
             logger.warn(info);
         }
-
-        DocumentFlowHateoas documentFlowHateoas =
-                new DocumentFlowHateoas(template);
-        documentFlowHateoasHandler
-                .addLinksOnTemplate(documentFlowHateoas, new Authorisation());
-        return documentFlowHateoas;
+        return packAsHateoas(template);
     }
-
     // All helper methods
 
     /**
@@ -224,20 +181,27 @@ public class DocumentFlowService
      * this, you will only ever get a valid DocumentFlow back. If
      * there is no valid DocumentFlow, an exception is thrown
      *
-     * @param documentFlowSystemId systemID of the DocumentFlow object to retrieve
+     * @param systemId systemId of the DocumentFlow object to retrieve
      * @return the DocumentFlow object
      */
     protected DocumentFlow getDocumentFlowOrThrow(
-            @NotNull String documentFlowSystemId) {
+            @NotNull final UUID systemId) {
         DocumentFlow documentFlow = documentFlowRepository.
-                findBySystemId(UUID.fromString(documentFlowSystemId));
+                findBySystemId(systemId);
         if (documentFlow == null) {
             String error = INFO_CANNOT_FIND_OBJECT +
-                    " DocumentFlow, using systemId " + documentFlowSystemId;
+                    " DocumentFlow, using systemId " + systemId;
             logger.error(error);
             throw new NoarkEntityNotFoundException(error);
         }
         return documentFlow;
+    }
+
+    private DocumentFlowHateoas packAsHateoas(DocumentFlow documentFlow) {
+        DocumentFlowHateoas documentFlowHateoas =
+                new DocumentFlowHateoas(documentFlow);
+        applyLinksAndHeader(documentFlowHateoas, documentFlowHateoasHandler);
+        return documentFlowHateoas;
     }
 
     private void validateFlowStatus(DocumentFlow incomingDocumentFlow) {
@@ -283,10 +247,8 @@ public class DocumentFlowService
                     DOCUMENT_FLOW_FLOW_TO + " are the same";
             throw new NikitaMalformedInputDataException(info);
         }
-
         documentFlow.setReferenceFlowTo(to);
         documentFlow.setReferenceFlowFrom(from);
-
         if (null != to
                 && null == documentFlow.getFlowTo()) {
             documentFlow.setFlowTo(to.getUsername());
@@ -295,7 +257,6 @@ public class DocumentFlowService
                 && null == documentFlow.getReferenceFlowToSystemID()) {
             documentFlow.setReferenceFlowToSystemID(to.getSystemId());
         }
-
         if (null != from
                 && null == documentFlow.getFlowFrom()) {
             documentFlow.setFlowFrom(from.getUsername());
@@ -305,5 +266,4 @@ public class DocumentFlowService
             documentFlow.setReferenceFlowFromSystemID(from.getSystemId());
         }
     }
-
 }

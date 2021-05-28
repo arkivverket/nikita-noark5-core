@@ -5,19 +5,27 @@ import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.hateoas.secondary.AuthorHateoas;
 import nikita.common.model.noark5.v5.secondary.Author;
 
+import javax.validation.constraints.NotNull;
+import java.util.UUID;
+
 public interface IAuthorService {
 
-    AuthorHateoas associateAuthorWithDocumentDescription
-        (Author author, DocumentDescription documentDescription);
+    AuthorHateoas associateAuthorWithDocumentDescription(
+            @NotNull final Author author,
+            @NotNull final DocumentDescription documentDescription);
 
-    AuthorHateoas associateAuthorWithRecord(Author author, Record record);
+    AuthorHateoas associateAuthorWithRecord(
+            @NotNull final Author author,
+            @NotNull final Record record);
 
-    AuthorHateoas updateAuthorBySystemId(String systemId, Long version,
-                        Author incomingAuthor);
+    AuthorHateoas updateAuthorBySystemId(
+            @NotNull final UUID systemId,
+            @NotNull final Long version,
+            @NotNull final Author incomingAuthor);
 
-    void deleteAuthorBySystemId(String systemID);
+    void deleteAuthorBySystemId(@NotNull final UUID systemId);
 
-    AuthorHateoas findBySystemId(String precedenceSystemId);
+    AuthorHateoas findBySystemId(@NotNull final UUID systemId);
 
-    AuthorHateoas generateDefaultAuthor();
+    AuthorHateoas generateDefaultAuthor(@NotNull final UUID systemId);
 }

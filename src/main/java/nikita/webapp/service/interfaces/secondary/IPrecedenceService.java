@@ -4,19 +4,24 @@ import nikita.common.model.noark5.v5.hateoas.secondary.PrecedenceHateoas;
 import nikita.common.model.noark5.v5.secondary.Precedence;
 
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 public interface IPrecedenceService {
 
-    PrecedenceHateoas updatePrecedenceBySystemId
-            (String systemId, Long version, Precedence incomingPrecedence);
+    PrecedenceHateoas updatePrecedenceBySystemId(
+            @NotNull final UUID systemId,
+            @NotNull final Long version,
+            @NotNull final Precedence incomingPrecedence);
 
-    PrecedenceHateoas createNewPrecedence(Precedence entity);
+    PrecedenceHateoas createNewPrecedence(
+            @NotNull final Precedence entity);
 
-    void deletePrecedenceBySystemId(String systemID);
+    void deletePrecedenceBySystemId(@NotNull final UUID systemId);
 
-    PrecedenceHateoas findAllByOwner();
+    PrecedenceHateoas findAll();
 
-    PrecedenceHateoas findBySystemId(String precedenceSystemId);
+    PrecedenceHateoas findBySystemId(
+            @NotNull final UUID systemId);
 
     PrecedenceHateoas generateDefaultPrecedence();
 

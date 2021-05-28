@@ -14,17 +14,17 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static nikita.common.config.ErrorMessagesConstants.MALFORMED_PAYLOAD;
 import static nikita.common.config.HATEOASConstants.LINKS;
 import static nikita.common.config.N5ResourceMappings.BSM_DEF;
+import static nikita.common.config.N5ResourceMappings.CORRESPONDENCE_PART_PERSON;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 
 /**
- * Created by tsodring on 1/6/17.
- * <p>
  * Deserialise an incoming CorrespondencePartPerson JSON object.
  */
 public class CorrespondencePartPersonDeserializer
-        extends JsonDeserializer {
+        extends JsonDeserializer<CorrespondencePartPerson> {
 
     private static final Logger logger =
             LoggerFactory.getLogger(CorrespondencePartPersonDeserializer.class);
@@ -41,7 +41,7 @@ public class CorrespondencePartPersonDeserializer
                 new CorrespondencePartPerson();
         ObjectNode objectNode = mapper.readTree(jsonParser);
 
-        deserialiseNoarkSystemIdEntity(correspondencePart, objectNode, errors);
+        deserialiseNoarkSystemIdEntity(correspondencePart, objectNode);
         deserialiseCorrespondencePartPersonEntity(
                 correspondencePart, objectNode, errors);
 
@@ -63,10 +63,8 @@ public class CorrespondencePartPersonDeserializer
         // Check that there are no additional values left after processing
         // the tree If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {
-            errors.append("The korrespondansepartperson you tried to create " +
-                    "is malformed. The following fields are not " +
-                    "recognised as korrespondansepartperson fields " +
-                    "[" + checkNodeObjectEmpty(objectNode) + "].");
+            errors.append(String.format(MALFORMED_PAYLOAD,
+                    CORRESPONDENCE_PART_PERSON, checkNodeObjectEmpty(objectNode)));
         }
         if (0 < errors.length())
             throw new NikitaMalformedInputDataException(errors.toString());

@@ -8,19 +8,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import nikita.common.model.noark5.v5.metadata.CommentType;
 import nikita.common.model.noark5.v5.secondary.Comment;
-import nikita.common.util.deserialisers.secondary.CommentDeserializer;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static nikita.common.config.ErrorMessagesConstants.MALFORMED_PAYLOAD;
 import static nikita.common.config.HATEOASConstants.LINKS;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 
 public class CommentDeserializer
-        extends JsonDeserializer {
+        extends JsonDeserializer<Comment> {
 
     private static final Logger logger =
             LoggerFactory.getLogger(CommentDeserializer.class);
@@ -36,7 +36,7 @@ public class CommentDeserializer
         ObjectNode objectNode = mapper.readTree(jsonParser);
 
         // Deserialize systemID
-        deserialiseNoarkSystemIdEntity(comment, objectNode, errors);
+        deserialiseNoarkSystemIdEntity(comment, objectNode);
         // Deserialize merknadstekst
         JsonNode currentNode = objectNode.get(COMMENT_TEXT);
         if (null != currentNode) {
@@ -74,11 +74,8 @@ public class CommentDeserializer
         // Check that there are no additional values left after processing the
         // tree. If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {
-            errors.append("The comment you tried to create is malformed. The");
-            errors.append(" following fields are not recognised as comment ");
-            errors.append(" fields [");
-            errors.append(checkNodeObjectEmpty(objectNode));
-            errors.append("]. ");
+            errors.append(String.format(MALFORMED_PAYLOAD,
+                    COMMENT, checkNodeObjectEmpty(objectNode)));
         }
         if (0 < errors.length())
             throw new NikitaMalformedInputDataException(errors.toString());

@@ -14,18 +14,15 @@ import nikita.common.model.noark5.v5.metadata.CorrespondencePartType;
 import nikita.common.repository.n5v5.secondary.ICorrespondencePartRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.secondary.ICorrespondencePartHateoasHandler;
-import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.IBSMService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
+import nikita.webapp.service.interfaces.odata.IODataService;
 import nikita.webapp.service.interfaces.secondary.ICorrespondencePartService;
-import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
-import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,8 +35,6 @@ import java.util.UUID;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.MetadataConstants.CORRESPONDENCE_PART_CODE_EA;
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
-import static org.springframework.http.HttpStatus.OK;
 
 @Service
 public class CorrespondencePartService
@@ -58,11 +53,12 @@ public class CorrespondencePartService
     public CorrespondencePartService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IODataService odataService,
             IPatchService patchService,
             ICorrespondencePartRepository correspondencePartRepository,
             ICorrespondencePartHateoasHandler correspondencePartHateoasHandler,
             IMetadataService metadataService, IBSMService bsmService) {
-        super(entityManager, applicationEventPublisher, patchService);
+        super(entityManager, applicationEventPublisher, patchService, odataService);
         this.correspondencePartRepository = correspondencePartRepository;
         this.correspondencePartHateoasHandler = correspondencePartHateoasHandler;
         this.metadataService = metadataService;
@@ -75,8 +71,8 @@ public class CorrespondencePartService
     @Transactional
     public CorrespondencePartPersonHateoas
     createNewCorrespondencePartPerson(
-            CorrespondencePartPerson correspondencePart,
-            Record record) {
+            @NotNull final CorrespondencePartPerson correspondencePart,
+            @NotNull final Record record) {
 
         validateCorrespondencePartType(correspondencePart);
         ContactInformation contactInformation
@@ -96,18 +92,9 @@ public class CorrespondencePartService
             residingAddress.getSimpleAddress().setAddressType(RESIDING_ADDRESS);
             residingAddress.setCorrespondencePartPerson(correspondencePart);
         }
-
         record.addCorrespondencePart(correspondencePart);
-        CorrespondencePartPersonHateoas correspondencePartPersonHateoas =
-                new CorrespondencePartPersonHateoas(
-                        correspondencePartRepository.save(correspondencePart));
-        correspondencePartHateoasHandler.addLinks(
-                correspondencePartPersonHateoas,
-                new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityCreatedEvent(this,
-                        correspondencePart));
-        return correspondencePartPersonHateoas;
+        return packAsCorrespondencePartPersonHateoas(
+                correspondencePartRepository.save(correspondencePart));
     }
 
     /**
@@ -122,8 +109,8 @@ public class CorrespondencePartService
     @Override
     @Transactional
     public CorrespondencePartUnitHateoas createNewCorrespondencePartUnit(
-            CorrespondencePartUnit correspondencePart,
-            Record record) {
+            @NotNull final CorrespondencePartUnit correspondencePart,
+            @NotNull final Record record) {
         validateCorrespondencePartType(correspondencePart);
         // Set NikitaEntity values for ContactInformation, PostalAddress,
         // BusinessAddress
@@ -139,42 +126,48 @@ public class CorrespondencePartService
             correspondencePart.setBusinessAddress(businessAddress);
         }
         record.addCorrespondencePart(correspondencePart);
-        correspondencePartRepository.save(correspondencePart);
-        CorrespondencePartUnitHateoas correspondencePartUnitHateoas =
-                new CorrespondencePartUnitHateoas(correspondencePart);
-        correspondencePartHateoasHandler.addLinks(correspondencePartUnitHateoas,
-                new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityCreatedEvent(this,
-                        correspondencePart));
-        return correspondencePartUnitHateoas;
+        return packAsCorrespondencePartUnitHateoas(
+                correspondencePartRepository.save(correspondencePart));
     }
 
     @Override
     @Transactional
     public CorrespondencePartInternalHateoas
     createNewCorrespondencePartInternal(
-            CorrespondencePartInternal correspondencePart,
-            Record record) {
+            @NotNull final CorrespondencePartInternal correspondencePart,
+            @NotNull final Record record) {
         validateCorrespondencePartType(correspondencePart);
         record.addCorrespondencePart(correspondencePart);
-        correspondencePartRepository.save(correspondencePart);
-        CorrespondencePartInternalHateoas correspondencePartInternalHateoas =
-                new CorrespondencePartInternalHateoas(correspondencePart);
-        correspondencePartHateoasHandler.addLinks(
-                correspondencePartInternalHateoas,
-                new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityCreatedEvent(this,
-                        correspondencePart));
-        return correspondencePartInternalHateoas;
+        return packAsCorrespondencePartInternalHateoas(
+                correspondencePartRepository.save(correspondencePart));
     }
 
     // All READ methods
 
     @Override
-    public CorrespondencePart findBySystemId(@NotNull String systemId) {
+    public CorrespondencePart findBySystemId(@NotNull final UUID systemId) {
         return getCorrespondencePartOrThrow(systemId);
+    }
+
+    @Override
+    public CorrespondencePartInternalHateoas
+    findCorrespondencePartInternalBySystemId(UUID systemId) {
+        return packAsCorrespondencePartInternalHateoas((CorrespondencePartInternal)
+                getCorrespondencePartOrThrow(systemId));
+    }
+
+    @Override
+    public CorrespondencePartPersonHateoas
+    findCorrespondencePartPersonBySystemId(UUID systemId) {
+        return packAsCorrespondencePartPersonHateoas((CorrespondencePartPerson)
+                getCorrespondencePartOrThrow(systemId));
+    }
+
+    @Override
+    public CorrespondencePartUnitHateoas
+    findCorrespondencePartUnitBySystemId(UUID systemId) {
+        return packAsCorrespondencePartUnitHateoas((CorrespondencePartUnit)
+                getCorrespondencePartOrThrow(systemId));
     }
 
     // All UPDATE methods
@@ -194,10 +187,10 @@ public class CorrespondencePartService
      */
     @Override
     @Transactional
-    public CorrespondencePartPerson
+    public CorrespondencePartPersonHateoas
     updateCorrespondencePartPerson(
-            @NotNull String systemId, @NotNull Long version,
-            @NotNull CorrespondencePartPerson incomingCorrespondencePart) {
+            @NotNull final UUID systemId, @NotNull final Long version,
+            @NotNull final CorrespondencePartPerson incomingCorrespondencePart) {
         CorrespondencePartPerson existingCorrespondencePart =
                 (CorrespondencePartPerson)
                         getCorrespondencePartOrThrow(systemId);
@@ -227,13 +220,13 @@ public class CorrespondencePartService
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
         existingCorrespondencePart.setVersion(version);
-        correspondencePartRepository.save(existingCorrespondencePart);
-        return existingCorrespondencePart;
+        return packAsCorrespondencePartPersonHateoas(
+                existingCorrespondencePart);
     }
 
     private void updateCorrespondencePartType(
-            CorrespondencePart incomingCorrespondencePart,
-            CorrespondencePart existingCorrespondencePart) {
+            @NotNull final CorrespondencePart incomingCorrespondencePart,
+            @NotNull final CorrespondencePart existingCorrespondencePart) {
         // Only copy if changed, in case it has an historical value
         if (existingCorrespondencePart.getCorrespondencePartType()
                 != incomingCorrespondencePart.getCorrespondencePartType()) {
@@ -245,9 +238,9 @@ public class CorrespondencePartService
 
     @Override
     @Transactional
-    public CorrespondencePartInternal updateCorrespondencePartInternal(
-            @NotNull String systemId, @NotNull Long version,
-            @NotNull CorrespondencePartInternal incomingCorrespondencePart) {
+    public CorrespondencePartInternalHateoas updateCorrespondencePartInternal(
+            @NotNull final UUID systemId, @NotNull final Long version,
+            @NotNull final CorrespondencePartInternal incomingCorrespondencePart) {
         CorrespondencePartInternal existingCorrespondencePart =
                 (CorrespondencePartInternal)
                         getCorrespondencePartOrThrow(systemId);
@@ -267,15 +260,15 @@ public class CorrespondencePartService
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
         existingCorrespondencePart.setVersion(version);
-        correspondencePartRepository.save(existingCorrespondencePart);
-        return existingCorrespondencePart;
+        return packAsCorrespondencePartInternalHateoas(
+                existingCorrespondencePart);
     }
 
     @Override
     @Transactional
-    public CorrespondencePartUnit updateCorrespondencePartUnit(
-            @NotNull String systemId, @NotNull Long version,
-            @NotNull CorrespondencePartUnit incomingCorrespondencePart) {
+    public CorrespondencePartUnitHateoas updateCorrespondencePartUnit(
+            @NotNull final UUID systemId, @NotNull final Long version,
+            @NotNull final CorrespondencePartUnit incomingCorrespondencePart) {
 
         CorrespondencePartUnit existingCorrespondencePart =
                 (CorrespondencePartUnit) getCorrespondencePartOrThrow(systemId);
@@ -305,33 +298,22 @@ public class CorrespondencePartService
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
         existingCorrespondencePart.setVersion(version);
-        correspondencePartRepository.save(existingCorrespondencePart);
-        return existingCorrespondencePart;
+        return packAsCorrespondencePartUnitHateoas(existingCorrespondencePart);
     }
 
     @Override
     @Transactional
-    public ResponseEntity<CorrespondencePartHateoas>
-    handleUpdate(UUID systemID, PatchObjects patchObjects) {
-        CorrespondencePart correspondencePart = (CorrespondencePart)
-                handlePatch(systemID, patchObjects);
-        CorrespondencePartHateoas correspondencePartHateoas =
-                new CorrespondencePartHateoas(correspondencePart);
-        correspondencePartHateoasHandler.addLinks(correspondencePartHateoas,
-                new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityUpdatedEvent(this,
-                        correspondencePart));
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(correspondencePartHateoas.getEntityVersion().toString())
-                .body(correspondencePartHateoas);
+    public CorrespondencePartHateoas handleUpdate(
+            @NotNull final UUID systemId,
+            @NotNull final PatchObjects patchObjects) {
+        return packAsHateoas((CorrespondencePart)
+                handlePatch(systemId, patchObjects));
     }
 
     // All template methods
 
     private void createTemplateCorrespondencePartType(
-            CorrespondencePart correspondencePart) {
+            @NotNull final CorrespondencePart correspondencePart) {
         CorrespondencePartType correspondencePartType = (CorrespondencePartType)
                 metadataService.findValidMetadataByEntityTypeOrThrow
                         (CORRESPONDENCE_PART_TYPE, CORRESPONDENCE_PART_CODE_EA, null);
@@ -351,7 +333,7 @@ public class CorrespondencePartService
      */
     @Override
     @Transactional
-    public void deleteCorrespondencePartUnit(@NotNull String systemId) {
+    public void deleteCorrespondencePartUnit(@NotNull final UUID systemId) {
         CorrespondencePartUnit correspondencePartUnit = (CorrespondencePartUnit)
                 getCorrespondencePartOrThrow(systemId);
         Record record = correspondencePartUnit.getReferenceRecord();
@@ -372,7 +354,7 @@ public class CorrespondencePartService
      */
     @Override
     @Transactional
-    public void deleteCorrespondencePartPerson(@NotNull String systemId) {
+    public void deleteCorrespondencePartPerson(@NotNull final UUID systemId) {
         CorrespondencePartPerson correspondencePartPerson = (CorrespondencePartPerson)
                 getCorrespondencePartOrThrow(systemId);
         Record record = correspondencePartPerson.getReferenceRecord();
@@ -393,20 +375,18 @@ public class CorrespondencePartService
      */
     @Override
     @Transactional
-    public void deleteCorrespondencePartInternal(@NotNull String systemId) {
+    public void deleteCorrespondencePartInternal(@NotNull final UUID systemId) {
         correspondencePartRepository.delete(
                 getCorrespondencePartOrThrow(systemId));
     }
 
     /**
      * Delete all objects belonging to the user identified by ownedBy
-     *
-     * @return the number of objects deleted
      */
     @Override
     @Transactional
-    public long deleteAllByOwnedBy() {
-        return correspondencePartRepository.deleteByOwnedBy(getUser());
+    public void deleteAllByOwnedBy() {
+        correspondencePartRepository.deleteByOwnedBy(getUser());
     }
 
     // Internal helper methods
@@ -419,8 +399,8 @@ public class CorrespondencePartService
      * @param incomingCorrespondencePart The incoming CorrespondencePart
      */
     private void updateCorrespondencePartUnitBusinessAddressCreateIfNull(
-            IBusinessAddress existingCorrespondencePart,
-            IBusinessAddress incomingCorrespondencePart) {
+            @NotNull final IBusinessAddress existingCorrespondencePart,
+            @NotNull final IBusinessAddress incomingCorrespondencePart) {
 
         if (existingCorrespondencePart.getBusinessAddress() != null &&
                 incomingCorrespondencePart.getBusinessAddress() != null) {
@@ -455,8 +435,8 @@ public class CorrespondencePartService
      * @param incomingCorrespondencePart The incoming CorrespondencePart
      */
     private void updateCorrespondencePartResidingAddressCreateIfNull(
-            IResidingAddress existingCorrespondencePart,
-            IResidingAddress incomingCorrespondencePart) {
+            @NotNull final IResidingAddress existingCorrespondencePart,
+            @NotNull final IResidingAddress incomingCorrespondencePart) {
 
         if (existingCorrespondencePart.getResidingAddress() != null &&
                 incomingCorrespondencePart.getResidingAddress() != null) {
@@ -491,8 +471,8 @@ public class CorrespondencePartService
      * @param incomingPostalAddress The incoming CorrespondencePart
      */
     private void updateCorrespondencePartPostalAddressCreateIfNull(
-            IPostalAddress existingPostalAddress,
-            IPostalAddress incomingPostalAddress) {
+            @NotNull final IPostalAddress existingPostalAddress,
+            @NotNull final IPostalAddress incomingPostalAddress) {
 
         if (existingPostalAddress.getPostalAddress() != null
                 && incomingPostalAddress.getPostalAddress() != null) {
@@ -527,8 +507,8 @@ public class CorrespondencePartService
      * @param incomingCorrespondencePart The incoming CorrespondencePart
      */
     private void updateCorrespondencePartContactInformationCreateIfNull(
-            IContactInformation existingCorrespondencePart,
-            IContactInformation incomingCorrespondencePart) {
+            @NotNull final IContactInformation existingCorrespondencePart,
+            @NotNull final IContactInformation incomingCorrespondencePart) {
 
         if (existingCorrespondencePart.getContactInformation() != null &&
                 incomingCorrespondencePart.getContactInformation() != null) {
@@ -560,18 +540,12 @@ public class CorrespondencePartService
      */
     @Override
     public CorrespondencePartUnitHateoas generateDefaultCorrespondencePartUnit(
-            final String recordSystemId) {
-
+            @NotNull final UUID recordSystemId) {
         CorrespondencePartUnit suggestedCorrespondencePart =
                 new CorrespondencePartUnit();
-
+        suggestedCorrespondencePart.setVersion(-1L, true);
         createTemplateCorrespondencePartType(suggestedCorrespondencePart);
-
-        CorrespondencePartUnitHateoas correspondencePartHateoas =
-                new CorrespondencePartUnitHateoas(suggestedCorrespondencePart);
-        correspondencePartHateoasHandler.addLinksOnTemplate(
-                correspondencePartHateoas, new Authorisation());
-        return correspondencePartHateoas;
+        return packAsCorrespondencePartUnitHateoas(suggestedCorrespondencePart);
     }
 
     /**
@@ -589,17 +563,13 @@ public class CorrespondencePartService
      */
     @Override
     public CorrespondencePartPersonHateoas
-    generateDefaultCorrespondencePartPerson(final String recordSystemId) {
+    generateDefaultCorrespondencePartPerson(
+            @NotNull final UUID recordSystemId) {
         CorrespondencePartPerson suggestedCorrespondencePart =
                 new CorrespondencePartPerson();
-
+        suggestedCorrespondencePart.setVersion(-1L, true);
         createTemplateCorrespondencePartType(suggestedCorrespondencePart);
-
-        CorrespondencePartPersonHateoas correspondencePartHateoas =
-                new CorrespondencePartPersonHateoas(suggestedCorrespondencePart);
-        correspondencePartHateoasHandler.addLinksOnTemplate(
-                correspondencePartHateoas, new Authorisation());
-        return correspondencePartHateoas;
+        return packAsCorrespondencePartPersonHateoas(suggestedCorrespondencePart);
     }
 
     /**
@@ -618,18 +588,14 @@ public class CorrespondencePartService
     @Override
     public CorrespondencePartInternalHateoas
     generateDefaultCorrespondencePartInternal(
-            final String recordSystemId) {
+            @NotNull final UUID recordSystemId) {
         CorrespondencePartInternal suggestedCorrespondencePart =
                 new CorrespondencePartInternal();
 
         createTemplateCorrespondencePartType(suggestedCorrespondencePart);
-
-        CorrespondencePartInternalHateoas correspondencePartHateoas =
-                new CorrespondencePartInternalHateoas(
-                        suggestedCorrespondencePart);
-        correspondencePartHateoasHandler.addLinksOnTemplate(
-                correspondencePartHateoas, new Authorisation());
-        return correspondencePartHateoas;
+        suggestedCorrespondencePart.setVersion(-1L, true);
+        return packAsCorrespondencePartInternalHateoas(
+                suggestedCorrespondencePart);
     }
 
     /**
@@ -643,8 +609,8 @@ public class CorrespondencePartService
      * @return The existing ContactInformation object updated with values
      */
     private ContactInformation updateContactInformation(
-            IContactInformationEntity existingContactInformation,
-            IContactInformationEntity incomingContactInformation) {
+            @NotNull final IContactInformationEntity existingContactInformation,
+            @NotNull final IContactInformationEntity incomingContactInformation) {
 
         existingContactInformation.setEmailAddress(
                 incomingContactInformation.getEmailAddress());
@@ -663,8 +629,8 @@ public class CorrespondencePartService
      *                        database
      * @param incomingAddress Incoming address object
      */
-    private void updateAddress(@NotNull SimpleAddress existingAddress,
-                               @NotNull SimpleAddress incomingAddress) {
+    private void updateAddress(@NotNull final SimpleAddress existingAddress,
+                               @NotNull final SimpleAddress incomingAddress) {
 
         existingAddress.setAddressType(incomingAddress.getAddressType());
         existingAddress.setAddressLine1(incomingAddress.getAddressLine1());
@@ -676,7 +642,7 @@ public class CorrespondencePartService
     }
 
     private void validateCorrespondencePartType(
-            CorrespondencePart correspondencePart) {
+            @NotNull final CorrespondencePart correspondencePart) {
         // Assume value already set, as the deserialiser will enforce it.
         CorrespondencePartType correspondencePartType =
                 (CorrespondencePartType) metadataService.findValidMetadata(
@@ -686,34 +652,57 @@ public class CorrespondencePartService
     }
 
     @Override
-    protected Optional<BSMMetadata> findBSMByName(String name) {
+    protected Optional<BSMMetadata> findBSMByName(@NotNull final String name) {
         return bsmService.findBSMByName(name);
     }
 
     @Override
     @Transactional
-    public Object associateBSM(@NotNull UUID systemId,
-                               @NotNull List<BSMBase> bsm) {
+    public Object associateBSM(@NotNull final UUID systemId,
+                               @NotNull final List<BSMBase> bsm) {
         CorrespondencePart correspondencePart =
                 getCorrespondencePartOrThrow(systemId);
         correspondencePart.addReferenceBSMBase(bsm);
         return correspondencePart;
     }
 
-    /**
-     * Internal helper method. Rather than having a find and try catch in
-     * multiple methods, we have it here once. If you call this, be aware
-     * that you will only ever get a valid CorrespondencePart back. If there
-     * is no valid CorrespondencePart, an exception is thrown
-     *
-     * @param correspondencePartSystemId systemId of correspondencePart to
-     *                                   retrieve
-     * @return the retrieved CorrespondencePart
-     */
-    private CorrespondencePart getCorrespondencePartOrThrow(
-            @NotNull String correspondencePartSystemId) {
-        return getCorrespondencePartOrThrow(
-                UUID.fromString(correspondencePartSystemId));
+    public CorrespondencePartHateoas packAsHateoas(
+            @NotNull final CorrespondencePart correspondencePart) {
+        CorrespondencePartHateoas correspondencePartHateoas =
+                new CorrespondencePartHateoas(correspondencePart);
+        applyLinksAndHeader(correspondencePartHateoas,
+                correspondencePartHateoasHandler);
+        return correspondencePartHateoas;
+    }
+
+    public CorrespondencePartPersonHateoas
+    packAsCorrespondencePartPersonHateoas(
+            @NotNull final CorrespondencePartPerson correspondencePartPerson) {
+        CorrespondencePartPersonHateoas correspondencePartPersonHateoas =
+                new CorrespondencePartPersonHateoas(correspondencePartPerson);
+        applyLinksAndHeader(correspondencePartPersonHateoas,
+                correspondencePartHateoasHandler);
+        return correspondencePartPersonHateoas;
+    }
+
+    public CorrespondencePartInternalHateoas
+    packAsCorrespondencePartInternalHateoas(
+            @NotNull final CorrespondencePartInternal correspondencePartInternal) {
+        CorrespondencePartInternalHateoas correspondencePartInternalHateoas =
+                new CorrespondencePartInternalHateoas(correspondencePartInternal);
+        applyLinksAndHeader(correspondencePartInternalHateoas,
+                correspondencePartHateoasHandler);
+        return correspondencePartInternalHateoas;
+    }
+
+    public CorrespondencePartUnitHateoas
+    packAsCorrespondencePartUnitHateoas(
+            @NotNull final CorrespondencePartUnit correspondencePartUnit) {
+        CorrespondencePartUnitHateoas correspondencePartUnitHateoas =
+                new CorrespondencePartUnitHateoas(correspondencePartUnit);
+        applyLinksAndHeader(correspondencePartUnitHateoas,
+                correspondencePartHateoasHandler);
+        return correspondencePartUnitHateoas;
     }
 
     /**
@@ -722,18 +711,18 @@ public class CorrespondencePartService
      * that you will only ever get a valid CorrespondencePart back. If there
      * is no valid CorrespondencePart, an exception is thrown
      *
-     * @param correspondencePartSystemId systemId of correspondencePart to
-     *                                   retrieve
+     * @param systemId systemId of correspondencePart to
+     *                 retrieve
      * @return the retrieved CorrespondencePart
      */
     private CorrespondencePart getCorrespondencePartOrThrow(
-            @NotNull UUID correspondencePartSystemId) {
+            @NotNull final UUID systemId) {
         CorrespondencePart correspondencePart =
                 correspondencePartRepository
-                        .findBySystemId(correspondencePartSystemId);
+                        .findBySystemId(systemId);
         if (correspondencePart == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " CorrespondencePart, " +
-                    "using systemId " + correspondencePartSystemId;
+                    "using systemId " + systemId;
             logger.info(info);
             throw new NoarkEntityNotFoundException(info);
         }

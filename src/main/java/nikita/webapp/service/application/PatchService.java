@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.constraints.NotNull;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Optional;
@@ -32,7 +33,7 @@ public class PatchService
     }
 
     @Transactional
-    public Object handlePatch(UUID originalObjectId,
+    public Object handlePatch(@NotNull final UUID originalObjectId,
                               PatchObject patchObject) {
         SystemIdEntity what = findSystemIdEntity(originalObjectId);
         SystemIdEntity fromObject = findSystemIdEntity(getFrom(patchObject));
@@ -109,13 +110,13 @@ public class PatchService
         return fromString(value);
     }
 
-    private SystemIdEntity findSystemIdEntity(UUID originalObjectId) {
+    private SystemIdEntity findSystemIdEntity(@NotNull final UUID originalObjectId) {
         Optional<SystemIdEntity> systemIdEntity =
                 systemIdEntityRepository.findById(originalObjectId);
         if (systemIdEntity.isPresent()) {
             return systemIdEntity.get();
         } else {
-            String error = "Could not find Noark object with systemID " +
+            String error = "Could not find Noark object with systemId " +
                     originalObjectId;
             logger.error(error);
             throw new NoarkEntityNotFoundException(error);

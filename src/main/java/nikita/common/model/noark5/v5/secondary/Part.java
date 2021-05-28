@@ -6,8 +6,12 @@ import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.NoarkGeneralEntity;
 import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.hateoas.secondary.PartHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.IPartEntity;
 import nikita.common.model.noark5.v5.metadata.PartRole;
+import nikita.webapp.hateoas.secondary.PartHateoasHandler;
+import nikita.webapp.util.annotation.HateoasObject;
+import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -26,6 +30,8 @@ import static nikita.common.config.N5ResourceMappings.*;
 
 @Entity
 @Table(name = TABLE_PART)
+@HateoasPacker(using = PartHateoasHandler.class)
+@HateoasObject(using = PartHateoas.class)
 @Audited
 public class Part
         extends NoarkGeneralEntity

@@ -14,38 +14,16 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static nikita.common.config.ErrorMessagesConstants.MALFORMED_PAYLOAD;
 import static nikita.common.config.HATEOASConstants.LINKS;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 
 /**
- * Created by tsodring on 1/6/17.
- * <p>
  * Deserialise an incoming Record JSON object.
- * <p>
- * Having a own deserialiser is done to have more fine grained control over the input. This allows us to be less strict
- * with property names, allowing for both English and Norwegian property names
- * <p>
- * <p>
- * <p>
- * Note this implementation expects that the Record object to deserialise is in compliance with the Noark standard where
- * certain properties i.e. createdBy and createdDate are set by the core, not the caller. This deserializer will not
- * enforce this and will deserialize a record object correctly. This is because e.g the import interface will require
- * such functionality.
- * <p>
- * - Testing of compliance of properties is handled by the core, either in RecordController or RecordService
- * <p>
- * Note. Currently we do not include 'id' or 'deleted' properties. 'id' is a primary key and it is assumed this is
- * taken care of by the DBMS and 'deleted' is a field internal to the core to handle soft delete. Importing soft deleted
- * objects is something we do not consider necessary.
- * <p>
- * Note:
- * - Unknown property values in the JSON will trigger an exception
- * - Missing obligatory property values in the JSON will trigger an exception
- * - Record has no obligatory values required to be present at instantiation time
  */
 public class RecordDeserializer
-        extends JsonDeserializer {
+        extends JsonDeserializer<Record> {
 
     private static final Logger logger =
             LoggerFactory.getLogger(RecordDeserializer.class);
@@ -99,7 +77,7 @@ public class RecordDeserializer
         }
 
         deserialiseDocumentMedium(record, objectNode, errors);
-        deserialiseKeyword(record, objectNode, errors);
+        deserialiseKeyword(record, objectNode);
         record.setReferenceClassified(
                 deserialiseClassified(objectNode, errors));
 
@@ -125,10 +103,8 @@ public class RecordDeserializer
         // Check that there are no additional values left after processing
         // the tree. If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {
-            errors.append("The registrering you tried to create is " +
-                          "malformed. The following fields are not " +
-                          "recognised as registrering fields " +
-                          "[" + checkNodeObjectEmpty(objectNode) + "].");
+            errors.append(String.format(MALFORMED_PAYLOAD,
+                    RECORD, checkNodeObjectEmpty(objectNode)));
         }
 
         if (0 < errors.length())

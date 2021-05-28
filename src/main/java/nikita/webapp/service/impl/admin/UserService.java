@@ -4,18 +4,16 @@ import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.admin.AuthorityName;
 import nikita.common.model.noark5.v5.admin.User;
 import nikita.common.model.noark5.v5.hateoas.admin.UserHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.repository.nikita.AuthorityRepository;
 import nikita.common.repository.nikita.IUserRepository;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.admin.IUserHateoasHandler;
-import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.IUserService;
 import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.impl.NoarkService;
+import nikita.webapp.service.interfaces.odata.IODataService;
 import nikita.webapp.util.exceptions.UsernameExistsException;
-import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -26,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -50,17 +47,17 @@ public class UserService
 
     public UserService(EntityManager entityManager,
                        ApplicationEventPublisher applicationEventPublisher,
+                       IODataService odataService,
                        IPatchService patchService,
                        IUserRepository userRepository,
                        AuthorityRepository authorityRepository,
                        IUserHateoasHandler userHateoasHandler,
                        PasswordEncoder encoder,
                        AdministrativeUnitService administrativeUnitService) {
-        super(entityManager, applicationEventPublisher, patchService);
+        super(entityManager, applicationEventPublisher, patchService, odataService);
         this.userRepository = userRepository;
         this.authorityRepository = authorityRepository;
         this.userHateoasHandler = userHateoasHandler;
-        this.applicationEventPublisher = applicationEventPublisher;
         this.encoder = encoder;
         this.administrativeUnitService = administrativeUnitService;
     }
@@ -71,17 +68,8 @@ public class UserService
     @Transactional
     public UserHateoas createNewUser(final User user)
             throws UsernameExistsException {
-        user.setPassword(encoder.encode(user.getPassword()));
-        user.setEnabled(true);
-        user.setCreatedBy(SYSTEM);
-        user.setCreatedDate(OffsetDateTime.now());
-        user.setAccountNonExpired(true);
-        user.setAccountNonLocked(true);
-        user.setCredentialsNonExpired(true);
-        UserHateoas userHateoas = new UserHateoas(userRepository.save(user));
-        userHateoasHandler.addLinks(userHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityUpdatedEvent(this, user));
+
+        UserHateoas userHateoas = packAsHateoas(createAndSaveUser(user));
 
         // If no administrativeUnit is associated with this user, create a
         // default one
@@ -99,26 +87,31 @@ public class UserService
         return userHateoas;
     }
 
+    /**
+     * Essentially we are just calling createAndSaveUser but I am leaving
+     * this as an own method in case we need to add additional logic.
+     * Note: There is an assumption here that the user object already contains
+     * a reference to the administrativeUnit
+     *
+     * @param user The incoming user object
+     * @throws UsernameExistsException if the username already exists in the
+     *                                 database
+     */
+    public void createNewUserDuringStartup(final User user)
+            throws UsernameExistsException {
+        createAndSaveUser(user);
+    }
+
     // All READ operations
 
     @Override
-    public UserHateoas findBySystemID(String systemID) {
-        User user = getUserOrThrow(systemID);
-        UserHateoas userHateoas = new UserHateoas(user);
-        userHateoasHandler.addLinks(userHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityUpdatedEvent(this, user));
-        return userHateoas;
+    public UserHateoas findBySystemID(@NotNull final UUID systemId) {
+        return packAsHateoas(getUserOrThrow(systemId));
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public UserHateoas findAll() {
-        UserHateoas userHateoas = new UserHateoas(
-                (List<INoarkEntity>)
-                        (List) userRepository.findAll());
-        userHateoasHandler.addLinks(userHateoas, new Authorisation());
-        return userHateoas;
+        return (UserHateoas) odataService.processODataQueryGet();
     }
 
     /**
@@ -147,14 +140,14 @@ public class UserService
     }
 
     /**
-     * Look up systemID/UUID and return the equivalent User instance
+     * Look up systemId/UUID and return the equivalent User instance
      * if it exist, or null if not.
      *
      * @param systemId UUID for the username to check
      * @return User if the UUID is registered, null otherwise
      */
     @Override
-    public User userGetBySystemId(UUID systemId) {
+    public User userGetBySystemId(@NotNull final UUID systemId) {
         Optional<User> userOptional = userRepository.findBySystemId(systemId);
         return userOptional.orElse(null);
     }
@@ -173,11 +166,11 @@ public class UserService
 
     @Override
     @Transactional
-    public UserHateoas handleUpdate(@NotNull String userSystemId,
-                                    @NotNull Long version,
+    public UserHateoas handleUpdate(@NotNull final UUID systemId,
+                                    @NotNull final Long version,
                                     @NotNull User incomingUser) {
 
-        User existingUser = getUserOrThrow(userSystemId);
+        User existingUser = getUserOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
         if (null != incomingUser.getFirstname()) {
@@ -190,32 +183,24 @@ public class UserService
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
         existingUser.setVersion(version);
-
-        UserHateoas userHateoas = new UserHateoas(userRepository.
-                save(existingUser));
-        userHateoasHandler.addLinks(userHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityUpdatedEvent(this, existingUser));
-        return userHateoas;
+        return packAsHateoas(existingUser);
     }
 
     // All DELETE operations
 
     /**
-     * Delete a user identified by the given systemID from the database.
+     * Delete a user identified by the given systemId from the database.
      *
      * @param systemId systemId of the user to delete
      */
     @Override
     @Transactional
-    public void deleteEntity(@NotNull String systemId) {
+    public void deleteEntity(@NotNull final UUID systemId) {
         deleteEntity(getUserOrThrow(systemId));
     }
 
     /**
      * Delete all user objects
-     *
-     * @return the number of objects deleted
      */
     @Override
     @Transactional
@@ -223,10 +208,18 @@ public class UserService
         return userRepository.deleteByUsername(getUser());
     }
 
+    @Override
+    public UserHateoas getDefaultUser() {
+        User user = new User();
+        user.setUsername("example@example.com");
+        user.setFirstname("Hans");
+        user.setLastname("Hansen");
+        user.setVersion(-1L, true);
+        return packAsHateoas(user);
+    }
+
     /**
      * Delete all objects belonging to the user identified by username
-     *
-     * @return the number of objects deleted
      */
     @Override
     @Transactional
@@ -238,18 +231,35 @@ public class UserService
 
     @Override
     public User validateUserReference
-            (String type, User user, String username, UUID systemID) {
-        if (null == user && null != systemID) {
-            user = userGetBySystemId(systemID);
+            (String type, User user, String username, UUID systemId) {
+        if (null == user && null != systemId) {
+            user = userGetBySystemId(systemId);
         }
         if (null != user &&
                 (!user.getUsername().equals(username)
-                        || !user.getSystemId().equals(systemID))) {
+                        || !user.getSystemId().equals(systemId))) {
             String info = "Inconsistent " + type + " values rejected. ";
             throw new NikitaMalformedInputDataException(info);
         }
         // The values are consistent, return existing user
         return user;
+    }
+
+    private User createAndSaveUser(@NotNull final User user) {
+        user.setPassword(encoder.encode(user.getPassword()));
+        user.setEnabled(true);
+        user.setCreatedBy(SYSTEM);
+        user.setCreatedDate(OffsetDateTime.now());
+        user.setAccountNonExpired(true);
+        user.setAccountNonLocked(true);
+        user.setCredentialsNonExpired(true);
+        return userRepository.save(user);
+    }
+
+    public UserHateoas packAsHateoas(@NotNull final User user) {
+        UserHateoas userHateoas = new UserHateoas(user);
+        applyLinksAndHeader(userHateoas, userHateoasHandler);
+        return userHateoas;
     }
 
     /**
@@ -261,9 +271,9 @@ public class UserService
      * @param systemId The systemId of the user object to retrieve
      * @return the user object
      */
-    private User getUserOrThrow(@NotNull String systemId) {
+    private User getUserOrThrow(@NotNull final UUID systemId) {
         Optional<User> userOptional =
-                userRepository.findBySystemId(UUID.fromString(systemId));
+                userRepository.findBySystemId(systemId);
         if (userOptional.isEmpty()) {
             String error = INFO_CANNOT_FIND_OBJECT + " User, using systemId " +
                     systemId;

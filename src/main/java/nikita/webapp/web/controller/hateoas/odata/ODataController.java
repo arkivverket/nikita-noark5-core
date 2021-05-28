@@ -5,11 +5,11 @@ import nikita.webapp.service.interfaces.odata.IODataService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-
 import static nikita.common.config.Constants.NOARK_FONDS_STRUCTURE_PATH;
 import static nikita.common.config.Constants.SLASH;
 import static nikita.common.config.ODataConstants.*;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.OK;
 
 /**
  * RestController for OData queries. Rather than having OData handling
@@ -61,28 +61,25 @@ public class ODataController {
      * to have an identified landing point for the parameters. That is why there
      * is a @SuppressWarnings("unused") here.
      *
-     * @param request The incoming request
      * @param filter  The $filter clause
      * @param top     $top, how many records to return
      * @param skip    $skip, avoid the the x number of records
      * @param orderBy order by this attribute
      * @return the result of the query wrapped as a Hateaos object
-     * @throws Exception, parsing, SQL exception
      */
     @SuppressWarnings("unused")
     @GetMapping(value = "**")
     public ResponseEntity<HateoasNoarkObject>
-    retrieveOData(HttpServletRequest request,
-                  @RequestParam(value = DOLLAR_FILTER, required = false)
+    retrieveOData(@RequestParam(value = DOLLAR_FILTER, required = false)
                           String filter,
                   @RequestParam(value = DOLLAR_TOP, required = false)
                           String top,
                   @RequestParam(value = DOLLAR_SKIP, required = false)
                           String skip,
                   @RequestParam(value = DOLLAR_ORDER_BY, required = false)
-                          String orderBy)
-            throws Exception {
-        return oDataService.processODataQueryGet(request);
+                          String orderBy) {
+        return ResponseEntity.status(OK)
+                .body(oDataService.processODataQueryGet());
     }
 
     /**
@@ -93,28 +90,25 @@ public class ODataController {
      * to have an identified landing point for the parameters. That is why there
      * is a @SuppressWarnings("unused") here.
      *
-     * @param request The incoming request
      * @param filter  The $filter clause
      * @param top     $top, how many records to return
      * @param skip    $skip, avoid the the x number of records
      * @param orderBy order by this attribute
      * @return the result of the query wrapped as a Hateaos object
-     * @throws Exception, parsing, SQL exception
      */
     @SuppressWarnings("unused")
     @DeleteMapping(value = NOARK_FONDS_STRUCTURE_PATH + SLASH + "/**",
             params = "!" + DOLLAR_ID)
     public ResponseEntity<String>
-    deleteViaOData(HttpServletRequest request,
-                   @RequestParam(value = DOLLAR_FILTER, required = false)
+    deleteViaOData(@RequestParam(value = DOLLAR_FILTER, required = false)
                            String filter,
                    @RequestParam(value = DOLLAR_TOP, required = false)
                            String top,
                    @RequestParam(value = DOLLAR_SKIP, required = false)
                            String skip,
                    @RequestParam(value = DOLLAR_ORDER_BY, required = false)
-                           String orderBy)
-            throws Exception {
-        return oDataService.processODataQueryDelete(request);
+                           String orderBy) {
+        return ResponseEntity.status(NO_CONTENT)
+                .body(oDataService.processODataQueryDelete());
     }
 }

@@ -6,9 +6,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import nikita.common.config.N5ResourceMappings;
 import nikita.common.model.noark5.v5.ChangeLog;
-import nikita.common.util.CommonUtils;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,12 +14,13 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.UUID;
 
+import static nikita.common.config.ErrorMessagesConstants.MALFORMED_PAYLOAD;
 import static nikita.common.config.HATEOASConstants.LINKS;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 
 public class ChangeLogDeserializer
-        extends JsonDeserializer {
+        extends JsonDeserializer<ChangeLog> {
 
     private static final Logger logger =
             LoggerFactory.getLogger(ChangeLogDeserializer.class);
@@ -96,10 +95,8 @@ public class ChangeLogDeserializer
         // Check that there are no additional values left after processing the tree
         // If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {
-            errors.append("The " + CHANGE_LOG + " entry you tried to create " +
-                          "is malformed. The following fields are not " +
-                          "recognised as " + CHANGE_LOG + " fields [" +
-                    CommonUtils.Hateoas.Deserialize.checkNodeObjectEmpty(objectNode) + "]. ");
+            errors.append(String.format(MALFORMED_PAYLOAD,
+                    CHANGE_LOG, checkNodeObjectEmpty(objectNode)));
         }
 
         if (0 < errors.length())

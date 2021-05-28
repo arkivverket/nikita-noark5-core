@@ -45,11 +45,7 @@ public class RightsController extends NoarkController {
             @RequestBody User administrativeUnit)
             throws NikitaException {
         administrativeUnitService.createNewUser(administrativeUnit);
-        UserHateoas adminHateoas = new UserHateoas(administrativeUnit);
-        administrativeUnitHateoasHandler.addLinks(adminHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.CREATED)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(administrativeUnit.getVersion().toString())
                 .body(adminHateoas);
     }
 
@@ -95,14 +91,12 @@ public class RightsController extends NoarkController {
     @Counted
 
     @GetMapping(value = ADMINISTRATIVE_UNIT + SLASH + SYSTEM_ID_PARAMETER + SLASH)
-    public ResponseEntity<UserHateoas> findBySystemId(@PathVariable(SYSTEM_ID) final String systemId,
+    public ResponseEntity<UserHateoas> findBySystemId(@PathVariable(SYSTEM_ID) final UUID systemId,
                                                                                    HttpServletRequest request) {
         User administrativeUnit = administrativeUnitService.findBySystemId(UUID.fromString(systemId));
         UserHateoas adminHateoas = new UserHateoas(administrativeUnit);
         administrativeUnitHateoasHandler.addLinks(adminHateoas, new Authorisation());
         return ResponseEntity.status(HttpStatus.OK)
-                .allow(CommonUtils.WebUtils.getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(administrativeUnit.getVersion().toString())
                 .body(adminHateoas);
     }
 
@@ -150,7 +144,7 @@ public class RightsController extends NoarkController {
                                                                               @Parameter(name = SYSTEM_ID,
                                                                                       description = "systemID of documentDescription to update.",
                                                                                       required = true)
-                                                                              @PathVariable(SYSTEM_ID) String systemID,
+                                                                              @PathVariable(SYSTEM_ID) UUID systemID,
                                                                               @Parameter(name = "administrativeUnit",
                                                                                       description = "Incoming administrativeUnit object",
                                                                                       required = true)

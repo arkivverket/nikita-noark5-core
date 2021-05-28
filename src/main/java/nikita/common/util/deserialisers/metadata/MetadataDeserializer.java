@@ -13,13 +13,14 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static nikita.common.config.ErrorMessagesConstants.MALFORMED_PAYLOAD;
 import static nikita.common.config.HATEOASConstants.LINKS;
 import static nikita.common.config.N5ResourceMappings.CODE;
 import static nikita.common.config.N5ResourceMappings.CODE_NAME;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.checkNodeObjectEmpty;
 
 public class MetadataDeserializer
-        extends JsonDeserializer {
+        extends JsonDeserializer<Metadata> {
 
     private static final Logger logger =
             LoggerFactory.getLogger(MetadataDeserializer.class);
@@ -55,11 +56,9 @@ public class MetadataDeserializer
         // Check that there are no additional values left after processing the tree
         // If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {
-            errors.append("The metadata you tried to create is malformed. The");
-            errors.append(" following fields are not recognised as metadata ");
-            errors.append("fields [");
-            errors.append(checkNodeObjectEmpty(objectNode));
-            errors.append("]. ");
+            errors.append(String.format(MALFORMED_PAYLOAD,
+                    "metadata", checkNodeObjectEmpty(objectNode)));
+
         }
 
         if (0 < errors.length())

@@ -13,7 +13,7 @@ public interface IScreeningMetadataService {
             @NotNull final Screening screening,
             @NotNull final Metadata screeningMetadata);
 
-    ScreeningMetadataHateoas findAllByOwner();
+    ScreeningMetadataHateoas findAll();
 
     ScreeningMetadataHateoas findBySystemId(@NotNull final UUID systemId);
 

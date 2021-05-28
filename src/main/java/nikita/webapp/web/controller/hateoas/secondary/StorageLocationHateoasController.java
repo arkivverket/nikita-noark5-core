@@ -18,7 +18,6 @@ import java.util.UUID;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
@@ -57,7 +56,7 @@ public class StorageLocationHateoasController
     @GetMapping()
     public ResponseEntity<StorageLocationHateoas> findAllStorageLocation() {
         StorageLocationHateoas storageLocationHateoas =
-                storageLocationService.findAllByOwner();
+                storageLocationService.findAll();
         return ResponseEntity.status(OK)
                 .body(storageLocationHateoas);
     }
@@ -79,7 +78,6 @@ public class StorageLocationHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<StorageLocationHateoas> findStorageLocationBySystemId(
-            HttpServletRequest request,
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the StorageLocation to retrieve",
                     required = true)
@@ -87,7 +85,6 @@ public class StorageLocationHateoasController
         StorageLocationHateoas storageLocationHateoas =
                 storageLocationService.findBySystemId(systemID);
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(storageLocationHateoas);
     }
 
@@ -135,7 +132,6 @@ public class StorageLocationHateoasController
                 storageLocationService.updateStorageLocationBySystemId(systemID,
                         parseETAG(request.getHeader(ETAG)), storageLocation);
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(storageLocationHateoas);
     }
 

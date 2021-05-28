@@ -13,12 +13,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.UUID;
 
 import static com.google.common.net.HttpHeaders.ETAG;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
@@ -65,14 +65,10 @@ public class UserController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @PostMapping(value = NEW_USER)
     public ResponseEntity<UserHateoas> createUser(
-            HttpServletRequest request,
             @RequestBody User user)
             throws NikitaException {
-        UserHateoas userHateoas = userService.createNewUser(user);
         return ResponseEntity.status(CREATED)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(user.getVersion().toString())
-                .body(userHateoas);
+                .body(userService.createNewUser(user));
     }
 
     // API - All GET Requests (CRUD - READ)
@@ -96,10 +92,9 @@ public class UserController
                     responseCode = INTERNAL_SERVER_ERROR_VAL,
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = USER)
-    public ResponseEntity<UserHateoas> findAll(HttpServletRequest request) {
+    public ResponseEntity<UserHateoas> findAll() {
         UserHateoas userHateoas = userService.findAll();
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
                 .body(userHateoas);
     }
 
@@ -125,17 +120,12 @@ public class UserController
     })
     @GetMapping(value = USER + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<UserHateoas>
-    findBySystemId(HttpServletRequest request,
-                   @Parameter(name = SYSTEM_ID,
-                           description = "systemID of the user to retrieve",
-                           required = true)
-                   @PathVariable(SYSTEM_ID) final String systemID) {
-        UserHateoas userHateoas = userService.findBySystemID(systemID);
+    findBySystemId(@Parameter(name = SYSTEM_ID,
+            description = "systemID of the user to retrieve",
+            required = true)
+                   @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .allow(
-                        getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(userHateoas.getEntityVersion().toString())
-                .body(userHateoas);
+                .body(userService.findBySystemID(systemID));
     }
 
     // Create a suggested user(like a template) with default values
@@ -159,16 +149,9 @@ public class UserController
                     responseCode = INTERNAL_SERVER_ERROR_VAL,
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = NEW_USER)
-    public ResponseEntity<UserHateoas>
-    getUserTemplate(HttpServletRequest request) {
-        User user = new User();
-        user.setUsername("example@example.com");
-        user.setFirstname("Hans");
-        user.setLastname("Hansen");
-        UserHateoas userHateoas = new UserHateoas(user);
+    public ResponseEntity<UserHateoas> getUserTemplate() {
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .body(userHateoas);
+                .body(userService.getDefaultUser());
     }
 
     // API - All PUT Requests (CRUD - UPDATE)
@@ -203,7 +186,7 @@ public class UserController
                        description = "systemID of documentDescription to " +
                                "update.",
                        required = true)
-               @PathVariable(SYSTEM_ID) String systemID,
+               @PathVariable(SYSTEM_ID) UUID systemID,
                @Parameter(name = "user",
                        description = "Incoming user object",
                        required = true)
@@ -212,8 +195,6 @@ public class UserController
         UserHateoas userHateoas = userService.handleUpdate(systemID,
                 parseETAG(request.getHeader(ETAG)), user);
         return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(request.getServletPath()))
-                .eTag(userHateoas.getEntityVersion().toString())
                 .body(userHateoas);
     }
 

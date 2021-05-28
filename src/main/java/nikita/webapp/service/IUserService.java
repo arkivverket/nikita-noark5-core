@@ -10,30 +10,39 @@ import java.util.UUID;
 
 public interface IUserService {
 
-    UserHateoas createNewUser(User user) throws UsernameExistsException;
+    UserHateoas createNewUser(@NotNull final User user)
+            throws UsernameExistsException;
+
+    void createNewUserDuringStartup(@NotNull final User user)
+            throws UsernameExistsException;
 
     UserHateoas findAll();
 
-    UserHateoas findBySystemID(String username);
+    UserHateoas findBySystemID(@NotNull final UUID systemId);
 
-    UserHateoas handleUpdate(String userSystemId, Long version, User
-            incomingUser);
+    UserHateoas handleUpdate(@NotNull final UUID systemId,
+                             @NotNull final Long version,
+                             @NotNull final User incomingUser);
 
-    boolean userExists(String username);
+    boolean userExists(@NotNull final String username);
 
-    User userGetByUsername(String username);
+    User userGetByUsername(@NotNull final String username);
 
-    User userGetBySystemId(UUID systemId);
+    User userGetBySystemId(@NotNull final UUID systemId);
 
-    boolean authorityExists(AuthorityName authority);
+    boolean authorityExists(@NotNull final AuthorityName authority);
 
-    // All DELETE operations
-    void deleteEntity(@NotNull String systemId);
+    void deleteEntity(@NotNull final UUID systemId);
 
     long deleteAll();
 
-    long deleteByUsername(String username);
+    long deleteByUsername(@NotNull final String username);
 
-    User validateUserReference(String type, User user,
-                               String username, UUID systemID);
+    User validateUserReference(
+            @NotNull final String type,
+            @NotNull final User user,
+            @NotNull final String username,
+            @NotNull final UUID systemId);
+
+    UserHateoas getDefaultUser();
 }

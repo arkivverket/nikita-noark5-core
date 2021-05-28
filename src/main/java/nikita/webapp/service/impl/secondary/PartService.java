@@ -18,18 +18,15 @@ import nikita.common.model.noark5.v5.secondary.PartUnit;
 import nikita.common.repository.n5v5.secondary.IPartRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.secondary.IPartHateoasHandler;
-import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.impl.NoarkService;
 import nikita.webapp.service.interfaces.IBSMService;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
+import nikita.webapp.service.interfaces.odata.IODataService;
 import nikita.webapp.service.interfaces.secondary.IPartService;
-import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
-import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,8 +39,6 @@ import java.util.UUID;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.Constants.TEMPLATE_PART_ROLE_CODE;
 import static nikita.common.config.N5ResourceMappings.*;
-import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
-import static org.springframework.http.HttpStatus.OK;
 
 @Service
 public class PartService
@@ -60,12 +55,13 @@ public class PartService
 
     public PartService(EntityManager entityManager,
                        ApplicationEventPublisher applicationEventPublisher,
+                       IODataService odataService,
                        IPatchService patchService,
                        IPartRepository partRepository,
                        IMetadataService metadataService,
                        IPartHateoasHandler partHateoasHandler,
                        IBSMService bsmService) {
-        super(entityManager, applicationEventPublisher, patchService);
+        super(entityManager, applicationEventPublisher, patchService, odataService);
         this.partRepository = partRepository;
         this.metadataService = metadataService;
         this.partHateoasHandler = partHateoasHandler;
@@ -77,103 +73,86 @@ public class PartService
     @Override
     @Transactional
     public PartPersonHateoas createNewPartPerson(
-            @NotNull PartPerson part, @NotNull Record record) {
+            @NotNull final PartPerson part, @NotNull final Record record) {
         validatePartRole(part);
         createPerson(part);
         record.addPart(part);
-        part = partRepository.save(part);
-        PartPersonHateoas partPersonHateoas = new PartPersonHateoas(part);
-        partHateoasHandler.addLinks(partPersonHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityCreatedEvent(this, part));
-        return partPersonHateoas;
+        return packAsPartPersonHateoas(partRepository.save(part));
     }
 
     @Override
     @Transactional
     public PartPersonHateoas createNewPartPerson(
-            @NotNull PartPerson part, @NotNull File file) {
+            @NotNull final PartPerson part, @NotNull final File file) {
         validatePartRole(part);
         createPerson(part);
         file.addPart(part);
-        part = partRepository.save(part);
-        PartPersonHateoas partPersonHateoas = new PartPersonHateoas(part);
-        partHateoasHandler.addLinks(partPersonHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityCreatedEvent(this, part));
-        return partPersonHateoas;
+        return packAsPartPersonHateoas(partRepository.save(part));
     }
 
     @Override
     @Transactional
-    public PartUnitHateoas createNewPartUnit(PartUnit part, Record record) {
+    public PartUnitHateoas createNewPartUnit(
+            @NotNull final PartUnit part, @NotNull final Record record) {
         validatePartRole(part);
         createUnit(part);
         record.addPart(part);
-        part = partRepository.save(part);
-        PartUnitHateoas partUnitHateoas = new PartUnitHateoas(part);
-        partHateoasHandler.addLinks(partUnitHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityCreatedEvent(this, part));
-        return partUnitHateoas;
+        return packAsPartUnitHateoas(partRepository.save(part));
     }
 
     @Override
     @Transactional
     public PartUnitHateoas createNewPartUnit(
-            @NotNull PartUnit part, @NotNull File file) {
+            @NotNull final PartUnit part, @NotNull final File file) {
         validatePartRole(part);
         createUnit(part);
         file.addPart(part);
-        part = partRepository.save(part);
-        PartUnitHateoas partUnitHateoas = new PartUnitHateoas(part);
-        partHateoasHandler.addLinks(partUnitHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityCreatedEvent(this, part));
-        return partUnitHateoas;
+        return packAsPartUnitHateoas(partRepository.save(part));
     }
 
     @Override
     @Transactional
     public PartUnitHateoas createNewPartUnit(
-            @NotNull PartUnit partUnit,
-            @NotNull DocumentDescription documentDescription) {
+            @NotNull final PartUnit partUnit,
+            @NotNull final DocumentDescription documentDescription) {
         validatePartRole(partUnit);
         createUnit(partUnit);
         documentDescription.addPart(partUnit);
-        partUnit = partRepository.save(partUnit);
-        PartUnitHateoas partUnitHateoas = new PartUnitHateoas(partUnit);
-        partHateoasHandler.addLinks(partUnitHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityCreatedEvent(this, partUnit));
-        return partUnitHateoas;
+        return packAsPartUnitHateoas(partRepository.save(partUnit));
     }
 
     @Override
     @Transactional
     public PartPersonHateoas createNewPartPerson(
-            @NotNull PartPerson partPerson,
-            @NotNull DocumentDescription documentDescription) {
+            @NotNull final PartPerson partPerson,
+            @NotNull final DocumentDescription documentDescription) {
         validatePartRole(partPerson);
         createPerson(partPerson);
         partPerson.addDocumentDescription(documentDescription);
-        partPerson = partRepository.save(partPerson);
-        PartPersonHateoas partPersonHateoas = new PartPersonHateoas(partPerson);
-        partHateoasHandler.addLinks(partPersonHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityCreatedEvent(this, partPerson));
-        return partPersonHateoas;
+        return packAsPartPersonHateoas(partRepository.save(partPerson));
     }
 
     // All READ methods
 
     @Override
-    public Part findBySystemId(@NotNull UUID systemId) {
+    public Part findBySystemId(@NotNull final UUID systemId) {
         return getPartOrThrow(systemId);
     }
 
     @Override
-    protected Optional<BSMMetadata> findBSMByName(String name) {
+    public PartPersonHateoas findPartPersonBySystemId(
+            @NotNull final UUID systemId) {
+        return packAsPartPersonHateoas((PartPerson) getPartOrThrow(systemId));
+    }
+
+    @Override
+    public PartUnitHateoas findPartUnitBySystemId(
+            @NotNull final UUID systemId) {
+        return packAsPartUnitHateoas((PartUnit) getPartOrThrow(systemId));
+    }
+
+    @Override
+    protected Optional<BSMMetadata> findBSMByName(@NotNull final String name) {
         return bsmService.findBSMByName(name);
     }
 
@@ -194,10 +173,9 @@ public class PartService
      */
     @Override
     @Transactional
-    public PartPerson
-    updatePartPerson(
-            @NotNull UUID systemId, @NotNull Long version,
-            @NotNull PartPerson incomingPart) {
+    public PartPersonHateoas updatePartPerson(
+            @NotNull final UUID systemId, @NotNull final Long version,
+            @NotNull final PartPerson incomingPart) {
         PartPerson existingPart = (PartPerson) getPartOrThrow(systemId);
 
         // Copy all the values you are allowed to copy ....
@@ -224,15 +202,14 @@ public class PartService
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
         existingPart.setVersion(version);
-        existingPart = partRepository.save(existingPart);
-        return existingPart;
+        return packAsPartPersonHateoas(existingPart);
     }
 
     @Override
     @Transactional
-    public PartUnit updatePartUnit(
-            @NotNull UUID systemId, @NotNull Long version,
-            @NotNull PartUnit incomingPart) {
+    public PartUnitHateoas updatePartUnit(
+            @NotNull final UUID systemId, @NotNull final Long version,
+            @NotNull final PartUnit incomingPart) {
 
         PartUnit existingPart = (PartUnit) getPartOrThrow(systemId);
 
@@ -262,29 +239,21 @@ public class PartService
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
         existingPart.setVersion(version);
-        existingPart = partRepository.save(existingPart);
-        return existingPart;
+        return packAsPartUnitHateoas(existingPart);
     }
 
     @Override
     @Transactional
-    public ResponseEntity<PartHateoas>
-    handleUpdate(UUID systemID, PatchObjects patchObjects) {
-        Part part = (Part) handlePatch(systemID, patchObjects);
-        PartHateoas partHateoas = new PartHateoas(part);
-        partHateoasHandler.addLinks(partHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityUpdatedEvent(this, part));
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(partHateoas.getEntityVersion().toString())
-                .body(partHateoas);
+    public PartHateoas handleUpdate(
+            @NotNull final UUID systemId,
+            @NotNull final PatchObjects patchObjects) {
+        return packAsHateoas((Part) handlePatch(systemId, patchObjects));
     }
 
     @Override
     @Transactional
-    public Object associateBSM(@NotNull UUID systemId,
-                               @NotNull List<BSMBase> bsm) {
+    public Object associateBSM(@NotNull final UUID systemId,
+                               @NotNull final List<BSMBase> bsm) {
         Part part = getPartOrThrow(systemId);
         part.addReferenceBSMBase(bsm);
         return part;
@@ -293,7 +262,7 @@ public class PartService
     // All DELETE methods
     @Override
     @Transactional
-    public void deletePartPerson(@NotNull UUID systemId) {
+    public void deletePartPerson(@NotNull final UUID systemId) {
         PartPerson partPerson = (PartPerson) getPartOrThrow(systemId);
         for (Record record : partPerson.getReferenceRecord()) {
             record.removePart(partPerson);
@@ -310,7 +279,7 @@ public class PartService
 
     @Override
     @Transactional
-    public void deletePartUnit(@NotNull UUID systemId) {
+    public void deletePartUnit(@NotNull final UUID systemId) {
         PartUnit partUnit = (PartUnit) getPartOrThrow(systemId);
         for (Record record : partUnit.getReferenceRecord()) {
             record.removePart(partUnit);
@@ -339,21 +308,18 @@ public class PartService
      * user and the business area they are working with. A generic Noark core
      * like this does not have scope for that kind of functionality.
      *
-     * @param recordSystemId The systemId of the record object
-     *                       you wish to create a templated object for
+     * @param systemId The systemId of the record object
+     *                 you wish to create a templated object for
      * @return the PartUnit object wrapped as a
      * PartUnitHateoas object
      */
     @Override
     public PartUnitHateoas generateDefaultPartUnit(
-            final String recordSystemId) {
+            @NotNull final UUID systemId) {
         PartUnit suggestedPart = new PartUnit();
-
+        suggestedPart.setVersion(-1L, true);
         setDefaultPartRole(suggestedPart);
-
-        PartUnitHateoas partHateoas = new PartUnitHateoas(suggestedPart);
-        partHateoasHandler.addLinksOnTemplate(partHateoas, new Authorisation());
-        return partHateoas;
+        return packAsPartUnitHateoas(suggestedPart);
     }
 
     /**
@@ -364,28 +330,24 @@ public class PartService
      * user and the business area they are working with. A generic Noark core
      * like this does not have scope for that kind of functionality.
      *
-     * @param recordSystemId The systemId of the record object
+     * @param systemId The systemId of the record object
      *                       you wish to create a templated object for
      * @return the PartPerson object wrapped as a
      * PartPersonHateoas object
      */
     @Override
     public PartPersonHateoas generateDefaultPartPerson(
-            final String recordSystemId) {
+            @NotNull final UUID systemId) {
         PartPerson suggestedPart = new PartPerson();
-
+        suggestedPart.setVersion(-1L, true);
         setDefaultPartRole(suggestedPart);
-
-        PartPersonHateoas partHateoas = new PartPersonHateoas(suggestedPart);
-        partHateoasHandler.addLinksOnTemplate(partHateoas, new Authorisation());
-        return partHateoas;
+        return packAsPartPersonHateoas(suggestedPart);
     }
 
     // Internal helper methods
 
-    private void createPerson(PartPerson part) {
-        ContactInformation contactInformation
-                = part.getContactInformation();
+    private void createPerson(@NotNull final PartPerson part) {
+        ContactInformation contactInformation = part.getContactInformation();
 
         if (contactInformation != null) {
             contactInformation.setPartPerson(part);
@@ -430,7 +392,7 @@ public class PartService
      * @param partSystemId systemId of part to retrieve
      * @return the retrieved Part
      */
-    private Part getPartOrThrow(@NotNull UUID partSystemId) {
+    private Part getPartOrThrow(@NotNull final UUID partSystemId) {
         Part part = partRepository.findBySystemId(partSystemId);
         if (part == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " Part, " +
@@ -614,7 +576,7 @@ public class PartService
         existingAddress.setCountryCode(incomingAddress.getCountryCode());
     }
 
-    private void setDefaultPartRole(@NotNull Part part) {
+    private void setDefaultPartRole(@NotNull final Part part) {
         PartRole partRole = (PartRole) metadataService
                 .findValidMetadataByEntityTypeOrThrow(PART_ROLE,
                         TEMPLATE_PART_ROLE_CODE, null);
@@ -626,5 +588,24 @@ public class PartService
         PartRole partRole = (PartRole) metadataService.findValidMetadata(
                 part.getPartRole());
         part.setPartRole(partRole);
+    }
+
+    public PartHateoas packAsHateoas(@NotNull final Part part) {
+        PartHateoas partHateoas = new PartHateoas(part);
+        applyLinksAndHeader(partHateoas, partHateoasHandler);
+        return partHateoas;
+    }
+
+    public PartPersonHateoas packAsPartPersonHateoas(
+            @NotNull final PartPerson partPerson) {
+        PartPersonHateoas partPersonHateoas = new PartPersonHateoas(partPerson);
+        applyLinksAndHeader(partPersonHateoas, partHateoasHandler);
+        return partPersonHateoas;
+    }
+
+    public PartUnitHateoas packAsPartUnitHateoas(@NotNull final PartUnit partUnit) {
+        PartUnitHateoas partUnitHateoas = new PartUnitHateoas(partUnit);
+        applyLinksAndHeader(partUnitHateoas, partHateoasHandler);
+        return partUnitHateoas;
     }
 }

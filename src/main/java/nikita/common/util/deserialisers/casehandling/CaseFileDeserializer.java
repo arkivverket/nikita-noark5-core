@@ -44,8 +44,8 @@ public class CaseFileDeserializer
         // Deserialise properties for File
         deserialiseNoarkGeneralEntity(caseFile, objectNode, errors);
         deserialiseDocumentMedium(caseFile, objectNode, errors);
-        deserialiseStorageLocation(caseFile, objectNode, errors);
-        deserialiseKeyword(caseFile, objectNode, errors);
+        deserialiseStorageLocation(caseFile, objectNode);
+        deserialiseKeyword(caseFile, objectNode);
 
         // Deserialize fileId
         JsonNode currentNode = objectNode.get(FILE_ID);

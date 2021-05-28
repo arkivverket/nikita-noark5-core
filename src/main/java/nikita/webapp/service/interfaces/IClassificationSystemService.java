@@ -6,7 +6,6 @@ import nikita.common.model.noark5.v5.ClassificationSystem;
 import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
 import nikita.common.model.noark5.v5.hateoas.ClassificationSystemHateoas;
 import nikita.common.model.noark5.v5.hateoas.SeriesHateoas;
-import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
@@ -31,8 +30,7 @@ public interface IClassificationSystemService {
     ClassHateoas findAllClassAssociatedWithClassificationSystem(
             @NotNull final UUID systemId);
 
-    ResponseEntity<SeriesHateoas>
-    findSeriesAssociatedWithClassificationSystem(
+    SeriesHateoas findSeriesAssociatedWithClassificationSystem(
             @NotNull final UUID systemId);
 
     // All UPDATE operations
@@ -44,7 +42,7 @@ public interface IClassificationSystemService {
     // All DELETE operations
     void deleteClassificationSystem(@NotNull final UUID systemId);
 
-    long deleteAllByOwnedBy();
+    void deleteAllByOwnedBy();
 
     ClassificationSystemHateoas generateDefaultClassificationSystem();
 }

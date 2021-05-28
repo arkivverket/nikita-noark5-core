@@ -14,8 +14,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static nikita.common.config.ErrorMessagesConstants.MALFORMED_PAYLOAD;
 import static nikita.common.config.HATEOASConstants.LINKS;
 import static nikita.common.config.N5ResourceMappings.BSM_DEF;
+import static nikita.common.config.N5ResourceMappings.CORRESPONDENCE_PART_INTERNAL;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 
 /**
@@ -32,7 +34,7 @@ import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
  * - Missing obligatory property values in the JSON will trigger an exception
  */
 public class CorrespondencePartInternalDeserializer
-        extends JsonDeserializer {
+        extends JsonDeserializer<CorrespondencePartInternal> {
 
     private static final Logger logger =
             LoggerFactory.getLogger(
@@ -51,7 +53,7 @@ public class CorrespondencePartInternalDeserializer
                 new CorrespondencePartInternal();
         ObjectNode objectNode = mapper.readTree(jsonParser);
         deserialiseNoarkSystemIdEntity(
-                correspondencePartInternal, objectNode, errors);
+                correspondencePartInternal, objectNode);
         deserialiseCorrespondencePartInternalEntity(
                 correspondencePartInternal, objectNode, errors);
 
@@ -74,11 +76,9 @@ public class CorrespondencePartInternalDeserializer
         // Check that there are no additional values left after processing
         // the tree. If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {
-            errors.append("The korrespondansepartintern you tried to create ");
-            errors.append("is malformed. The following fields are not ");
-            errors.append("recognised as korrespondansepartintern fields [");
-            errors.append(checkNodeObjectEmpty(objectNode));
-            errors.append("]. ");
+            errors.append(String.format(MALFORMED_PAYLOAD,
+                    CORRESPONDENCE_PART_INTERNAL,
+                    checkNodeObjectEmpty(objectNode)));
         }
 
         if (0 < errors.length())

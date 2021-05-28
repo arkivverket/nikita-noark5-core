@@ -11,20 +11,25 @@ import java.util.UUID;
 
 public interface ICommentService {
 
-    CommentHateoas generateDefaultComment();
+    CommentHateoas generateDefaultComment(@NotNull final UUID systemId);
 
-    CommentHateoas createNewComment(Comment comment, File file);
+    CommentHateoas createNewComment(
+            @NotNull final Comment comment,
+            @NotNull final File file);
 
-    CommentHateoas createNewComment(Comment comment, Record record);
+    CommentHateoas createNewComment(
+            @NotNull final Comment comment,
+            @NotNull final Record record);
 
-    CommentHateoas createNewComment
-        (Comment comment, DocumentDescription documentDescription);
+    CommentHateoas createNewComment(
+            @NotNull final Comment comment,
+            @NotNull final DocumentDescription documentDescription);
 
-    CommentHateoas findSingleComment(UUID commentSystemId);
+    CommentHateoas findSingleComment(@NotNull final UUID commentSystemId);
 
-    CommentHateoas handleUpdate(@NotNull UUID systemId,
-                                @NotNull Long version,
-                                @NotNull Comment incomingComment);
+    CommentHateoas handleUpdate(@NotNull final UUID systemId,
+                                @NotNull final Long version,
+                                @NotNull final Comment incomingComment);
 
-    void deleteComment(UUID systemId);
+    void deleteComment(@NotNull final UUID systemId);
 }

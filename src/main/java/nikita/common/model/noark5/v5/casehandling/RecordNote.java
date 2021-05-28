@@ -102,8 +102,20 @@ public class RecordNote
 
     // Links to DocumentFlow
     @OneToMany(mappedBy = "referenceRecordNote")
-    private List<DocumentFlow> referenceDocumentFlow = new ArrayList<>();
+    private final List<DocumentFlow> referenceDocumentFlow = new ArrayList<>();
 
+    public RecordNote() {
+    }
+
+    public RecordNote(Record record) {
+        super();
+        setVersion(record.getVersion(), true);
+        this.setRecordId(record.getRecordId());
+        this.setTitle(record.getTitle());
+        this.setPublicTitle(record.getPublicTitle());
+        this.setDescription(record.getDescription());
+        this.setDocumentMedium(record.getDocumentMedium());
+    }
 
     public OffsetDateTime getDocumentDate() {
         return documentDate;
@@ -172,12 +184,6 @@ public class RecordNote
     @Override
     public List<DocumentFlow> getReferenceDocumentFlow() {
         return referenceDocumentFlow;
-    }
-
-    @Override
-    public void setReferenceDocumentFlow(
-            List<DocumentFlow> referenceDocumentFlow) {
-        this.referenceDocumentFlow = referenceDocumentFlow;
     }
 
     @Override

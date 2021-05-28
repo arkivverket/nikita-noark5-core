@@ -13,21 +13,16 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static nikita.common.config.ErrorMessagesConstants.MALFORMED_PAYLOAD;
 import static nikita.common.config.HATEOASConstants.LINKS;
 import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
 
 /**
- * Created by tsodring on 29/05/19.
- * <p>
  * Deserialise an incoming RecordNote JSON object.
- * <p>
- * Note:
- * - Unknown property values in the JSON will trigger an exception
- * - Missing obligatory property values in the JSON will trigger an exception
  */
 public class RecordNoteDeserializer
-        extends JsonDeserializer {
+        extends JsonDeserializer<RecordNote> {
 
     private static final Logger logger =
             LoggerFactory.getLogger(RecordNoteDeserializer.class);
@@ -138,10 +133,8 @@ public class RecordNoteDeserializer
         // Check that there are no additional values left after processing
         // the tree. If there are additional throw a malformed input exception
         if (objectNode.size() != 0) {
-            errors.append("The arkivnotat you tried to create is malformed. " +
-                          "The following fields are not recognised as " +
-                          "arkivnotat fields " +
-                          "[" + checkNodeObjectEmpty(objectNode) + "]. ");
+            errors.append(String.format(MALFORMED_PAYLOAD,
+                    RECORD_NOTE, checkNodeObjectEmpty(objectNode)));
         }
         if (0 < errors.length())
             throw new NikitaMalformedInputDataException(errors.toString());

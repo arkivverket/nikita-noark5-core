@@ -3,6 +3,10 @@ package nikita.common.model.noark5.v5.nationalidentifier;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.SystemIdEntity;
+import nikita.common.model.noark5.v5.hateoas.nationalidentifier.NationalIdentifierHateoas;
+import nikita.webapp.hateoas.nationalidentifier.NationalIdentifierHateoasHandler;
+import nikita.webapp.util.annotation.HateoasObject;
+import nikita.webapp.util.annotation.HateoasPacker;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
@@ -14,6 +18,8 @@ import static nikita.common.config.Constants.*;
 @Entity
 @Table(name = TABLE_NATIONAL_IDENTIFIER)
 @Inheritance(strategy = JOINED)
+@HateoasPacker(using = NationalIdentifierHateoasHandler.class)
+@HateoasObject(using = NationalIdentifierHateoas.class)
 @Audited
 public class NationalIdentifier
         extends SystemIdEntity {

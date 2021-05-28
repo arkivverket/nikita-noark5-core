@@ -14,9 +14,9 @@ import nikita.common.util.exceptions.NikitaMisconfigurationException;
 import nikita.common.util.exceptions.NoarkConflictException;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.secondary.ICrossReferenceHateoasHandler;
-import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.impl.NoarkService;
+import nikita.webapp.service.interfaces.odata.IODataService;
 import nikita.webapp.service.interfaces.secondary.ICrossReferenceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -50,11 +49,12 @@ public class CrossReferenceService
     public CrossReferenceService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IODataService odataService,
             IPatchService patchService,
             ISystemIdEntityRepository systemIdEntityRepository,
             ICrossReferenceRepository crossReferenceRepository,
             ICrossReferenceHateoasHandler crossReferenceHateoasHandler) {
-        super(entityManager, applicationEventPublisher, patchService);
+        super(entityManager, applicationEventPublisher, patchService, odataService);
         this.systemIdEntityRepository = systemIdEntityRepository;
         this.crossReferenceRepository = crossReferenceRepository;
         this.crossReferenceHateoasHandler = crossReferenceHateoasHandler;
@@ -96,37 +96,19 @@ public class CrossReferenceService
         crossReference.setReferenceType(getReferenceType(type));
         crossReference.setFromReferenceType(fromReferenceType);
         entity.addCrossReference(crossReference);
-        CrossReferenceHateoas crossReferenceHateoas =
-                new CrossReferenceHateoas(crossReferenceRepository
-                        .save(crossReference));
-        crossReferenceHateoasHandler.addLinks(crossReferenceHateoas,
-                new Authorisation());
-        setOutgoingRequestHeader(crossReferenceHateoas);
-        return crossReferenceHateoas;
-
+        return packAsHateoas(crossReferenceRepository.save(crossReference));
     }
 
     // All READ methods
 
     @Override
     public CrossReferenceHateoas findBySystemId(@NotNull final UUID systemId) {
-        CrossReferenceHateoas crossReferenceHateoas =
-                new CrossReferenceHateoas(getCrossReferenceOrThrow(systemId));
-        crossReferenceHateoasHandler.addLinks(crossReferenceHateoas,
-                new Authorisation());
-        setOutgoingRequestHeader(crossReferenceHateoas);
-        return crossReferenceHateoas;
+        return packAsHateoas(getCrossReferenceOrThrow(systemId));
     }
 
     @Override
-    public CrossReferenceHateoas findAllByOwner() {
-        CrossReferenceHateoas crossReferenceHateoas =
-                new CrossReferenceHateoas(List.copyOf(
-                        crossReferenceRepository.findByOwnedBy(getUser())));
-        crossReferenceHateoasHandler.addLinks(crossReferenceHateoas,
-                new Authorisation());
-        setOutgoingRequestHeader(crossReferenceHateoas);
-        return crossReferenceHateoas;
+    public CrossReferenceHateoas findAll() {
+        return (CrossReferenceHateoas) odataService.processODataQueryGet();
     }
 
     // All UPDATE methods
@@ -147,12 +129,7 @@ public class CrossReferenceService
         validateNotDuplicate(incomingCrossReference);
         existingCrossReference.setToSystemId(
                 incomingCrossReference.getToSystemId());
-        CrossReferenceHateoas crossReferenceHateoas =
-                new CrossReferenceHateoas(existingCrossReference);
-        crossReferenceHateoasHandler.addLinks(crossReferenceHateoas,
-                new Authorisation());
-        setOutgoingRequestHeader(crossReferenceHateoas);
-        return crossReferenceHateoas;
+        return packAsHateoas(existingCrossReference);
     }
 
     // All DELETE methods
@@ -176,22 +153,19 @@ public class CrossReferenceService
         crossReferenceRepository.delete(crossReference);
     }
 
-
     // All template methods
 
     @Override
-    public CrossReferenceHateoas getDefaultCrossReference() {
+    public CrossReferenceHateoas getDefaultCrossReference(
+            @NotNull final UUID systemId) {
         CrossReference suggestedCrossReference = new CrossReference();
-        CrossReferenceHateoas partHateoas =
-                new CrossReferenceHateoas(suggestedCrossReference);
-        crossReferenceHateoasHandler.addLinksOnTemplate(partHateoas,
-                new Authorisation());
-        return partHateoas;
+        suggestedCrossReference.setVersion(-1L, true);
+        return packAsHateoas(suggestedCrossReference);
     }
 
     // All helper methods
 
-    private String getReferenceType(String baseType) {
+    private String getReferenceType(@NotNull final String baseType) {
         switch (baseType) {
             case FILE:
                 return REFERENCE_TO_FILE;
@@ -206,7 +180,7 @@ public class CrossReferenceService
 
     }
 
-    private String getEntityType(CrossReference crossReference) {
+    private String getEntityType(@NotNull final CrossReference crossReference) {
         if (null != crossReference.getReferenceType() &&
                 !crossReference.getReferenceType().isBlank()) {
             switch (crossReference.getFromReferenceType()) {
@@ -230,8 +204,9 @@ public class CrossReferenceService
      * @param crossReference The CrossReference to check
      * @param typeFrom       the object type
      */
-    private String getReferenceTypeIfOK(CrossReference crossReference,
-                                        String typeFrom) {
+    private String getReferenceTypeIfOK(
+            @NotNull final CrossReference crossReference,
+            @NotNull final String typeFrom) {
         SystemIdEntity entity = getToObjectOrThrow(
                 crossReference.getToSystemId());
         String typeTo = entity.getBaseTypeName();
@@ -246,7 +221,7 @@ public class CrossReferenceService
     }
 
     /**
-     * Check that the systemID of the request URL matches the value that is
+     * Check that the systemId of the request URL matches the value that is
      * in the fromSystemID field. If they don't match throw a BAD REQUEST
      * (400) exception. This test is so that we can trust the value i
      * fromSystemId. Also if the incoming request does not match, then the
@@ -255,9 +230,10 @@ public class CrossReferenceService
      *
      * @param crossReference the incoming CrossReference object
      */
-    private void validateIncomingCrossReference(CrossReference crossReference) {
-        String systemId = getFirstSystemIDFromRequest();
-        if (!crossReference.getFromSystemId().toString().equals(systemId)) {
+    private void validateIncomingCrossReference(
+            @NotNull final CrossReference crossReference) {
+        UUID systemId = getFirstSystemIDFromRequest();
+        if (!crossReference.getFromSystemId().equals(systemId)) {
             String error = String.format(CROSS_REFERENCE_BAD_SYSTEM_ID,
                     crossReference.getFromSystemId().toString(), systemId);
             throw new NikitaMalformedInputDataException(error);
@@ -265,7 +241,8 @@ public class CrossReferenceService
         validateNotDuplicate(crossReference);
     }
 
-    private void validateNotDuplicate(CrossReference crossReference) {
+    private void validateNotDuplicate(
+            @NotNull final CrossReference crossReference) {
         UUID fromSystemId = crossReference.getFromSystemId();
         UUID toSystemId = crossReference.getToSystemId();
         Optional<CrossReference> crossReferenceOpt =
@@ -285,7 +262,7 @@ public class CrossReferenceService
      * will only ever get a valid object (arkivenhet) back. If there is no valid
      * object (arkivenhet), an exception is thrown
      *
-     * @param systemId the systemID of the object to to retrieve
+     * @param systemId the systemId of the object to to retrieve
      * @return the (arkivenhet) object
      */
     protected SystemIdEntity getToObjectOrThrow(
@@ -294,10 +271,17 @@ public class CrossReferenceService
                 systemIdEntityRepository.findById(systemId);
         if (systemIdEntityOpt.isEmpty()) {
             throw new NoarkEntityNotFoundException(INFO_CANNOT_FIND_OBJECT +
-                    " with systemID " + systemId + " " +
+                    " with systemId " + systemId + " " +
                     "that was attempted to be associated with CrossReference");
         }
         return systemIdEntityOpt.get();
+    }
+
+    private CrossReferenceHateoas packAsHateoas(CrossReference crossReference) {
+        CrossReferenceHateoas crossReferenceHateoas =
+                new CrossReferenceHateoas(crossReference);
+        applyLinksAndHeader(crossReferenceHateoas, crossReferenceHateoasHandler);
+        return crossReferenceHateoas;
     }
 
     /**
@@ -306,12 +290,12 @@ public class CrossReferenceService
      * will only ever get a valid CrossReference back. If there is no valid
      * CrossReference, an exception is thrown
      *
-     * @param crossReferenceSystemId systemID of the CrossReference object to
+     * @param crossReferenceSystemId systemId of the CrossReference object to
      *                               retrieve
      * @return the CrossReference object
      */
     protected CrossReference getCrossReferenceOrThrow(
-            @NotNull UUID crossReferenceSystemId) {
+            @NotNull final UUID crossReferenceSystemId) {
         CrossReference crossReference = crossReferenceRepository.
                 findBySystemId(crossReferenceSystemId);
         if (crossReference == null) {

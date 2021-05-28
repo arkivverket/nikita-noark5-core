@@ -99,7 +99,7 @@ public class SignOff
 
     // Links to RegistryEntry
     @ManyToMany(mappedBy = "referenceSignOff")
-    private Set<RegistryEntry> referenceRecord = new TreeSet<>();
+    private Set<RegistryEntry> referenceRegistryEntry = new TreeSet<>();
 
     @Override
     public OffsetDateTime getSignOffDate() {
@@ -218,23 +218,24 @@ public class SignOff
     }
 
     @Override
-    public Set<RegistryEntry> getReferenceRecord() {
-        return referenceRecord;
+    public Set<RegistryEntry> getReferenceRegistryEntry() {
+        return referenceRegistryEntry;
     }
 
     @Override
-    public void setReferenceRecord(Set<RegistryEntry> referenceRecord) {
-        this.referenceRecord = referenceRecord;
+    public void setReferenceRegistryEntry(Set<RegistryEntry> referenceRegistryEntry) {
+        this.referenceRegistryEntry = referenceRegistryEntry;
     }
 
     @Override
     public void addRecord(RegistryEntry registryEntry) {
-        this.referenceRecord.add(registryEntry);
+        this.referenceRegistryEntry.add(registryEntry);
         registryEntry.getReferenceSignOff().add(this);
     }
 
+    @Override
     public void removeRecord(RegistryEntry registryEntry) {
-        this.referenceRecord.remove(registryEntry);
+        this.referenceRegistryEntry.remove(registryEntry);
         registryEntry.getReferenceSignOff().remove(this);
     }
 

@@ -1,5 +1,6 @@
 package nikita.webapp.service.impl;
 
+import nikita.common.model.nikita.NikitaPage;
 import nikita.common.model.nikita.PatchMerge;
 import nikita.common.model.nikita.PatchObjects;
 import nikita.common.model.noark5.bsm.BSMBase;
@@ -13,32 +14,23 @@ import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileExpansionHateo
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
 import nikita.common.model.noark5.v5.hateoas.secondary.*;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.md_other.BSMMetadata;
 import nikita.common.model.noark5.v5.metadata.Metadata;
 import nikita.common.model.noark5.v5.nationalidentifier.*;
 import nikita.common.model.noark5.v5.secondary.*;
 import nikita.common.repository.n5v5.IFileRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
-import nikita.webapp.hateoas.interfaces.IClassHateoasHandler;
 import nikita.webapp.hateoas.interfaces.IFileHateoasHandler;
-import nikita.webapp.hateoas.interfaces.ISeriesHateoasHandler;
-import nikita.webapp.hateoas.interfaces.nationalidentifier.INationalIdentifierHateoasHandler;
-import nikita.webapp.hateoas.interfaces.secondary.ICommentHateoasHandler;
-import nikita.webapp.hateoas.interfaces.secondary.IPartHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.IScreeningMetadataHateoasHandler;
-import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.*;
 import nikita.webapp.service.interfaces.metadata.IMetadataService;
+import nikita.webapp.service.interfaces.odata.IODataService;
 import nikita.webapp.service.interfaces.secondary.*;
-import nikita.webapp.web.events.AfterNoarkEntityCreatedEvent;
 import nikita.webapp.web.events.AfterNoarkEntityDeletedEvent;
-import nikita.webapp.web.events.AfterNoarkEntityUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,15 +38,11 @@ import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 import static java.util.List.copyOf;
-import static java.util.UUID.fromString;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
-import static nikita.common.util.CommonUtils.WebUtils.getMethodsForRequestOrThrow;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.*;
-import static org.springframework.http.HttpStatus.OK;
 
 @Service
 public class FileService
@@ -69,63 +57,49 @@ public class FileService
     private final IFileRepository fileRepository;
     private final IBSMService bsmService;
     private final IFileHateoasHandler fileHateoasHandler;
-    private final ISeriesHateoasHandler seriesHateoasHandler;
-    private final IClassHateoasHandler classHateoasHandler;
     private final ICommentService commentService;
     private final IKeywordService keywordService;
     private final ICrossReferenceService crossReferenceService;
     private final IMetadataService metadataService;
     private final INationalIdentifierService nationalIdentifierService;
     private final IPartService partService;
-    private final ICommentHateoasHandler commentHateoasHandler;
-    private final INationalIdentifierHateoasHandler nationalIdentifierHateoasHandler;
-    private final IPartHateoasHandler partHateoasHandler;
     private final IScreeningMetadataService screeningMetadataService;
-    private final IScreeningMetadataHateoasHandler screeningMetadataHateoasHandler;
     private final IStorageLocationService storageLocationService;
+    private final IScreeningMetadataHateoasHandler screeningMetadataHateoasHandler;
 
     public FileService(EntityManager entityManager,
                        ApplicationEventPublisher applicationEventPublisher,
+                       IODataService odataService,
                        IPatchService patchService,
                        IRecordService recordService,
                        ICaseFileService caseFileService,
                        IFileRepository fileRepository,
                        IBSMService bsmService,
                        IFileHateoasHandler fileHateoasHandler,
-                       ISeriesHateoasHandler seriesHateoasHandler,
-                       IClassHateoasHandler classHateoasHandler,
                        ICommentService commentService,
                        IKeywordService keywordService,
                        ICrossReferenceService crossReferenceService,
                        IMetadataService metadataService,
                        INationalIdentifierService nationalIdentifierService,
                        IPartService partService,
-                       ICommentHateoasHandler commentHateoasHandler,
-                       INationalIdentifierHateoasHandler nationalIdentifierHateoasHandler,
-                       IPartHateoasHandler partHateoasHandler,
                        IScreeningMetadataService screeningMetadataService,
-                       IScreeningMetadataHateoasHandler screeningMetadataHateoasHandler,
-                       IStorageLocationService storageLocationService) {
-        super(entityManager, applicationEventPublisher, patchService);
+                       IStorageLocationService storageLocationService,
+                       IScreeningMetadataHateoasHandler screeningMetadataHateoasHandler) {
+        super(entityManager, applicationEventPublisher, patchService, odataService);
         this.recordService = recordService;
         this.caseFileService = caseFileService;
         this.fileRepository = fileRepository;
         this.bsmService = bsmService;
         this.fileHateoasHandler = fileHateoasHandler;
-        this.seriesHateoasHandler = seriesHateoasHandler;
-        this.classHateoasHandler = classHateoasHandler;
         this.commentService = commentService;
         this.keywordService = keywordService;
         this.crossReferenceService = crossReferenceService;
         this.metadataService = metadataService;
         this.nationalIdentifierService = nationalIdentifierService;
         this.partService = partService;
-        this.commentHateoasHandler = commentHateoasHandler;
-        this.nationalIdentifierHateoasHandler = nationalIdentifierHateoasHandler;
-        this.partHateoasHandler = partHateoasHandler;
         this.screeningMetadataService = screeningMetadataService;
-        this.screeningMetadataHateoasHandler = screeningMetadataHateoasHandler;
         this.storageLocationService = storageLocationService;
+        this.screeningMetadataHateoasHandler = screeningMetadataHateoasHandler;
     }
 
     // All CREATE operations
@@ -137,22 +111,18 @@ public class FileService
         setFinaliseEntityValues(file);
         bsmService.validateBSMList(file.getReferenceBSMBase());
         validateScreening(metadataService, file);
-        FileHateoas fileHateoas = new FileHateoas(fileRepository.save(file));
-        fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityCreatedEvent(this, file));
-        return fileHateoas;
+        return packAsHateoas(fileRepository.save(file));
     }
 
     @Override
     @Transactional
-    public File createFile(File file) {
+    public FileHateoas createFile(File file) {
         validateDocumentMedium(metadataService, file);
         validateScreening(metadataService, file);
         bsmService.validateBSMList(file.getReferenceBSMBase());
         fileRepository.save(file);
         setFinaliseEntityValues(file);
-        return file;
+        return packAsHateoas(file);
     }
 
     /**
@@ -169,7 +139,7 @@ public class FileService
     @Override
     @Transactional
     public FileHateoas createFileAssociatedWithFile(
-            String systemId, File file) {
+            UUID systemId, File file) {
         file.setReferenceParentFile(getFileOrThrow(systemId));
         return save(file);
     }
@@ -177,16 +147,16 @@ public class FileService
     @Override
     @Transactional
     public CommentHateoas createCommentAssociatedWithFile
-            (String systemID, Comment comment) {
+            (@NotNull final UUID systemId, Comment comment) {
         return commentService.createNewComment(comment,
-                getFileOrThrow(systemID));
+                getFileOrThrow(systemId));
     }
 
     @Override
     @Transactional
-    public ResponseEntity<RecordHateoas> createRecordAssociatedWithFile(
-            String fileSystemId, Record record) {
-        record.setReferenceFile(getFileOrThrow(fileSystemId));
+    public RecordHateoas createRecordAssociatedWithFile(
+            UUID systemId, Record record) {
+        record.setReferenceFile(getFileOrThrow(systemId));
         return recordService.save(record);
     }
 
@@ -194,18 +164,18 @@ public class FileService
     @Transactional
     public PartPersonHateoas
     createPartPersonAssociatedWithFile(
-            @NotNull String systemID, @NotNull PartPerson partPerson) {
+            @NotNull final UUID systemId, @NotNull PartPerson partPerson) {
         return partService.
-                createNewPartPerson(partPerson, getFileOrThrow(systemID));
+                createNewPartPerson(partPerson, getFileOrThrow(systemId));
     }
 
     @Override
     @Transactional
     public PartUnitHateoas
     createPartUnitAssociatedWithFile(
-            @NotNull String systemID, @NotNull PartUnit partUnit) {
+            @NotNull final UUID systemId, @NotNull PartUnit partUnit) {
         return partService.
-                createNewPartUnit(partUnit, getFileOrThrow(systemID));
+                createNewPartUnit(partUnit, getFileOrThrow(systemId));
     }
 
     @Override
@@ -219,71 +189,71 @@ public class FileService
     @Transactional
     public BuildingHateoas
     createBuildingAssociatedWithFile(
-            @NotNull String systemID, @NotNull Building building) {
+            @NotNull final UUID systemId, @NotNull Building building) {
         return nationalIdentifierService.
-                createNewBuilding(building, getFileOrThrow(systemID));
+                createNewBuilding(building, getFileOrThrow(systemId));
     }
 
     @Override
     @Transactional
     public CadastralUnitHateoas
     createCadastralUnitAssociatedWithFile(
-            @NotNull String systemID, @NotNull CadastralUnit cadastralUnit) {
+            @NotNull final UUID systemId, @NotNull CadastralUnit cadastralUnit) {
         return nationalIdentifierService.
-                createNewCadastralUnit(cadastralUnit, getFileOrThrow(systemID));
+                createNewCadastralUnit(cadastralUnit, getFileOrThrow(systemId));
     }
 
     @Override
     @Transactional
     public DNumberHateoas
     createDNumberAssociatedWithFile(
-            @NotNull String systemID, @NotNull DNumber dNumber) {
+            @NotNull final UUID systemId, @NotNull DNumber dNumber) {
         return nationalIdentifierService.
-                createNewDNumber(dNumber, getFileOrThrow(systemID));
+                createNewDNumber(dNumber, getFileOrThrow(systemId));
     }
 
     @Override
     @Transactional
     public PlanHateoas
     createPlanAssociatedWithFile(
-            @NotNull String systemID, @NotNull Plan plan) {
+            @NotNull final UUID systemId, @NotNull Plan plan) {
         return nationalIdentifierService.
-                createNewPlan(plan, getFileOrThrow(systemID));
+                createNewPlan(plan, getFileOrThrow(systemId));
     }
 
     @Override
     @Transactional
     public PositionHateoas
     createPositionAssociatedWithFile(
-            @NotNull String systemID, @NotNull Position position) {
+            @NotNull final UUID systemId, @NotNull Position position) {
         return nationalIdentifierService.
-                createNewPosition(position, getFileOrThrow(systemID));
+                createNewPosition(position, getFileOrThrow(systemId));
     }
 
     @Override
     @Transactional
     public SocialSecurityNumberHateoas
     createSocialSecurityNumberAssociatedWithFile
-            (@NotNull String systemID,
+            (@NotNull final UUID systemId,
              @NotNull SocialSecurityNumber socialSecurityNumber) {
         return nationalIdentifierService.
                 createNewSocialSecurityNumber(socialSecurityNumber,
-                        getFileOrThrow(systemID));
+                        getFileOrThrow(systemId));
     }
 
     @Override
     @Transactional
     public UnitHateoas
     createUnitAssociatedWithFile(
-            @NotNull String systemID, @NotNull Unit unit) {
+            @NotNull final UUID systemId, @NotNull Unit unit) {
         return nationalIdentifierService.
-                createNewUnit(unit, getFileOrThrow(systemID));
+                createNewUnit(unit, getFileOrThrow(systemId));
     }
 
     @Override
     @Transactional
     public CaseFileHateoas expandToCaseFile(
-            @NotNull UUID systemId, @NotNull PatchMerge patchMerge) {
+            @NotNull final UUID systemId, @NotNull PatchMerge patchMerge) {
         return caseFileService.expandFileAsCaseFileHateoas(
                 getFileOrThrow(systemId), patchMerge);
     }
@@ -292,16 +262,10 @@ public class FileService
     @Transactional
     public StorageLocationHateoas createStorageLocationAssociatedWithFile(
             UUID systemId, StorageLocation storageLocation) {
-        File file = getFileOrThrow(systemId.toString());
+        File file = getFileOrThrow(systemId);
         return storageLocationService
                 .createStorageLocationAssociatedWithFile(
                         storageLocation, file);
-    }
-
-    // All READ operations.
-
-    public List<File> findAll() {
-        return fileRepository.findAll();
     }
 
     /**
@@ -312,22 +276,34 @@ public class FileService
      * @return A FileHateoas object containing the children file's
      */
     @Override
-    public FileHateoas findAllChildren(@NotNull String systemId) {
-        FileHateoas fileHateoas = new
-                FileHateoas((List<INoarkEntity>)
-                (List) getFileOrThrow(systemId).getReferenceChildFile());
-        fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
-        return fileHateoas;
+    public FileHateoas findAllChildren(@NotNull final UUID systemId) {
+        // Make sure the file exists
+        getFileOrThrow(systemId);
+        return (FileHateoas) odataService.processODataQueryGet();
+    }
+
+    /**
+     * Retrieve a list of children file belonging to the file object
+     * identified by systemId
+     *
+     * @param systemId The systemId of the File object to retrieve its children
+     * @return A FileHateoas object containing the children file's
+     */
+    @Override
+    public RecordHateoas findAllRecords(@NotNull final UUID systemId) {
+        // Make sure the file exists
+        getFileOrThrow(systemId);
+        return (RecordHateoas) odataService.processODataQueryGet();
     }
 
     @Override
-    public PartPersonHateoas generateDefaultPartPerson(String systemID) {
-        return partService.generateDefaultPartPerson(systemID);
+    public PartPersonHateoas generateDefaultPartPerson(@NotNull final UUID systemId) {
+        return partService.generateDefaultPartPerson(systemId);
     }
 
     @Override
-    public PartUnitHateoas generateDefaultPartUnit(String systemID) {
-        return partService.generateDefaultPartUnit(systemID);
+    public PartUnitHateoas generateDefaultPartUnit(@NotNull final UUID systemId) {
+        return partService.generateDefaultPartUnit(systemId);
     }
 
     @Override
@@ -336,62 +312,64 @@ public class FileService
         return caseFileService.generateDefaultExpandedCaseFile();
     }
 
-    public List<File> findByOwnedBy(String ownedBy) {
-        ownedBy = (ownedBy == null) ? getUser() : ownedBy;
-        return fileRepository.findByOwnedBy(ownedBy);
+    @Override
+    public FileHateoas findAll() {
+        return (FileHateoas) odataService.processODataQueryGet();
     }
 
     @Override
     public CommentHateoas getCommentAssociatedWithFile(
-            @NotNull final String systemID) {
-        CommentHateoas commentHateoas = new CommentHateoas(
-                copyOf(getFileOrThrow(systemID).getReferenceComment()));
-        commentHateoasHandler.addLinks(commentHateoas, new Authorisation());
-        return commentHateoas;
+            @NotNull final UUID systemId) {
+        // Make sure the file exists
+        getFileOrThrow(systemId);
+        return (CommentHateoas) odataService.processODataQueryGet();
     }
 
     @Override
     public PartHateoas getPartAssociatedWithFile(
-            @NotNull final String systemID) {
-        PartHateoas partHateoas = new PartHateoas(
-                copyOf(getFileOrThrow(systemID).getReferencePart()));
-        partHateoasHandler.addLinks(partHateoas, new Authorisation());
-        return partHateoas;
+            @NotNull final UUID systemId) {
+        // Make sure the file exists
+        getFileOrThrow(systemId);
+        return (PartHateoas) odataService.processODataQueryGet();
+    }
+
+    @Override
+    public KeywordHateoas getKeywordAssociatedWithFile(
+            @NotNull final UUID systemId) {
+        getFileOrThrow(systemId);
+        return (KeywordHateoas) odataService.processODataQueryGet();
+    }
+
+    @Override
+    public StorageLocationHateoas getStorageLocationAssociatedWithFile(
+            @NotNull final UUID systemId) {
+        getFileOrThrow(systemId);
+        return (StorageLocationHateoas) odataService.processODataQueryGet();
     }
 
     @Override
     public NationalIdentifierHateoas getNationalIdentifierAssociatedWithFile(
-            @NotNull final String systemID) {
-        NationalIdentifierHateoas niHateoas = new NationalIdentifierHateoas(
-                (List<INoarkEntity>) (List) getFileOrThrow(systemID).
-                        getReferenceNationalIdentifier());
-        nationalIdentifierHateoasHandler
-                .addLinks(niHateoas, new Authorisation());
-        return niHateoas;
+            @NotNull final UUID systemId) {
+        return (NationalIdentifierHateoas) odataService.processODataQueryGet();
     }
 
     @Override
     public ScreeningMetadataHateoas
-    getScreeningMetadataAssociatedWithFile(UUID fileSystemId) {
-        Screening screening = getFileOrThrow(fileSystemId)
+    getScreeningMetadataAssociatedWithFile(@NotNull final UUID systemId) {
+        Screening screening = getFileOrThrow(systemId)
                 .getReferenceScreening();
         if (null == screening) {
             throw new NoarkEntityNotFoundException(
                     INFO_CANNOT_FIND_OBJECT + " Screening, using systemId " +
-                            fileSystemId);
+                            systemId);
         }
-        Set<ScreeningMetadataLocal> screeningMetadata =
-                screening.getReferenceScreeningMetadata();
-        ScreeningMetadataHateoas screeningMetadataHateoas =
-                new ScreeningMetadataHateoas(copyOf(screeningMetadata));
-        screeningMetadataHateoasHandler.addLinks(screeningMetadataHateoas,
-                new Authorisation());
-        return screeningMetadataHateoas;
+        return packAsHateoas(new NikitaPage(copyOf(
+                screening.getReferenceScreeningMetadata())));
     }
 
     @Override
-    public File findBySystemId(String systemId) {
-        return getFileOrThrow(systemId);
+    public FileHateoas findBySystemId(@NotNull final UUID systemId) {
+        return packAsHateoas(getFileOrThrow(systemId));
     }
 
     /**
@@ -399,20 +377,12 @@ public class FileService
      * the files systemId.
      *
      * @param systemId systemId of the file
-     * @return The parent Class packed as a ResponseEntity
+     * @return The parent Class packed as a ClassHateoas
      */
     @Override
-    public ResponseEntity<ClassHateoas>
-    findClassAssociatedWithFile(@NotNull final String systemId) {
-        ClassHateoas classHateoas = new ClassHateoas(
-                fileRepository.findBySystemId(fromString(systemId)).
-                        getReferenceClass());
-
-        classHateoasHandler.addLinks(classHateoas, new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(classHateoas.getEntityVersion().toString())
-                .body(classHateoas);
+    public ClassHateoas
+    findClassAssociatedWithFile(@NotNull final UUID systemId) {
+        return (ClassHateoas) odataService.processODataQueryGet();
     }
 
     /**
@@ -420,20 +390,12 @@ public class FileService
      * the files systemId.
      *
      * @param systemId systemId of the file
-     * @return The parent Series packed as a ResponseEntity
+     * @return The parent Series packed as a SeriesHateoas
      */
     @Override
-    public ResponseEntity<SeriesHateoas>
-    findSeriesAssociatedWithFile(@NotNull final String systemId) {
-        SeriesHateoas seriesHateoas = new SeriesHateoas(
-                fileRepository.findBySystemId(fromString(systemId)).
-                        getReferenceSeries());
-
-        seriesHateoasHandler.addLinks(seriesHateoas, new Authorisation());
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(seriesHateoas.getEntityVersion().toString())
-                .body(seriesHateoas);
+    public SeriesHateoas
+    findSeriesAssociatedWithFile(@NotNull final UUID systemId) {
+        return (SeriesHateoas) odataService.processODataQueryGet();
     }
 
     // All UPDATE operations
@@ -464,8 +426,10 @@ public class FileService
      */
     @Override
     @Transactional
-    public File handleUpdate(@NotNull String systemId, @NotNull Long version,
-                             @NotNull File incomingFile) {
+    public FileHateoas handleUpdate(
+            @NotNull final UUID systemId,
+            @NotNull final Long version,
+            @NotNull File incomingFile) {
         File existingFile = getFileOrThrow(systemId);
         // Here copy all the values you are allowed to copy ....
         updateTitleAndDescription(incomingFile, existingFile);
@@ -476,33 +440,20 @@ public class FileService
         // Note setVersion can potentially result in a NoarkConcurrencyException
         // exception as it checks the ETAG value
         existingFile.setVersion(version);
-        fileRepository.save(existingFile);
-        return existingFile;
+        return packAsHateoas(existingFile);
     }
 
     @Transactional
     public FileHateoas update(File file) {
-        FileHateoas fileHateoas = new FileHateoas(fileRepository.save(file));
         bsmService.validateBSMList(file.getReferenceBSMBase());
-        fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityUpdatedEvent(this, file));
-        return fileHateoas;
+        return packAsHateoas(file);
     }
 
     @Override
     @Transactional
-    public ResponseEntity<FileHateoas> handleUpdate(
-            UUID systemID, PatchObjects patchObjects) {
-        File file = (File) handlePatch(systemID, patchObjects);
-        FileHateoas fileHateoas = new FileHateoas(file);
-        fileHateoasHandler.addLinks(fileHateoas, new Authorisation());
-        applicationEventPublisher.publishEvent(
-                new AfterNoarkEntityUpdatedEvent(this, file));
-        return ResponseEntity.status(OK)
-                .allow(getMethodsForRequestOrThrow(getServletPath()))
-                .eTag(fileHateoas.getEntityVersion().toString())
-                .body(fileHateoas);
+    public FileHateoas handleUpdate(
+            UUID systemId, PatchObjects patchObjects) {
+        return packAsHateoas((File) handlePatch(systemId, patchObjects));
     }
 
     @Override
@@ -530,7 +481,7 @@ public class FileService
 
     @Override
     @Transactional
-    public Object associateBSM(@NotNull UUID systemId,
+    public Object associateBSM(@NotNull final UUID systemId,
                                @NotNull List<BSMBase> bsm) {
         File file = getFileOrThrow(systemId);
         file.addReferenceBSMBase(bsm);
@@ -541,8 +492,8 @@ public class FileService
 
     @Override
     @Transactional
-    public void deleteEntity(@NotNull String fileSystemId) {
-        File file = getFileOrThrow(fileSystemId);
+    public void deleteEntity(@NotNull final UUID systemId) {
+        File file = getFileOrThrow(systemId);
         fileRepository.delete(file);
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityDeletedEvent(this, file));
@@ -550,25 +501,24 @@ public class FileService
 
     /**
      * Delete all objects belonging to the user identified by ownedBy
-     *
-     * @return the number of objects deleted
      */
     @Override
     @Transactional
-    public long deleteAllByOwnedBy() {
-        return fileRepository.deleteByOwnedBy(getUser());
+    public void deleteAllByOwnedBy() {
+        fileRepository.deleteByOwnedBy(getUser());
     }
 
     // All template operations
 
     @Override
-    public StorageLocationHateoas getDefaultStorageLocation(UUID systemId) {
+    public StorageLocationHateoas getDefaultStorageLocation(@NotNull final UUID systemId) {
         return storageLocationService.getDefaultStorageLocation(systemId);
     }
 
     @Override
-    public CrossReferenceHateoas getDefaultCrossReference() {
-        return crossReferenceService.getDefaultCrossReference();
+    public CrossReferenceHateoas getDefaultCrossReference(
+            @NotNull final UUID systemId) {
+        return crossReferenceService.getDefaultCrossReference(systemId);
     }
 
     /**
@@ -581,65 +531,83 @@ public class FileService
      * @return the File object wrapped as a FileHateoas object
      */
     @Override
-    public FileHateoas generateDefaultFile() {
+    public FileHateoas generateDefaultFile(@NotNull final UUID systemId) {
         File defaultFile = new File();
-        //defaultFile.setReferenceScreening(generateDefaultScreening());
-        FileHateoas fileHateoas = new FileHateoas(defaultFile);
-        fileHateoasHandler.addLinksOnTemplate(fileHateoas, new Authorisation());
-        return fileHateoas;
+        defaultFile.setVersion(-1L, true);
+        return packAsHateoas(defaultFile);
     }
 
     @Override
-    public ScreeningMetadataHateoas getDefaultScreeningMetadata(UUID systemId) {
+    public ScreeningMetadataHateoas getDefaultScreeningMetadata(
+            @NotNull final UUID systemId) {
         return screeningMetadataService.getDefaultScreeningMetadata(systemId);
     }
 
     @Override
-    public CommentHateoas generateDefaultComment() {
-        return commentService.generateDefaultComment();
+    public CommentHateoas generateDefaultComment(@NotNull final UUID systemId) {
+        return commentService.generateDefaultComment(systemId);
     }
 
     @Override
-    public KeywordHateoas generateDefaultKeyword() {
-        return keywordService.generateDefaultKeyword();
+    public KeywordHateoas generateDefaultKeyword(@NotNull final UUID systemId) {
+        return keywordService.generateDefaultKeyword(systemId);
     }
 
     @Override
-    public BuildingHateoas generateDefaultBuilding() {
-        return nationalIdentifierService.generateDefaultBuilding();
+    public BuildingHateoas generateDefaultBuilding(
+            @NotNull final UUID systemId) {
+        return nationalIdentifierService.generateDefaultBuilding(systemId);
     }
 
     @Override
-    public CadastralUnitHateoas generateDefaultCadastralUnit() {
-        return nationalIdentifierService.generateDefaultCadastralUnit();
+    public CadastralUnitHateoas generateDefaultCadastralUnit(
+            @NotNull final UUID systemId) {
+        return nationalIdentifierService.generateDefaultCadastralUnit(systemId);
     }
 
     @Override
-    public DNumberHateoas generateDefaultDNumber() {
-        return nationalIdentifierService.generateDefaultDNumber();
+    public DNumberHateoas generateDefaultDNumber(@NotNull final UUID systemId) {
+        return nationalIdentifierService.generateDefaultDNumber(systemId);
     }
 
     @Override
-    public PlanHateoas generateDefaultPlan() {
-        return nationalIdentifierService.generateDefaultPlan();
+    public PlanHateoas generateDefaultPlan(@NotNull final UUID systemId) {
+        return nationalIdentifierService.generateDefaultPlan(systemId);
     }
 
     @Override
-    public PositionHateoas generateDefaultPosition() {
-        return nationalIdentifierService.generateDefaultPosition();
+    public PositionHateoas generateDefaultPosition(
+            @NotNull final UUID systemId) {
+        return nationalIdentifierService.generateDefaultPosition(systemId);
     }
 
     @Override
-    public SocialSecurityNumberHateoas generateDefaultSocialSecurityNumber() {
-        return nationalIdentifierService.generateDefaultSocialSecurityNumber();
+    public SocialSecurityNumberHateoas generateDefaultSocialSecurityNumber(
+            @NotNull final UUID systemId) {
+        return nationalIdentifierService
+                .generateDefaultSocialSecurityNumber(systemId);
     }
 
     @Override
-    public UnitHateoas generateDefaultUnit() {
-        return nationalIdentifierService.generateDefaultUnit();
+    public UnitHateoas generateDefaultUnit(@NotNull final UUID systemId) {
+        return nationalIdentifierService.generateDefaultUnit(systemId);
     }
 
     // All HELPER operations
+
+    public ScreeningMetadataHateoas packAsHateoas(NikitaPage page) {
+        ScreeningMetadataHateoas screeningMetadataHateoas =
+                new ScreeningMetadataHateoas(page);
+        applyLinksAndHeader(screeningMetadataHateoas,
+                screeningMetadataHateoasHandler);
+        return screeningMetadataHateoas;
+    }
+
+    public FileHateoas packAsHateoas(@NotNull final File file) {
+        FileHateoas fileHateoas = new FileHateoas(file);
+        applyLinksAndHeader(fileHateoas, fileHateoasHandler);
+        return fileHateoas;
+    }
 
     /**
      * Used to retrieve a BSMBase object so parent can can check that the
@@ -663,20 +631,7 @@ public class FileService
      * @param systemId systemId of the file object you are looking for
      * @return the newly found file object or null if it does not exist
      */
-    public File getFileOrThrow(@NotNull String systemId) {
-        return getFileOrThrow(fromString(systemId));
-    }
-
-    /**
-     * Internal helper method. Rather than having a find and try catch in
-     * multiple methods, we have it here once. Note. If you call this, be aware
-     * that you will only ever get a valid File back. If there is no valid
-     * File, an exception is thrown
-     *
-     * @param systemId systemId of the file object you are looking for
-     * @return the newly found file object or null if it does not exist
-     */
-    public File getFileOrThrow(@NotNull UUID systemId) {
+    public File getFileOrThrow(@NotNull final UUID systemId) {
         File file = fileRepository.findBySystemId(systemId);
         if (file == null) {
             String info = INFO_CANNOT_FIND_OBJECT + " File, using systemId " +

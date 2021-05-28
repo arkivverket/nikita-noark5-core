@@ -3,13 +3,12 @@ package nikita.webapp.service.impl;
 import nikita.common.model.noark5.v5.EventLog;
 import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.hateoas.EventLogHateoas;
-import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.repository.n5v5.IEventLogRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
 import nikita.webapp.hateoas.interfaces.IEventLogHateoasHandler;
-import nikita.webapp.security.Authorisation;
 import nikita.webapp.service.application.IPatchService;
 import nikita.webapp.service.interfaces.IEventLogService;
+import nikita.webapp.service.interfaces.odata.IODataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -19,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.UUID;
 
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
@@ -38,10 +36,11 @@ public class EventLogService
     public EventLogService(
             EntityManager entityManager,
             ApplicationEventPublisher applicationEventPublisher,
+            IODataService odataService,
             IPatchService patchService,
             IEventLogRepository eventLogRepository,
             IEventLogHateoasHandler eventLogHateoasHandler) {
-        super(entityManager, applicationEventPublisher, patchService);
+        super(entityManager, applicationEventPublisher, patchService, odataService);
         this.eventLogRepository = eventLogRepository;
         this.eventLogHateoasHandler = eventLogHateoasHandler;
     }
@@ -50,47 +49,36 @@ public class EventLogService
 
     @Override
     @Transactional
-    public EventLogHateoas createNewEventLog(EventLog eventLog,
-                                             SystemIdEntity entity) {
-        if (null == eventLog.getChangedDate())
+    public EventLogHateoas createNewEventLog(
+            @NotNull final EventLog eventLog,
+            @NotNull final SystemIdEntity entity) {
+        if (null == eventLog.getChangedDate()) {
             eventLog.setChangedDate(OffsetDateTime.now());
-        eventLog = eventLogRepository.save(eventLog);
-        EventLogHateoas eventLogHateoas = new EventLogHateoas(eventLog);
-        eventLogHateoasHandler.addLinks(eventLogHateoas, new Authorisation());
-        return eventLogHateoas;
+        }
+        return packAsHateoas(eventLogRepository.save(eventLog));
     }
 
     // All READ operations
 
     @Override
-    @SuppressWarnings("unchecked")
     public EventLogHateoas findEventLogByOwner() {
-        EventLogHateoas eventLogHateoas = new
-                EventLogHateoas((List<INoarkEntity>) (List)
-                eventLogRepository.findByOwnedBy(getUser()));
-        eventLogHateoasHandler
-                .addLinksOnRead(eventLogHateoas, new Authorisation());
-        return eventLogHateoas;
+        return (EventLogHateoas) odataService.processODataQueryGet();
     }
 
     @Override
-    public EventLogHateoas findSingleEventLog(String eventLogSystemId) {
-        EventLog existingEventLog = getEventLogOrThrow(eventLogSystemId);
-
-        EventLogHateoas eventLogHateoas =
-                new EventLogHateoas(eventLogRepository.save(existingEventLog));
-        eventLogHateoasHandler.addLinks(eventLogHateoas, new Authorisation());
-        return eventLogHateoas;
+    public EventLogHateoas findSingleEventLog(@NotNull final UUID systemId) {
+        return packAsHateoas(getEventLogOrThrow(systemId));
     }
 
     // All UPDATE operations
 
     @Override
     @Transactional
-    public EventLogHateoas handleUpdate(@NotNull String eventLogSystemId,
-                                        @NotNull Long version,
-                                        @NotNull EventLog incomingEventLog) {
-        EventLog existingEventLog = getEventLogOrThrow(eventLogSystemId);
+    public EventLogHateoas handleUpdate(
+            @NotNull final UUID systemId,
+            @NotNull final Long version,
+            @NotNull final EventLog incomingEventLog) {
+        EventLog existingEventLog = getEventLogOrThrow(systemId);
         /*
         // Copy all the values you are allowed to copy ....
         existingEventLog.setEventLogText(incomingEventLog.getEventLogText());
@@ -102,40 +90,40 @@ public class EventLogService
         // NoarkConcurrencyException exception as it checks the ETAG
         // value
         existingEventLog.setVersion(version);
-
-        EventLogHateoas eventLogHateoas =
-                new EventLogHateoas(eventLogRepository.save(existingEventLog));
-        eventLogHateoasHandler.addLinks(eventLogHateoas, new Authorisation());
-        return eventLogHateoas;
+        return packAsHateoas(existingEventLog);
     }
 
     // All DELETE operations
 
     @Transactional
-    public void deleteEntity(String systemID) {
-        deleteEntity(getEventLogOrThrow(systemID));
+    public void deleteEntity(@NotNull final UUID systemId) {
+        deleteEntity(getEventLogOrThrow(systemId));
     }
 
     // All template operations
 
     @Override
-    public EventLogHateoas generateDefaultEventLog(SystemIdEntity entity) {
+    public EventLogHateoas generateDefaultEventLog(
+            @NotNull final SystemIdEntity entity) {
         EventLog defaultEventLog = new EventLog();
-
         defaultEventLog.setChangedDate(OffsetDateTime.now());
         defaultEventLog.setChangedBy(getUser());
-        EventLogHateoas eventLogHateoas =
-                new EventLogHateoas(defaultEventLog);
-        eventLogHateoasHandler
-                .addLinksOnTemplate(eventLogHateoas, new Authorisation());
-        return eventLogHateoas;
+        defaultEventLog.setVersion(-1L, true);
+        return packAsHateoas(defaultEventLog);
     }
 
     // All helper operations
 
-    protected EventLog getEventLogOrThrow(@NotNull String eventLogSystemId) {
-        EventLog eventLog = eventLogRepository.
-                findBySystemId(UUID.fromString(eventLogSystemId));
+
+    public EventLogHateoas packAsHateoas(
+            @NotNull final EventLog eventLog) {
+        EventLogHateoas eventLogHateoas = new EventLogHateoas(eventLog);
+        applyLinksAndHeader(eventLogHateoas, eventLogHateoasHandler);
+        return eventLogHateoas;
+    }
+
+    protected EventLog getEventLogOrThrow(@NotNull final UUID eventLogSystemId) {
+        EventLog eventLog = eventLogRepository.findBySystemId(eventLogSystemId);
         if (eventLog == null) {
             String info = INFO_CANNOT_FIND_OBJECT +
                     " EventLog, using systemId " + eventLogSystemId;

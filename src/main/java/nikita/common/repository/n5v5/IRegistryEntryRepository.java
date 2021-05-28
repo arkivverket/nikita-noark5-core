@@ -12,13 +12,7 @@ import java.util.UUID;
 public interface IRegistryEntryRepository extends
         PagingAndSortingRepository<RegistryEntry, UUID> {
 
-    // -- All SAVE operations
-    @Override
-    RegistryEntry save(RegistryEntry registryEntry);
-
     RegistryEntry findBySystemId(UUID systemId);
-
-    List<RegistryEntry> findByOwnedBy(String ownedBy);
 
     List<RegistryEntry> findByReferenceFile(File file);
 

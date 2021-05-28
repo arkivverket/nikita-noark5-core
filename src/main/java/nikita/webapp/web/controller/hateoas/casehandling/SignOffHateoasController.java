@@ -17,6 +17,7 @@ import static nikita.common.config.Constants.*;
 import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping(value = HREF_BASE_CASE_HANDLING + SLASH + SIGN_OFF,
@@ -53,7 +54,8 @@ public class SignOffHateoasController
                     description = "systemID of the signOff to retrieve",
                     required = true)
             @PathVariable(SYSTEM_ID) final UUID signOffSystemId) {
-        return signOffService.findBySystemId(signOffSystemId);
+        return ResponseEntity.status(OK).body(
+                signOffService.findBySystemId(signOffSystemId));
     }
 
     // API - All PUT Requests (CRUD - UPDATE)
@@ -83,7 +85,8 @@ public class SignOffHateoasController
                     description = "Incoming signOff object",
                     required = true)
             @RequestBody SignOff signOff) {
-        return signOffService.updateSignOff(signOffSystemId, signOff);
+        return ResponseEntity.status(OK).body(
+                signOffService.updateSignOff(signOffSystemId, signOff));
     }
 
     // API - All DELETE Requests (CRUD - DELETE)

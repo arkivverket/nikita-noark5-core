@@ -22,7 +22,7 @@ public interface IKeywordService {
 
     KeywordHateoas findBySystemId(@NotNull final UUID systemId);
 
-    KeywordHateoas findAllByOwner();
+    KeywordHateoas findAll();
 
     KeywordHateoas updateKeywordBySystemId(
             @NotNull final UUID systemId,
@@ -31,5 +31,5 @@ public interface IKeywordService {
 
     void deleteKeywordBySystemId(@NotNull final UUID systemId);
 
-    KeywordHateoas generateDefaultKeyword();
+    KeywordHateoas generateDefaultKeyword(@NotNull final UUID systemId);
 }
