@@ -1579,7 +1579,7 @@ public class RecordHateoasController
                     responseCode = INTERNAL_SERVER_ERROR_VAL,
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @PostMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
-            RECORD_EXPAND_TO_RECORD_NOTE,
+            RECORD_EXPAND_TO_REGISTRY_ENTRY,
             consumes = NOARK5_V5_CONTENT_TYPE_JSON)
     public ResponseEntity<RegistryEntryHateoas> expandRecordToRegistryEntry(
             @Parameter(name = SYSTEM_ID,
