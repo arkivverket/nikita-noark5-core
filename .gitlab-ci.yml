@@ -80,7 +80,7 @@ maven-build:
   stage: build
   script:
     - "mvn package -B"
-    - "mvn test"
+    - "mvn test -DrunAllTests=runAllTests"
   artifacts:
     paths:
       - target/*.jar
