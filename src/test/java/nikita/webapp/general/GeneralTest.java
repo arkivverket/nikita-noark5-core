@@ -508,7 +508,7 @@ public class GeneralTest {
         System.out.println(jsonPatchWriter);
 
         resultActions = mockMvc.perform(MockMvcRequestBuilders
-                .patch(url)
+                .post(url)
                 .contextPath("/noark5v5")
                 .accept(NOARK5_V5_CONTENT_TYPE_JSON)
                 .contentType(NOARK5_V5_CONTENT_TYPE_JSON)
