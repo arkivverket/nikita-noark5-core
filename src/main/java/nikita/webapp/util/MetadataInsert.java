@@ -1,10 +1,10 @@
 package nikita.webapp.util;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import nikita.common.model.noark5.v5.metadata.Metadata;
 import nikita.common.repository.n5v5.metadata.IMetadataRepository;
 import nikita.common.util.exceptions.NikitaMisconfigurationException;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.data.repository.support.Repositories;
@@ -33,39 +33,27 @@ public class MetadataInsert {
         repositories = new Repositories(appContext);
     }
 
-
     public void populateMetadataEntities() {
-
         try {
-
             PathMatchingResourcePatternResolver resolver =
                     new PathMatchingResourcePatternResolver();
             Resource[] resources = resolver.getResources(RESOURCE_METADATA);
-
             for (Resource resource : resources) {
-
                 ObjectMapper objectMapper = new ObjectMapper();
-
                 JsonNode tree = objectMapper
                         .readTree(resource.getInputStream());
-
-                Iterator<Map.Entry<String, JsonNode>> itr = tree.getFields();
-
+                Iterator<Map.Entry<String, JsonNode>> itr = tree.fields();
                 while (itr.hasNext()) {
-
-                    Map.Entry mapEntry = itr.next();
-
-                    String fieldName = (String) mapEntry.getKey();
-                    JsonNode node = (JsonNode) mapEntry.getValue();
-
+                    Map.Entry<String, JsonNode> mapEntry = itr.next();
+                    String fieldName = mapEntry.getKey();
+                    JsonNode node = mapEntry.getValue();
                     if (node.isArray()) {
-                        Iterator<JsonNode> metadataValues = node.getElements();
+                        Iterator<JsonNode> metadataValues = node.elements();
                         while (metadataValues.hasNext()) {
                             JsonNode metadataObject = metadataValues.next();
-                            String code = metadataObject.get("code")
-                                    .getTextValue();
+                            String code = metadataObject.get("code").asText();
                             String codename = metadataObject.get("codename")
-                                    .getTextValue();
+                                    .asText();
                             populateMetadataEntities(code, codename, fieldName);
                         }
                     }
@@ -76,14 +64,14 @@ public class MetadataInsert {
         }
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public void populateMetadataEntities(String code, String codename,
                                          String fieldName)
             throws ClassNotFoundException, NoSuchMethodException,
             InvocationTargetException, InstantiationException,
             IllegalAccessException {
 
-        Metadata metadataEntity =
-                getEntityInstance(fieldName);
+        Metadata metadataEntity = getEntityInstance(fieldName);
 
         metadataEntity.setCode(code);
         metadataEntity.setCodeName(codename);
