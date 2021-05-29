@@ -1,6 +1,6 @@
 package nikita.webapp.web.controller;
 
-import com.codahale.metrics.annotation.Counted;
+
 import nikita.webapp.application.*;
 import nikita.webapp.service.application.ApplicationService;
 import org.springframework.http.ResponseEntity;
@@ -35,8 +35,7 @@ public class ApplicationController {
      * (200 OK, or 500 Internal Error)
      */
     // API - All GET Requests (CRUD - READ)
-    @Counted
-    @GetMapping
+        @GetMapping
     public ResponseEntity<ApplicationDetails> identify(
             HttpServletRequest request) {
         return ResponseEntity.status(OK)
@@ -44,7 +43,6 @@ public class ApplicationController {
                 .body(applicationService.getApplicationDetails());
     }
 
-    @Counted
     @GetMapping(value = HREF_OPENID_CONFIGURATION, produces = CONTENT_TYPE_JSON)
     public ResponseEntity<OIDCConfiguration> getOpenIdConfiguration(
             HttpServletRequest request) {
@@ -53,7 +51,6 @@ public class ApplicationController {
                 .body(applicationService.getOpenIdConfiguration());
     }
 
-    @Counted
     @GetMapping(value = HREF_SYSTEM_INFORMATION)
     public ResponseEntity<SystemInformation> getSystemInformation(
             HttpServletRequest request) {
@@ -62,7 +59,6 @@ public class ApplicationController {
                 .body(applicationService.getSystemInformation());
     }
 
-    @Counted
     @GetMapping(value = HREF_BASE_FONDS_STRUCTURE)
     public ResponseEntity<FondsStructureDetails> getFondsStructure(
             HttpServletRequest request) {
@@ -71,7 +67,6 @@ public class ApplicationController {
                 .body(applicationService.getFondsStructureDetails());
     }
 
-    @Counted
     @GetMapping(value = HREF_BASE_METADATA)
     public ResponseEntity<MetadataDetails> getMetadataPath(
             HttpServletRequest request) {
@@ -80,7 +75,6 @@ public class ApplicationController {
                 .body(applicationService.getMetadataDetails());
     }
 
-    @Counted
     @GetMapping(value = HREF_BASE_ADMIN)
     public ResponseEntity<AdministrationDetails> getAdminPath(
             HttpServletRequest request) {
@@ -89,7 +83,6 @@ public class ApplicationController {
                 .body(applicationService.getAdministrationDetails());
     }
 
-    @Counted
     @GetMapping(value = HREF_BASE_CASE_HANDLING)
     public ResponseEntity<CaseHandlingDetails> getCaseHandling(
             HttpServletRequest request) {
@@ -98,7 +91,6 @@ public class ApplicationController {
                 .body(applicationService.getCaseHandlingDetails());
     }
 
-    @Counted
     @GetMapping(value = HREF_BASE_LOGGING)
     public ResponseEntity<LoggingDetails> getLogging(
             HttpServletRequest request) {

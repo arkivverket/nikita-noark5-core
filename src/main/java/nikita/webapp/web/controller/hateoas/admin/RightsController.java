@@ -37,8 +37,7 @@ public class RightsController extends NoarkController {
             @ApiResponse(responseCode = CONFLICT_VAL, description = API_MESSAGE_CONFLICT),
             @ApiResponse(responseCode = INTERNAL_SERVER_ERROR_VAL, description = API_MESSAGE_INTERNAL_SERVER_ERROR),
             @ApiResponse(responseCode = 501, description = API_MESSAGE_NOT_IMPLEMENTED)})
-    @Counted
-
+    
     @PostMapping(value = NEW_ADMINISTRATIVE_UNIT)
     public ResponseEntity<UserHateoas> createUser(
             HttpServletRequest request,
@@ -60,8 +59,7 @@ public class RightsController extends NoarkController {
             @ApiResponse(responseCode = UNAUTHORIZED_VAL, description = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(responseCode = FORBIDDEN_VAL, description = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(responseCode = INTERNAL_SERVER_ERROR_VAL, description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-
+    
     @GetMapping(value = ADMINISTRATIVE_UNIT)
     public ResponseEntity<UserHateoas> findAll(HttpServletRequest request) {
         UserHateoas adminHateoas = new UserHateoas(
@@ -88,8 +86,7 @@ public class RightsController extends NoarkController {
             @ApiResponse(responseCode = CONFLICT_VAL, description = API_MESSAGE_CONFLICT),
             @ApiResponse(responseCode = INTERNAL_SERVER_ERROR_VAL, description = API_MESSAGE_INTERNAL_SERVER_ERROR),
             @ApiResponse(responseCode = 501, description = API_MESSAGE_NOT_IMPLEMENTED)})
-    @Counted
-
+    
     @GetMapping(value = ADMINISTRATIVE_UNIT + SLASH + SYSTEM_ID_PARAMETER + SLASH)
     public ResponseEntity<UserHateoas> findBySystemId(@PathVariable(SYSTEM_ID) final UUID systemId,
                                                                                    HttpServletRequest request) {
@@ -110,8 +107,7 @@ public class RightsController extends NoarkController {
             @ApiResponse(responseCode = UNAUTHORIZED_VAL, description = API_MESSAGE_UNAUTHENTICATED_USER),
             @ApiResponse(responseCode = FORBIDDEN_VAL, description = API_MESSAGE_UNAUTHORISED_FOR_USER),
             @ApiResponse(responseCode = INTERNAL_SERVER_ERROR_VAL, description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-
+    
     @GetMapping(value = NEW_ADMINISTRATIVE_UNIT)
     public ResponseEntity<UserHateoas> getUserTemplate(HttpServletRequest request) {
         User administrativeUnit = new User();
@@ -137,8 +133,7 @@ public class RightsController extends NoarkController {
             @ApiResponse(responseCode = NOT_FOUND_VAL, description = API_MESSAGE_MALFORMED_PAYLOAD),
             @ApiResponse(responseCode = CONFLICT_VAL, description = API_MESSAGE_CONFLICT),
             @ApiResponse(responseCode = INTERNAL_SERVER_ERROR_VAL, description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
-    @Counted
-
+    
     @PutMapping(value = ADMINISTRATIVE_UNIT + SLASH + SYSTEM_ID_PARAMETER)
     public ResponseEntity<UserHateoas> updateUser(HttpServletRequest request,
                                                                               @Parameter(name = SYSTEM_ID,
