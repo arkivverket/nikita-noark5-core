@@ -1,0 +1,65 @@
+#!/bin/sh
+
+set -e
+set -x
+
+nikitastarted=false
+
+atexit() {
+    if [ "$serverpid" ]; then
+	echo "stopping nikita"
+	kill $serverpid
+	sleep 1
+	if ! $nikitastarted ; then
+	    tail -100 nikita-run.log
+	fi
+    fi
+}
+trap atexit EXIT
+
+mvn spring-boot:run > nikita-run.log 2>&1 &
+serverpid=$!
+
+echo "Waiting for nikita to start"
+count=0
+while ! curl --silent $baseurl && [ 10 -gt "$count" ]; do
+    sleep 20
+    printf "."; count=$(($count + 1))
+done
+if [ 10 -gt "$count" ]; then
+    nikitastarted=true
+else
+    echo "Failed to start nikita"
+    tail -100 nikita-run.log
+    exit 1
+fi
+
+
+echo "Nikita started, running tests"
+
+cd noark5-tester
+
+export LC_ALL=C.UTF-8
+
+./runtest  --baseurl $baseurl --keep
+
+./export-all --baseurl $baseurl
+
+firstseries=$(jq -r '.results []._links.self.href' json-dump-*/api/arkivstruktur/arkivdel.json | head -1)
+
+./import-email --baseurl $baseurl --saksmappe --mbox testdata/nikita-noark.mbox --storageurl "$firstseries" --maxinserts 10
+
+./export-all --baseurl $baseurl --xml
+
+find uttrekk-*
+
+depotdir="$(dirname "$(ls uttrekk-*/*/arkivstruktur.xml | head -1)")"
+
+echo "Trying to load data from $depotdir"
+
+./import-uttrekk --baseurl $baseurl "$depotdir"
+
+(
+    cd "$depotdir"
+    xmllint --noout  --schema arkivstruktur.xsd arkivstruktur.xml
+) > nikita-xml-validation-report.txt 2>&1 || true
