@@ -5,15 +5,15 @@
 # See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 image: docker:latest
 services:
-- docker:dind
+  - docker:dind
 stages:
-- build
-- test
-- use
-- deploy
+  - build
+  - test
+  - use
+  - deploy
 include:
-- template: Code-Quality.gitlab-ci.yml
-- template: Security/SAST.gitlab-ci.yml
+  - template: Code-Quality.gitlab-ci.yml
+  - template: Security/SAST.gitlab-ci.yml
 noark5tester-runtest:
   stage: test
   variables:
@@ -21,14 +21,14 @@ noark5tester-runtest:
   image: debian:buster
   allow_failure: false
   before_script:
-  - apt update
-  - apt install -y git maven curl python3 unoconv python3-tz
-  - git clone https://github.com/petterreinholdtsen/noark5-tester
+    - apt update
+    - apt install -y git maven curl python3 unoconv python3-tz
+    - git clone https://github.com/petterreinholdtsen/noark5-tester
   script:
-  - scripts/run-runtest
+    - scripts/run-runtest
   artifacts:
     paths:
-    - nikita-run.log
+      - nikita-run.log
 noark5tester-inoutin:
   stage: use
   variables:
@@ -36,47 +36,47 @@ noark5tester-inoutin:
   image: debian:buster
   allow_failure: false
   before_script:
-  - apt update
-  - apt install -y git maven curl python3 python3-tz  python3-lxml jq python3-dateutil
-    python3-stdnum
-  - apt install -y libxml2-utils
-  - git clone https://github.com/petterreinholdtsen/noark5-tester
+    - apt update
+    - apt install -y git maven curl python3 python3-tz  python3-lxml jq python3-dateutil
+      python3-stdnum
+    - apt install -y libxml2-utils
+    - git clone https://github.com/petterreinholdtsen/noark5-tester
   script:
-  - scripts/run-inoutin-test
+    - scripts/run-inoutin-test
   artifacts:
     paths:
-    - nikita-run.log
-    - noark5-tester/json-dump-*/*
-    - noark5-tester/uttrekk-*/*
-    - noark5-tester/nikita-xml-validation-report.txt
+      - nikita-run.log
+      - noark5-tester/json-dump-*/*
+      - noark5-tester/uttrekk-*/*
+      - noark5-tester/nikita-xml-validation-report.txt
 maven-build:
   before_script:
-  - apt-get update
-  - apt install -y unoconv
+    - apt-get update
+    - apt install -y unoconv
   image: maven:3.6.1-jdk-11
   stage: build
   script:
-  - mvn package -B
-  - mvn test -DrunAllTests=runAllTests
+    - mvn package -B
+    - mvn test -DrunAllTests=runAllTests
   artifacts:
     paths:
-    - target/*.jar
-    - target/generate*/**
+      - target/*.jar
+      - target/generate*/**
 code_quality:
   stage: test
   artifacts:
     expose_as: Code Quality Report
     paths:
-    - gl-code-quality-report.json
+      - gl-code-quality-report.json
 docker-build-master:
   before_script:
-  - apt-get update
+    - apt-get update
   image: maven:3.6.1-jdk-11
   stage: deploy
   script:
-  - mvn compile jib:build -Djib.to.image=registry.hub.docker.com/oslometabi/nikita-noark5-core:latest
-    -Djib.to.auth.username=$DOCKER_HUB_USER -Djib.to.auth.password=$DOCKER_HUB_PASSWORD
+    - mvn compile jib:build -Djib.to.image=registry.hub.docker.com/oslometabi/nikita-noark5-core:latest
+      -Djib.to.auth.username=$DOCKER_HUB_USER -Djib.to.auth.password=$DOCKER_HUB_PASSWORD
   only:
-  - master
+    - master
 sast:
   stage: test
