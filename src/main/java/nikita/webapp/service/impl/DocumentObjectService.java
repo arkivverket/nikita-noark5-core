@@ -892,12 +892,14 @@ public class DocumentObjectService
         Path archiveVersion = createIncomingFile(archiveDocumentObject);
         String command = "unoconv ";
         String toFormat = " -f pdf ";
+        // Include text formatting information / metadata in generated PDF
+        String taggedPdf = " -e UseTaggedPDF=1";
         String fromFileLocation = productionVersion.
                 toAbsolutePath().toString();
         String toFileLocation = " -o " +
                 archiveVersion.toAbsolutePath();
-        String convertCommand = command + toFormat + toFileLocation + " " +
-                fromFileLocation;
+        String convertCommand = command + toFormat + taggedPdf +
+                toFileLocation + " " + fromFileLocation;
         try {
             Process p = Runtime.getRuntime().exec(convertCommand);
             p.waitFor();
