@@ -10,13 +10,14 @@ atexit() {
 	echo "stopping nikita"
 	kill $serverpid
 	sleep 1
-	if ! $nikitastarted ; then
-	    tail -100 nikita-run.log
+	if $nikitastarted ; then
+	    tail -100 $basedir/nikita-run.log
 	fi
     fi
 }
 trap atexit EXIT
 
+basedir=$(pwd)
 mvn spring-boot:run > nikita-run.log 2>&1 &
 serverpid=$!
 
@@ -30,7 +31,7 @@ if [ 10 -gt "$count" ]; then
     nikitastarted=true
 else
     echo "Failed to start nikita"
-    tail -100 nikita-run.log
+    tail -100 $basedir/nikita-run.log
     exit 1
 fi
 
@@ -63,3 +64,9 @@ echo "Trying to load data from $depotdir"
     cd "$depotdir"
     xmllint --noout  --schema arkivstruktur.xsd arkivstruktur.xml
 ) > nikita-xml-validation-report.txt 2>&1 || true
+
+if [ "$serverpid" ]; then
+    echo "stopping nikita after successful run"
+    kill $serverpid
+    unset serverpid
+fi

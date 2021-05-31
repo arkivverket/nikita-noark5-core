@@ -22,14 +22,16 @@ noark5tester-runtest:
     - apt install -y git maven curl python3 unoconv python3-tz
     - git clone https://github.com/petterreinholdtsen/noark5-tester
   script:
-    - atexit() { if [ "$serverpid" ]; then echo "stopping nikita"; kill $serverpid; sleep 1; if ! $nikitastarted ; then tail -100 nikita-run.log ; fi; fi }
+    - atexit() { if [ "$serverpid" ]; then echo "stopping nikita"; kill $serverpid; sleep 1; if $nikitastarted ; then tail -100 $basedir/nikita-run.log ; fi; fi }
     - trap atexit EXIT
+    - basedir=$(pwd)
     - mvn spring-boot:run > nikita-run.log 2>&1 &
     - serverpid=$!
     - echo "Waiting for nikita to start"
     - echo "baseurl is set to $baseurl"
-    - count=0; while ! curl --silent $baseurl && [ 10 -gt "$count" ]; do sleep 20; printf "."; count=$(($count + 1)); done; if [ 10 -gt "$count" ]; then nikitastarted=true; else echo "Failed to start nikita"; tail -100 nikita-run.log; exit 1; fi
+    - count=0; while ! curl --silent $baseurl && [ 10 -gt "$count" ]; do sleep 20; printf "."; count=$(($count + 1)); done; if [ 10 -gt "$count" ]; then nikitastarted=true; else echo "Failed to start nikita"; tail -100 $basedir/nikita-run.log; exit 1; fi
     - (cd noark5-tester && LC_ALL=C.UTF-8 ./runtest --baseurl $baseurl)
+    - if [ "$serverpid" ]; then echo "stopping nikita after successful run"; kill $serverpid; unset serverpid; fi
   artifacts:
     paths:
       - nikita-run.log
