@@ -440,6 +440,12 @@ public class RecordService
     }
 
     @Override
+    public StorageLocationHateoas findStorageLocationAssociatedWithRecord(
+            @NotNull final UUID systemID) {
+        return (StorageLocationHateoas) odataService.processODataQueryGet();
+    }
+
+    @Override
     public RecordHateoas findAll() {
         return (RecordHateoas) odataService.processODataQueryGet();
     }

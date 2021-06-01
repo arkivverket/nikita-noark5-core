@@ -265,6 +265,12 @@ public class FondsService
         return (FondsCreatorHateoas) odataService.processODataQueryGet();
     }
 
+    @Override
+    public StorageLocationHateoas findStorageLocationAssociatedWithFonds(
+            @NotNull final UUID systemID) {
+        return (StorageLocationHateoas) odataService.processODataQueryGet();
+    }
+
     /**
      * Generate a Default Series object that can be associated with the
      * identified Fonds.

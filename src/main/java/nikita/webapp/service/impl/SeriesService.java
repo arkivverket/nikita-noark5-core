@@ -219,6 +219,12 @@ public class SeriesService
         return (FondsHateoas) odataService.processODataQueryGet();
     }
 
+    @Override
+    public StorageLocationHateoas findStorageLocationAssociatedWithSeries(
+            @NotNull final UUID systemID) {
+        return (StorageLocationHateoas) odataService.processODataQueryGet();
+    }
+
     // systemId
     @Override
     public SeriesHateoas findBySystemId(@NotNull final UUID systemId) {

@@ -551,6 +551,35 @@ public class SeriesHateoasController
                 .body(seriesService.getDefaultScreeningMetadata(systemID));
     }
 
+    // Retrieve all StorageLocation associated with a Series
+    // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/oppbevaringssted
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/oppbevaringssted/
+    @Operation(summary = "Retrieves all StorageLocation associated with a Series")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "StorageLocation returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + STORAGE_LOCATION)
+    public ResponseEntity<StorageLocationHateoas>
+    findStorageLocationAssociatedWithSeries(
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the series to retrieve " +
+                            "StorageLocation",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        return ResponseEntity.status(OK)
+                .body(seriesService.findStorageLocationAssociatedWithSeries(systemID));
+    }
+
     // Create a default StorageLocation
     // GET [contextPath][api]/arkivstruktur/arkivdel/{systemId}/ny-oppbevaringssted
     @Operation(summary = "Get a default StorageLocation object")
