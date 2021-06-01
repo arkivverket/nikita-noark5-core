@@ -11,8 +11,6 @@ import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 
 /**
- * Created by tsodring on 2/6/17.
- * <p>
  * Used to add DocumentDescriptionHateoas links with DocumentDescription
  * specific information
  */
