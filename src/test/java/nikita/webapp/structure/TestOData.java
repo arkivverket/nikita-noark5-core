@@ -2279,7 +2279,7 @@ public class TestOData {
         String attributeName = "forfatter";
         String compareValue = "Frank Grimes";
         String odata = "dokumentbeskrivelse?$filter=forfatter/" +
-                attributeName + " eq " + "'" + compareValue + "')";
+                attributeName + " eq " + "'" + compareValue + "'";
         String hql = "SELECT documentdescription_1 FROM DocumentDescription" +
                 " AS documentdescription_1" +
                 " JOIN" +
@@ -2320,7 +2320,7 @@ public class TestOData {
         String attributeName = "partEnhet/organisasjonsnummer";
         String compareValue = " 02020202022";
         String odata = "mappe?$filter=" + attributeName + " eq " +
-                "'" + compareValue + "')";
+                "'" + compareValue + "'";
 
         String hql = "SELECT file_1 FROM File AS file_1" +
                 " JOIN" +
@@ -2356,7 +2356,7 @@ public class TestOData {
     public void shouldReturnValidHQLStorageLocation() {
         String compareValue = "Archive Room XVI";
         String odata = STORAGE_LOCATION + "?$filter=" + STORAGE_LOCATION +
-                " eq '" + compareValue + "')";
+                " eq '" + compareValue + "'";
         String hql = "SELECT storagelocation_1 FROM StorageLocation AS" +
                 " storagelocation_1" +
                 " WHERE" +
@@ -2391,7 +2391,7 @@ public class TestOData {
         ///noark5v5/odata/api/arkivstruktur/mappe?$filter=oppbevaringssted/oppbevaringssted eq 'Archive Room XVI'
         String compareValue = "Archive Room XVI";
         String odata = FILE + "?$filter=" + STORAGE_LOCATION + "/" +
-                STORAGE_LOCATION + " eq '" + compareValue + "')";
+                STORAGE_LOCATION + " eq '" + compareValue + "'";
         String hql = "SELECT file_1 FROM File AS file_1" +
                 " JOIN" +
                 " file_1.referenceStorageLocation AS storagelocation_1" +
@@ -2402,6 +2402,46 @@ public class TestOData {
                 compareValue);
         Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
     }
+
+    /**
+     * Check that it is possible to do a JOIN query with Keyword
+     * Entity:  mappe, noekkelord
+     * Attribute: noekkelord
+     * <p>
+     * ODATA Input:
+     * mappe?$filter=noekkelord eq 'Archive Room XVI'
+     * <p>
+     * Expected HQL:
+     * SELECT file_1 FROM File AS file_1
+     * JOIN
+     * file_1.referenceKeyword AS storagelocation_1
+     * WHERE
+     * storagelocation_1.storageLocation = :parameter_0
+     * <p>
+     * Additionally parameter_0 should be
+     * Archive Room XVI
+     */
+    @Test
+    @Transactional
+    public void shouldReturnValidHQLKeywordJoin() {
+        ///noark5v5/odata/api/arkivstruktur/mappe?$filter=noekkelord
+        // /noekkelord eq 'interesting'
+        String compareValue = "interesting";
+        String odata = FILE + "?$filter=" + KEYWORD + "/" +
+                KEYWORD + " eq '" + compareValue + "'&$top=1";
+        String hql = "SELECT file_1 FROM File AS file_1" +
+                " JOIN" +
+                " file_1.referenceKeyword AS keyword_1" +
+                " WHERE" +
+                " keyword_1.keyword = :parameter_0";
+        QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
+        Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
+                compareValue);
+        Assertions.assertEquals(queryObject.getQuery().getQueryString(), hql);
+    }
+    //
+// xfailure: search https://nikita.oslomet.no/noark5v5/api/arkivstruktur/dokumentbeskrivelse?$filter=forfatter%2Fforfatter+eq+%27Henrik+Ibsen%27&$top=1 failed
+//  xfailure: search https://nikita.oslomet.no/noark5v5/api/arkivstruktur/mappe?$filter=virksomhetsspesifikkeMetadata%2Fn5t-v1%3Areal+eq+%22one+for+the+team%22&$top=1 failed
 
     @Test
     @Transactional

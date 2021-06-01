@@ -87,7 +87,7 @@ public class KeywordTest
 
         // OData search for a File based on Keyword
         String odata = "?$filter=noekkelord/noekkelord eq '" +
-                KEYWORD_TEST_UPDATED + "'";
+                KEYWORD_TEST_UPDATED + "'&$top=1";
         String urlDocDescSearch = contextPath + "/odata/api/arkivstruktur/" +
                 FILE + odata;
         resultActions = mockMvc.perform(MockMvcRequestBuilders
