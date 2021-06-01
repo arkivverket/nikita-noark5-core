@@ -1475,7 +1475,7 @@ public final class CommonUtils {
                     if (0 == screeningObjectNode.size()) {
                         objectNode.remove(SCREENING);
                     }
-                } else if (null != screeningNode) { // Remove NullNode
+                } else { // Remove NullNode
                     objectNode.remove(SCREENING);
                 }
                 return screening;
@@ -1500,11 +1500,11 @@ public final class CommonUtils {
                     errors.append(SCREENING_AUTHORITY + " is missing. ");
                 }
                 // Deserialize screeningMetadata
-                currentNode = objectNode.get(SCREENING_METADATA);
+                currentNode = objectNode.get(SCREENING_SCREENING_METADATA);
                 if (null != currentNode) {
                     deserialiseScreeningMetadataLocal(screeningEntity,
                             currentNode, errors);
-                    objectNode.remove(SCREENING_METADATA);
+                    objectNode.remove(SCREENING_SCREENING_METADATA);
                 }
                 // Deserialize screeningDocument
                 ScreeningDocument screeningDocument = (ScreeningDocument)
