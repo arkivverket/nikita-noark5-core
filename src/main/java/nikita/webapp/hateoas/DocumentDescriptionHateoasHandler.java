@@ -37,8 +37,6 @@ public class DocumentDescriptionHateoasHandler
         addNewPartPerson(entity, hateoasNoarkObject);
         addNewPartUnit(entity, hateoasNoarkObject);
         // links for secondary entities 1:M
-        addStorageLocation(entity, hateoasNoarkObject);
-        addNewStorageLocation(entity, hateoasNoarkObject);
         addComment(entity, hateoasNoarkObject);
         addNewComment(entity, hateoasNoarkObject);
         addAuthor(entity, hateoasNoarkObject);
