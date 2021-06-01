@@ -44,7 +44,9 @@ public final class StorageLocationValidator {
     public static void validateStorageLocationForDocumentDescription(
             ResultActions resultActions)
             throws Exception {
-        validateStorageLocation(resultActions);
+        resultActions
+                .andExpect(jsonPath("$." + STORAGE_LOCATION)
+                        .value(STORAGE_LOCATION_TEST));
     }
 
     /**
