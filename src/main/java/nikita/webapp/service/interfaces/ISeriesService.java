@@ -62,6 +62,9 @@ public interface ISeriesService {
     FondsHateoas findFondsAssociatedWithSeries(
             @NotNull final UUID systemId);
 
+    StorageLocationHateoas findStorageLocationAssociatedWithSeries(
+            @NotNull final UUID systemId);
+
     // All UPDATE operations
     SeriesHateoas handleUpdate(@NotNull final UUID systemId,
                                @NotNull final Long version,
@@ -88,4 +91,5 @@ public interface ISeriesService {
             @NotNull final UUID systemId);
 
     SeriesHateoas generateDefaultSeries(@NotNull final UUID systemId);
+
 }

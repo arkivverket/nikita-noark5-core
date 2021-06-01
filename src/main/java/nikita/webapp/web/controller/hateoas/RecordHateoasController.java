@@ -663,6 +663,36 @@ public class RecordHateoasController
                         generateDefaultPartPerson(systemID));
     }
 
+    // Retrieve all StorageLocation associated with a Record
+    // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/oppbevaringssted
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/oppbevaringssted/
+    @Operation(summary = "Retrieves all StorageLocation associated with a Record")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "StorageLocation returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + STORAGE_LOCATION)
+    public ResponseEntity<StorageLocationHateoas>
+    getStorageLocationAssociatedWithRecord(
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the record to retrieve " +
+                            "StorageLocation",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        return ResponseEntity.status(OK)
+                .body(recordService
+                        .findStorageLocationAssociatedWithRecord(systemID));
+    }
+
     // Create a default StorageLocation
     // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/ny-oppbevaringssted
     @Operation(summary = "Get a default StorageLocation object")

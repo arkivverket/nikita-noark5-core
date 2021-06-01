@@ -11,8 +11,6 @@ import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 
 /**
- * Created by tsodring on 2/6/17.
- * <p>
  * Used to add DocumentDescriptionHateoas links with DocumentDescription
  * specific information
  */
@@ -37,8 +35,6 @@ public class DocumentDescriptionHateoasHandler
         addNewPartPerson(entity, hateoasNoarkObject);
         addNewPartUnit(entity, hateoasNoarkObject);
         // links for secondary entities 1:M
-        addStorageLocation(entity, hateoasNoarkObject);
-        addNewStorageLocation(entity, hateoasNoarkObject);
         addComment(entity, hateoasNoarkObject);
         addNewComment(entity, hateoasNoarkObject);
         addAuthor(entity, hateoasNoarkObject);

@@ -134,6 +134,9 @@ public interface IRecordService {
 
     RecordHateoas findBySystemId(@NotNull final UUID systemId);
 
+    StorageLocationHateoas findStorageLocationAssociatedWithRecord(
+            @NotNull final UUID systemId);
+
     RecordHateoas findAll();
 
     AuthorHateoas associateAuthorWithRecord(

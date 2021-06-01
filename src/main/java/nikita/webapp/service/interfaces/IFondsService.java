@@ -48,6 +48,9 @@ public interface IFondsService {
     FondsCreatorHateoas findFondsCreatorAssociatedWithFonds(
             @NotNull final UUID systemId);
 
+    StorageLocationHateoas findStorageLocationAssociatedWithFonds(
+            @NotNull final UUID systemID);
+
     SeriesHateoas generateDefaultSeries(@NotNull final UUID systemId);
 
     FondsHateoas generateDefaultFonds(@NotNull final UUID systemId);
