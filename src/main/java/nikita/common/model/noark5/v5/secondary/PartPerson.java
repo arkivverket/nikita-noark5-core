@@ -85,6 +85,9 @@ public class PartPerson
 
     public void setPostalAddress(PostalAddress postalAddress) {
         this.postalAddress = postalAddress;
+        if (null != postalAddress) {
+            this.postalAddress.setPartPerson(this);
+        }
     }
 
     public ResidingAddress getResidingAddress() {
@@ -93,6 +96,9 @@ public class PartPerson
 
     public void setResidingAddress(ResidingAddress residingAddress) {
         this.residingAddress = residingAddress;
+        if (null != residingAddress) {
+            residingAddress.setPartPerson(this);
+        }
     }
 
     public ContactInformation getContactInformation() {
@@ -101,6 +107,9 @@ public class PartPerson
 
     public void setContactInformation(ContactInformation contactInformation) {
         this.contactInformation = contactInformation;
+        if (null != contactInformation) {
+            contactInformation.setPartPerson(this);
+        }
     }
 
     @Override
