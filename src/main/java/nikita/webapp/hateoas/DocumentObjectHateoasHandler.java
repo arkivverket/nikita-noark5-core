@@ -43,6 +43,7 @@ public class DocumentObjectHateoasHandler
     public void addEntityLinksOnTemplate(ISystemId entity,
                                          IHateoasNoarkObject hateoasNoarkObject) {
         addVariantFormat(entity, hateoasNoarkObject);
+        addFormat(entity, hateoasNoarkObject);
     }
 
     @Override

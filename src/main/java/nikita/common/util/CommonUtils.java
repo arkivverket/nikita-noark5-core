@@ -48,6 +48,7 @@ import static java.time.temporal.ChronoField.HOUR_OF_DAY;
 import static java.time.temporal.ChronoField.MINUTE_OF_HOUR;
 import static java.util.UUID.fromString;
 import static nikita.common.config.Constants.*;
+import static nikita.common.config.ErrorMessagesConstants.DESERIALISE_LEFTOVER;
 import static nikita.common.config.ErrorMessagesConstants.STRING_IS_BLANK;
 import static nikita.common.config.HATEOASConstants.*;
 import static nikita.common.config.N5ResourceMappings.*;
@@ -1474,6 +1475,9 @@ public final class CommonUtils {
                             errors);
                     if (0 == screeningObjectNode.size()) {
                         objectNode.remove(SCREENING);
+                    } else {
+                        errors.append(String.format(DESERIALISE_LEFTOVER,
+                                screeningObjectNode));
                     }
                 } else { // Remove NullNode
                     objectNode.remove(SCREENING);
@@ -2391,8 +2395,6 @@ public final class CommonUtils {
                             screening.getAccessRestriction());
                     printNullable(jgen, SCREENING_AUTHORITY,
                             screening.getScreeningAuthority());
-                    printScreeningMetadata(jgen,
-                            screening.getReferenceScreeningMetadata());
                     printNullableMetadata(jgen, SCREENING_SCREENING_DOCUMENT,
                             screening.getScreeningDocument());
                     printNullableDateTime(jgen, SCREENING_EXPIRES_DATE,

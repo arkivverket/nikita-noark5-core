@@ -18,4 +18,6 @@ public final class ErrorMessagesConstants {
     public static final String MALFORMED_PAYLOAD =
             "The [%s] you tried to create is malformed. The following fields" +
                     " are not recognised as fields [%s]";
+    public static final String DESERIALISE_LEFTOVER =
+            "The following fields are left over after deserialising [%s]. ";
 }
