@@ -57,7 +57,17 @@ public class DocumentDescriptionHateoasHandler
         addDocumentType(entity, hateoasNoarkObject);
         addDocumentStatus(entity, hateoasNoarkObject);
         addScreeningMetadata(entity, hateoasNoarkObject);
+        addAssociatedWithRecordAs(entity, hateoasNoarkObject);
     }
+
+    @Override
+    public void addAssociatedWithRecordAs(ISystemId entity,
+                                          IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_METADATA + SLASH + ASSOCIATED_WITH_RECORD_AS,
+                REL_METADATA_ASSOCIATED_WITH_RECORD_AS, false));
+    }
+
     /**
      * Create a REL/HREF pair for the parent Record associated
      * with the given DocumentDescription
