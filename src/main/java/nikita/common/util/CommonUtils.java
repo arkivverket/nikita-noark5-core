@@ -2395,8 +2395,6 @@ public final class CommonUtils {
                             screening.getAccessRestriction());
                     printNullable(jgen, SCREENING_AUTHORITY,
                             screening.getScreeningAuthority());
-                    printScreeningMetadata(jgen,
-                            screening.getReferenceScreeningMetadata());
                     printNullableMetadata(jgen, SCREENING_SCREENING_DOCUMENT,
                             screening.getScreeningDocument());
                     printNullableDateTime(jgen, SCREENING_EXPIRES_DATE,
