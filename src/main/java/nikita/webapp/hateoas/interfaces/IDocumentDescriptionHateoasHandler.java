@@ -65,5 +65,7 @@ public interface IDocumentDescriptionHateoasHandler
     void addNewScreeningMetadataLocal(ISystemId entity,
                                       IHateoasNoarkObject hateoasNoarkObject);
 
+    void addAssociatedWithRecordAs(ISystemId entity,
+                                   IHateoasNoarkObject hateoasNoarkObject);
 }
 
