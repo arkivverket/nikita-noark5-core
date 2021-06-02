@@ -1503,13 +1503,6 @@ public final class CommonUtils {
                 } else {
                     errors.append(SCREENING_AUTHORITY + " is missing. ");
                 }
-                // Deserialize screeningMetadata
-                currentNode = objectNode.get(SCREENING_SCREENING_METADATA);
-                if (null != currentNode) {
-                    deserialiseScreeningMetadataLocal(screeningEntity,
-                            currentNode, errors);
-                    objectNode.remove(SCREENING_SCREENING_METADATA);
-                }
                 // Deserialize screeningDocument
                 ScreeningDocument screeningDocument = (ScreeningDocument)
                         deserialiseMetadataValue(objectNode,
