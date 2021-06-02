@@ -108,6 +108,9 @@ public class CorrespondencePartPerson
 
     public void setContactInformation(ContactInformation contactInformation) {
         this.contactInformation = contactInformation;
+        if (null != contactInformation) {
+            contactInformation.setCorrespondencePartPerson(this);
+        }
     }
 
     public ResidingAddress getResidingAddress() {
@@ -116,6 +119,9 @@ public class CorrespondencePartPerson
 
     public void setResidingAddress(ResidingAddress residingAddress) {
         this.residingAddress = residingAddress;
+        if (null != residingAddress) {
+            residingAddress.setCorrespondencePartPerson(this);
+        }
     }
 
     public PostalAddress getPostalAddress() {
@@ -124,6 +130,9 @@ public class CorrespondencePartPerson
 
     public void setPostalAddress(PostalAddress postalAddress) {
         this.postalAddress = postalAddress;
+        if (null != postalAddress) {
+            postalAddress.setReferenceCorrespondencePartPerson(this);
+        }
     }
 
     @Override

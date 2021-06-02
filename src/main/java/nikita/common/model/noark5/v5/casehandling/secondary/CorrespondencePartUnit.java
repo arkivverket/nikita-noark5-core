@@ -92,7 +92,9 @@ public class CorrespondencePartUnit
 
     public void setContactInformation(ContactInformation contactInformation) {
         this.contactInformation = contactInformation;
-        contactInformation.setCorrespondencePartUnit(this);
+        if (null != contactInformation) {
+            contactInformation.setCorrespondencePartUnit(this);
+        }
     }
 
     public BusinessAddress getBusinessAddress() {
@@ -101,7 +103,9 @@ public class CorrespondencePartUnit
 
     public void setBusinessAddress(BusinessAddress businessAddress) {
         this.businessAddress = businessAddress;
-        this.businessAddress.setReferenceCorrespondencePartUnit(this);
+        if (null != businessAddress) {
+            businessAddress.setReferenceCorrespondencePartUnit(this);
+        }
     }
 
     public PostalAddress getPostalAddress() {
@@ -110,7 +114,9 @@ public class CorrespondencePartUnit
 
     public void setPostalAddress(PostalAddress postalAddress) {
         this.postalAddress = postalAddress;
-        this.postalAddress.setReferenceCorrespondencePartUnit(this);
+        if (null != postalAddress) {
+            postalAddress.setReferenceCorrespondencePartUnit(this);
+        }
     }
 
     public String getContactPerson() {
