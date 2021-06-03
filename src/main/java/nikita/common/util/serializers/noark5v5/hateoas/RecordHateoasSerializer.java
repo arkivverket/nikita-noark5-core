@@ -39,9 +39,7 @@ public class RecordHateoasSerializer
         printDisposal(jgen, record);
         printScreening(jgen, record);
         printClassified(jgen, record);
-        printKeyword(jgen, record);
         printDocumentMedium(jgen, record);
-        printStorageLocation(jgen, record);
         // TODO: FIX THIS printCrossReference(jgen, record);
         if (record instanceof RegistryEntry) {
             printElectronicSignature(jgen, (RegistryEntry) record);

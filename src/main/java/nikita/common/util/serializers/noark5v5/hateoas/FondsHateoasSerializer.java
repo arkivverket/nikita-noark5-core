@@ -31,7 +31,6 @@ public class FondsHateoasSerializer
         printNullableMetadata(jgen, FONDS_STATUS,
                               fonds.getFondsStatus());
         printDocumentMedium(jgen, fonds);
-        printStorageLocation(jgen, fonds);
         printFinaliseEntity(jgen, fonds);
         printCreateEntity(jgen, fonds);
         printModifiedEntity(jgen, fonds);
