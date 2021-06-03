@@ -341,6 +341,12 @@ public class FileService
     }
 
     @Override
+    public CrossReferenceHateoas findCrossReferenceAssociatedWithFile(
+            @NotNull final UUID systemId) {
+        return (CrossReferenceHateoas) odataService.processODataQueryGet();
+    }
+
+    @Override
     public StorageLocationHateoas getStorageLocationAssociatedWithFile(
             @NotNull final UUID systemId) {
         getFileOrThrow(systemId);

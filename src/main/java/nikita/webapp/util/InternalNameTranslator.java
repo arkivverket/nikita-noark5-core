@@ -98,6 +98,10 @@ public class InternalNameTranslator {
                         COUNTRY_ENG,
                         COUNTRY_ENG_OBJECT);
         addNorToEnglishNameMap
+                (CROSS_REFERENCE,
+                        CROSS_REFERENCE_ENG,
+                        CROSS_REFERENCE_ENG_OBJECT);
+        addNorToEnglishNameMap
                 (DELETION,
                         DELETION_ENG,
                         DELETION_ENG_OBJECT);

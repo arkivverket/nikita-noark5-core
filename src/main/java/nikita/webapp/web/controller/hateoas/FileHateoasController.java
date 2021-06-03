@@ -1096,13 +1096,16 @@ public class FileHateoasController
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
 
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + CROSS_REFERENCE)
-    public ResponseEntity<ApiError> findAllCrossReferenceAssociatedWithFile(
+    public ResponseEntity<CrossReferenceHateoas>
+    findAllCrossReferenceAssociatedWithFile(
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the File to retrieve " +
                             "CrossReferences for",
                     required = true)
             @PathVariable(SYSTEM_ID) final UUID systemID) {
-        return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
+        return ResponseEntity.status(OK)
+                .body(fileService
+                        .findCrossReferenceAssociatedWithFile(systemID));
     }
 
     // Retrieve all Class associated with a File as secondary classification

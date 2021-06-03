@@ -2408,24 +2408,22 @@ public class TestOData {
      * Entity:  mappe, noekkelord
      * Attribute: noekkelord
      * <p>
-     * ODATA Input:
-     * mappe?$filter=noekkelord eq 'Archive Room XVI'
+     * ODATA Input: mappe?$filter=noekkelord/noekkelord eq 'interesting'
      * <p>
      * Expected HQL:
      * SELECT file_1 FROM File AS file_1
      * JOIN
-     * file_1.referenceKeyword AS storagelocation_1
+     * file_1.referenceKeyword AS keyword_1
      * WHERE
-     * storagelocation_1.storageLocation = :parameter_0
+     * keyword_1.keyword = :parameter_0
      * <p>
      * Additionally parameter_0 should be
-     * Archive Room XVI
+     * interesting
      */
     @Test
     @Transactional
     public void shouldReturnValidHQLKeywordJoin() {
-        ///noark5v5/odata/api/arkivstruktur/mappe?$filter=noekkelord
-        // /noekkelord eq 'interesting'
+        //noark5v5/odata/api/arkivstruktur/mappe?$filter=noekkelord/noekkelord eq 'interesting'
         String compareValue = "interesting";
         String odata = FILE + "?$filter=" + KEYWORD + "/" +
                 KEYWORD + " eq '" + compareValue + "'&$top=1";

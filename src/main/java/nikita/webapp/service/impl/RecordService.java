@@ -826,6 +826,11 @@ public class RecordService
         return crossReferenceService.getDefaultCrossReference(systemId);
     }
 
+    @Override
+    public CrossReferenceHateoas findCrossReferenceAssociatedWithRecord(
+            @NotNull final UUID systemId) {
+        return (CrossReferenceHateoas) odataService.processODataQueryGet();
+    }
     // All HELPER operations
 
     public RecordHateoas packAsHateoas(@NotNull final Record record) {

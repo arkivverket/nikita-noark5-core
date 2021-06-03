@@ -78,13 +78,15 @@ public final class Constants {
     public static final String NEW_PART = NEW + DASH + PART;
 
     // Other arkivstruktur commands
+
+    public static final String EXPAND_TO = "utvid-til-";
     public static final String FILE_END = "avslutt-mappe";
-    public static final String FILE_EXPAND_TO_CASE_FILE = "utvid-til-" + CASE_FILE;
-    public static final String FILE_EXPAND_TO_MEETING_FILE = "utvid-til-" + MEETING_FILE;
+    public static final String FILE_EXPAND_TO_CASE_FILE = EXPAND_TO + CASE_FILE;
+    public static final String FILE_EXPAND_TO_MEETING_FILE = EXPAND_TO + MEETING_FILE;
     public static final String RECORD_EXPAND_TO_REGISTRY_ENTRY =
-            "utvid-til-" + REGISTRY_ENTRY;
+            EXPAND_TO + REGISTRY_ENTRY;
     public static final String RECORD_EXPAND_TO_RECORD_NOTE =
-            "utvid-til-" + RECORD_NOTE;
+            EXPAND_TO + RECORD_NOTE;
     public static final String NEW_COMMENT = NEW + DASH + COMMENT;
     public static final String PARENT_FILE = PARENT + FILE;
     public static final String SUB_FILE = SUB + FILE;

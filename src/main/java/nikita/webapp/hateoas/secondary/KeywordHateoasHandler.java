@@ -59,7 +59,7 @@ public class KeywordHateoasHandler
         if (keyword.getReferenceRecord().size() > 0) {
             hateoasNoarkObject.addLink(keyword,
                     new Link(getOutgoingAddress() +
-                            "?" + urlEncode(DOLLAR_FILTER) +
+                            HREF_BASE_RECORD + "?" + urlEncode(DOLLAR_FILTER) +
                             "=" + KEYWORD + SLASH + SYSTEM_ID +
                             urlEncode(" eq '" + keyword.getSystemId() + "'"),
                             REL_FONDS_STRUCTURE_RECORD));

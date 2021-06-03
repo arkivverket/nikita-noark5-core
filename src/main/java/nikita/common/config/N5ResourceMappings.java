@@ -627,7 +627,7 @@ public final class N5ResourceMappings {
     public static final String CREATED_BY_ENG = "created_by";
     public static final String CREATED_DATE_ENG = "created_date";
     public static final String CROSS_REFERENCE_CLASS_ENG = "referanseTilKlasse";
-    public static final String CROSS_REFERENCE_ENG = "kryssreferanse";
+    public static final String CROSS_REFERENCE_ENG = "cross_reference";
     public static final String CROSS_REFERENCE_FILE_ENG = "referanseTilMappe";
     public static final String CROSS_REFERENCE_RECORD_ENG = "referanseTilRegistrering";
     public static final String DELETION_BY_ENG = "deletion_by";
@@ -906,7 +906,7 @@ public final class N5ResourceMappings {
     public static final String CREATED_BY_ENG_OBJECT = "createdBy";
     public static final String CREATED_DATE_ENG_OBJECT = "createdDate";
     public static final String CROSS_REFERENCE_CLASS_ENG_OBJECT = "referanseTilKlasse";
-    public static final String CROSS_REFERENCE_ENG_OBJECT = "kryssreferanse";
+    public static final String CROSS_REFERENCE_ENG_OBJECT = "CrossReference";
     public static final String CROSS_REFERENCE_FILE_ENG_OBJECT = "referanseTilMappe";
     public static final String CROSS_REFERENCE_RECORD_ENG_OBJECT = "referanseTilRegistrering";
     public static final String DELETION_BY_ENG_OBJECT = "deletionBy";

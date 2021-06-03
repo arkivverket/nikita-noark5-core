@@ -211,4 +211,7 @@ public interface IRecordService {
     RegistryEntryHateoas expandToRegistryEntry(
             @NotNull final UUID systemId,
             @NotNull final PatchMerge patchMerge);
+
+    CrossReferenceHateoas findCrossReferenceAssociatedWithRecord(
+            @NotNull UUID systemId);
 }
