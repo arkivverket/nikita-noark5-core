@@ -260,6 +260,34 @@ public class CaseFileHateoasController
                 .body(caseFileService.generateDefaultRegistryEntry(systemID));
     }
 
+    // Create a CaseFile object with default values
+    // GET [contextPath][api]/sakarkiv/saksmappe/{systemID}/ny-saksmappe
+    @Operation(summary = "Create a (sub)CaseFile with default values")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "CaseFile returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH +
+            NEW_CASE_FILE)
+    public ResponseEntity<CaseFileHateoas> createDefaultCaseFile(
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the caseFile to retrieve a " +
+                            "template (sub)CaseFile for",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        return ResponseEntity.status(OK)
+                .body(caseFileService.generateDefaultCaseFile());
+    }
+
     // Create a RecordNote object with default values
     // GET [contextPath][api]/sakarkiv/mappe/{systemID}/ny-arkivnotat
     @Operation(summary = "Create a RecordNote with default values")

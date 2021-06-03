@@ -43,8 +43,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static nikita.common.config.Constants.DASH;
-import static nikita.common.config.Constants.NEW;
+import static nikita.common.config.Constants.*;
 import static nikita.common.config.DatabaseConstants.ID;
 import static nikita.common.config.N5ResourceMappings.BSM_DEF;
 import static nikita.common.config.N5ResourceMappings.PASSWORD_ENG;
@@ -458,8 +457,8 @@ public class NoarkService
         HttpServletRequest request = getRequest();
         String method = request.getMethod().toLowerCase();
         if (method.equals("get")) {
-            StringBuffer buffer = request.getRequestURL();
-            if (buffer.lastIndexOf(NEW + DASH) > 0) {
+            String url = request.getRequestURL().toString();
+            if (url.contains(NEW + DASH) || url.contains(EXPAND_TO)) {
                 return "get-template";
             }
         }

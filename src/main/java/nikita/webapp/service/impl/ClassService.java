@@ -287,6 +287,12 @@ public class ClassService
         return (KeywordHateoas) odataService.processODataQueryGet();
     }
 
+    @Override
+    public CrossReferenceHateoas findCrossReferenceAssociatedWithClass(
+            @NotNull final UUID systemId) {
+        return (CrossReferenceHateoas) odataService.processODataQueryGet();
+    }
+
     /**
      * Retrieve a single class object identified by systemId
      * <p>

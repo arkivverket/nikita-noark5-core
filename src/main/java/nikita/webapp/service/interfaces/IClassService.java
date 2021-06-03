@@ -74,6 +74,9 @@ public interface IClassService {
 
     KeywordHateoas findKeywordAssociatedWithClass(@NotNull final UUID systemId);
 
+    CrossReferenceHateoas findCrossReferenceAssociatedWithClass(
+            @NotNull final UUID systemId);
+
     // All UPDATE operations
     ClassHateoas handleUpdate(@NotNull final UUID systemId,
                               @NotNull final Long version,
@@ -93,5 +96,4 @@ public interface IClassService {
     KeywordHateoas generateDefaultKeyword(@NotNull final UUID systemId);
 
     CrossReferenceHateoas getDefaultCrossReference(@NotNull final UUID systemId);
-
 }

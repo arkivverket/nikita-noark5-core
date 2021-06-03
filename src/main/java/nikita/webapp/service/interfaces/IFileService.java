@@ -124,6 +124,9 @@ public interface IFileService {
 
     KeywordHateoas findKeywordAssociatedWithFile(@NotNull final UUID systemId);
 
+    CrossReferenceHateoas findCrossReferenceAssociatedWithFile(
+            @NotNull final UUID systemID);
+
     StorageLocationHateoas getStorageLocationAssociatedWithFile(
             @NotNull final UUID systemId);
 
@@ -187,4 +190,5 @@ public interface IFileService {
             @NotNull final UUID systemId);
 
     CrossReferenceHateoas getDefaultCrossReference(@NotNull final UUID systemId);
+
 }

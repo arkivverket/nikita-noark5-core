@@ -783,6 +783,38 @@ public class ClassHateoasController
                 .body(classService.getDefaultCrossReference(systemID));
     }
 
+    // Retrieve all CrossReference associated with a Class
+    // GET [contextPath][api]/arkivstruktur/klasse/{systemId}/kryssreferanse
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/kryssreferanse/
+    @Operation(summary = "Retrieves all CrossReference associated with a Class" +
+            " identified by a systemId")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "Class returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + CROSS_REFERENCE)
+    public ResponseEntity<CrossReferenceHateoas>
+    findAllCrossReferenceAssociatedWithClass(
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the Class to retrieve " +
+                            "CrossReferences for",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        return ResponseEntity.status(OK)
+                .body(classService
+                        .findCrossReferenceAssociatedWithClass(systemID));
+    }
+
     // Retrieve all Records associated with a Class (paginated)
     // GET [contextPath][api]/arkivstruktur/klasse/{systemId}/registrering/
     @Operation(summary = "Retrieves a lit of Records associated with a Class")
