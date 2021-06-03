@@ -281,6 +281,12 @@ public class ClassService
         return (ClassHateoas) odataService.processODataQueryGet();
     }
 
+    @Override
+    public KeywordHateoas findKeywordAssociatedWithClass(
+            @NotNull final UUID systemId) {
+        return (KeywordHateoas) odataService.processODataQueryGet();
+    }
+
     /**
      * Retrieve a single class object identified by systemId
      * <p>

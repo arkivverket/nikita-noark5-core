@@ -334,7 +334,7 @@ public class FileService
     }
 
     @Override
-    public KeywordHateoas getKeywordAssociatedWithFile(
+    public KeywordHateoas findKeywordAssociatedWithFile(
             @NotNull final UUID systemId) {
         getFileOrThrow(systemId);
         return (KeywordHateoas) odataService.processODataQueryGet();

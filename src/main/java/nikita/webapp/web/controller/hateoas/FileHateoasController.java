@@ -904,7 +904,7 @@ public class FileHateoasController
                     required = true)
             @PathVariable(SYSTEM_ID) final UUID systemID) {
         return ResponseEntity.status(OK)
-                .body(fileService.getKeywordAssociatedWithFile(systemID));
+                .body(fileService.findKeywordAssociatedWithFile(systemID));
     }
 
     // Retrieve all StorageLocation associated with a File
