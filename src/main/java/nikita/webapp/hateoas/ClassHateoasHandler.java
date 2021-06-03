@@ -43,6 +43,7 @@ public class ClassHateoasHandler
         addNewCrossReference(entity, hateoasNoarkObject);
         // links for metadata entities
         addAccessRestriction(entity, hateoasNoarkObject);
+        addScreeningDocument(entity, hateoasNoarkObject);
         addDisposalDecision(entity, hateoasNoarkObject);
         addNewKeyword(entity, hateoasNoarkObject);
         addKeyword(entity, hateoasNoarkObject);
@@ -58,6 +59,8 @@ public class ClassHateoasHandler
             IHateoasNoarkObject hateoasNoarkObject) {
         super.addEntityLinksOnTemplate(entity, hateoasNoarkObject);
         addClassifiedCodeMetadata(entity, hateoasNoarkObject);
+        addAccessRestriction(entity, hateoasNoarkObject);
+        addScreeningDocument(entity, hateoasNoarkObject);
         addScreeningMetadata(entity, hateoasNoarkObject);
         addAccessRestriction(entity, hateoasNoarkObject);
         addDisposalDecision(entity, hateoasNoarkObject);
@@ -186,6 +189,14 @@ public class ClassHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_METADATA + SLASH + ACCESS_RESTRICTION,
                 REL_METADATA_ACCESS_RESTRICTION, false));
+    }
+
+    @Override
+    public void addScreeningDocument(ISystemId entity,
+                                     IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_METADATA + SLASH + SCREENING_DOCUMENT,
+                REL_METADATA_SCREENING_DOCUMENT, false));
     }
 
     @Override
