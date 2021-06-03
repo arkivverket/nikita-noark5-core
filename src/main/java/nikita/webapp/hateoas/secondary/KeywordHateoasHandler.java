@@ -9,8 +9,7 @@ import nikita.webapp.hateoas.interfaces.secondary.IKeywordHateoasHandler;
 import org.springframework.stereotype.Component;
 
 import static nikita.common.config.Constants.*;
-import static nikita.common.config.N5ResourceMappings.KEYWORD;
-import static nikita.common.config.N5ResourceMappings.SYSTEM_ID;
+import static nikita.common.config.N5ResourceMappings.*;
 import static nikita.common.config.ODataConstants.DOLLAR_FILTER;
 
 /**
@@ -58,9 +57,9 @@ public class KeywordHateoasHandler
                           IHateoasNoarkObject hateoasNoarkObject) {
         if (keyword.getReferenceRecord().size() > 0) {
             hateoasNoarkObject.addLink(keyword,
-                    new Link(getOutgoingAddress() +
+                    new Link(getOutgoingAddress() + RECORD +
                             "?" + urlEncode(DOLLAR_FILTER) +
-                            "=" + KEYWORD + SLASH + SYSTEM_ID +
+                            "=" + KEYWORD + SLASH + KEYWORD + SYSTEM_ID +
                             urlEncode(" eq '" + keyword.getSystemId() + "'"),
                             REL_FONDS_STRUCTURE_RECORD));
         }
@@ -81,9 +80,9 @@ public class KeywordHateoasHandler
                          IHateoasNoarkObject hateoasNoarkObject) {
         if (keyword.getReferenceClass().size() > 0) {
             hateoasNoarkObject.addLink(keyword,
-                    new Link(getOutgoingAddress() +
+                    new Link(getOutgoingAddress() + CLASS +
                             HREF_BASE_CLASS + "?" + urlEncode(DOLLAR_FILTER) +
-                            "=" + KEYWORD + SLASH + SYSTEM_ID +
+                            "=" + KEYWORD + SLASH + KEYWORD + SYSTEM_ID +
                             urlEncode(" eq '" + keyword.getSystemId() + "'"),
                             REL_FONDS_STRUCTURE_CLASS));
         }
@@ -104,9 +103,9 @@ public class KeywordHateoasHandler
                         IHateoasNoarkObject hateoasNoarkObject) {
         if (keyword.getReferenceFile().size() > 0) {
             hateoasNoarkObject.addLink(keyword,
-                    new Link(getOutgoingAddress() +
+                    new Link(getOutgoingAddress() + FILE +
                             HREF_BASE_FILE + "?" + urlEncode(DOLLAR_FILTER) +
-                            "=" + KEYWORD + SLASH + SYSTEM_ID +
+                            "=" + KEYWORD + SLASH + KEYWORD + SYSTEM_ID +
                             urlEncode(" eq '" + keyword.getSystemId() + "'"),
                             REL_FONDS_STRUCTURE_FILE));
         }
