@@ -1,6 +1,6 @@
 # nikita-noark5-core
 
-<a href="https://scan.coverity.com/projects/OsloMet-ABI-nikita-noark5-core">
+<a href="https://scan.coverity.com/projects/hioa-abi-nikita-noark5-core">
   <img alt="Coverity Scan Build Status"
        src="https://scan.coverity.com/projects/12784/badge.svg"/>
 </a>
