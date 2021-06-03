@@ -520,6 +520,33 @@ public class ClassHateoasController
                         .getScreeningMetadataAssociatedWithClass(systemID));
     }
 
+    // Retrieve all Keyword associated with a Class
+    // GET [contextPath][api]/arkivstruktur/klasse/{systemId}/noekkelord
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/noekkelord/
+    @Operation(summary = "Retrieves all Keyword associated with a Class")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "Keyword returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + KEYWORD)
+    public ResponseEntity<KeywordHateoas> findKeywordAssociatedWithClass(
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the class to retrieve keyword",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        return ResponseEntity.status(OK)
+                .body(classService.findKeywordAssociatedWithClass(systemID));
+    }
+
     // Return a Class object with default values
     //GET [contextPath][api]/arkivstruktur/klasse/{systemId}/ny-klasse
     @Operation(summary = "Create a Class with default values")

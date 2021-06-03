@@ -451,6 +451,11 @@ public class RecordService
     }
 
     @Override
+    public KeywordHateoas findKeywordAssociatedWithRecord(UUID systemId) {
+        return (KeywordHateoas) odataService.processODataQueryGet();
+    }
+
+    @Override
     public ScreeningMetadataHateoas
     getScreeningMetadataAssociatedWithRecord(@NotNull final UUID systemId) {
         Screening screening = getRecordOrThrow(systemId)

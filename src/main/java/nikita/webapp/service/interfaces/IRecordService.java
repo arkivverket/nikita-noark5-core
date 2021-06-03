@@ -139,6 +139,9 @@ public interface IRecordService {
 
     RecordHateoas findAll();
 
+    KeywordHateoas findKeywordAssociatedWithRecord(
+            @NotNull final UUID systemId);
+
     AuthorHateoas associateAuthorWithRecord(
             @NotNull final UUID systemId,
             @NotNull final Author author);

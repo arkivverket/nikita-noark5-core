@@ -1839,6 +1839,33 @@ public class RecordHateoasController
                         generateDefaultDocumentDescription(systemID));
     }
 
+    // Retrieve all Keyword associated with a Record
+    // GET [contextPath][api]/arkivstruktur/registrering/{systemId}/noekkelord
+    // https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/noekkelord/
+    @Operation(summary = "Retrieves all Keyword associated with a Record")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = OK_VAL,
+                    description = "Keyword returned"),
+            @ApiResponse(
+                    responseCode = UNAUTHORIZED_VAL,
+                    description = API_MESSAGE_UNAUTHENTICATED_USER),
+            @ApiResponse(
+                    responseCode = FORBIDDEN_VAL,
+                    description = API_MESSAGE_UNAUTHORISED_FOR_USER),
+            @ApiResponse(
+                    responseCode = INTERNAL_SERVER_ERROR_VAL,
+                    description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
+    @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + KEYWORD)
+    public ResponseEntity<KeywordHateoas> findKeywordAssociatedWithRecord(
+            @Parameter(name = SYSTEM_ID,
+                    description = "systemID of the record to retrieve keyword",
+                    required = true)
+            @PathVariable(SYSTEM_ID) final UUID systemID) {
+        return ResponseEntity.status(OK)
+                .body(recordService.findKeywordAssociatedWithRecord(systemID));
+    }
+
     // Retrieve all DocumentDescriptions associated with a Record identified by systemId
     // GET [contextPath][api]/arkivstruktur/resgistrering/{systemId}/dokumentbeskrivelse
     @Operation(summary = "Retrieves a list of DocumentDescriptions associated" +

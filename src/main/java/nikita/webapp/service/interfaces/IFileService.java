@@ -122,7 +122,7 @@ public interface IFileService {
 
     PartHateoas getPartAssociatedWithFile(@NotNull final UUID systemId);
 
-    KeywordHateoas getKeywordAssociatedWithFile(@NotNull final UUID systemId);
+    KeywordHateoas findKeywordAssociatedWithFile(@NotNull final UUID systemId);
 
     StorageLocationHateoas getStorageLocationAssociatedWithFile(
             @NotNull final UUID systemId);
