@@ -63,7 +63,14 @@ let app = angular.module('nikita', ['ngFileUpload'])
         this.doCheckToken = async function (url, token) {
             let tokenValid = false;
             console.log("Checking validity of token [" + token + "]. using [" + url + "]");
-            await fetch(url + "?token=" + token).then(function (response) {
+            const settings = {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                }
+            };
+            await fetch(url + "?token=" + token, settings).then(function (response) {
                 if (response.status === 200) {
                     tokenValid = true;
                 }
