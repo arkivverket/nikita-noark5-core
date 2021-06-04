@@ -39,6 +39,9 @@ public interface ISeriesHateoasHandler
     void addClassificationSystem(ISystemId entity, 
                             IHateoasNoarkObject hateoasNoarkObject);
 
+    void addDeletionType(ISystemId entity,
+                         IHateoasNoarkObject hateoasNoarkObject);
+
     void addClassifiedCodeMetadata(ISystemId entity,
                                    IHateoasNoarkObject hateoasNoarkObject);
 
