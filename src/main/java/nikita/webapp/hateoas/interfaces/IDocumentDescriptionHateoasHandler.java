@@ -35,6 +35,9 @@ public interface IDocumentDescriptionHateoasHandler
     void addClassifiedCodeMetadata(ISystemId entity,
                                    IHateoasNoarkObject hateoasNoarkObject);
 
+    void addDeletionType(ISystemId entity,
+                         IHateoasNoarkObject hateoasNoarkObject);
+
     void addDocumentType(ISystemId entity,
                          IHateoasNoarkObject hateoasNoarkObject);
 

@@ -36,6 +36,7 @@ public class SeriesHateoasHandler
     public void addEntityLinks(ISystemId entity,
                                IHateoasNoarkObject hateoasNoarkObject) {
         addClassifiedCodeMetadata(entity, hateoasNoarkObject);
+        addDeletionType(entity, hateoasNoarkObject);
         addDocumentMedium(entity, hateoasNoarkObject);
         addNewRegistration(entity, hateoasNoarkObject);
         addNewFile(entity, hateoasNoarkObject);
@@ -64,6 +65,7 @@ public class SeriesHateoasHandler
             IHateoasNoarkObject hateoasNoarkObject) {
         super.addEntityLinksOnTemplate(entity, hateoasNoarkObject);
         addClassifiedCodeMetadata(entity, hateoasNoarkObject);
+        addDeletionType(entity, hateoasNoarkObject);
         addDocumentMedium(entity, hateoasNoarkObject);
         addSeriesStatus(entity, hateoasNoarkObject);
         addAccessRestriction(entity, hateoasNoarkObject);
@@ -265,6 +267,13 @@ public class SeriesHateoasHandler
                 REL_FONDS_STRUCTURE_NEW_STORAGE_LOCATION, false));
     }
 
+
+    @Override
+    public void addDeletionType(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_METADATA + SLASH + DELETION_TYPE,
+                REL_METADATA_DELETION_TYPE, false));
+    }
 
     @Override
     public void addClassifiedCodeMetadata(ISystemId entity,

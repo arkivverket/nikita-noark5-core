@@ -41,6 +41,7 @@ public class DocumentDescriptionHateoasHandler
         addNewAuthor(entity, hateoasNoarkObject);
         // links for metadata entities
         addClassifiedCodeMetadata(entity, hateoasNoarkObject);
+        addDeletionType(entity, hateoasNoarkObject);
         addDocumentMedium(entity, hateoasNoarkObject);
         addDocumentType(entity, hateoasNoarkObject);
         addDocumentStatus(entity, hateoasNoarkObject);
@@ -55,6 +56,7 @@ public class DocumentDescriptionHateoasHandler
     public void addEntityLinksOnTemplate(ISystemId entity,
                                          IHateoasNoarkObject hateoasNoarkObject) {
         addClassifiedCodeMetadata(entity, hateoasNoarkObject);
+        addDeletionType(entity, hateoasNoarkObject);
         addDocumentMedium(entity, hateoasNoarkObject);
         addDocumentType(entity, hateoasNoarkObject);
         addDocumentStatus(entity, hateoasNoarkObject);
@@ -145,6 +147,13 @@ public class DocumentDescriptionHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_METADATA + SLASH + DOCUMENT_STATUS,
                 REL_METADATA_DOCUMENT_STATUS, false));
+    }
+
+    @Override
+    public void addDeletionType(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_METADATA + SLASH + DELETION_TYPE,
+                REL_METADATA_DELETION_TYPE, false));
     }
 
     @Override
