@@ -1732,7 +1732,6 @@ public final class CommonUtils {
                                                IFileEntity file)
                     throws IOException {
                 printSystemIdEntity(jgen, file);
-                printStorageLocation(jgen, file);
                 printNullable(jgen, FILE_ID, file.getFileId());
                 printTitleAndDescription(jgen, file);
                 printNullable(jgen, FILE_PUBLIC_TITLE, file.getPublicTitle());
@@ -2191,22 +2190,6 @@ public final class CommonUtils {
             }
             */
 
-            public static void printStorageLocation(
-                    JsonGenerator jgen, IStorageLocation storageLocationEntity)
-                    throws IOException {
-                Set<StorageLocation> storageLocation = storageLocationEntity
-                        .getReferenceStorageLocation();
-                if (storageLocation != null && storageLocation.size() > 0) {
-                    jgen.writeArrayFieldStart(STORAGE_LOCATION);
-                    for (StorageLocation location : storageLocation) {
-                        if (location.getStorageLocation() != null) {
-                            jgen.writeString(location.getStorageLocation());
-                        }
-                    }
-                    jgen.writeEndArray();
-                }
-            }
-
             public static void printFondsCreators(
                     JsonGenerator jgen, IFondsCreator fondsCreatorObject)
                     throws IOException {
@@ -2466,20 +2449,6 @@ public final class CommonUtils {
                         jgen.writeStringField(REFERENCE_TYPE,
                                 crossReference.getReferenceType());
                     }
-                }
-            }
-
-            public static void printKeyword(JsonGenerator jgen, IKeyword keywordEntity)
-                    throws IOException {
-                Set<Keyword> keywords = keywordEntity.getReferenceKeyword();
-                if (keywords != null && keywords.size() > 0) {
-                    jgen.writeArrayFieldStart(KEYWORD);
-                    for (Keyword keyword : keywords) {
-                        if (keyword.getKeyword() != null) {
-                            jgen.writeString(keyword.getKeyword());
-                        }
-                    }
-                    jgen.writeEndArray();
                 }
             }
         }

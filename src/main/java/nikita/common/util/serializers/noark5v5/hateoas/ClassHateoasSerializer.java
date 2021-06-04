@@ -29,7 +29,6 @@ public class ClassHateoasSerializer
         printSystemIdEntity(jgen, klass);
         printNullable(jgen, CLASS_ID, klass.getClassId());
         printTitleAndDescription(jgen, klass);
-        printKeyword(jgen, klass);
         printFinaliseEntity(jgen, klass);
         printCreateEntity(jgen, klass);
         printModifiedEntity(jgen, klass);

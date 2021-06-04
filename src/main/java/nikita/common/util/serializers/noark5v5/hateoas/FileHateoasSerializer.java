@@ -40,7 +40,6 @@ public class FileHateoasSerializer
             printCaseFileEntity(jgen, (CaseFile) file);
         }
         printDocumentMedium(jgen, file);
-        printKeyword(jgen, file);
         printFinaliseEntity(jgen, file);
         printCreateEntity(jgen, file);
         printModifiedEntity(jgen, file);
