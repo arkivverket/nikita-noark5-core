@@ -44,6 +44,8 @@ public class DocumentDescriptionHateoasHandler
         addDocumentMedium(entity, hateoasNoarkObject);
         addDocumentType(entity, hateoasNoarkObject);
         addDocumentStatus(entity, hateoasNoarkObject);
+        addAccessRestriction(entity, hateoasNoarkObject);
+        addScreeningDocument(entity, hateoasNoarkObject);
         addScreeningMetadata(entity, hateoasNoarkObject);
         addScreeningMetadataLocal(entity, hateoasNoarkObject);
         addNewScreeningMetadataLocal(entity, hateoasNoarkObject);
@@ -56,6 +58,8 @@ public class DocumentDescriptionHateoasHandler
         addDocumentMedium(entity, hateoasNoarkObject);
         addDocumentType(entity, hateoasNoarkObject);
         addDocumentStatus(entity, hateoasNoarkObject);
+        addAccessRestriction(entity, hateoasNoarkObject);
+        addScreeningDocument(entity, hateoasNoarkObject);
         addScreeningMetadata(entity, hateoasNoarkObject);
         addAssociatedWithRecordAs(entity, hateoasNoarkObject);
     }
@@ -220,6 +224,22 @@ public class DocumentDescriptionHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemIdAsString() +
                 SLASH + NEW_AUTHOR + SLASH, REL_FONDS_STRUCTURE_NEW_AUTHOR));
+    }
+
+    @Override
+    public void addAccessRestriction(ISystemId entity,
+                                     IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_METADATA + SLASH + ACCESS_RESTRICTION,
+                REL_METADATA_ACCESS_RESTRICTION, false));
+    }
+
+    @Override
+    public void addScreeningDocument(ISystemId entity,
+                                     IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_METADATA + SLASH + SCREENING_DOCUMENT,
+                REL_METADATA_SCREENING_DOCUMENT, false));
     }
 
     @Override

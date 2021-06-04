@@ -60,6 +60,8 @@ public class FileHateoasHandler
         addClassifiedCodeMetadata(entity, hateoasNoarkObject);
         addNewStorageLocation(entity, hateoasNoarkObject);
         addStorageLocation(entity, hateoasNoarkObject);
+        addAccessRestriction(entity, hateoasNoarkObject);
+        addScreeningDocument(entity, hateoasNoarkObject);
         addScreeningMetadata(entity, hateoasNoarkObject);
         addScreeningMetadataLocal(entity, hateoasNoarkObject);
         addNewScreeningMetadataLocal(entity, hateoasNoarkObject);
@@ -81,6 +83,8 @@ public class FileHateoasHandler
         addDocumentMedium(entity, hateoasNoarkObject);
         addMetadataFileType(entity, hateoasNoarkObject);
         addClassifiedCodeMetadata(entity, hateoasNoarkObject);
+        addAccessRestriction(entity, hateoasNoarkObject);
+        addScreeningDocument(entity, hateoasNoarkObject);
         addScreeningMetadata(entity, hateoasNoarkObject);
     }
 
@@ -337,6 +341,22 @@ public class FileHateoasHandler
                 SLASH + NEW_STORAGE_LOCATION + SLASH,
                 REL_FONDS_STRUCTURE_NEW_STORAGE_LOCATION, false));
 
+    }
+
+    @Override
+    public void addAccessRestriction(ISystemId entity,
+                                     IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_METADATA + SLASH + ACCESS_RESTRICTION,
+                REL_METADATA_ACCESS_RESTRICTION, false));
+    }
+
+    @Override
+    public void addScreeningDocument(ISystemId entity,
+                                     IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_METADATA + SLASH + SCREENING_DOCUMENT,
+                REL_METADATA_SCREENING_DOCUMENT, false));
     }
 
     @Override

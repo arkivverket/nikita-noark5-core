@@ -54,6 +54,12 @@ public interface ISeriesHateoasHandler
     void addStorageLocation(ISystemId entity,
                             IHateoasNoarkObject hateoasNoarkObject);
 
+    void addAccessRestriction(ISystemId entity,
+                              IHateoasNoarkObject hateoasNoarkObject);
+
+    void addScreeningDocument(ISystemId entity,
+                              IHateoasNoarkObject hateoasNoarkObject);
+
     void addScreeningMetadata(ISystemId entity,
                               IHateoasNoarkObject hateoasNoarkObject);
 

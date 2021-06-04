@@ -51,6 +51,8 @@ public class SeriesHateoasHandler
         addSeriesStatus(entity, hateoasNoarkObject);
         addNewStorageLocation(entity, hateoasNoarkObject);
         addStorageLocation(entity, hateoasNoarkObject);
+        addAccessRestriction(entity, hateoasNoarkObject);
+        addScreeningDocument(entity, hateoasNoarkObject);
         addScreeningMetadata(entity, hateoasNoarkObject);
         addScreeningMetadataLocal(entity, hateoasNoarkObject);
         addNewScreeningMetadataLocal(entity, hateoasNoarkObject);
@@ -64,6 +66,8 @@ public class SeriesHateoasHandler
         addClassifiedCodeMetadata(entity, hateoasNoarkObject);
         addDocumentMedium(entity, hateoasNoarkObject);
         addSeriesStatus(entity, hateoasNoarkObject);
+        addAccessRestriction(entity, hateoasNoarkObject);
+        addScreeningDocument(entity, hateoasNoarkObject);
         addScreeningMetadata(entity, hateoasNoarkObject);
     }
 
@@ -268,6 +272,22 @@ public class SeriesHateoasHandler
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_METADATA + SLASH + CLASSIFIED_CODE,
                 REL_METADATA_CLASSIFIED_CODE));
+    }
+
+    @Override
+    public void addAccessRestriction(ISystemId entity,
+                                     IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_METADATA + SLASH + ACCESS_RESTRICTION,
+                REL_METADATA_ACCESS_RESTRICTION, false));
+    }
+
+    @Override
+    public void addScreeningDocument(ISystemId entity,
+                                     IHateoasNoarkObject hateoasNoarkObject) {
+        hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
+                HREF_BASE_METADATA + SLASH + SCREENING_DOCUMENT,
+                REL_METADATA_SCREENING_DOCUMENT, false));
     }
 
     @Override
