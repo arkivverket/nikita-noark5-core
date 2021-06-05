@@ -281,8 +281,6 @@ public class RecordNoteService
 
     private RecordNote generateDefaultRecordNote() {
         RecordNote defaultRecordNote = new RecordNote();
-        defaultRecordNote.setTitle(DEFAULT_TITLE + "RecordNote");
-        defaultRecordNote.setDescription(DEFAULT_DESCRIPTION + "RecordNote");
         defaultRecordNote.setVersion(-1L, true);
         return defaultRecordNote;
     }
