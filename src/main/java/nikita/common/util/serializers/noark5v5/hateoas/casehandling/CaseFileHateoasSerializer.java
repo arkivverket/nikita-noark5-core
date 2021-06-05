@@ -49,10 +49,7 @@ public class CaseFileHateoasSerializer
         printFileEntity(jgen, caseFile);
         printCaseFileEntity(jgen, caseFile);
 
-        printKeyword(jgen, caseFile);
-        printStorageLocation(jgen, caseFile);
         printDocumentMedium(jgen, caseFile);
-        printKeyword(jgen, caseFile);
         printFinaliseEntity(jgen, caseFile);
         printCrossReferences(jgen, caseFile);
         printDisposal(jgen, caseFile);

@@ -35,6 +35,9 @@ public interface IDocumentDescriptionHateoasHandler
     void addClassifiedCodeMetadata(ISystemId entity,
                                    IHateoasNoarkObject hateoasNoarkObject);
 
+    void addDeletionType(ISystemId entity,
+                         IHateoasNoarkObject hateoasNoarkObject);
+
     void addDocumentType(ISystemId entity,
                          IHateoasNoarkObject hateoasNoarkObject);
 
@@ -55,6 +58,12 @@ public interface IDocumentDescriptionHateoasHandler
 
     void addNewAuthor(ISystemId entity,
                       IHateoasNoarkObject hateoasNoarkObject);
+
+    void addAccessRestriction(ISystemId entity,
+                              IHateoasNoarkObject hateoasNoarkObject);
+
+    void addScreeningDocument(ISystemId entity,
+                              IHateoasNoarkObject hateoasNoarkObject);
 
     void addScreeningMetadata(ISystemId entity,
                               IHateoasNoarkObject hateoasNoarkObject);

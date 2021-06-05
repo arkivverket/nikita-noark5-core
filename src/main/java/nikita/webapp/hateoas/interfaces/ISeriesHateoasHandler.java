@@ -39,6 +39,9 @@ public interface ISeriesHateoasHandler
     void addClassificationSystem(ISystemId entity, 
                             IHateoasNoarkObject hateoasNoarkObject);
 
+    void addDeletionType(ISystemId entity,
+                         IHateoasNoarkObject hateoasNoarkObject);
+
     void addClassifiedCodeMetadata(ISystemId entity,
                                    IHateoasNoarkObject hateoasNoarkObject);
 
@@ -53,6 +56,12 @@ public interface ISeriesHateoasHandler
 
     void addStorageLocation(ISystemId entity,
                             IHateoasNoarkObject hateoasNoarkObject);
+
+    void addAccessRestriction(ISystemId entity,
+                              IHateoasNoarkObject hateoasNoarkObject);
+
+    void addScreeningDocument(ISystemId entity,
+                              IHateoasNoarkObject hateoasNoarkObject);
 
     void addScreeningMetadata(ISystemId entity,
                               IHateoasNoarkObject hateoasNoarkObject);
