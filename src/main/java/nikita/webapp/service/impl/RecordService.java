@@ -42,6 +42,7 @@ import java.util.UUID;
 
 import static java.util.List.copyOf;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
+import static nikita.common.config.Constants.TEST_TITLE;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateScreening;
 
@@ -645,6 +646,7 @@ public class RecordService
     @Override
     public RecordHateoas generateDefaultRecord(@NotNull final UUID systemId) {
         Record defaultRecord = new Record();
+        defaultRecord.setTitle(TEST_TITLE);
         defaultRecord.setVersion(-1L, true);
         return packAsHateoas(defaultRecord);
     }
