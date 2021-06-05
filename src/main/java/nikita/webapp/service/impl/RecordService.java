@@ -40,9 +40,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static java.time.OffsetDateTime.now;
 import static java.util.List.copyOf;
-import static nikita.common.config.Constants.*;
+import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
+import static nikita.common.config.Constants.TEST_TITLE;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateDocumentMedium;
 import static nikita.webapp.util.NoarkUtils.NoarkEntity.Create.validateScreening;
 
@@ -646,10 +646,7 @@ public class RecordService
     @Override
     public RecordHateoas generateDefaultRecord(@NotNull final UUID systemId) {
         Record defaultRecord = new Record();
-        defaultRecord.setArchivedBy(TEST_USER_CASE_HANDLER_2);
-        defaultRecord.setArchivedDate(now());
         defaultRecord.setTitle(TEST_TITLE);
-        defaultRecord.setDescription(TEST_DESCRIPTION);
         defaultRecord.setVersion(-1L, true);
         return packAsHateoas(defaultRecord);
     }
