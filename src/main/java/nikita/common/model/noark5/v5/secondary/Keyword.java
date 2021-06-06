@@ -35,6 +35,13 @@ import static nikita.common.config.N5ResourceMappings.*;
 public class Keyword
         extends SystemIdEntity
         implements IKeywordEntity {
+    /**
+     * M022 - noekkelord (xs:string)
+     */
+    @Column(name = KEYWORD_ENG_OBJECT, nullable = false)
+    @Audited
+    @JsonProperty(KEYWORD)
+    private String keyword;
 
     // Links to Class
     @ManyToMany(mappedBy = REFERENCE_KEYWORD)
@@ -45,13 +52,6 @@ public class Keyword
     // Links to Record
     @ManyToMany(mappedBy = REFERENCE_KEYWORD)
     private final Set<Record> referenceRecord = new HashSet<>();
-    /**
-     * M022 - noekkelord (xs:string)
-     */
-    @Column(name = KEYWORD_ENG_OBJECT)
-    @Audited
-    @JsonProperty(KEYWORD)
-    private String keyword;
 
     public String getKeyword() {
         return keyword;

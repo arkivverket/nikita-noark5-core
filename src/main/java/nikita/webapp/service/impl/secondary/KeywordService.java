@@ -4,6 +4,7 @@ import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.hateoas.secondary.KeywordHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.KeywordTemplateHateoas;
 import nikita.common.model.noark5.v5.secondary.Keyword;
 import nikita.common.repository.n5v5.secondary.IKeywordRepository;
 import nikita.common.util.exceptions.NoarkEntityNotFoundException;
@@ -134,16 +135,24 @@ public class KeywordService
 
     // All template methods
 
-    public KeywordHateoas generateDefaultKeyword(@NotNull final UUID systemId) {
+    @Override
+    public KeywordTemplateHateoas generateDefaultKeyword(@NotNull final UUID systemId) {
         Keyword suggestedKeyword = new Keyword();
         suggestedKeyword.setVersion(-1L, true);
-        return packAsHateoas(suggestedKeyword);
+        return packAsKeywordTemplateHateoas(suggestedKeyword);
     }
 
     // All helper methods
 
     public KeywordHateoas packAsHateoas(@NotNull final Keyword keyword) {
         KeywordHateoas keywordHateoas = new KeywordHateoas(keyword);
+        applyLinksAndHeader(keywordHateoas, keywordHateoasHandler);
+        return keywordHateoas;
+    }
+
+    public KeywordTemplateHateoas packAsKeywordTemplateHateoas(@NotNull final Keyword keyword) {
+        KeywordTemplateHateoas keywordHateoas =
+                new KeywordTemplateHateoas(keyword);
         applyLinksAndHeader(keywordHateoas, keywordHateoasHandler);
         return keywordHateoas;
     }

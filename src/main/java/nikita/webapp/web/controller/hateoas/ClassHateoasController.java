@@ -15,6 +15,7 @@ import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.CrossReferenceHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.KeywordHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.KeywordTemplateHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.ScreeningMetadataHateoas;
 import nikita.common.model.noark5.v5.metadata.Metadata;
 import nikita.common.model.noark5.v5.secondary.CrossReference;
@@ -641,7 +642,7 @@ public class ClassHateoasController
                     responseCode = INTERNAL_SERVER_ERROR_VAL,
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_KEYWORD)
-    public ResponseEntity<KeywordHateoas> createDefaultKeyword(
+    public ResponseEntity<KeywordTemplateHateoas> createDefaultKeyword(
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of Class to create default " +
                             "Keyword for",

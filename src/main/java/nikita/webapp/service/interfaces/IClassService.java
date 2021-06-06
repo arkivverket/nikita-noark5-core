@@ -11,6 +11,7 @@ import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CaseFileHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.CrossReferenceHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.KeywordHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.KeywordTemplateHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.ScreeningMetadataHateoas;
 import nikita.common.model.noark5.v5.metadata.Metadata;
 import nikita.common.model.noark5.v5.secondary.CrossReference;
@@ -93,7 +94,7 @@ public interface IClassService {
     ScreeningMetadataHateoas getDefaultScreeningMetadata(
             @NotNull final UUID systemId);
 
-    KeywordHateoas generateDefaultKeyword(@NotNull final UUID systemId);
+    KeywordTemplateHateoas generateDefaultKeyword(@NotNull final UUID systemId);
 
     CrossReferenceHateoas getDefaultCrossReference(@NotNull final UUID systemId);
 }
