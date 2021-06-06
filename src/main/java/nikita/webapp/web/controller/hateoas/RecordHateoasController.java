@@ -797,7 +797,7 @@ public class RecordHateoasController
                     responseCode = INTERNAL_SERVER_ERROR_VAL,
                     description = API_MESSAGE_INTERNAL_SERVER_ERROR)})
     @GetMapping(value = SLASH + SYSTEM_ID_PARAMETER + SLASH + NEW_KEYWORD)
-    public ResponseEntity<KeywordHateoas> createDefaultKeyword(
+    public ResponseEntity<KeywordTemplateHateoas> createDefaultKeyword(
             @Parameter(name = SYSTEM_ID,
                     description = "systemID of the file to retrieve " +
                             "associated Record",

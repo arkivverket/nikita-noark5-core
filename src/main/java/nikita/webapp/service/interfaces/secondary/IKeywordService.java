@@ -4,6 +4,7 @@ import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Record;
 import nikita.common.model.noark5.v5.hateoas.secondary.KeywordHateoas;
+import nikita.common.model.noark5.v5.hateoas.secondary.KeywordTemplateHateoas;
 import nikita.common.model.noark5.v5.secondary.Keyword;
 
 import javax.validation.constraints.NotNull;
@@ -31,5 +32,5 @@ public interface IKeywordService {
 
     void deleteKeywordBySystemId(@NotNull final UUID systemId);
 
-    KeywordHateoas generateDefaultKeyword(@NotNull final UUID systemId);
+    KeywordTemplateHateoas generateDefaultKeyword(@NotNull final UUID systemId);
 }

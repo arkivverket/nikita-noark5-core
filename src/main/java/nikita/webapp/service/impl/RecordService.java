@@ -658,7 +658,7 @@ public class RecordService
     }
 
     @Override
-    public KeywordHateoas generateDefaultKeyword(@NotNull final UUID systemId) {
+    public KeywordTemplateHateoas generateDefaultKeyword(@NotNull final UUID systemId) {
         return keywordService.generateDefaultKeyword(systemId);
     }
 

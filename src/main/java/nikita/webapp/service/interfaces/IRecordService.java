@@ -191,7 +191,7 @@ public interface IRecordService {
     ScreeningMetadataHateoas getDefaultScreeningMetadata(
             @NotNull final UUID systemId);
 
-    KeywordHateoas generateDefaultKeyword(@NotNull final UUID systemId);
+    KeywordTemplateHateoas generateDefaultKeyword(@NotNull final UUID systemId);
 
     StorageLocationHateoas getDefaultStorageLocation(
             @NotNull final UUID systemId);
