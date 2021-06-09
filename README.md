@@ -11,7 +11,8 @@ on third parties (banks and email providers) to store their records. Nikita is a
 to take control of your records and store them on your conditions, rather than being subject to the privacy unfriendly
 conditions of others. Nikita also is based on a
 standard ([Noark 5 REST API](https://github.com/arkivverket/noark5-tjenestegrensesnitt-standard)). Nikita implements a
-REST based web API for storing and retrieving documents and metadata.
+REST based web API for storing and retrieving documents and metadata following the
+[Noark 5 standard](https://github.com/arkivverket/noark5-standard).
 
 A twenty-minute video about nikita and open source record-keeping
 from [debconf2020](https://debconf20.debconf.org/talks/58-flexible-record-keeping-in-a-foss-world/) gives an
