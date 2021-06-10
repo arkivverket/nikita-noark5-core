@@ -1,24 +1,118 @@
 Major changes in Nikita Noark 5 Core releases
 =============================================
 
-These are the highlevel changes.  For details, see the git history.
+These are the highlevel changes. For details, see the git history.
 
-Release 0.6 2021-XX-XX (commit X)
+Release 0.6 2021-06-10 (d1ba5fc7e8bad0cfdce45ac20354b19d10ebbc7b)
 ----------------------
- * Changed internal URLs, replaced "hateoas-api" with "api".
- * Implemented storing of Precedence.
- * Corrected handling of screening.
- * Corrected \_links collection returned for list of mixed entity
-   types to match the specific entity.
- * Improved several internal structures.
+
+* Refactor metadata entity search
+* Remove redundant security configuration
+* Make OpenAPI documentation work
+* Change database structure / inheritance model to a more sensible approach
+* Make it possible to move entities around the fonds structure
+* Implemented a number of missing endpoints
+* Make sure yml files are in sync
+* Implemented/finalised storing and use of
+    - Business Specific Metadata
+    - Norwegian National Identifiers
+    - Cross Reference
+    - Keyword
+    - StorageLocation
+    - Author
+    - Screening for relevant objects
+    - ChangeLog
+    - EventLog
+* Make generation of updated docker image part of successful CI pipeline
+* Implement pagination for all list requests
+    - Refactor code to support lists
+    - Refactor code for readability
+    - Standardise the controller/service code
+* Finalise File->CaseFile expansion and Record->registryEntry/recordNote expansion
+* Improved Continuous Integration (CI) approach via gitlab
+* Changed conversion approach to generate tagged PDF documents
+* Updated dependencies
+    - For security reasons
+    - Brought codebase to spring-boot version 2.5.0
+    - Remove import of necessary dependencies
+    - Remove non-used metrics classes
+* Added new analysis to CI including
+* Implemented storing of Keyword
+* Implemented storing of Screening and ScreeningMetadata
+* Improved OData support
+    - Better support for inheritance in queries where applicable
+    - Brought in more OData tests
+    - Improved OData/hibernate understanding of queries
+    - Implement $count, $orderby
+    - Finalise $top and $skip
+    - Make sure & is used between query parameters
+* Improved Testing in codebase
+    - A new approach for integration tests to make test more readable
+    - Introduce tests in parallel with code development for TDD approach
+    - Remove test that required particular access to storage
+* Implement case-handling process from received email to case-handler
+    - Develop required GUI elements (digital postroom from email)
+    - Introduced leader, quality control and postroom roles
+* Make PUT requests return 200 OK not 201 CREATED
+* Make DELETE requests return 204 NO CONTENT not 200 OK
+* Replaced 'oppdatert*' with 'endret*' everywhere to match latest spec
+* Upgrade Gitlab CI to use python > 3 for CI scripts
+* Bug fixes
+    - Fix missing ALLOW
+    - Fix reading of objects from jar file during start-up
+    - Reduce the number of warnings in the codebase
+    - Fix delete problems
+    - Make better use of cascade for "leaf" objects
+    - Add missing annotations where relevant
+    - Remove the use of ETAG for delete
+    - Fix missing/wrong/broken rels discovered by runtest
+    - Drop unofficial convertFil (konverterFil) end point
+    - Fix regex problem for dateTime
+    - Fix multiple static analysis issues discovered by coverity
+    - Fix proxy problem when looking for object class names
+    - Add many missing translated Norwegian to English (internal) attribute/entity names
+    - Change UUID generation approach to allow code also set a value
+    - Fix problem with Part/PartParson
+    - Fix problem with empty OData search results
+    - Fix metadata entity domain problem
+* General Improvements
+    - Makes future refactoring easier as coupling is reduced
+    - Allow some constant variables to be set from property file
+    - Refactor code to make reflection work better across codebase
+    - Reduce the number of @Service layer classes used in @Controller classes
+    - Be more consistent on naming of similar variable types
+    - Start printing rels/href if they are applicable
+    - Cleaner / standardised approach to deleting objects
+    - Avoid concatenation when using StringBuilder
+    - Consolidate code to avoid duplication
+    - Tidy formatting for a more consistent reading style across similar class files
+    - Make throw a log.error message not an log.info message
+    - Make throw print the log value rather than printing in multiple places
+    - Add some missing pronom codes
+    - Fix time formatting issue in Gitlab CI
+    - Remove stale / unused code
+    - Use only UUID datatype rather than combination String/UUID for systemID
+    - Mark variables final and @NotNull where relevant to indicate intention
+* Change Date values to DateTime to maintain compliance with Noark 5 standard
+* Domain model improvements using Hypersistence Optimizer
+    - Move @Transactional from class to methods to avoid borrowing the JDBC Connection unnecessarily
+    - Fix OneToOne performance issues
+    - Fix ManyToMany performance issues
+    - Add missing bidirectional synchronization support
+    - Fix ManyToMany performance issue
+* Make List<> and Set<> use final-keyword to avoid potential problems during update operations
+* Changed internal URLs, replaced "hateoas-api" with "api".
+* Implemented storing of Precedence.
+* Corrected handling of screening.
+* Corrected \_links collection returned for list of mixed entity types to match the specific entity.
+* Improved several internal structures.
 
 Release 0.5 2020-03-02 (commit bf83be0610b1fdc6b56b4c94ab07c3d1716940cb)
 ----------------------
- * Updated to Noark 5 versjon 5.0 API specification.
-    - Changed formatting of \_links from [] to {} to match IETF draft
-      on JSON HAL.
-    - Merged Registrering og Basisregistrering in version 4 to
-      combined Registrering.
+
+* Updated to Noark 5 versjon 5.0 API specification.
+    - Changed formatting of \_links from [] to {} to match IETF draft on JSON HAL.
+    - Merged Registrering og Basisregistrering in version 4 to combined Registrering.
     - DokumentObjekt is now subtype of ArkivEnhet.
     - Introducing new entity Arkivnotat.
     - Changed all relation keys to use /v5/ instead of /v4/.
