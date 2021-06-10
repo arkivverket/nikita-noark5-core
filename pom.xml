@@ -7,7 +7,7 @@
     <groupId>nikita</groupId>
     <artifactId>nikita-noark5-core</artifactId>
     <packaging>jar</packaging>
-    <version>0.5</version>
+    <version>0.6</version>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
