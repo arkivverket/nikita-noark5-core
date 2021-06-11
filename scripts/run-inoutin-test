@@ -50,6 +50,9 @@ firstseries=$(jq -r '.results []._links.self.href' json-dump-*/api/arkivstruktur
 
 ./import-email --baseurl $baseurl --saksmappe --mbox testdata/nikita-noark.mbox --storageurl "$firstseries" --maxinserts 10
 
+# Try to import closed archive, allow it to fail as it is not yet handled
+./import-uttrekk --baseurl $baseurl testdata/deponixml/noark5/ || true
+
 ./export-all --baseurl $baseurl --xml
 
 find uttrekk-*
