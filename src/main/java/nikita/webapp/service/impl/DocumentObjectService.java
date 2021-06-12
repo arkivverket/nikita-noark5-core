@@ -878,7 +878,6 @@ public class DocumentObjectService
         validateFormat(archiveDocumentObject);
 
         archiveDocumentObject.setMimeType(MIME_TYPE_PDF);
-        archiveDocumentObject.setFormatDetails("fmt/95");
 
         archiveDocumentObject
                 .setVariantFormat(new VariantFormat(ARCHIVE_VERSION_CODE));
@@ -890,18 +889,21 @@ public class DocumentObjectService
         // Setting a UUID here as the filename on disk will use this UUID value
         archiveDocumentObject.setSystemId(randomUUID());
         Path archiveVersion = createIncomingFile(archiveDocumentObject);
-        String command = "unoconv ";
-        String toFormat = " -f pdf ";
+        String[] cmdArray = new String[8];
+        cmdArray[0] = "unoconv";
+        cmdArray[1] = "-f";
+        cmdArray[2] = "pdf";
+
         // Include text formatting information / metadata in generated PDF
-        String taggedPdf = " -e UseTaggedPDF=1";
-        String fromFileLocation = productionVersion.
-                toAbsolutePath().toString();
-        String toFileLocation = " -o " +
-                archiveVersion.toAbsolutePath();
-        String convertCommand = command + toFormat + taggedPdf +
-                toFileLocation + " " + fromFileLocation;
+        cmdArray[3] = "-e";
+        cmdArray[4] = "UseTaggedPDF=1";
+
+        cmdArray[5] = "-o";
+        cmdArray[6] = archiveVersion.toAbsolutePath().toString();
+        cmdArray[7] = productionVersion.toAbsolutePath().toString();
+
         try {
-            Process p = Runtime.getRuntime().exec(convertCommand);
+            Process p = Runtime.getRuntime().exec(cmdArray);
             p.waitFor();
         } catch (RuntimeException e) {
             logger.error("Error converting document in " +
