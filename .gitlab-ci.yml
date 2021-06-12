@@ -46,7 +46,7 @@ noark5tester-inoutin:
       - noark5-tester/nikita-xml-validation-report.txt
 maven-build:
   before_script:
-    - apt-get update
+    - apt update
     - apt install -y unoconv
   image: maven:3.6.1-jdk-11
   stage: build
@@ -65,7 +65,7 @@ code_quality:
       - gl-code-quality-report.json
 docker-build-master:
   before_script:
-    - apt-get update
+    - apt update
   image: maven:3.6.1-jdk-11
   stage: deploy
   script:
