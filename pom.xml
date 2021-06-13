@@ -297,7 +297,11 @@
             <artifactId>angular-file-upload</artifactId>
             <version>${angular-file-upload.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.webjars.npm</groupId>
+            <artifactId>angular-img-http-src</artifactId>
+            <version>1.0.1</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -398,6 +402,16 @@
                                     <groupId>org.webjars</groupId>
                                     <artifactId>popper.js</artifactId>
                                     <version>${popper.version}</version>
+                                    <type>jar</type>
+                                    <includes>**/*.js</includes>
+                                    <outputDirectory>
+                                        ${project.basedir}/web/dependencies/vendor/
+                                    </outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.webjars.npm</groupId>
+                                    <artifactId>angular-img-http-src</artifactId>
+                                    <version>1.0.1</version>
                                     <type>jar</type>
                                     <includes>**/*.js</includes>
                                     <outputDirectory>
