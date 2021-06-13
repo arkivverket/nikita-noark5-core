@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html ng-app="nikita">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>Bildesøk</title>
+    <script src="dependencies/internal/config.js"></script>
+    <script src="dependencies/vendor/META-INF/resources/webjars/jquery/3.3.1-1/jquery.min.js"></script>
+    <script src="dependencies/vendor/META-INF/resources/webjars/angularjs/1.7.0/angular.min.js"></script>
+    <script src="dependencies/vendor/META-INF/resources/webjars/angular-file-upload/12.2.13/ng-file-upload-all.js"></script>
+    <script src="dependencies/vendor/META-INF/resources/webjars/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="dependencies/vendor/META-INF/resources/webjars/popper.js/1.14.1/umd/popper.js"></script>
+    <link href="dependencies/vendor/META-INF/resources/webjars/bootstrap/4.1.1/css/bootstrap.min.css"
+          rel="stylesheet" type="text/css">
+    <link
+            href="dependencies/vendor/META-INF/resources/webjars/font-awesome/5.0.9/web-fonts-with-css/css/fontawesome-all.css"
+            rel="stylesheet" type="text/css">
+    <script src="dependencies/vendor/META-INF/resources/webjars/angular-img-http-src/1.0.1/index.js"></script>
+    <script src="dependencies/internal/common_functionality.js"></script>
+    <script src="dependencies/internal/login.js"></script>
+    <script src="dependencies/internal/picture.js"></script>
+</head>
+<body ng-controller="PictureController">
+
+<div class="heading">
+    <h2>Bildearkiv</h2>
+</div>
+<div class="card-body">
+    <div class="container">
+        <div class="col-12">
+            <div class="row">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">anmarkningar</span>
+                    </div>
+                    <input aria-label="anmarkningar" class="form-control"
+                           ng-model="anmarkningarInput" rows="1"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">arkivbildare</span>
+                    </div>
+                    <select class="form-control form-control-lg rounded-1" data-placement="top"
+                            id="arkivbildareInput" ng-model="selectedArkivbildare">
+                        <option ng-repeat="arkivbildare in arkivbildareList"
+                                ng-selected="{{arkivbildare.value == selectedArkivbildare}}"
+                                value="{{arkivbildare.value}}">{{arkivbildare.value}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">motiv</span>
+                    </div>
+                    <input aria-label="motiv" class="form-control"
+                           ng-model="motivInput" rows="1"/>
+                </div>
+            </div>
+            <div class="row">
+                <button class="btn btn-primary" ng-click="doPictureSearch()" ng-disabled="!loggedIn"
+                        type="button">
+                    Søk
+                </button>
+            </div>
+        </div>
+        <hr/>
+        <div class="row">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Antall treff</span>
+                </div>
+                <input aria-label="resultListCount" class="form-control"
+                       ng-if="resultListCount" ng-model="resultListCount" rows="1"/>
+            </div>
+        </div>
+
+        <hr/>
+    </div>
+</div>
+<div>
+    <div class="container-fluid">
+        <div class="row" ng-repeat="record in records">
+            <div class="col-md-6 col-lg-4" data-target="#imageModal"
+                 data-toggle="modal" ng-click="imageSelected(record)">
+                <div class="card mx-auto text-center">
+                    <div class="card border-0 transform-on-hover">
+                        <a>
+                            <img alt="{{record.virksomhetsspesifikkeMetadata['tab:motiv'] | limitTo:40}}"
+                                 class="card-img-top"
+                                 http-src="{{record.file}}">
+                        </a>
+                        <div class="card-body">
+                            <h6>{{record.virksomhetsspesifikkeMetadata['tab:motiv'] | limitTo:40}}</h6>
+                            <p class="text-muted card-text">
+                                {{record.virksomhetsspesifikkeMetadata['tab:anmarkningar']}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--modal to show image -->
+    <div aria-hidden="true" class="modal fade" id="imageModal"
+         image-modal-dir role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>{{selectedRecord.virksomhetsspesifikkeMetadata['tab:bildnummer']}}</h4>
+                    <button class="close" data-dismiss="modal" type="button">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-1"></div>
+                            <div class="col big-box">
+                                <a>
+                                    <img alt="{{selectedRecord.virksomhetsspesifikkeMetadata['tab:motiv'] | limitTo:40}}"
+                                         class="card-img-top"
+                                         http-src="{{selectedRecord.file}}">
+                                </a>
+                            </div>
+                            <div class="col">
+                                <div class="row">
+                                    <div class="col mini-box">
+                                        <label for="ar">ar</label>
+                                        <input class="form-control form-control-lg rounded-1" disabled id="ar"
+                                               ng-model="selectedRecord.virksomhetsspesifikkeMetadata['tab:ar']"
+                                               type="text"/>
+                                    </div>
+                                    <div class="col mini-box">
+                                        <label for="negativ">negativ finnes</label>
+                                        <input class="form-control form-control-lg rounded-1" disabled id="negativ"
+                                               ng-model="selectedRecord.virksomhetsspesifikkeMetadata['tab:negativ']"
+                                               type="text"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col mini-box">
+                                        <label for="bildnummer">bildnummer</label>
+                                        <input class="form-control form-control-lg rounded-1" disabled id="bildnummer"
+                                               ng-model="selectedRecord.virksomhetsspesifikkeMetadata['tab:bildnummer']"
+                                               type="text"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1"></div>
+                        </div>
+                        <div class="row" ng-if="selectedRecord.virksomhetsspesifikkeMetadata['tab:anmarkningar']">
+                            <div class="col-1"></div>
+                            <div class="col-10">
+                                <label for="anmarkningar">anmarkningar</label>
+                                <input class="form-control form-control-lg rounded-1" disabled id="anmarkningar"
+                                       ng-model="selectedRecord.virksomhetsspesifikkeMetadata['tab:anmarkningar']"
+                                       type="text"/>
+
+                            </div>
+                            <div class="col-1"></div>
+                        </div>
+                        <div class="row" ng-if="selectedRecord.virksomhetsspesifikkeMetadata['tab:publikation']">
+                            <div class="col-1"></div>
+                            <div class="col-10">
+                                <label for="publikation">publikation</label>
+                                <input class="form-control form-control-lg rounded-1" disabled id="publikation"
+                                       ng-model="selectedRecord.virksomhetsspesifikkeMetadata['tab:publikation']"
+                                       type="text"/>
+
+                            </div>
+                            <div class="col-1"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-1"></div>
+                            <div class="col-10">
+                                <label for="arkivbildare">arkivbildare</label>
+                                <input class="form-control form-control-lg rounded-1" disabled id="arkivbildare"
+                                       ng-model="selectedRecord.virksomhetsspesifikkeMetadata['tab:arkivbildare']"
+                                       type="text"/>
+
+                            </div>
+                            <div class="col-1"></div>
+                        </div>
+                        <div class="row" ng-if="selectedRecord.virksomhetsspesifikkeMetadata['tab:bildrattigheter']">
+                            <div class="col-1"></div>
+                            <div class="col-10">
+                                <label for="bildrattigheter">bildrattigheter</label>
+                                <input class="form-control form-control-lg rounded-1" disabled id="bildrattigheter"
+                                       ng-model="selectedRecord.virksomhetsspesifikkeMetadata['tab:bildrattigheter']"
+                                       type="text"/>
+
+                            </div>
+                            <div class="col-1"></div>
+                        </div>
+                        <div class="row" ng-if="selectedRecord.virksomhetsspesifikkeMetadata['tab:placering']">
+                            <div class="col-1"></div>
+                            <div class="col-10">
+                                <label for="placering">placering</label>
+                                <input class="form-control form-control-lg rounded-1" disabled id="placering"
+                                       ng-model="selectedRecord.virksomhetsspesifikkeMetadata['tab:placering']"
+                                       type="text"/>
+
+                            </div>
+                            <div class="col-1"></div>
+                        </div>
+                        <div class="row" ng-if="selectedRecord.virksomhetsspesifikkeMetadata['tab:plats']">
+                            <div class="col-1"></div>
+                            <div class="col-10">
+                                <label for="plats">plats</label>
+                                <input class="form-control form-control-lg rounded-1" disabled id="plats"
+                                       ng-model="selectedRecord.virksomhetsspesifikkeMetadata['tab:plats']"
+                                       type="text"/>
+
+                            </div>
+                            <div class="col-1"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-1"></div>
+                            <div class="col-10">
+                                <label for="motiv">motiv</label>
+                                <textarea class="form-control  form-control-lg rounded-1" data-placement="top"
+                                          disabled id="motiv"
+                                          ng-model="selectedRecord.virksomhetsspesifikkeMetadata['tab:motiv']"
+                                          type="text"/>
+                            </div>
+                            <div class="col-1"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-lg btn-primary float-left"
+                            data-dismiss="modal" ng-click="doDismissShowImage()">
+                        Lukk
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End modal to show image -->
+</div>
+</body>
+</html>
