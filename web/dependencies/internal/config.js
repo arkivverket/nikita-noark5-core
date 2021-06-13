@@ -44,6 +44,7 @@ var REL_FONDS_CREATOR = "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/
 var REL_NEW_SERIES = "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-arkivdel/";
 var REL_NEW_FONDS_CREATOR = "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/ny-arkivskaper/";
 var REL_FONDS_CREATOR = "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/arkivskaper/";
+var REL_GET_FILE = "https://rel.arkivverket.no/noark5/v5/api/arkivstruktur/fil/";
 var REL_SELF = 'self';
 var REL_LOGIN_OAUTH2 = 'https://rel.arkivverket.no/noark5/v5/api/login/rfc6749/';
 var REL_LOGOUT_OAUTH2 = 'https://rel.arkivverket.no/noark5/v5/api/logout/rfc6749/';

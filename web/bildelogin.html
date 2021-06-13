@@ -8,17 +8,17 @@
   <script src="dependencies/vendor/META-INF/resources/webjars/bootstrap/4.1.1/js/bootstrap.min.js"></script>
   <script src="dependencies/vendor/META-INF/resources/webjars/popper.js/1.14.1/umd/popper.js"></script>
   <script src="dependencies/vendor/META-INF/resources/webjars/angularjs/1.7.0/angular.min.js"></script>
-  <script src="dependencies/vendor/META-INF/resources/webjars/angular-img-http-src/1.0.1/index.js"></script>
   <script
           src="dependencies/vendor/META-INF/resources/webjars/angular-file-upload/12.2.13/ng-file-upload-all.js"></script>
   <script src="dependencies/internal/common_functionality.js"></script>
-  <script src="dependencies/internal/login.js"></script>
+  <script src="dependencies/internal/bildelogin.js"></script>
 
   <link href="dependencies/vendor/META-INF/resources/webjars/bootstrap/4.1.1/css/bootstrap.min.css"
         rel="stylesheet" type="text/css">
+
   <link
-    href="dependencies/vendor/META-INF/resources/webjars/font-awesome/5.0.9/web-fonts-with-css/css/fontawesome-all.css"
-    rel="stylesheet" type="text/css">
+          href="dependencies/vendor/META-INF/resources/webjars/font-awesome/5.0.9/web-fonts-with-css/css/fontawesome-all.css"
+          rel="stylesheet" type="text/css">
 
   <!-- Manually setting the size of the modal for creating a new user -->
   <style media="screen" type="text/css">
@@ -29,7 +29,7 @@
   </style>
 </head>
 
-<body ng-controller="LoginController">
+<body ng-controller="BildeLoginController">
 <div class="container py-5">
   <div class="col-md-6 mx-auto">
 
@@ -47,28 +47,28 @@
       <div class="card-body">
         <div class="form-group">
           <label for="emailAddress">Brukernavn</label>
-          <input class="form-control form-control-lg rounded-1" placeholder="Epostadresse" required
-                 name="emailAddress" type="email" ng-model="emailAddress" id="emailAddress" autofocus>
+          <input autofocus class="form-control form-control-lg rounded-1" id="emailAddress"
+                 name="emailAddress" ng-model="emailAddress" placeholder="Epostadresse" required type="email">
         </div>
         <div class="form-group">
           <label for="password">Passord</label>
-          <input class="form-control form-control-lg rounded-1" placeholder="Ditt passord"
-                 name="password" type="password" ng-model="password" id="password">
+          <input class="form-control form-control-lg rounded-1" id="password"
+                 name="password" ng-model="password" placeholder="Ditt passord" type="password">
         </div>
         <div class="form-group">
           <label for="role">Logg på som:</label>
-          <select id="role" class="form-control form-control-lg rounded-1" ng-model="selectedLoginRole">
-            <option ng-selected="{{option.value == selectedLoginRole}}"
-                    ng-repeat="option in loginOptions"
+          <select class="form-control form-control-lg rounded-1" id="role" ng-model="selectedLoginRole">
+            <option ng-repeat="option in loginOptions"
+                    ng-selected="{{option.value == selectedLoginRole}}"
                     value="{{option.value}}">{{option.value}}
             </option>
           </select>
         </div>
         <div>
-          <button class="btn btn-primary btn-lg float-left" data-toggle="modal" data-target="#newAccountModal">
+          <button class="btn btn-primary btn-lg float-left" data-target="#newAccountModal" data-toggle="modal">
             Registrer deg
           </button>
-          <button class="btn btn-success btn-lg float-right" ng-click="doLogin()" id="login">Logg på</button>
+          <button class="btn btn-success btn-lg float-right" id="login" ng-click="doLogin()">Logg på</button>
         </div>
       </div>
 
@@ -81,13 +81,13 @@
 </div>
 
 <!-- modal to create a new user -->
-<div id="newAccountModal" class="modal fade" tabindex="-1"
-     role="dialog" aria-hidden="true" new-user-modal-dir>
+<div aria-hidden="true" class="modal fade" id="newAccountModal"
+     new-user-modal-dir role="dialog" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h4>Opprett ny bruker</h4>
-        <button type="button" class="close" data-dismiss="modal">×</button>
+        <button class="close" data-dismiss="modal" type="button">×</button>
       </div>
       <div class="modal-body">
         <div>
@@ -96,9 +96,9 @@
               <div class="col-1"></div>
               <div class="col-10">
                 <label class="control-label" for="emailAddressReg">Epostadresse:</label>
-                <input type="text" name="emailAddress" id="emailAddressReg"
-                       ng-model="emailAddressRegister" class="form-control form-control-lg rounded-1"
-                       placeholder="Epostadresse"/>
+                <input class="form-control form-control-lg rounded-1" id="emailAddressReg" name="emailAddress"
+                       ng-model="emailAddressRegister" placeholder="Epostadresse"
+                       type="text"/>
               </div>
               <div class="col-1"></div>
             </div>
@@ -106,9 +106,9 @@
               <div class="col-1"></div>
               <div class="col-10">
                 <label class="control-label" for="firstname">Fornavn:</label>
-                <input class="form-control form-control-lg rounded-1" placeholder="Fornavn"
-                       name="firstname" type="text" value=""
-                       ng-model="firstnameRegister" id="firstname">
+                <input class="form-control form-control-lg rounded-1" id="firstname"
+                       name="firstname" ng-model="firstnameRegister" placeholder="Fornavn"
+                       type="text" value="">
               </div>
               <div class="col-1"></div>
             </div>
@@ -116,9 +116,9 @@
               <div class="col-1"></div>
               <div class="col-10">
                 <label class="control-label" for="lastname">Etternavn:</label>
-                <input class="form-control form-control-lg rounded-1" placeholder="Etternavn"
-                       name="lastname" type="text" value=""
-                       ng-model="lastnameRegister" id="lastname">
+                <input class="form-control form-control-lg rounded-1" id="lastname"
+                       name="lastname" ng-model="lastnameRegister" placeholder="Etternavn"
+                       type="text" value="">
               </div>
               <div class="col-1"></div>
             </div>
@@ -126,9 +126,9 @@
               <div class="col-1"></div>
               <div class="col-10">
                 <label class="control-label" for="passwordReg">Passord:</label>
-                <input class="form-control form-control-lg rounded-1" placeholder="Passord"
-                       name="password" type="password" value=""
-                       ng-model="passwordRegister" id="passwordReg">
+                <input class="form-control form-control-lg rounded-1" id="passwordReg"
+                       name="password" ng-model="passwordRegister" placeholder="Passord"
+                       type="password" value="">
               </div>
               <div class="col-1"></div>
             </div>
@@ -136,9 +136,9 @@
               <div class="col-1"></div>
               <div class="col-10">
                 <label class="control-label" for="repeatPasswordReg">Gjenta passord:</label>
-                <input class="form-control form-control-lg rounded-1" placeholder="Gjenta passord"
-                       name="repeat_password" type="password" value=""
-                       ng-model="repeatPasswordRegister" id="repeatPasswordReg">
+                <input class="form-control form-control-lg rounded-1" id="repeatPasswordReg"
+                       name="repeat_password" ng-model="repeatPasswordRegister" placeholder="Gjenta passord"
+                       type="password" value="">
               </div>
               <div class="col-1"></div>
             </div>
