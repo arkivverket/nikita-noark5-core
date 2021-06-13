@@ -16,6 +16,7 @@ public final class FileConstants {
     public static final String FILE_EXTENSION_PNG = "png";
     public static final String FILE_EXTENSION_GIF = "gif";
     public static final String FILE_EXTENSION_TEXT = "txt";
+    public static final String FILE_EXTENSION_TEXT_CODE = "x-fmt/111";
 
     public static final String MIME_TYPE_PDF = "application/pdf";
     public static final String MIME_TYPE_ODT = "application/vnd.oasis.opendocument.text";

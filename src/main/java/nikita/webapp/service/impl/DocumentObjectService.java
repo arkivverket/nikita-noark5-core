@@ -55,7 +55,9 @@ import static java.util.UUID.randomUUID;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.ExceptionDetailsConstants.MISSING_DOCUMENT_DESCRIPTION_ERROR;
 import static nikita.common.config.FileConstants.FILE_EXTENSION_PDF_CODE;
+import static nikita.common.config.FileConstants.FILE_EXTENSION_TEXT_CODE;
 import static nikita.common.config.FileConstants.MIME_TYPE_PDF;
+import static nikita.common.config.FileConstants.MIME_TYPE_TEXT;
 import static nikita.common.config.N5ResourceMappings.ARCHIVE_VERSION_CODE;
 import static nikita.common.config.N5ResourceMappings.PRODUCTION_VERSION_CODE;
 import static nikita.common.config.ServerConstants.DOCUMENT_STORE_LOCATION;
@@ -358,6 +360,124 @@ public class DocumentObjectService
                     + e);
         }
         return archiveDocumentObject;
+    }
+
+    protected Path extractTextFromImage(
+            DocumentObject productionDocumentObject,
+            DocumentObject textDocumentObject)
+            throws IOException, InterruptedException {
+
+        // TODO Do four OCR runs with different rotations and pick the
+        // best one.
+
+        Path productionVersion = getToFile(productionDocumentObject);
+
+        // set the filename to ocrextract.txt.
+        textDocumentObject.setFormat(new Format(FILE_EXTENSION_TEXT_CODE));
+        validateFormat(textDocumentObject);
+
+        textDocumentObject.setMimeType(MIME_TYPE_TEXT);
+        textDocumentObject.setFormatDetails("OCR");
+
+        textDocumentObject.setVariantFormat
+            (new VariantFormat(PRODUCTION_VERSION_CODE));
+        validateVariantFormat(textDocumentObject);
+
+        setFilenameAndExtensionForArchiveDocument
+            (productionDocumentObject, textDocumentObject);
+
+        // Setting a UUID here as the filename on disk will use this UUID value
+        textDocumentObject.setSystemId(randomUUID());
+        Path textVersion = createIncomingFile(textDocumentObject);
+        String[] cmdArray = new String[5];
+        cmdArray[0] = "tesseract";
+        cmdArray[1] = "-l";
+        cmdArray[2] = "nor";
+        cmdArray[3] = productionVersion.toAbsolutePath().toString();
+        cmdArray[4] = textVersion.toAbsolutePath().toString();
+
+        try {
+            Process p = Runtime.getRuntime().exec(cmdArray);
+            p.waitFor();
+        } catch (RuntimeException e) {
+            logger.error("Error converting document in " +
+                    productionDocumentObject + " to text format");
+            logger.error(e.toString());
+        }
+
+        textDocumentObject.setFileSize(Files.size(textVersion));
+        setGeneratedDocumentFilename(textDocumentObject);
+        textDocumentObject.setOwnedBy(productionDocumentObject.getOwnedBy());
+
+        return textVersion;
+    }
+
+    @Transactional
+    public DocumentObject extractOCRTextFromDocument(DocumentObject
+                                                     originalDocumentObject) {
+        DocumentObject textDocumentObject = new DocumentObject();
+
+        try {
+            OffsetDateTime now = OffsetDateTime.now();
+            Path textFile = extractTextFromImage
+                (originalDocumentObject, textDocumentObject);
+            // Parent document description
+            DocumentDescription documentDescription =
+                originalDocumentObject.getReferenceDocumentDescription();
+            // If it's null, throw an exception. You can't create a
+            // related documentObject unless it has a document description
+            if (documentDescription == null) {
+                throw new NoarkEntityNotFoundException(
+                        MISSING_DOCUMENT_DESCRIPTION_ERROR);
+            }
+            // TODO: Double check this. Standard says it's only applicable to
+            // archive version, but we increment every time a new document is
+            // uploaded to a document description
+            textDocumentObject.setVersionNumber(
+                    originalDocumentObject.getVersionNumber());
+
+            // Set creation details. Logged in user is responsible
+            String username = getUser();
+            textDocumentObject.setCreatedBy(username);
+            textDocumentObject.setCreatedDate(now);
+
+            // Handle the conversion details
+            Conversion conversion = new Conversion();
+            conversion.setConversionTool("Text extracted using tesseract (from Nikita)");
+            conversion.setConvertedBy(username);
+            conversion.setConvertedDate(now);
+            conversion.setConvertedFromFormat(
+                    originalDocumentObject.getFormat());
+            conversion.setConvertedToFormat(
+                    textDocumentObject.getFormat());
+            textDocumentObject.addReferenceConversion(conversion);
+
+            // Tie the new document object and document description together
+            textDocumentObject.setReferenceDocumentDescription
+                    (documentDescription);
+            documentDescription.addDocumentObject(textDocumentObject);
+
+            textDocumentObject.setChecksum(
+                    new DigestUtils(defaultChecksumAlgorithm).
+                            digestAsHex(textFile.toFile()));
+            textDocumentObject.setChecksumAlgorithm(
+                    defaultChecksumAlgorithm);
+
+            if (textDocumentObject.getFileSize() > 0) {
+                moveIncomingToStorage(textFile, textDocumentObject);
+                documentObjectRepository.save(textDocumentObject);
+                return textDocumentObject;
+            } else {
+                logger.error("File size of text version is not > 0. Not " +
+                        "persisting this documentDescription to the database.");
+            }
+            return null;
+
+        } catch (InterruptedException | IOException e) {
+            logger.error("Problem when trying to convert to text format"
+                    + e);
+        }
+        return textDocumentObject;
     }
 
     // All DELETE operations
@@ -763,6 +883,11 @@ public class DocumentObjectService
             if (supportForDocumentConversion(documentObject)) {
                 convertDocumentToPDF(documentObject);
             }
+
+	    // Run OCR on all images to look for text content
+	    if (0 == documentObject.getMimeType().indexOf("image/")) {
+		extractOCRTextFromDocument(documentObject);
+	    }
             documentObjectRepository.save(documentObject);
         } catch (IOException e) {
             String msg = "When associating an uploaded file with " +
