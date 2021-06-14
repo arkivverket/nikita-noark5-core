@@ -28,7 +28,7 @@
 <div class="card-body">
     <div class="container">
         <div class="col-12">
-            <div class="row">
+            <div class="row mt-2">
                 <div class="input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text">arkivbildare</span>
@@ -42,44 +42,49 @@
                     </select>
                 </div>
             </div>
-            <div class="row">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">anmarkningar</span>
+            <div class="row mt-2">
+                <div class="col-6">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">motiv</span>
+                        </div>
+                        <input aria-label="motiv" class="form-control"
+                               ng-model="motivInput" rows="1"/>
                     </div>
-                    <input aria-label="anmarkningar" class="form-control"
-                           ng-model="anmarkningarInput" rows="1"/>
+                </div>
+                <div class="col-6">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">anmarkningar</span>
+                        </div>
+                        <input aria-label="anmarkningar" class="form-control"
+                               ng-model="anmarkningarInput" rows="1"/>
+                    </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">motiv</span>
-                    </div>
-                    <input aria-label="motiv" class="form-control"
-                           ng-model="motivInput" rows="1"/>
-                </div>
-            </div>
-            <div class="row">
+        </div>
+        <div class="row mt-2">
+            <div class="col-md-12 text-right">
                 <button class="btn btn-primary" ng-click="doPictureSearch()" ng-disabled="!loggedIn"
                         type="button">
                     Søk
                 </button>
             </div>
         </div>
-        <hr/>
-        <div class="row">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">Antall treff</span>
-                </div>
-                <input aria-label="resultListCount" class="form-control"
-                       ng-if="resultListCount" ng-model="resultListCount" rows="1"/>
-            </div>
-        </div>
-
-        <hr/>
     </div>
+    <hr/>
+    <div class="row">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Antall treff</span>
+            </div>
+            <input aria-label="resultListCount" class="form-control"
+                   ng-if="resultListCount" ng-model="resultListCount" rows="1"/>
+        </div>
+    </div>
+
+    <hr/>
+</div>
 </div>
 <div>
     <div class="container-fluid">
