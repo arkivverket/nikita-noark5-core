@@ -1916,8 +1916,8 @@ public class TestOData {
                 " JOIN" +
                 " file_1.referenceBSMBase AS bsmbase_1" +
                 " WHERE" +
-                " bsmbase_1.valueName = :parameter_0 and" +
-                " bsmbase_1.offsetdatetimeValue = :parameter_1";
+                " (bsmbase_1.valueName = :parameter_0 and" +
+                " bsmbase_1.offsetdatetimeValue = :parameter_1)";
 
         QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
 
@@ -1960,8 +1960,8 @@ public class TestOData {
                 " JOIN file_1.referenceBSMBase AS bsmbase_1" +
                 " JOIN file_1.referenceBSMBase AS bsmbase_1" +
                 " WHERE" +
-                " bsmbase_1.valueName = :parameter_0 and" +
-                " bsmbase_1.isNullValue is not null";
+                " (bsmbase_1.valueName = :parameter_0 and" +
+                " bsmbase_1.isNullValue is not null)";
 
         QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
 
@@ -1996,9 +1996,9 @@ public class TestOData {
 
         String hql = "SELECT bsmbase_1 FROM BSMBase AS bsmbase_1" +
                 " WHERE" +
-                " bsmbase_1.valueName = :parameter_0" +
+                " (bsmbase_1.valueName = :parameter_0" +
                 " and" +
-                " bsmbase_1.isNullValue is null";
+                " bsmbase_1.isNullValue is null)";
 
         QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
         Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
@@ -2032,9 +2032,9 @@ public class TestOData {
 
         String hql = "SELECT bsmbase_1 FROM BSMBase AS bsmbase_1" +
                 " WHERE" +
-                " bsmbase_1.valueName = :parameter_0" +
+                " (bsmbase_1.valueName = :parameter_0" +
                 " and" +
-                " bsmbase_1.isNullValue is not null";
+                " bsmbase_1.isNullValue is not null)";
 
         QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
         Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
