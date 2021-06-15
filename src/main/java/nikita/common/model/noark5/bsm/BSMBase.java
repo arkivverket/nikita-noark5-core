@@ -45,7 +45,7 @@ public class BSMBase
     @Column
     protected String valueNamespace;
 
-    @Column
+    @Column(length = 10000)
     private String stringValue;
 
     @Column
