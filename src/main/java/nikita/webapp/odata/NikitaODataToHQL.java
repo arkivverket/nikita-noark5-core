@@ -105,6 +105,7 @@ public class NikitaODataToHQL
             if (!this.entity.equals(BSMBase.class.getSimpleName())) {
                 addEntityToEntityJoin(this.entity, BSMBase.class.getSimpleName());
             }
+            statement.addBracket("(");
             statement.addCompareValue("bsmbase_1.valueName",
                     "=", ctx.getText());
             statement.addLogicalOperator("and");
@@ -123,6 +124,9 @@ public class NikitaODataToHQL
     @Override
     public void exitBoolExpression(ODataParser.BoolExpressionContext ctx) {
         super.exitBoolExpression(ctx);
+        if (processingBSM) {
+            statement.addBracket(")");
+        }
         // Reset BSM variable for any further processing of other
         processingBSM = false;
     }
