@@ -7,6 +7,8 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
@@ -14,13 +16,11 @@ import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 
-import static nikita.common.config.Constants.*;
+import static nikita.common.config.Constants.DESCRIPTION_LENGTH;
+import static nikita.common.config.Constants.TITLE_LENGTH;
 import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
-/**
- * Created by tsodring on 5/8/17.
- */
 @MappedSuperclass
 @HateoasPacker
 public class NoarkGeneralEntity
@@ -33,6 +33,7 @@ public class NoarkGeneralEntity
     @NotNull
     @Column(name = TITLE_ENG, nullable = false, length = TITLE_LENGTH)
     @Audited
+    @KeywordField
     @JsonProperty(TITLE)
     private String title;
 
@@ -41,6 +42,7 @@ public class NoarkGeneralEntity
      */
     @Column(name = DESCRIPTION_ENG, length = DESCRIPTION_LENGTH)
     @Audited
+    @KeywordField
     @JsonProperty(DESCRIPTION)
     private String description;
 
@@ -50,6 +52,7 @@ public class NoarkGeneralEntity
     @Column(name = FINALISED_DATE_ENG)
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
+    @GenericField
     @JsonProperty(FINALISED_DATE)
     private OffsetDateTime finalisedDate;
 
