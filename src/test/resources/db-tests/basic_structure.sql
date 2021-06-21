@@ -128,6 +128,6 @@ insert into sa_case_file (system_id, case_date, case_responsible, case_sequence_
 values ('fed888c6-83e1-4ed0-922a-bd5770af3fad', '2021-04-24 14:55:13', 'admin@example.com', '1', 'R',
         'Opprettet av saksbehandler', '2021', 'c3d4affc-66a0-4663-b63a-6ecc4f3d6009');
 
-insert into sa_sequence_generator(f_pk_administrative_unit_id, year, administrative_unit_name, record_sequence_number,
+insert into sa_sequence_generator(reference_administrative_unit, year, administrative_unit_name, record_sequence_number,
                                   case_file_sequence_number)
 values ('c3d4affc-66a0-4663-b63a-6ecc4f3d6009', '2021', 'example test administrative unit', '1', '1')
