@@ -65,30 +65,29 @@ public class AdministrativeUnit
     @JsonProperty(SHORT_NAME)
     private String shortName;
 
+    // Links to businessSpecificMetadata (virksomhetsspesifikkeMetadata)
+    @OneToMany(mappedBy = "referenceAdministrativeUnit",
+            cascade = {PERSIST, MERGE, REMOVE})
+    private final List<BSMBase> referenceBSMBase = new ArrayList<>();
     /**
      * M583 - administrativEnhetNavn (xs:string)
      */
-    @Column(name = "administrative_unit_name")
+    @Column(name = ADMINISTRATIVE_UNIT_NAME_ENG)
     @Audited
+    @JsonProperty(ADMINISTRATIVE_UNIT_NAME)
     private String administrativeUnitName;
-
     /**
      * M584 administrativEnhetsstatus (xs:string)
      */
-    @Column(name = "administrative_unit_status")
+    @Column(name = ADMINISTRATIVE_UNIT_STATUS_ENG)
     @Audited
+    @JsonProperty(ADMINISTRATIVE_UNIT_STATUS)
     private String administrativeUnitStatus;
-
     // Used identify as a default
-    @Column(name = "default_administrative_unit")
+    @Column(name = DEFAULT_ADMINISTRATIVE_UNIT_ENG)
     @Audited
+    @JsonProperty(DEFAULT_ADMINISTRATIVE_UNIT)
     private Boolean defaultAdministrativeUnit;
-
-    // Links to SequenceNumberGenerator
-    @OneToMany(mappedBy = "referenceAdministrativeUnit",
-            cascade = ALL, orphanRemoval = true)
-    private Set<SequenceNumberGenerator>
-            referenceSequenceNumberGenerator = new HashSet<>();
 
     @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = TABLE_ADMINISTRATIVE_UNIT_USER,
@@ -118,11 +117,11 @@ public class AdministrativeUnit
     @OneToMany(mappedBy = "referenceParentAdministrativeUnit", fetch = LAZY)
     private List<AdministrativeUnit> referenceChildAdministrativeUnit =
             new ArrayList<>();
-
-    // Links to businessSpecificMetadata (virksomhetsspesifikkeMetadata)
-    @OneToMany(mappedBy = "referenceAdministrativeUnit",
-            cascade = {PERSIST, MERGE, REMOVE})
-    private List<BSMBase> referenceBSMBase = new ArrayList<>();
+    // Links to SequenceNumberGenerator
+    @OneToMany(mappedBy = REFERENCE_SEQUENCE_NUMBER_ADMINISTRATIVE_UNIT_ENG,
+            cascade = ALL, orphanRemoval = true)
+    private Set<SequenceNumberGenerator>
+            referenceSequenceNumberGenerator = new HashSet<>();
 
     @Override
     public OffsetDateTime getFinalisedDate() {

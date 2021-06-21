@@ -1,14 +1,18 @@
 package nikita.common.model.noark5.v5.casehandling;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.io.Serializable;
 
-import static nikita.common.config.Constants.FOREIGN_KEY_ADMINISTRATIVE_UNIT_PK;
 import static nikita.common.config.Constants.TABLE_CASE_FILE_SEQUENCE;
+import static nikita.common.config.N5ResourceMappings.*;
 
 /**
  * A sequence number generator is required to automatically fill in values for
@@ -23,54 +27,46 @@ import static nikita.common.config.Constants.TABLE_CASE_FILE_SEQUENCE;
  */
 @Entity
 @Table(name = TABLE_CASE_FILE_SEQUENCE)
-@IdClass(SequenceNumberGeneratorId.class)
 public class SequenceNumberGenerator
         implements Serializable {
 
-    @Id
-    @ManyToOne
-    @JoinColumn(name = FOREIGN_KEY_ADMINISTRATIVE_UNIT_PK,
-            insertable = false, updatable = false)
-    private AdministrativeUnit referenceAdministrativeUnit;
+    @EmbeddedId
+    SequenceNumberGeneratorId sequenceNumberGeneratorId;
 
-    @Id
-    @Column(name = "year")
-    private Integer year;
-
-    @Column(name = "case_file_sequence_number")
+    @Column(name = CASE_FILE_SEQUENCE_NUMBER)
     private Integer sequenceNumber;
 
-    @Column(name = "record_sequence_number")
+    @Column(name = RECORD_SEQUENCE_NUMBER)
     private Integer recordSequenceNumber;
 
-    @Column(name = "administrative_unit_name")
+    @Column(name = ADMINISTRATIVE_UNIT_NAME_ENG)
+    @JsonProperty(ADMINISTRATIVE_UNIT_NAME)
     private String administrativeUnitName;
 
     public SequenceNumberGenerator() {
     }
 
     public SequenceNumberGenerator(
-            Integer year,
-            AdministrativeUnit referenceAdministrativeUnit) {
-        this.year = year;
-        this.referenceAdministrativeUnit = referenceAdministrativeUnit;
+            SequenceNumberGeneratorId sequenceNumberGeneratorId) {
+        this.sequenceNumberGeneratorId = sequenceNumberGeneratorId;
     }
 
     public AdministrativeUnit getReferenceAdministrativeUnit() {
-        return referenceAdministrativeUnit;
+        return sequenceNumberGeneratorId.getReferenceAdministrativeUnit();
     }
 
     public void setReferenceAdministrativeUnit(
             AdministrativeUnit referenceAdministrativeUnit) {
-        this.referenceAdministrativeUnit = referenceAdministrativeUnit;
+        this.sequenceNumberGeneratorId.setReferenceAdministrativeUnit(
+                referenceAdministrativeUnit);
     }
 
     public Integer getYear() {
-        return year;
+        return sequenceNumberGeneratorId.getYear();
     }
 
     public void setYear(Integer year) {
-        this.year = year;
+        sequenceNumberGeneratorId.setYear(year);
     }
 
     public Integer incrementCaseFileByOne() {
@@ -121,7 +117,11 @@ public class SequenceNumberGenerator
         SequenceNumberGenerator rhs = (SequenceNumberGenerator) other;
         return new EqualsBuilder()
                 .appendSuper(super.equals(other))
-                .append(year, rhs.year)
+                .append(sequenceNumberGeneratorId.getYear(),
+                        rhs.sequenceNumberGeneratorId.getYear())
+                .append(sequenceNumberGeneratorId
+                                .getReferenceAdministrativeUnit().getSystemId(),
+                        rhs.getReferenceAdministrativeUnit().getSystemId())
                 .append(sequenceNumber, rhs.sequenceNumber)
                 .append(recordSequenceNumber, rhs.recordSequenceNumber)
 	    .append(administrativeUnitName, rhs.administrativeUnitName)
@@ -132,7 +132,8 @@ public class SequenceNumberGenerator
     public int hashCode() {
         return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
-                .append(year)
+                .append(getReferenceAdministrativeUnit().getSystemId())
+                .append(getYear())
                 .append(sequenceNumber)
                 .append(recordSequenceNumber)
 	    .append(administrativeUnitName)

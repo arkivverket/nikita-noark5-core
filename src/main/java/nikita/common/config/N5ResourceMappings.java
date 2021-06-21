@@ -558,9 +558,12 @@ public final class N5ResourceMappings {
     public static final String ADDRESS_LINE_2_ENG = "adresselinje2";
     public static final String ADDRESS_LINE_3_ENG = "adresselinje3";
     public static final String ADMINISTRATIVE_UNIT_FIELD_ENG = "administrative_unit";
-    public static final String ADMINISTRATIVE_UNIT_NAME_ENG = "administrativEnhetNavn";
+    public static final String ADMINISTRATIVE_UNIT_NAME_ENG =
+            "administrative_unit_name";
     public static final String ADMINISTRATIVE_UNIT_PARENT_REFERENCE_ENG = "referanseOverordnetEnhet";
     public static final String ADMINISTRATIVE_UNIT_STATUS_ENG = "administrativEnhetsstatus";
+    public static final String DEFAULT_ADMINISTRATIVE_UNIT_ENG = "default_administrative_unit";
+    public static final String DEFAULT_ADMINISTRATIVE_UNIT = "basisAdministrativEnhet";
     public static final String ASSOCIATED_WITH_RECORD_AS_ENG = "associated_with_record_as";
     public static final String AUTHOR_ENG = "author";
     public static final String BUILDING_CHANGE_NUMBER_ENG = "building_change_number";
@@ -582,8 +585,19 @@ public final class N5ResourceMappings {
     public static final String CASE_SEQUENCE_NUMBER_ENG = "case_sequence_number";
     public static final String CASE_STATUS_ENG = "case_status";
     public static final String CASE_YEAR_ENG = "case_year";
+    public static final String CASE_ = "";
+    public static final String CASE__ENG = "";
+    public static final String CASE__OBJECT = "";
+
     public static final String CHANGED_DATE_ENG = "changed_date";
     public static final String CHANGED_BY_ENG = "changed_by";
+    public static final String REFERENCE_ADMINISTRATIVE_UNIT_ENG =
+            "reference_administrative_unit";
+    public static final String REFERENCE_SEQUENCE_NUMBER_ADMINISTRATIVE_UNIT_ENG =
+            "sequenceNumberGeneratorId.referenceAdministrativeUnit";
+    public static final String YEAR_ENG = "year";
+    public static final String RECORD_SEQUENCE_NUMBER = "record_sequence_number";
+    public static final String CASE_FILE_SEQUENCE_NUMBER = "case_file_sequence_number";
     public static final String CLASS_ENG = "class";
     public static final String CLASS_ID_ENG = "class_id";
     public static final String CLASSIFICATION_BY_ENG = "gradertAv";
@@ -741,7 +755,6 @@ public final class N5ResourceMappings {
     public static final String PRODUCTION_VERSION_ENG = "Produksjonsformat";
     public static final String RECORD_ARCHIVED_BY_ENG = "archived_by";
     public static final String RECORD_ARCHIVED_DATE_ENG = "archived_date";
-    public static final String REFERENCE_ADMINISTRATIVE_UNIT_ENG = "referanseAdministratitivEnhet";
     public static final String REFERENCE_ARCHIVE_UNIT_ENG = "reference_archive_unit";
     public static final String REFERENCE_CHANGED_BY_ENG = "reference_changed_by";
     public static final String REFERENCE_METADATA_ENG = "reference_metadata";

@@ -2,6 +2,7 @@ package nikita.webapp.service.impl;
 
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.casehandling.SequenceNumberGenerator;
+import nikita.common.model.noark5.v5.casehandling.SequenceNumberGeneratorId;
 import nikita.common.repository.n5v5.casehandling.ISequenceNumberGeneratorRepository;
 import nikita.common.util.exceptions.NikitaException;
 import nikita.webapp.service.interfaces.ISequenceNumberGeneratorService;
@@ -11,9 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.Optional;
+
+import static org.joda.time.LocalDateTime.now;
 
 /**
  * Service class for SequenceNumberGenerator
@@ -53,7 +55,7 @@ public class SequenceNumberGeneratorService
 
         Optional<SequenceNumberGenerator> nextSequenceOptional =
                 numberGeneratorRepository
-                        .findByReferenceAdministrativeUnitAndYear(
+                        .findBySequenceNumberGeneratorIdReferenceAdministrativeUnitAndSequenceNumberGeneratorIdYear(
                                 administrativeUnit, currentYear);
 
         if (nextSequenceOptional.isPresent()) {
@@ -80,7 +82,7 @@ public class SequenceNumberGeneratorService
 
         Optional<SequenceNumberGenerator> nextSequenceOptional =
                 numberGeneratorRepository
-                        .findByReferenceAdministrativeUnitAndYear(
+                        .findBySequenceNumberGeneratorIdReferenceAdministrativeUnitAndSequenceNumberGeneratorIdYear(
                                 administrativeUnit, currentYear);
 
         if (nextSequenceOptional.isPresent()) {
@@ -102,8 +104,8 @@ public class SequenceNumberGeneratorService
             @NotNull AdministrativeUnit administrativeUnit) {
 
         SequenceNumberGenerator sequenceNumberGenerator =
-                new SequenceNumberGenerator(LocalDate.now().getYear(),
-                        administrativeUnit);
+                new SequenceNumberGenerator(new SequenceNumberGeneratorId(
+                        now().getYear(), administrativeUnit));
 
         sequenceNumberGenerator.setAdministrativeUnitName(
                 administrativeUnit.getAdministrativeUnitName());
@@ -162,7 +164,7 @@ public class SequenceNumberGeneratorService
                     currentYear.toString());
             throw new NikitaException("Error missing sequencenumber " +
                     "generator for " + administrativeUnit + " and year " +
-                    currentYear.toString());
+                    currentYear);
         }
     }
 
@@ -180,7 +182,7 @@ public class SequenceNumberGeneratorService
                     currentYear.toString());
             throw new NikitaException("Error missing sequencenumber " +
                     "generator for " + administrativeUnit + " and year " +
-                    currentYear.toString());
+                    currentYear);
         }
     }
 }
