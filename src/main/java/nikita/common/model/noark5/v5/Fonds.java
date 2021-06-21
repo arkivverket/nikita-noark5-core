@@ -17,6 +17,7 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @JsonDeserialize(using = FondsDeserializer.class)
 @HateoasPacker(using = FondsHateoasHandler.class)
 @HateoasObject(using = FondsHateoas.class)
+@Indexed
 public class Fonds
         extends NoarkGeneralEntity
         implements IStorageLocation, IDocumentMedium, IFondsCreator {
