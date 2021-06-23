@@ -77,6 +77,7 @@ public class AdministrativeUnit
     @OneToMany(mappedBy = "referenceAdministrativeUnit",
             cascade = {PERSIST, MERGE, REMOVE})
     private final List<BSMBase> referenceBSMBase = new ArrayList<>();
+
     /**
      * M583 - administrativEnhetNavn (xs:string)
      */
@@ -85,6 +86,7 @@ public class AdministrativeUnit
     @JsonProperty(ADMINISTRATIVE_UNIT_NAME)
     @FullTextField
     private String administrativeUnitName;
+
     /**
      * M584 administrativEnhetsstatus (xs:string)
      */
