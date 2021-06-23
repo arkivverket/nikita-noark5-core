@@ -16,6 +16,9 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -38,6 +41,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @JsonDeserialize(using = CaseFileDeserializer.class)
 @HateoasPacker(using = CaseFileHateoasHandler.class)
 @HateoasObject(using = CaseFileHateoas.class)
+@Indexed
 public class CaseFile
         extends File
         implements ICaseFileEntity {
@@ -50,6 +54,7 @@ public class CaseFile
     @Column(name = CASE_YEAR_ENG)
     @Audited
     @JsonProperty(CASE_YEAR)
+    @GenericField
     private Integer caseYear;
 
     /**
@@ -58,6 +63,7 @@ public class CaseFile
     @Column(name = CASE_SEQUENCE_NUMBER_ENG)
     @Audited
     @JsonProperty(CASE_SEQUENCE_NUMBER)
+    @GenericField
     private Integer caseSequenceNumber;
 
     /**
@@ -68,6 +74,7 @@ public class CaseFile
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(CASE_DATE)
+    @GenericField
     private OffsetDateTime caseDate;
 
     /**
@@ -77,6 +84,7 @@ public class CaseFile
     @Column(name = CASE_RESPONSIBLE_ENG, nullable = false)
     @Audited
     @JsonProperty(CASE_RESPONSIBLE)
+    @KeywordField
     private String caseResponsible;
 
     /**
@@ -85,6 +93,7 @@ public class CaseFile
     @Column(name = CASE_RECORDS_MANAGEMENT_UNIT_ENG)
     @Audited
     @JsonProperty(CASE_RECORDS_MANAGEMENT_UNIT)
+    @KeywordField
     private String recordsManagementUnit;
 
     // Links to Precedence
@@ -113,6 +122,7 @@ public class CaseFile
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(CASE_LOANED_DATE)
+    @GenericField
     private OffsetDateTime loanedDate;
 
     /**
@@ -121,6 +131,7 @@ public class CaseFile
     @Column(name = CASE_LOANED_TO_ENG)
     @Audited
     @JsonProperty(CASE_LOANED_TO)
+    @KeywordField
     private String loanedTo;
     /**
      * M??? - saksstatus name (xs:string)

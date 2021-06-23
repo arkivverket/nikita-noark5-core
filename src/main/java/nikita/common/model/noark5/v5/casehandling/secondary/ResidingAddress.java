@@ -3,6 +3,8 @@ package nikita.common.model.noark5.v5.casehandling.secondary;
 import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.common.model.noark5.v5.secondary.PartPerson;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -14,12 +16,14 @@ import static nikita.common.config.Constants.TABLE_RESIDING_ADDRESS;
 
 @Entity
 @Table(name = TABLE_RESIDING_ADDRESS)
+@Indexed
 public class ResidingAddress
         extends SystemIdEntity
         implements ISystemId {
 
     @Embedded
-    SimpleAddress simpleAddress;
+    @IndexedEmbedded
+    private SimpleAddress simpleAddress;
 
     @OneToOne(fetch = LAZY)
     CorrespondencePartPerson referenceCorrespondencePartPerson;

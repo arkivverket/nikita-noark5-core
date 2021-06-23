@@ -11,6 +11,7 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 import javax.persistence.*;
 
@@ -24,6 +25,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @JsonDeserialize(using = CorrespondencePartPersonDeserializer.class)
 @HateoasPacker(using = CorrespondencePartPersonHateoasHandler.class)
 @HateoasObject(using = CorrespondencePartPersonHateoas.class)
+@Indexed
 public class CorrespondencePartPerson
         extends CorrespondencePart
         implements ICorrespondencePartPersonEntity {

@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -33,7 +34,7 @@ public class NoarkGeneralEntity
     @NotNull
     @Column(name = TITLE_ENG, nullable = false, length = TITLE_LENGTH)
     @Audited
-    @KeywordField
+    @FullTextField
     @JsonProperty(TITLE)
     private String title;
 
@@ -42,7 +43,7 @@ public class NoarkGeneralEntity
      */
     @Column(name = DESCRIPTION_ENG, length = DESCRIPTION_LENGTH)
     @Audited
-    @KeywordField
+    @FullTextField
     @JsonProperty(DESCRIPTION)
     private String description;
 
@@ -62,6 +63,7 @@ public class NoarkGeneralEntity
     @Column(name = FINALISED_BY_ENG)
     @Audited
     @JsonProperty(FINALISED_BY)
+    @KeywordField
     private String finalisedBy;
 
     @Override

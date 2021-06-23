@@ -14,6 +14,8 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,6 +36,7 @@ import static nikita.common.config.N5ResourceMappings.SOCIAL_SECURITY_NUMBER_ENG
 @HateoasPacker(using = SocialSecurityNumberHateoasHandler.class)
 @HateoasObject(using = SocialSecurityNumberHateoas.class)
 @ANationalIdentifier(name = SOCIAL_SECURITY_NUMBER)
+@Indexed
 public class SocialSecurityNumber
         extends PersonIdentifier
         implements ISocialSecurityNumberEntity {
@@ -43,6 +46,7 @@ public class SocialSecurityNumber
     @Column(name = SOCIAL_SECURITY_NUMBER_ENG)
     @Audited
     @JsonProperty(SOCIAL_SECURITY_NUMBER)
+    @KeywordField
     private String socialSecurityNumber;
 
     @Override

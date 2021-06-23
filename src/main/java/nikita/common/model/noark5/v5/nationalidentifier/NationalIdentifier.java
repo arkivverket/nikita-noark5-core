@@ -8,6 +8,7 @@ import nikita.webapp.hateoas.nationalidentifier.NationalIdentifierHateoasHandler
 import nikita.webapp.util.annotation.HateoasObject;
 import nikita.webapp.util.annotation.HateoasPacker;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 import javax.persistence.*;
 
@@ -21,6 +22,7 @@ import static nikita.common.config.Constants.*;
 @HateoasPacker(using = NationalIdentifierHateoasHandler.class)
 @HateoasObject(using = NationalIdentifierHateoas.class)
 @Audited
+@Indexed
 public class NationalIdentifier
         extends SystemIdEntity {
 

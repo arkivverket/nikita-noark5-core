@@ -14,6 +14,7 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,6 +34,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @HateoasPacker(using = DNumberHateoasHandler.class)
 @HateoasObject(using = DNumberHateoas.class)
 @ANationalIdentifier(name = D_NUMBER)
+@Indexed
 public class DNumber
         extends PersonIdentifier
         implements IDNumberEntity {

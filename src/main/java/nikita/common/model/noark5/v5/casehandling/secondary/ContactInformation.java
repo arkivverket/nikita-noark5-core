@@ -9,6 +9,7 @@ import nikita.common.model.noark5.v5.secondary.PartUnit;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,6 +22,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 
 @Entity
 @Table(name = TABLE_CONTACT_INFORMATION)
+@Indexed
 public class ContactInformation
         extends SystemIdEntity
         implements ISystemId, IContactInformationEntity {

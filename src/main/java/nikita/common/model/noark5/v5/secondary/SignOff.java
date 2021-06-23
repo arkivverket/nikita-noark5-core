@@ -15,6 +15,9 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -34,6 +37,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @JsonDeserialize(using = SignOffDeserializer.class)
 @HateoasPacker(using = SignOffHateoasHandler.class)
 @HateoasObject(using = SignOffHateoas.class)
+@Indexed
 public class SignOff
         extends SystemIdEntity
         implements ISignOffEntity {
@@ -45,6 +49,7 @@ public class SignOff
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(SIGN_OFF_DATE)
+    @GenericField
     private OffsetDateTime signOffDate;
 
     /**
@@ -53,6 +58,7 @@ public class SignOff
     @Column(name = SIGN_OFF_BY_ENG)
     @Audited
     @JsonProperty(SIGN_OFF_BY)
+    @KeywordField
     private String signOffBy;
 
     /**

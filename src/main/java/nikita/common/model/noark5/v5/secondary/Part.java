@@ -15,6 +15,8 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -32,6 +34,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @Table(name = TABLE_PART)
 @HateoasPacker(using = PartHateoasHandler.class)
 @HateoasObject(using = PartHateoas.class)
+@Indexed
 @Audited
 public class Part
         extends NoarkGeneralEntity
@@ -60,6 +63,7 @@ public class Part
     @Column(name = CORRESPONDENCE_PART_NAME_ENG)
     @Audited
     @JsonProperty(CORRESPONDENCE_PART_NAME)
+    @FullTextField
     private String name;
 
     // Links to Files

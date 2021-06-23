@@ -12,6 +12,8 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -29,6 +31,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @JsonDeserialize(using = ClassDeserializer.class)
 @HateoasPacker(using = ClassHateoasHandler.class)
 @HateoasObject(using = ClassHateoas.class)
+@Indexed
 public class Class
         extends NoarkGeneralEntity
         implements IClassEntity {
@@ -39,6 +42,7 @@ public class Class
     @Column(name = CLASS_ID_ENG)
     @Audited
     @JsonProperty(CLASS_ID)
+    @KeywordField
     private String classId;
 
     // Links to Keywords

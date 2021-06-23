@@ -13,6 +13,9 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -23,7 +26,6 @@ import java.util.List;
 import static javax.persistence.InheritanceType.JOINED;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
-import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
@@ -32,6 +34,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @JsonDeserialize(using = RecordNoteDeserializer.class)
 @HateoasPacker(using = RecordNoteHateoasHandler.class)
 @HateoasObject(using = RecordNoteHateoas.class)
+@Indexed
 public class RecordNote
         extends Record
         implements IRecordNoteEntity {
@@ -43,22 +46,27 @@ public class RecordNote
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(REGISTRY_ENTRY_DOCUMENT_DATE)
+    @GenericField
     private OffsetDateTime documentDate;
 
     /**
      * M104 - mottattDato (xs:dateTime)
      */
-    @Column(name = "received_date")
+    @Column(name = REGISTRY_ENTRY_RECEIVED_DATE_ENG)
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
+    @JsonProperty(REGISTRY_ENTRY_RECEIVED_DATE)
+    @GenericField
     private OffsetDateTime receivedDate;
 
     /**
      * M105 - sendtDato (xs:dateTime)
      */
-    @Column(name = "sent_date")
+    @Column(name = REGISTRY_ENTRY_SENT_DATE_ENG)
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
+    @JsonProperty(REGISTRY_ENTRY_SENT_DATE)
+    @GenericField
     private OffsetDateTime sentDate;
 
     /**
@@ -68,36 +76,44 @@ public class RecordNote
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(REGISTRY_ENTRY_DUE_DATE)
+    @GenericField
     private OffsetDateTime dueDate;
 
     /**
      * M110 - offentlighetsvurdertDato (xs:date)
      */
-    @Column(name = "freedom_assessment_date")
-    @DateTimeFormat(iso = DATE)
+    @Column(name = REGISTRY_ENTRY_RECORD_FREEDOM_ASSESSMENT_DATE_ENG)
+    @DateTimeFormat(iso = DATE_TIME)
     @Audited
+    @JsonProperty(REGISTRY_ENTRY_RECORD_FREEDOM_ASSESSMENT_DATE)
+    @GenericField
     private OffsetDateTime freedomAssessmentDate;
 
     /**
      * M304 - antallVedlegg (xs:integer)
      */
-    @Column(name = "number_of_attachments")
+    @Column(name = REGISTRY_ENTRY_NUMBER_OF_ATTACHMENTS_ENG)
     @Audited
+    @JsonProperty(REGISTRY_ENTRY_NUMBER_OF_ATTACHMENTS)
+    @GenericField
     private Integer numberOfAttachments;
 
     /**
      * M106 - utlaantDato (xs:date)
      */
-    @Column(name = "loaned_date")
+    @Column(name = CASE_LOANED_DATE_ENG)
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
+    @JsonProperty(CASE_LOANED_DATE)
     private OffsetDateTime loanedDate;
 
     /**
      * M309 - utlaantTil (xs:string)
      */
-    @Column(name = "loaned_to")
+    @Column(name = CASE_LOANED_TO_ENG)
     @Audited
+    @JsonProperty(CASE_LOANED_TO)
+    @KeywordField
     private String loanedTo;
 
     // Links to DocumentFlow

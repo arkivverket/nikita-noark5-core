@@ -2,6 +2,7 @@ package nikita.common.model.noark5.v5.casehandling.secondary;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -19,6 +20,7 @@ public class PostalNumber implements Serializable {
      * M407 - postnummer (xs:string)
      */
     @Column(name = "postal_number")
+    @KeywordField
     private String postalNumber;
 
     public PostalNumber() {

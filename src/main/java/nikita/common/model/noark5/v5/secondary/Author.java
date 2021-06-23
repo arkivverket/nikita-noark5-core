@@ -13,6 +13,8 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 
 import javax.persistence.*;
 
@@ -25,6 +27,7 @@ import static nikita.common.config.N5ResourceMappings.AUTHOR;
 @JsonDeserialize(using = AuthorDeserializer.class)
 @HateoasPacker(using = AuthorHateoasHandler.class)
 @HateoasObject(using = AuthorHateoas.class)
+@Indexed
 public class Author
         extends SystemIdEntity
         implements IAuthorEntity {
@@ -42,6 +45,7 @@ public class Author
      */
     @Column(name = "author")
     @Audited
+    @KeywordField
     private String author;
 
     /**

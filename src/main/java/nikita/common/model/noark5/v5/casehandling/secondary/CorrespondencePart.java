@@ -12,6 +12,7 @@ import nikita.webapp.hateoas.casehandling.CorrespondencePartHateoasHandler;
 import nikita.webapp.util.annotation.HateoasObject;
 import nikita.webapp.util.annotation.HateoasPacker;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -29,6 +30,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @HateoasPacker(using = CorrespondencePartHateoasHandler.class)
 @HateoasObject(using = CorrespondencePartHateoas.class)
 @Audited
+@Indexed
 public class CorrespondencePart
         extends SystemIdEntity
         implements ICorrespondencePartEntity {

@@ -14,6 +14,9 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 
 import javax.persistence.*;
 
@@ -27,6 +30,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @JsonDeserialize(using = PartUnitDeserializer.class)
 @HateoasPacker(using = PartUnitHateoasHandler.class)
 @HateoasObject(using = PartUnitHateoas.class)
+@Indexed
 public class PartUnit
         extends Part
         implements IPartUnitEntity {
@@ -37,6 +41,7 @@ public class PartUnit
     @Column(name = ORGANISATION_NUMBER_ENG)
     @Audited
     @JsonProperty(ORGANISATION_NUMBER)
+    @KeywordField
     private String organisationNumber;
 
     /**
@@ -45,6 +50,7 @@ public class PartUnit
     @Column(name = CONTACT_PERSON_ENG)
     @Audited
     @JsonProperty(CONTACT_PERSON)
+    @FullTextField
     private String contactPerson;
 
     @OneToOne(mappedBy = "partUnit", fetch = LAZY, cascade = ALL)

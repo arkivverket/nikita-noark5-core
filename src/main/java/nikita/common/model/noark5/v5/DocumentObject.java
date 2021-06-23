@@ -16,9 +16,15 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.bridge.mapping.annotation.ValueBridgeRef;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.sql.Clob;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +40,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @JsonDeserialize(using = DocumentObjectDeserializer.class)
 @HateoasPacker(using = DocumentObjectHateoasHandler.class)
 @HateoasObject(using = DocumentObjectHateoas.class)
+@Indexed
 public class DocumentObject
         extends SystemIdEntity
         implements ICreate, IElectronicSignature, IConversion {
@@ -81,6 +88,7 @@ public class DocumentObject
      */
     @Column(name = DOCUMENT_OBJECT_FORMAT_DETAILS_ENG)
     @Audited
+    @FullTextField
     private String formatDetails;
 
     /**
@@ -95,6 +103,7 @@ public class DocumentObject
      */
     @Column(name = DOCUMENT_OBJECT_CHECKSUM_ENG)
     @Audited
+    @KeywordField
     private String checksum;
 
     /**
@@ -102,6 +111,7 @@ public class DocumentObject
      */
     @Column(name = DOCUMENT_OBJECT_CHECKSUM_ALGORITHM_ENG)
     @Audited
+    @KeywordField
     private String checksumAlgorithm;
 
     /**
@@ -109,6 +119,7 @@ public class DocumentObject
      */
     @Column(name = DOCUMENT_OBJECT_FILE_SIZE_ENG)
     @Audited
+    @GenericField
     private Long fileSize;
 
     /**
@@ -116,6 +127,7 @@ public class DocumentObject
      */
     @Column(name = DOCUMENT_OBJECT_FILE_NAME_ENG)
     @Audited
+    @KeywordField
     private String originalFilename;
 
     /**
@@ -123,7 +135,12 @@ public class DocumentObject
      */
     @Column(name = DOCUMENT_OBJECT_MIME_TYPE_ENG)
     @Audited
+    @KeywordField
     private String mimeType;
+
+    @Lob
+    @FullTextField(valueBridge = @ValueBridgeRef(type = ClobImpl.class))
+    private Clob documentTokens;
 
     // Link to DocumentDescription
     @ManyToOne(fetch = LAZY)
@@ -235,6 +252,14 @@ public class DocumentObject
 
     public void setMimeType(String mimeType) {
         this.mimeType = mimeType;
+    }
+
+    public Clob getDocumentTokens() {
+        return documentTokens;
+    }
+
+    public void setDocumentTokens(Clob documentTokens) {
+        this.documentTokens = documentTokens;
     }
 
     @Override

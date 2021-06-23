@@ -17,6 +17,9 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -36,6 +39,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @JsonDeserialize(using = FileDeserializer.class)
 @HateoasPacker(using = FileHateoasHandler.class)
 @HateoasObject(using = FileHateoas.class)
+@Indexed
 public class File
         extends NoarkGeneralEntity
         implements IFileEntity {
@@ -45,6 +49,7 @@ public class File
     @Column(name = FILE_ID_ENG)
     @Audited
     @JsonProperty(FILE_ID)
+    @KeywordField
     private String fileId;
 
     /**
@@ -53,6 +58,7 @@ public class File
     @Column(name = FILE_PUBLIC_TITLE_ENG, length = TITLE_LENGTH)
     @Audited
     @JsonProperty(FILE_PUBLIC_TITLE)
+    @FullTextField
     private String publicTitle;
 
     /**

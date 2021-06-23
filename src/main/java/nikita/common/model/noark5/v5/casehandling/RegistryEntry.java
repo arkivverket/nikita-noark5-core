@@ -19,6 +19,9 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -42,33 +45,30 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @JsonDeserialize(using = RegistryEntryDeserializer.class)
 @HateoasPacker(using = RegistryEntryHateoasHandler.class)
 @HateoasObject(using = RegistryEntryHateoas.class)
+@Indexed
 public class RegistryEntry
         extends Record
         implements IRegistryEntryEntity {
 
+    // Links to DocumentFlow
+    @OneToMany(mappedBy = "referenceRegistryEntry")
+    private final List<DocumentFlow> referenceDocumentFlow = new ArrayList<>();
     /**
      * M013 - journalaar (xs:integer)
      */
     @Column(name = REGISTRY_ENTRY_YEAR_ENG, nullable = false)
     @Audited
     @JsonProperty(REGISTRY_ENTRY_YEAR)
+    @GenericField
     private Integer recordYear;
-
     /**
      * M014 - journalsekvensnummer (xs:integer)
      */
     @Column(name = REGISTRY_ENTRY_SEQUENCE_NUMBER_ENG, nullable = false)
     @Audited
     @JsonProperty(REGISTRY_ENTRY_SEQUENCE_NUMBER)
+    @GenericField
     private Integer recordSequenceNumber;
-
-    /**
-     * M015 - journalpostnummer (xs:integer)
-     */
-    @Column(name = REGISTRY_ENTRY_NUMBER_ENG, nullable = false)
-    @Audited
-    @JsonProperty(REGISTRY_ENTRY_NUMBER)
-    private Integer registryEntryNumber;
 
     /**
      * M?? - journalposttype code (xs:string)
@@ -105,7 +105,14 @@ public class RegistryEntry
     @Audited
     @JsonProperty(REGISTRY_ENTRY_STATUS_CODE_NAME)
     private String registryEntryStatusCodeName;
-
+    /**
+     * M015 - journalpostnummer (xs:integer)
+     */
+    @Column(name = REGISTRY_ENTRY_NUMBER_ENG, nullable = false)
+    @Audited
+    @JsonProperty(REGISTRY_ENTRY_NUMBER)
+    @GenericField
+    private Integer registryEntryNumber;
     /**
      * M101 - journaldato (xs:date)
      */
@@ -114,8 +121,8 @@ public class RegistryEntry
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(REGISTRY_ENTRY_DATE)
+    @GenericField
     private OffsetDateTime recordDate;
-
     /**
      * M103 - dokumentetsDato (xs:date)
      */
@@ -123,8 +130,8 @@ public class RegistryEntry
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(REGISTRY_ENTRY_DOCUMENT_DATE)
+    @GenericField
     private OffsetDateTime documentDate;
-
     /**
      * M104 - mottattDato (xs:dateTime)
      */
@@ -132,8 +139,8 @@ public class RegistryEntry
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(REGISTRY_ENTRY_RECEIVED_DATE)
+    @GenericField
     private OffsetDateTime receivedDate;
-
     /**
      * M105 - sendtDato (xs:dateTime)
      */
@@ -141,8 +148,8 @@ public class RegistryEntry
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(REGISTRY_ENTRY_SENT_DATE)
+    @GenericField
     private OffsetDateTime sentDate;
-
     /**
      * M109 - forfallsdato (xs:date)
      */
@@ -150,8 +157,8 @@ public class RegistryEntry
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(REGISTRY_ENTRY_DUE_DATE)
+    @GenericField
     private OffsetDateTime dueDate;
-
     /**
      * M110 - offentlighetsvurdertDato (xs:date)
      */
@@ -159,16 +166,16 @@ public class RegistryEntry
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(REGISTRY_ENTRY_RECORD_FREEDOM_ASSESSMENT_DATE)
+    @GenericField
     private OffsetDateTime freedomAssessmentDate;
-
     /**
      * M304 - antallVedlegg (xs:integer)
      */
     @Column(name = REGISTRY_ENTRY_NUMBER_OF_ATTACHMENTS_ENG)
     @Audited
     @JsonProperty(REGISTRY_ENTRY_NUMBER_OF_ATTACHMENTS)
+    @GenericField
     private Integer numberOfAttachments;
-
     /**
      * M106 - utlaantDato (xs:date)
      */
@@ -176,27 +183,24 @@ public class RegistryEntry
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(CASE_LOANED_DATE)
+    @GenericField
     private OffsetDateTime loanedDate;
-
     /**
      * M309 - utlaantTil (xs:string)
      */
     @Column(name = CASE_LOANED_TO_ENG)
     @Audited
     @JsonProperty(CASE_LOANED_TO)
+    @KeywordField
     private String loanedTo;
-
     /**
      * M308 - journalenhet (xs:string)
      */
     @Column(name = CASE_RECORDS_MANAGEMENT_UNIT_ENG)
     @Audited
     @JsonProperty(CASE_RECORDS_MANAGEMENT_UNIT)
+    @KeywordField
     private String recordsManagementUnit;
-
-    // Links to DocumentFlow
-    @OneToMany(mappedBy = "referenceRegistryEntry")
-    private List<DocumentFlow> referenceDocumentFlow = new ArrayList<>();
 
     // Links to SignOff
     @ManyToMany(cascade = {PERSIST, MERGE})

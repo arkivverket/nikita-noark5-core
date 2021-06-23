@@ -6,6 +6,9 @@ import nikita.common.model.noark5.v5.interfaces.entities.IDisposalEntity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
@@ -25,6 +28,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
  */
 @Entity
 @Table(name = TABLE_DISPOSAL)
+@Indexed
 public class Disposal
         extends SystemIdEntity
         implements IDisposalEntity {
@@ -36,6 +40,7 @@ public class Disposal
      */
     @Column(name = "disposal_decision")
     @Audited
+    @FullTextField
     private String disposalDecision;
 
     /**
@@ -43,6 +48,7 @@ public class Disposal
      */
     @Column(name = "disposal_authority")
     @Audited
+    @FullTextField
     private String disposalAuthority;
 
     /**
@@ -50,6 +56,7 @@ public class Disposal
      */
     @Column(name = "preservation_time")
     @Audited
+    @GenericField
     private Integer preservationTime;
 
     /**
@@ -58,6 +65,7 @@ public class Disposal
     @Column(name = "disposal_date")
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
+    @GenericField
     private OffsetDateTime disposalDate;
 
     // Links to Series

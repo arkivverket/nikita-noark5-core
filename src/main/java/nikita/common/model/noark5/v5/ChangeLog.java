@@ -11,6 +11,8 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;
@@ -25,6 +27,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @JsonDeserialize(using = ChangeLogDeserializer.class)
 @HateoasPacker(using = ChangeLogHateoasHandler.class)
 @HateoasObject(using = ChangeLogHateoas.class)
+@Indexed
 public class ChangeLog
     extends SystemIdEntity
     implements IChangeLogEntity
@@ -38,6 +41,7 @@ public class ChangeLog
     @Column(name = REFERENCE_ARCHIVE_UNIT_ENG)
     @Audited
     @JsonProperty(REFERENCE_ARCHIVE_UNIT)
+    @KeywordField
     private UUID referenceArchiveUnitSystemId;
 
     /**
@@ -46,6 +50,7 @@ public class ChangeLog
     @Column(name = REFERENCE_METADATA_ENG)
     @Audited
     @JsonProperty(REFERENCE_METADATA)
+    @KeywordField
     private String referenceMetadata;
 
     /**
@@ -54,6 +59,7 @@ public class ChangeLog
     @Column(name = REFERENCE_CHANGED_BY_ENG)
     @Audited
     @JsonProperty(REFERENCE_CHANGED_BY)
+    @KeywordField
     private String referenceChangedBy;
 
     /**
@@ -62,6 +68,7 @@ public class ChangeLog
     @Column(name = OLD_VALUE_ENG)
     @Audited
     @JsonProperty(OLD_VALUE)
+    @KeywordField
     private String oldValue;
 
     /**
@@ -70,6 +77,7 @@ public class ChangeLog
     @Column(name = NEW_VALUE_ENG)
     @Audited
     @JsonProperty(NEW_VALUE)
+    @KeywordField
     private String newValue;
 
     // Link to Archive Unit (aka SystemIdEntity)

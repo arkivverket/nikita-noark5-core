@@ -14,6 +14,9 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,6 +36,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @HateoasPacker(using = CadastralUnitHateoasHandler.class)
 @HateoasObject(using = CadastralUnitHateoas.class)
 @ANationalIdentifier(name = CADASTRAL_UNIT)
+@Indexed
 public class CadastralUnit
         extends NationalIdentifier
         implements ICadastralUnitEntity {
@@ -43,6 +47,7 @@ public class CadastralUnit
     @Column(name = MUNICIPALITY_NUMBER_ENG, nullable = false)
     @Audited
     @JsonProperty(MUNICIPALITY_NUMBER)
+    @KeywordField
     String municipalityNumber;
 
     /**
@@ -51,6 +56,7 @@ public class CadastralUnit
     @Column(name = HOLDING_NUMBER_ENG, nullable = false)
     @Audited
     @JsonProperty(HOLDING_NUMBER)
+    @GenericField
     Integer holdingNumber;
 
     /**
@@ -59,6 +65,7 @@ public class CadastralUnit
     @Column(name = SUB_HOLDING_NUMBER_ENG, nullable = false)
     @Audited
     @JsonProperty(SUB_HOLDING_NUMBER)
+    @GenericField
     Integer subHoldingNumber;
 
     /**
@@ -67,6 +74,7 @@ public class CadastralUnit
     @Column(name = LEASE_NUMBER_ENG)
     @Audited
     @JsonProperty(LEASE_NUMBER)
+    @GenericField
     Integer leaseNumber;
 
     /**
@@ -75,6 +83,7 @@ public class CadastralUnit
     @Column(name = SECTION_NUMBER_ENG)
     @Audited
     @JsonProperty(SECTION_NUMBER)
+    @GenericField
     Integer sectionNumber;
 
     @Override

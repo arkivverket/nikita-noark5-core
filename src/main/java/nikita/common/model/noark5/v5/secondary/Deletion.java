@@ -9,6 +9,9 @@ import nikita.common.model.noark5.v5.metadata.DeletionType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
@@ -25,6 +28,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 
 @Entity
 @Table(name = TABLE_DELETION)
+@Indexed
 public class Deletion
         extends SystemIdEntity
         implements IDeletionEntity {
@@ -51,6 +55,7 @@ public class Deletion
     @Column(name = DELETION_BY_ENG)
     @Audited
     @JsonProperty(DELETION_BY)
+    @KeywordField
     private String deletionBy;
 
     /**
@@ -60,6 +65,7 @@ public class Deletion
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(DELETION_DATE)
+    @GenericField
     private OffsetDateTime deletionDate;
 
     // TODO add 'referanseSlettetAv'

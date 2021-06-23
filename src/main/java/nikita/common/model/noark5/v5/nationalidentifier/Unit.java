@@ -14,6 +14,8 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,6 +35,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @HateoasPacker(using = UnitHateoasHandler.class)
 @HateoasObject(using = UnitHateoas.class)
 @ANationalIdentifier(name = UNIT_IDENTIFIER_ENG_OBJECT)
+@Indexed
 public class Unit
         extends NationalIdentifier
         implements IUnitEntity {
@@ -43,6 +46,7 @@ public class Unit
     @Column(name = ORGANISATION_NUMBER_ENG, nullable = false)
     @Audited
     @JsonProperty(ORGANISATION_NUMBER)
+    @KeywordField
     private String organisationNumber;
 
     @Override

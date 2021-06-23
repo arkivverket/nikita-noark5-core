@@ -7,6 +7,9 @@ import nikita.common.model.noark5.v5.metadata.ClassifiedCode;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
@@ -29,6 +32,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 
 @Entity
 @Table(name = TABLE_CONTACT_CLASSIFIED)
+@Indexed
 public class Classified
         extends SystemIdEntity
         implements IClassifiedEntity {
@@ -56,6 +60,7 @@ public class Classified
     @Column(name = "classification_date")
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
+    @GenericField
     private OffsetDateTime classificationDate;
 
     /**
@@ -63,6 +68,7 @@ public class Classified
      */
     @Column(name = "classification_by")
     @Audited
+    @KeywordField
     private String classificationBy;
 
     /**
@@ -71,6 +77,7 @@ public class Classified
     @Column(name = "classification_downgraded_date")
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
+    @GenericField
     private OffsetDateTime classificationDowngradedDate;
 
     /**
@@ -78,6 +85,7 @@ public class Classified
      **/
     @Column(name = "classification_downgraded_by")
     @Audited
+    @KeywordField
     private String classificationDowngradedBy;
 
     // Links to Series

@@ -17,6 +17,10 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -35,6 +39,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @JsonDeserialize(using = PrecedenceDeserializer.class)
 @HateoasPacker(using = PrecedenceHateoasHandler.class)
 @HateoasObject(using = PrecedenceHateoas.class)
+@Indexed
 public class Precedence
         extends NoarkGeneralEntity
         implements IPrecedenceEntity {
@@ -46,6 +51,7 @@ public class Precedence
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(PRECEDENCE_DATE)
+    @GenericField
     private OffsetDateTime precedenceDate;
 
     /**
@@ -54,6 +60,7 @@ public class Precedence
     @Column(name = PRECEDENCE_AUTHORITY_ENG)
     @Audited
     @JsonProperty(PRECEDENCE_AUTHORITY)
+    @FullTextField
     private String precedenceAuthority;
 
     /**
@@ -62,6 +69,7 @@ public class Precedence
     @Column(name = PRECEDENCE_SOURCE_OF_LAW_ENG)
     @Audited
     @JsonProperty(PRECEDENCE_SOURCE_OF_LAW)
+    @FullTextField
     private String sourceOfLaw;
 
     /**
@@ -70,6 +78,7 @@ public class Precedence
     @Column(name = PRECEDENCE_APPROVED_DATE_ENG)
     @Audited
     @JsonProperty(PRECEDENCE_APPROVED_DATE)
+    @GenericField
     private OffsetDateTime precedenceApprovedDate;
 
     /**
@@ -78,6 +87,7 @@ public class Precedence
     @Column(name = PRECEDENCE_APPROVED_BY_ENG)
     @Audited
     @JsonProperty(PRECEDENCE_APPROVED_BY)
+    @KeywordField
     private String precedenceApprovedBy;
 
     /**
@@ -86,6 +96,7 @@ public class Precedence
     @Column(name = PRECEDENCE_REFERENCE_APPROVED_BY_ENG)
     @Audited
     @JsonProperty(PRECEDENCE_REFERENCE_APPROVED_BY)
+    @KeywordField
     private UUID referencePrecedenceApprovedBySystemID;
 
     /**

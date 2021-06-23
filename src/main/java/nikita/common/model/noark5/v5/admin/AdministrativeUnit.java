@@ -16,6 +16,10 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -36,6 +40,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @JsonDeserialize(using = AdministrativeUnitDeserializer.class)
 @HateoasPacker(using = AdministrativeUnitHateoasHandler.class)
 @HateoasObject(using = AdministrativeUnitHateoas.class)
+@Indexed
 public class AdministrativeUnit
         extends SystemIdEntity
         implements IAdministrativeUnitEntity {
@@ -47,6 +52,7 @@ public class AdministrativeUnit
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(FINALISED_DATE)
+    @GenericField
     private OffsetDateTime finalisedDate;
 
     /**
@@ -55,6 +61,7 @@ public class AdministrativeUnit
     @Column(name = FINALISED_BY_ENG)
     @Audited
     @JsonProperty(FINALISED_BY)
+    @KeywordField
     private String finalisedBy;
 
     /**
@@ -63,6 +70,7 @@ public class AdministrativeUnit
     @Column(name = SHORT_NAME_ENG)
     @Audited
     @JsonProperty(SHORT_NAME)
+    @KeywordField
     private String shortName;
 
     // Links to businessSpecificMetadata (virksomhetsspesifikkeMetadata)
@@ -75,6 +83,7 @@ public class AdministrativeUnit
     @Column(name = ADMINISTRATIVE_UNIT_NAME_ENG)
     @Audited
     @JsonProperty(ADMINISTRATIVE_UNIT_NAME)
+    @FullTextField
     private String administrativeUnitName;
     /**
      * M584 administrativEnhetsstatus (xs:string)
@@ -83,6 +92,7 @@ public class AdministrativeUnit
     @Audited
     @JsonProperty(ADMINISTRATIVE_UNIT_STATUS)
     private String administrativeUnitStatus;
+
     // Used identify as a default
     @Column(name = DEFAULT_ADMINISTRATIVE_UNIT_ENG)
     @Audited

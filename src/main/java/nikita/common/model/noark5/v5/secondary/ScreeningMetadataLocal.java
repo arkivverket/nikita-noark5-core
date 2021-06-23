@@ -10,6 +10,7 @@ import nikita.webapp.hateoas.secondary.ScreeningMetadataHateoasHandler;
 import nikita.webapp.util.annotation.HateoasObject;
 import nikita.webapp.util.annotation.HateoasPacker;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 import javax.persistence.*;
 
@@ -34,6 +35,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @Table(name = TABLE_FONDS_STRUCTURE_SCREENING_METADATA)
 @HateoasPacker(using = ScreeningMetadataHateoasHandler.class)
 @HateoasObject(using = ScreeningMetadataHateoas.class)
+@Indexed
 public class ScreeningMetadataLocal
         extends SystemIdEntity
         implements IMetadataEntity {

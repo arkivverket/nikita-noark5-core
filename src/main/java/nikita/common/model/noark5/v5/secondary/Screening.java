@@ -10,6 +10,9 @@ import nikita.common.model.noark5.v5.metadata.ScreeningDocument;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
@@ -29,6 +32,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 
 @Entity
 @Table(name = TABLE_SCREENING)
+@Indexed
 public class Screening
         extends SystemIdEntity
         implements IScreeningEntity {
@@ -55,6 +59,7 @@ public class Screening
     @Column(name = SCREENING_AUTHORITY_ENG)
     @Audited
     @JsonProperty(SCREENING_AUTHORITY)
+    @FullTextField
     private String screeningAuthority;
 
     /**
@@ -80,6 +85,7 @@ public class Screening
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(SCREENING_EXPIRES_DATE)
+    @GenericField
     private OffsetDateTime screeningExpiresDate;
 
     /**
@@ -88,6 +94,7 @@ public class Screening
     @Column(name = SCREENING_DURATION_ENG)
     @Audited
     @JsonProperty(SCREENING_DURATION)
+    @GenericField
     private Integer screeningDuration;
 
     /**

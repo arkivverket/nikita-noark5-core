@@ -11,6 +11,9 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,6 +31,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @JsonDeserialize(using = FondsCreatorDeserializer.class)
 @HateoasPacker(using = FondsCreatorHateoasHandler.class)
 @HateoasObject(using = FondsCreatorHateoas.class)
+@Indexed
 public class FondsCreator
         extends SystemIdEntity
         implements IFondsCreatorEntity {
@@ -39,6 +43,7 @@ public class FondsCreator
     @Column(name = FONDS_CREATOR_ID_ENG, nullable = false)
     @Audited
     @JsonProperty(FONDS_CREATOR_ID)
+    @KeywordField
     private String fondsCreatorId;
 
     /**
@@ -48,6 +53,7 @@ public class FondsCreator
     @Column(name = FONDS_CREATOR_NAME_ENG, nullable = false)
     @Audited
     @JsonProperty(FONDS_CREATOR_NAME)
+    @FullTextField
     private String fondsCreatorName;
 
     /**
@@ -56,6 +62,7 @@ public class FondsCreator
     @Column(name = DESCRIPTION_ENG, length = DESCRIPTION_LENGTH)
     @Audited
     @JsonProperty(DESCRIPTION)
+    @FullTextField
     private String description;
 
     // Links to Fonds

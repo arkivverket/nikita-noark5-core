@@ -18,6 +18,10 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -41,6 +45,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @JsonDeserialize(using = RecordDeserializer.class)
 @HateoasPacker(using = RecordHateoasHandler.class)
 @HateoasObject(using = RecordHateoas.class)
+@Indexed
 public class Record
         extends SystemIdEntity
         implements IRecordEntity, IPart, ICorrespondencePart {
@@ -52,6 +57,7 @@ public class Record
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(RECORD_ARCHIVED_DATE)
+    @GenericField
     private OffsetDateTime archivedDate;
 
     /**
@@ -60,6 +66,7 @@ public class Record
     @Column(name = RECORD_ARCHIVED_BY_ENG)
     @Audited
     @JsonProperty(RECORD_ARCHIVED_BY)
+    @KeywordField
     private String archivedBy;
 
     /**
@@ -68,6 +75,7 @@ public class Record
     @Column(name = RECORD_ID_ENG)
     @Audited
     @JsonProperty(RECORD_ID)
+    @KeywordField
     private String recordId;
 
     /**
@@ -77,6 +85,7 @@ public class Record
     @Column(name = TITLE_ENG, nullable = false, length = TITLE_LENGTH)
     @Audited
     @JsonProperty(TITLE)
+    @FullTextField
     private String title;
 
     /**
@@ -85,6 +94,7 @@ public class Record
     @Column(name = FILE_PUBLIC_TITLE_ENG, length = TITLE_LENGTH)
     @Audited
     @JsonProperty(FILE_PUBLIC_TITLE)
+    @FullTextField
     private String publicTitle;
 
     /**
@@ -93,6 +103,7 @@ public class Record
     @Column(name = DESCRIPTION_ENG, length = DESCRIPTION_LENGTH)
     @Audited
     @JsonProperty(DESCRIPTION)
+    @FullTextField
     private String description;
 
     // Links to Part

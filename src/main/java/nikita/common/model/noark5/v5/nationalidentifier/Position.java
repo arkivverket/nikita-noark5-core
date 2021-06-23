@@ -15,6 +15,9 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,6 +37,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @HateoasPacker(using = PositionHateoasHandler.class)
 @HateoasObject(using = PositionHateoas.class)
 @ANationalIdentifier(name = POSITION)
+@Indexed
 public class Position
         extends NationalIdentifier
         implements IPositionEntity {
@@ -43,6 +47,7 @@ public class Position
      */
     @Column(name = "coordinate_system_code", nullable = false)
     @Audited
+    @KeywordField
     private String coordinateSystemCode;
 
     /**
@@ -50,6 +55,7 @@ public class Position
      */
     @Column(name = "coordinate_system_code_name", nullable = false)
     @Audited
+    @KeywordField
     private String coordinateSystemCodeName;
 
     /**
@@ -59,6 +65,7 @@ public class Position
     @Column(name = X_ENG, nullable = false)
     @Audited
     @JsonProperty(X)
+    @GenericField
     private Double x;
 
     /**
@@ -68,6 +75,7 @@ public class Position
     @Column(name = Y_ENG, nullable = false)
     @Audited
     @JsonProperty(Y)
+    @GenericField
     private Double y;
 
     /**
@@ -77,6 +85,7 @@ public class Position
     @Column(name = Z_ENG)
     @Audited
     @JsonProperty(Z)
+    @GenericField
     private Double z;
 
     @Override
