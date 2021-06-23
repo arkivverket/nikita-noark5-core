@@ -57,10 +57,7 @@ import java.util.UUID;
 import static java.util.UUID.randomUUID;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.ExceptionDetailsConstants.MISSING_DOCUMENT_DESCRIPTION_ERROR;
-import static nikita.common.config.FileConstants.FILE_EXTENSION_PDF_CODE;
-import static nikita.common.config.FileConstants.FILE_EXTENSION_TEXT_CODE;
-import static nikita.common.config.FileConstants.MIME_TYPE_PDF;
-import static nikita.common.config.FileConstants.MIME_TYPE_TEXT;
+import static nikita.common.config.FileConstants.*;
 import static nikita.common.config.N5ResourceMappings.ARCHIVE_VERSION_CODE;
 import static nikita.common.config.N5ResourceMappings.PRODUCTION_VERSION_CODE;
 import static nikita.common.config.ServerConstants.DOCUMENT_STORE_LOCATION;
@@ -180,7 +177,6 @@ public class DocumentObjectService
                     contentLength + "). The document was attempted to be " +
                     "associated with " + documentObject);
         }
-
 
         // Check that if the content-type is set it should be in agreement
         // with mimeType value in documentObject
@@ -383,11 +379,11 @@ public class DocumentObjectService
         textDocumentObject.setFormatDetails("OCR");
 
         textDocumentObject.setVariantFormat
-            (new VariantFormat(PRODUCTION_VERSION_CODE));
+                (new VariantFormat(PRODUCTION_VERSION_CODE));
         validateVariantFormat(textDocumentObject);
 
         setFilenameAndExtensionForArchiveDocument
-            (productionDocumentObject, textDocumentObject);
+                (productionDocumentObject, textDocumentObject);
 
         // Setting a UUID here as the filename on disk will use this UUID value
         textDocumentObject.setSystemId(randomUUID());
@@ -417,16 +413,16 @@ public class DocumentObjectService
 
     @Transactional
     public DocumentObject extractOCRTextFromDocument(DocumentObject
-                                                     originalDocumentObject) {
+                                                             originalDocumentObject) {
         DocumentObject textDocumentObject = new DocumentObject();
 
         try {
             OffsetDateTime now = OffsetDateTime.now();
             Path textFile = extractTextFromImage
-                (originalDocumentObject, textDocumentObject);
+                    (originalDocumentObject, textDocumentObject);
             // Parent document description
             DocumentDescription documentDescription =
-                originalDocumentObject.getReferenceDocumentDescription();
+                    originalDocumentObject.getReferenceDocumentDescription();
             // If it's null, throw an exception. You can't create a
             // related documentObject unless it has a document description
             if (documentDescription == null) {
@@ -506,7 +502,6 @@ public class DocumentObjectService
 
     /**
      * Delete all objects belonging to the user identified by ownedBy
-     *
      */
     @Override
     @Transactional
@@ -891,10 +886,10 @@ public class DocumentObjectService
                 convertDocumentToPDF(documentObject);
             }
 
-	    // Run OCR on all images to look for text content
-	    if (0 == documentObject.getMimeType().indexOf("image/")) {
-		extractOCRTextFromDocument(documentObject);
-	    }
+            // Run OCR on all images to look for text content
+            if (0 == documentObject.getMimeType().indexOf("image/")) {
+                extractOCRTextFromDocument(documentObject);
+            }
             documentObjectRepository.save(documentObject);
         } catch (IOException | TikaException | SQLException e) {
             String msg = "When associating an uploaded file with " +
