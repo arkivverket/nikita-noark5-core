@@ -81,13 +81,13 @@ public class ODataController {
                   @RequestParam(value = DOLLAR_SEARCH, required = false)
                           String search) {
         if (search != null && !search.isBlank()) {
-            int fetchCount = 0;
+            int fetchCount = 10;
             if (top != null && !top.isBlank()) {
-                fetchCount = Integer.getInteger(top);
+                fetchCount = Integer.parseInt(top);
             }
             int from = 0;
             if (skip != null && !skip.isBlank()) {
-                from = Integer.getInteger(skip);
+                from = Integer.parseInt(skip);
             }
             return ResponseEntity.status(OK)
                     .body(oDataService.processODataSearchQuery(
