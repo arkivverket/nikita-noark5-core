@@ -4,6 +4,9 @@ import nikita.common.model.noark5.v5.interfaces.entities.secondary.ISimpleAddres
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -24,6 +27,7 @@ public class SimpleAddress
      * M407 - postnummer (xs:string)
      */
     @Embedded
+    @IndexedEmbedded
     PostalNumber postalNumber;
 
     /**
@@ -31,6 +35,7 @@ public class SimpleAddress
      */
     @Column(name = "address_line_1")
     @Audited
+    @FullTextField
     private String addressLine1;
 
     /**
@@ -38,6 +43,7 @@ public class SimpleAddress
      */
     @Column(name = "address_line_2")
     @Audited
+    @FullTextField
     private String addressLine2;
 
     /**
@@ -45,6 +51,7 @@ public class SimpleAddress
      */
     @Column(name = "address_line_3")
     @Audited
+    @FullTextField
     private String addressLine3;
 
     /**
@@ -52,6 +59,7 @@ public class SimpleAddress
      */
     @Audited
     @Column(name = "postal_town")
+    @KeywordField
     private String postalTown;
 
     /**
@@ -59,6 +67,7 @@ public class SimpleAddress
      */
     @Audited
     @Column(name = "country_code")
+    @KeywordField
     private String countryCode;
 
     /**

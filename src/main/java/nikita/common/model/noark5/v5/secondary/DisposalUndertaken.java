@@ -7,6 +7,9 @@ import nikita.common.model.noark5.v5.interfaces.entities.IDisposalUndertakenEnti
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
@@ -23,6 +26,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 
 @Entity
 @Table(name = TABLE_DISPOSAL_UNDERTAKEN)
+@Indexed
 public class DisposalUndertaken
         extends SystemIdEntity
         implements IDisposalUndertakenEntity {
@@ -34,6 +38,7 @@ public class DisposalUndertaken
      */
     @Column(name = "disposal_by")
     @Audited
+    @KeywordField
     private String disposalBy;
 
     /**
@@ -42,6 +47,7 @@ public class DisposalUndertaken
     @Column(name = "disposal_date")
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
+    @GenericField
     private OffsetDateTime disposalDate;
 
     // Links to Series

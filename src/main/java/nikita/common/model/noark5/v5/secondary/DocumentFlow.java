@@ -17,6 +17,9 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;
@@ -31,6 +34,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @JsonDeserialize(using = DocumentFlowDeserializer.class)
 @HateoasPacker(using = DocumentFlowHateoasHandler.class)
 @HateoasObject(using = DocumentFlowHateoas.class)
+@Indexed
 public class DocumentFlow
         extends SystemIdEntity
         implements IDocumentFlowEntity  {
@@ -41,6 +45,7 @@ public class DocumentFlow
     @Column(name = DOCUMENT_FLOW_FLOW_TO_ENG)
     @Audited
     @JsonProperty(DOCUMENT_FLOW_FLOW_TO)
+    @KeywordField
     private String flowTo;
 
     /**
@@ -49,6 +54,7 @@ public class DocumentFlow
     @Column(name = DOCUMENT_FLOW_FLOW_FROM_ENG)
     @Audited
     @JsonProperty(DOCUMENT_FLOW_FLOW_FROM)
+    @KeywordField
     private String flowFrom;
 
     /**
@@ -57,6 +63,7 @@ public class DocumentFlow
     @Column(name = DOCUMENT_FLOW_FLOW_RECEIVED_DATE_ENG)
     @Audited
     @JsonProperty(DOCUMENT_FLOW_FLOW_RECEIVED_DATE)
+    @GenericField
     private OffsetDateTime flowReceivedDate;
 
     /**
@@ -65,6 +72,7 @@ public class DocumentFlow
     @Column(name = DOCUMENT_FLOW_FLOW_SENT_DATE_ENG)
     @Audited
     @JsonProperty(DOCUMENT_FLOW_FLOW_SENT_DATE)
+    @GenericField
     private OffsetDateTime flowSentDate;
 
     /**

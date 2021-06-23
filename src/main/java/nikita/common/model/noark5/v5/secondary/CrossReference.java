@@ -15,6 +15,8 @@ import nikita.webapp.util.annotation.HateoasObject;
 import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -38,6 +40,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @JsonDeserialize(using = CrossReferenceDeserializer.class)
 @HateoasPacker(using = CrossReferenceHateoasHandler.class)
 @HateoasObject(using = CrossReferenceHateoas.class)
+@Indexed
 public class CrossReference
         extends SystemIdEntity
         implements ISystemId, ICrossReferenceEntity {
@@ -46,10 +49,12 @@ public class CrossReference
 
     @Column(name = FROM_SYSTEM_ID_ENG, nullable = false)
     @JsonProperty(FROM_SYSTEM_ID)
+    @KeywordField
     private UUID fromSystemId;
 
     @Column(name = TO_SYSTEM_ID_ENG, nullable = false)
     @JsonProperty(TO_SYSTEM_ID)
+    @KeywordField
     private UUID toSystemId;
 
     /**

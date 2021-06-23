@@ -1,30 +1,33 @@
 package nikita.common.model.noark5.v5.casehandling;
 
-import org.hibernate.annotations.Type;
+import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import java.io.Serializable;
 import java.util.Objects;
-import java.util.UUID;
 
-/**
- * SequenceNumberGeneratorId is used as a  @IdClass for
- * SequenceNumberGenerator. This is one way to handle the definition of a
- * composite key.
- */
+import static nikita.common.config.N5ResourceMappings.REFERENCE_ADMINISTRATIVE_UNIT_ENG;
+import static nikita.common.config.N5ResourceMappings.YEAR_ENG;
+
 @Embeddable
 public class SequenceNumberGeneratorId
         implements Serializable {
 
-    @Type(type="uuid-char")
-    private UUID referenceAdministrativeUnit;
+    @ManyToOne
+    @JoinColumn(name = REFERENCE_ADMINISTRATIVE_UNIT_ENG)
+    private AdministrativeUnit referenceAdministrativeUnit;
+
+    @Column(name = YEAR_ENG)
     private Integer year;
 
     public SequenceNumberGeneratorId() {
     }
 
-    public SequenceNumberGeneratorId(Integer year,
-                                     UUID referenceAdministrativeUnit) {
+    public SequenceNumberGeneratorId(
+            Integer year, AdministrativeUnit referenceAdministrativeUnit) {
         this.year = year;
         this.referenceAdministrativeUnit = referenceAdministrativeUnit;
     }
@@ -37,11 +40,12 @@ public class SequenceNumberGeneratorId
         this.year = year;
     }
 
-    public UUID getReferenceAdministrativeUnit() {
+    public AdministrativeUnit getReferenceAdministrativeUnit() {
         return referenceAdministrativeUnit;
     }
 
-    public void setReferenceAdministrativeUnit(UUID referenceAdministrativeUnit) {
+    public void setReferenceAdministrativeUnit(
+            AdministrativeUnit referenceAdministrativeUnit) {
         this.referenceAdministrativeUnit = referenceAdministrativeUnit;
     }
 

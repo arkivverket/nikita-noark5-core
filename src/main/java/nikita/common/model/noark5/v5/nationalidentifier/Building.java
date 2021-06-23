@@ -14,6 +14,8 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,6 +35,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @HateoasPacker(using = BuildingHateoasHandler.class)
 @HateoasObject(using = BuildingHateoas.class)
 @ANationalIdentifier(name = BUILDING)
+@Indexed
 public class Building
         extends NationalIdentifier
         implements IBuildingEntity {
@@ -43,6 +46,7 @@ public class Building
     @Column(name = BUILDING_NUMBER_ENG, nullable = false)
     @Audited
     @JsonProperty(BUILDING_NUMBER)
+    @GenericField
     Integer buildingNumber;
 
     /**
@@ -51,6 +55,7 @@ public class Building
     @Column(name = BUILDING_CHANGE_NUMBER)
     @Audited
     @JsonProperty(BUILDING_CHANGE_NUMBER)
+    @GenericField
     Integer runningChangeNumber;
 
     @Override

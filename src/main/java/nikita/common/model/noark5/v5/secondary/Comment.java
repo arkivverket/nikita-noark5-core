@@ -16,6 +16,10 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
@@ -36,6 +40,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @JsonDeserialize(using = CommentDeserializer.class)
 @HateoasPacker(using = CommentHateoasHandler.class)
 @HateoasObject(using = CommentHateoas.class)
+@Indexed
 public class Comment
         extends SystemIdEntity
         implements ICommentEntity {
@@ -48,6 +53,7 @@ public class Comment
     @Column(name = COMMENT_TEXT_ENG)
     @JsonProperty(COMMENT_TEXT)
     @Audited
+    @FullTextField
     private String commentText;
 
     /**
@@ -73,6 +79,7 @@ public class Comment
     @JsonProperty(COMMENT_TIME)
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
+    @GenericField
     private OffsetDateTime commentDate;
 
     /**
@@ -81,6 +88,7 @@ public class Comment
     @Column(name = COMMENT_REGISTERED_BY_ENG)
     @JsonProperty(COMMENT_REGISTERED_BY)
     @Audited
+    @KeywordField
     private String commentRegisteredBy;
 
     // Link to File

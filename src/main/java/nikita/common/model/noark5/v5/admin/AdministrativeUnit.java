@@ -16,6 +16,10 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -36,6 +40,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @JsonDeserialize(using = AdministrativeUnitDeserializer.class)
 @HateoasPacker(using = AdministrativeUnitHateoasHandler.class)
 @HateoasObject(using = AdministrativeUnitHateoas.class)
+@Indexed
 public class AdministrativeUnit
         extends SystemIdEntity
         implements IAdministrativeUnitEntity {
@@ -47,6 +52,7 @@ public class AdministrativeUnit
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(FINALISED_DATE)
+    @GenericField
     private OffsetDateTime finalisedDate;
 
     /**
@@ -55,6 +61,7 @@ public class AdministrativeUnit
     @Column(name = FINALISED_BY_ENG)
     @Audited
     @JsonProperty(FINALISED_BY)
+    @KeywordField
     private String finalisedBy;
 
     /**
@@ -63,32 +70,36 @@ public class AdministrativeUnit
     @Column(name = SHORT_NAME_ENG)
     @Audited
     @JsonProperty(SHORT_NAME)
+    @KeywordField
     private String shortName;
+
+    // Links to businessSpecificMetadata (virksomhetsspesifikkeMetadata)
+    @OneToMany(mappedBy = "referenceAdministrativeUnit",
+            cascade = {PERSIST, MERGE, REMOVE})
+    private final List<BSMBase> referenceBSMBase = new ArrayList<>();
 
     /**
      * M583 - administrativEnhetNavn (xs:string)
      */
-    @Column(name = "administrative_unit_name")
+    @Column(name = ADMINISTRATIVE_UNIT_NAME_ENG)
     @Audited
+    @JsonProperty(ADMINISTRATIVE_UNIT_NAME)
+    @FullTextField
     private String administrativeUnitName;
 
     /**
      * M584 administrativEnhetsstatus (xs:string)
      */
-    @Column(name = "administrative_unit_status")
+    @Column(name = ADMINISTRATIVE_UNIT_STATUS_ENG)
     @Audited
+    @JsonProperty(ADMINISTRATIVE_UNIT_STATUS)
     private String administrativeUnitStatus;
 
     // Used identify as a default
-    @Column(name = "default_administrative_unit")
+    @Column(name = DEFAULT_ADMINISTRATIVE_UNIT_ENG)
     @Audited
+    @JsonProperty(DEFAULT_ADMINISTRATIVE_UNIT)
     private Boolean defaultAdministrativeUnit;
-
-    // Links to SequenceNumberGenerator
-    @OneToMany(mappedBy = "referenceAdministrativeUnit",
-            cascade = ALL, orphanRemoval = true)
-    private Set<SequenceNumberGenerator>
-            referenceSequenceNumberGenerator = new HashSet<>();
 
     @ManyToMany(cascade = {PERSIST, MERGE})
     @JoinTable(name = TABLE_ADMINISTRATIVE_UNIT_USER,
@@ -118,11 +129,11 @@ public class AdministrativeUnit
     @OneToMany(mappedBy = "referenceParentAdministrativeUnit", fetch = LAZY)
     private List<AdministrativeUnit> referenceChildAdministrativeUnit =
             new ArrayList<>();
-
-    // Links to businessSpecificMetadata (virksomhetsspesifikkeMetadata)
-    @OneToMany(mappedBy = "referenceAdministrativeUnit",
-            cascade = {PERSIST, MERGE, REMOVE})
-    private List<BSMBase> referenceBSMBase = new ArrayList<>();
+    // Links to SequenceNumberGenerator
+    @OneToMany(mappedBy = REFERENCE_SEQUENCE_NUMBER_ADMINISTRATIVE_UNIT_ENG,
+            cascade = ALL, orphanRemoval = true)
+    private Set<SequenceNumberGenerator>
+            referenceSequenceNumberGenerator = new HashSet<>();
 
     @Override
     public OffsetDateTime getFinalisedDate() {

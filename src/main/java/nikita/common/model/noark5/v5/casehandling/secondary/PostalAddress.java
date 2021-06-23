@@ -5,6 +5,8 @@ import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.ISimpleAddress;
 import nikita.common.model.noark5.v5.secondary.PartPerson;
 import nikita.common.model.noark5.v5.secondary.PartUnit;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -16,11 +18,13 @@ import static nikita.common.config.Constants.TABLE_POSTAL_ADDRESS;
 
 @Entity
 @Table(name = TABLE_POSTAL_ADDRESS)
+@Indexed
 public class PostalAddress
         extends SystemIdEntity
         implements ISystemId, ISimpleAddress {
 
     @Embedded
+    @IndexedEmbedded
     private SimpleAddress simpleAddress;
 
     @OneToOne(fetch = LAZY)

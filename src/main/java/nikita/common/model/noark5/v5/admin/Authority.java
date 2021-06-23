@@ -1,5 +1,7 @@
 package nikita.common.model.noark5.v5.admin;
 
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -13,6 +15,7 @@ import static nikita.common.config.Constants.TABLE_AUTHORITY_SEQ;
 
 @Entity
 @Table(name = TABLE_AUTHORITY)
+@Indexed
 public class Authority
         implements Serializable {
 

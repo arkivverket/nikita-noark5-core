@@ -1,7 +1,6 @@
 package nikita.common.model.noark5.v5;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.hateoas.EventLogHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.IEventLogEntity;
@@ -13,12 +12,16 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.OffsetDateTime;
 
-import static javax.persistence.FetchType.LAZY;
 import static nikita.common.config.Constants.*;
 import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
@@ -28,6 +31,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @JsonDeserialize(using = EventLogDeserializer.class)
 @HateoasPacker(using = EventLogHateoasHandler.class)
 @HateoasObject(using = EventLogHateoas.class)
+@Indexed
 public class EventLog
     extends ChangeLog
     implements IEventLogEntity
@@ -55,6 +59,7 @@ public class EventLog
     @Column(name = DESCRIPTION_ENG, length = DESCRIPTION_LENGTH)
     @Audited
     @JsonProperty(DESCRIPTION)
+    @FullTextField
     private String description;
 
     /**
@@ -64,6 +69,7 @@ public class EventLog
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(EVENT_DATE)
+    @GenericField
     private OffsetDateTime eventDate;
 
     @Override

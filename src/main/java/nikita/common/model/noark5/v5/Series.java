@@ -16,6 +16,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -35,6 +37,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @JsonDeserialize(using = SeriesDeserializer.class)
 @HateoasPacker(using = SeriesHateoasHandler.class)
 @HateoasObject(using = SeriesHateoas.class)
+@Indexed
 public class Series
         extends NoarkGeneralEntity
         implements IStorageLocation, IDocumentMedium, IClassified, IScreening,
@@ -65,6 +68,7 @@ public class Series
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(SERIES_START_DATE)
+    @GenericField
     private OffsetDateTime seriesStartDate;
 
     /**
@@ -74,6 +78,7 @@ public class Series
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(SERIES_END_DATE)
+    @GenericField
     private OffsetDateTime seriesEndDate;
 
     /**

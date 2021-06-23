@@ -11,6 +11,7 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -26,6 +27,7 @@ import static nikita.common.config.N5ResourceMappings.REFERENCE_CLASSIFICATION_S
 @JsonDeserialize(using = ClassificationSystemDeserializer.class)
 @HateoasPacker(using = ClassificationSystemHateoasHandler.class)
 @HateoasObject(using = ClassificationSystemHateoas.class)
+@Indexed
 public class ClassificationSystem
         extends NoarkGeneralEntity
         implements IClassificationSystemEntity {

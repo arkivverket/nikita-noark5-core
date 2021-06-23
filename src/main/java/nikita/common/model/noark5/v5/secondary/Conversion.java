@@ -14,6 +14,10 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;
@@ -27,6 +31,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @JsonDeserialize(using = ConversionDeserializer.class)
 @HateoasPacker(using = ConversionHateoasHandler.class)
 @HateoasObject(using = ConversionHateoas.class)
+@Indexed
 public class Conversion
         extends SystemIdEntity
         implements IConversionEntity {
@@ -39,6 +44,7 @@ public class Conversion
     @Column(name = CONVERTED_DATE_ENG)
     @Audited
     @JsonProperty(CONVERTED_DATE)
+    @GenericField
     private OffsetDateTime convertedDate;
 
     /**
@@ -47,6 +53,7 @@ public class Conversion
     @Column(name = CONVERTED_BY_ENG)
     @Audited
     @JsonProperty(CONVERTED_BY)
+    @KeywordField
     private String convertedBy;
 
     /**
@@ -83,6 +90,7 @@ public class Conversion
     @Column(name = CONVERSION_TOOL_ENG)
     @Audited
     @JsonProperty(CONVERSION_TOOL)
+    @FullTextField
     private String conversionTool;
 
     /**
@@ -91,6 +99,7 @@ public class Conversion
     @Column(name = CONVERSION_COMMENT_ENG)
     @Audited
     @JsonProperty(CONVERSION_COMMENT)
+    @FullTextField
     private String conversionComment;
 
     // Link to DocumentObject

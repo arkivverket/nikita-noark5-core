@@ -15,6 +15,8 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,6 +35,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @JsonDeserialize(using = StorageLocationDeserializer.class)
 @HateoasPacker(using = StorageLocationHateoasHandler.class)
 @HateoasObject(using = StorageLocationHateoas.class)
+@Indexed
 public class StorageLocation
         extends SystemIdEntity
         implements IStorageLocationEntity {
@@ -56,6 +59,7 @@ public class StorageLocation
     @Column(name = STORAGE_LOCATION_ENG)
     @Audited
     @JsonProperty(STORAGE_LOCATION)
+    @FullTextField
     private String storageLocation;
 
     public String getStorageLocation() {

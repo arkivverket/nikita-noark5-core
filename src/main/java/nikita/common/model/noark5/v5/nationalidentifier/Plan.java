@@ -15,6 +15,8 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -38,6 +40,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @HateoasPacker(using = PlanHateoasHandler.class)
 @HateoasObject(using = PlanHateoas.class)
 @ANationalIdentifier(name = PLAN)
+@Indexed
 public class Plan
         extends NationalIdentifier
         implements IPlanEntity {
@@ -48,6 +51,7 @@ public class Plan
     @Column(name = MUNICIPALITY_NUMBER)
     @Audited
     @JsonProperty(MUNICIPALITY_NUMBER)
+    @KeywordField
     String municipalityNumber;
 
     /**
@@ -56,6 +60,7 @@ public class Plan
     @Column(name = COUNTY_NUMBER_ENG)
     @Audited
     @JsonProperty(COUNTY_NUMBER)
+    @KeywordField
     String countyNumber;
 
     /**
@@ -63,6 +68,7 @@ public class Plan
      */
     @Column(name = "country_code")
     @Audited
+    @KeywordField
     String countryCode;
 
     /**
@@ -70,6 +76,7 @@ public class Plan
      */
     @Column(name = "country_code_name")
     @Audited
+    @KeywordField
     String countryCodeName;
 
     /**
@@ -78,6 +85,7 @@ public class Plan
     @Column(name = PLAN_IDENTIFICATION_ENG, nullable = false)
     @Audited
     @JsonProperty(PLAN_IDENTIFICATION)
+    @KeywordField
     String planIdentification;
 
     @Override

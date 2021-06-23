@@ -12,6 +12,7 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,6 +30,7 @@ import static nikita.common.config.N5ResourceMappings.CORRESPONDENCE_PART_INTERN
 @JsonDeserialize(using = CorrespondencePartInternalDeserializer.class)
 @HateoasPacker(using = CorrespondencePartInternalHateoasHandler.class)
 @HateoasObject(using = CorrespondencePartInternalHateoas.class)
+@Indexed
 public class CorrespondencePartInternal
         extends CorrespondencePart
         implements ICorrespondencePartInternalEntity {

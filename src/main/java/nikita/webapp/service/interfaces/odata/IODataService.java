@@ -15,4 +15,6 @@ public interface IODataService {
     HateoasNoarkObject processODataQueryGet();
 
     String processODataQueryDelete();
+
+    HateoasNoarkObject processODataSearchQuery(String search, int fetchCount, int skip);
 }

@@ -14,6 +14,8 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 
 import javax.persistence.*;
 
@@ -27,6 +29,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @JsonDeserialize(using = PartPersonDeserializer.class)
 @HateoasPacker(using = PartPersonHateoasHandler.class)
 @HateoasObject(using = PartPersonHateoas.class)
+@Indexed
 public class PartPerson
         extends Part
         implements IPartPersonEntity {
@@ -37,6 +40,7 @@ public class PartPerson
     @Column(name = SOCIAL_SECURITY_NUMBER_ENG)
     @Audited
     @JsonProperty(SOCIAL_SECURITY_NUMBER)
+    @KeywordField
     private String socialSecurityNumber;
 
     /**
@@ -45,6 +49,7 @@ public class PartPerson
     @Column(name = D_NUMBER_FIELD_ENG)
     @Audited
     @JsonProperty(D_NUMBER_FIELD)
+    @KeywordField
     private String dNumber;
 
     @OneToOne(mappedBy = "partPerson", fetch = LAZY, cascade = ALL)

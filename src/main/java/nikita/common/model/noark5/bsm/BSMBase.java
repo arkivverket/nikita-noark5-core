@@ -15,6 +15,10 @@ import nikita.webapp.hateoas.metadata.BSMBaseHateoasHandler;
 import nikita.webapp.util.annotation.HateoasObject;
 import nikita.webapp.util.annotation.HateoasPacker;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;
@@ -30,6 +34,7 @@ import static nikita.common.config.Constants.*;
 @JsonDeserialize(using = BSMDeserialiser.class)
 @HateoasPacker(using = BSMBaseHateoasHandler.class)
 @HateoasObject(using = BSMBaseHateoas.class)
+@Indexed
 public class BSMBase
         extends SystemIdEntity {
 
@@ -46,6 +51,7 @@ public class BSMBase
     protected String valueNamespace;
 
     @Column(length = 10000)
+    @FullTextField
     private String stringValue;
 
     @Column
@@ -63,16 +69,20 @@ public class BSMBase
     private Boolean isNullValue = false;
 
     @Column
+    @GenericField
     // Do not rename this variable as it is used for BSM query generation
     private OffsetDateTime offsetdatetimeValue;
 
     @Column
+    @GenericField
     private Double doubleValue;
 
     @Column
+    @GenericField
     private Integer integerValue;
 
     @Column
+    @KeywordField
     private String uriValue;
 
     @ManyToOne(fetch = LAZY)

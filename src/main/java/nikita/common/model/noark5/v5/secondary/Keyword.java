@@ -15,6 +15,8 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,6 +34,7 @@ import static nikita.common.config.N5ResourceMappings.*;
 @JsonDeserialize(using = KeywordDeserializer.class)
 @HateoasPacker(using = KeywordHateoasHandler.class)
 @HateoasObject(using = KeywordHateoas.class)
+@Indexed
 public class Keyword
         extends SystemIdEntity
         implements IKeywordEntity {
@@ -41,6 +44,7 @@ public class Keyword
     @Column(name = KEYWORD_ENG_OBJECT, nullable = false)
     @Audited
     @JsonProperty(KEYWORD)
+    @KeywordField
     private String keyword;
 
     // Links to Class

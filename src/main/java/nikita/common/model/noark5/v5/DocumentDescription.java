@@ -19,6 +19,10 @@ import nikita.webapp.util.annotation.HateoasPacker;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -40,6 +44,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @JsonDeserialize(using = DocumentDescriptionDeserializer.class)
 @HateoasPacker(using = DocumentDescriptionHateoasHandler.class)
 @HateoasObject(using = DocumentDescriptionHateoas.class)
+@Indexed
 public class DocumentDescription
         extends SystemIdEntity
         implements ICreate, ITitleDescription,
@@ -91,6 +96,7 @@ public class DocumentDescription
     @Column(name = TITLE_ENG, nullable = false, length = TITLE_LENGTH)
     @Audited
     @JsonProperty(TITLE)
+    @FullTextField
     private String title;
 
     /**
@@ -99,6 +105,7 @@ public class DocumentDescription
     @Column(name = DESCRIPTION_ENG, length = DESCRIPTION_LENGTH)
     @Audited
     @JsonProperty(DESCRIPTION)
+    @FullTextField
     private String description;
 
     /**
@@ -152,6 +159,7 @@ public class DocumentDescription
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
     @JsonProperty(DOCUMENT_DESCRIPTION_ASSOCIATED_DATE)
+    @GenericField
     private OffsetDateTime associationDate;
 
     /**
@@ -160,6 +168,7 @@ public class DocumentDescription
     @Column(name = DOCUMENT_DESCRIPTION_ASSOCIATED_BY_ENG)
     @Audited
     @JsonProperty(DOCUMENT_DESCRIPTION_ASSOCIATED_BY)
+    @KeywordField
     private String associatedBy;
 
     /**
@@ -168,6 +177,7 @@ public class DocumentDescription
     @Column(name = STORAGE_LOCATION_ENG)
     @Audited
     @JsonProperty(STORAGE_LOCATION)
+    @FullTextField
     private String storageLocation;
 
     /**
@@ -176,6 +186,7 @@ public class DocumentDescription
     @Column(name = DOCUMENT_DESCRIPTION_EXTERNAL_REFERENCE_ENG)
     @Audited
     @JsonProperty(DOCUMENT_DESCRIPTION_EXTERNAL_REFERENCE)
+    @FullTextField
     private String externalReference;
 
     // Links to Records

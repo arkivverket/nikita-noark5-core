@@ -10,6 +10,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -43,6 +44,7 @@ public class SystemIdEntity
     @GeneratedValue(generator = "uuid-gen")
     @Column(name = SYSTEM_ID_ENG, updatable = false, nullable = false)
     @Type(type = "uuid-char")
+    @KeywordField
     private UUID systemId;
 
     // Links to ChangeLog

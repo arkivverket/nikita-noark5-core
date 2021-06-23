@@ -9,6 +9,7 @@ import nikita.common.model.noark5.v5.metadata.VariantFormat;
 import nikita.common.model.noark5.v5.secondary.Conversion;
 import nikita.common.repository.n5v5.IDocumentObjectRepository;
 import nikita.common.util.CommonUtils;
+import nikita.common.util.analysis.DocumentAnalysis;
 import nikita.common.util.exceptions.*;
 import nikita.webapp.config.WebappProperties;
 import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
@@ -21,6 +22,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.config.TikaConfig;
 import org.apache.tika.detect.Detector;
+import org.apache.tika.exception.TikaException;
 import org.apache.tika.io.TikaInputStream;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.mime.MediaType;
@@ -47,6 +49,7 @@ import java.nio.file.Paths;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -54,10 +57,7 @@ import java.util.UUID;
 import static java.util.UUID.randomUUID;
 import static nikita.common.config.Constants.INFO_CANNOT_FIND_OBJECT;
 import static nikita.common.config.ExceptionDetailsConstants.MISSING_DOCUMENT_DESCRIPTION_ERROR;
-import static nikita.common.config.FileConstants.FILE_EXTENSION_PDF_CODE;
-import static nikita.common.config.FileConstants.FILE_EXTENSION_TEXT_CODE;
-import static nikita.common.config.FileConstants.MIME_TYPE_PDF;
-import static nikita.common.config.FileConstants.MIME_TYPE_TEXT;
+import static nikita.common.config.FileConstants.*;
 import static nikita.common.config.N5ResourceMappings.ARCHIVE_VERSION_CODE;
 import static nikita.common.config.N5ResourceMappings.PRODUCTION_VERSION_CODE;
 import static nikita.common.config.ServerConstants.DOCUMENT_STORE_LOCATION;
@@ -177,7 +177,6 @@ public class DocumentObjectService
                     contentLength + "). The document was attempted to be " +
                     "associated with " + documentObject);
         }
-
 
         // Check that if the content-type is set it should be in agreement
         // with mimeType value in documentObject
@@ -380,11 +379,11 @@ public class DocumentObjectService
         textDocumentObject.setFormatDetails("OCR");
 
         textDocumentObject.setVariantFormat
-            (new VariantFormat(PRODUCTION_VERSION_CODE));
+                (new VariantFormat(PRODUCTION_VERSION_CODE));
         validateVariantFormat(textDocumentObject);
 
         setFilenameAndExtensionForArchiveDocument
-            (productionDocumentObject, textDocumentObject);
+                (productionDocumentObject, textDocumentObject);
 
         // Setting a UUID here as the filename on disk will use this UUID value
         textDocumentObject.setSystemId(randomUUID());
@@ -414,16 +413,20 @@ public class DocumentObjectService
 
     @Transactional
     public DocumentObject extractOCRTextFromDocument(DocumentObject
-                                                     originalDocumentObject) {
+                                                             originalDocumentObject) {
         DocumentObject textDocumentObject = new DocumentObject();
 
         try {
             OffsetDateTime now = OffsetDateTime.now();
             Path textFile = extractTextFromImage
-                (originalDocumentObject, textDocumentObject);
+                    (originalDocumentObject, textDocumentObject);
+            DocumentAnalysis documentAnalysis = new DocumentAnalysis();
+            textDocumentObject.setDocumentTokens(
+                    documentAnalysis.getDocumentTokensAsClob(
+                            TikaInputStream.get(textFile)));
             // Parent document description
             DocumentDescription documentDescription =
-                originalDocumentObject.getReferenceDocumentDescription();
+                    originalDocumentObject.getReferenceDocumentDescription();
             // If it's null, throw an exception. You can't create a
             // related documentObject unless it has a document description
             if (documentDescription == null) {
@@ -472,8 +475,8 @@ public class DocumentObjectService
                         "persisting this documentDescription to the database.");
             }
             return null;
-
-        } catch (InterruptedException | IOException e) {
+        } catch (InterruptedException | IOException | TikaException
+                | SQLException e) {
             logger.error("Problem when trying to convert to text format"
                     + e);
         }
@@ -503,7 +506,6 @@ public class DocumentObjectService
 
     /**
      * Delete all objects belonging to the user identified by ownedBy
-     *
      */
     @Override
     @Transactional
@@ -856,7 +858,9 @@ public class DocumentObjectService
 
             setGeneratedDocumentFilename(documentObject);
 
-            String mimeType = getMimeType(incoming);
+            DocumentAnalysis documentAnalysis = new DocumentAnalysis();
+            InputStream stream = TikaInputStream.get(incoming);
+            String mimeType = documentAnalysis.getMimeType(stream);
             if (!mimeType.equals(documentObject.getMimeType())) {
                 logger.warn("Overriding mime-type for documentObject [" +
                         documentObject + "]. Original was [" +
@@ -864,7 +868,9 @@ public class DocumentObjectService
                         mimeType + "].");
             }
             documentObject.setMimeType(mimeType);
-
+            // Parse document for word tokens
+            documentObject.setDocumentTokens(
+                    documentAnalysis.getDocumentTokensAsClob(stream));
             // TODO find way to detect PRONOM code for a uploaded file.
             Format format = documentObject.getFormat();
             if (null == format) {
@@ -884,12 +890,12 @@ public class DocumentObjectService
                 convertDocumentToPDF(documentObject);
             }
 
-	    // Run OCR on all images to look for text content
-	    if (0 == documentObject.getMimeType().indexOf("image/")) {
-		extractOCRTextFromDocument(documentObject);
-	    }
+            // Run OCR on all images to look for text content
+            if (0 == documentObject.getMimeType().indexOf("image/")) {
+                extractOCRTextFromDocument(documentObject);
+            }
             documentObjectRepository.save(documentObject);
-        } catch (IOException e) {
+        } catch (IOException | TikaException | SQLException e) {
             String msg = "When associating an uploaded file with " +
                     documentObject + " the following Exception occurred " +
                     e;

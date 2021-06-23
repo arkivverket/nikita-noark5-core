@@ -14,6 +14,9 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -30,6 +33,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 
 @Entity
 @Table(name = TABLE_ELECTRONIC_SIGNATURE)
+@Indexed
 public class ElectronicSignature
         extends NoarkEntity
         implements ISystemId, Comparable<SystemIdEntity> {
@@ -38,6 +42,7 @@ public class ElectronicSignature
     @OneToMany(mappedBy = "referenceSystemIdEntity")
     @JsonIgnore
     private final List<ChangeLog> referenceChangeLog = new ArrayList<>();
+
     /**
      * M001 - systemID (xs:string)
      */
@@ -45,6 +50,7 @@ public class ElectronicSignature
     @Column(name = SYSTEM_ID_ENG, updatable = false, nullable = false)
     @Type(type = "uuid-char")
     private UUID systemId;
+
     /**
      * M622 - verifisertDato (xs:date)
      */
@@ -52,14 +58,18 @@ public class ElectronicSignature
     @JsonProperty(ELECTRONIC_SIGNATURE_VERIFIED_DATE)
     @DateTimeFormat(iso = DATE_TIME)
     @Audited
+    @GenericField
     private OffsetDateTime verifiedDate;
+
     /**
      * M623 - verifisertAv (xs:string)
      */
     @Column(name = ELECTRONIC_SIGNATURE_VERIFIED_BY_ENG)
     @JsonProperty(ELECTRONIC_SIGNATURE_VERIFIED_BY)
     @Audited
+    @KeywordField
     private String verifiedBy;
+
     /**
      * M??? - elektronisksignatursikkerhetsnivaa code (xs:string)
      */
@@ -67,6 +77,7 @@ public class ElectronicSignature
     @JsonProperty(ELECTRONIC_SIGNATURE_SECURITY_LEVEL_CODE)
     @Audited
     private String electronicSignatureSecurityLevelCode;
+
     /**
      * M507 - elektronisksignatursikkerhetsnivaa code name (xs:string)
      */
@@ -74,6 +85,7 @@ public class ElectronicSignature
     @JsonProperty(ELECTRONIC_SIGNATURE_SECURITY_LEVEL_CODE_NAME)
     @Audited
     private String electronicSignatureSecurityLevelCodeName;
+
     /**
      * M??? - elektronisksignaturverifisert code (xs:string)
      */
