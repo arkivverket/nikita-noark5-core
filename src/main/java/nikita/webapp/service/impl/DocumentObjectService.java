@@ -9,6 +9,7 @@ import nikita.common.model.noark5.v5.metadata.VariantFormat;
 import nikita.common.model.noark5.v5.secondary.Conversion;
 import nikita.common.repository.n5v5.IDocumentObjectRepository;
 import nikita.common.util.CommonUtils;
+import nikita.common.util.analysis.DocumentAnalysis;
 import nikita.common.util.exceptions.*;
 import nikita.webapp.config.WebappProperties;
 import nikita.webapp.hateoas.interfaces.IDocumentObjectHateoasHandler;
@@ -21,6 +22,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.config.TikaConfig;
 import org.apache.tika.detect.Detector;
+import org.apache.tika.exception.TikaException;
 import org.apache.tika.io.TikaInputStream;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.mime.MediaType;
@@ -47,6 +49,7 @@ import java.nio.file.Paths;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -856,7 +859,9 @@ public class DocumentObjectService
 
             setGeneratedDocumentFilename(documentObject);
 
-            String mimeType = getMimeType(incoming);
+            DocumentAnalysis documentAnalysis = new DocumentAnalysis();
+            InputStream stream = TikaInputStream.get(incoming);
+            String mimeType = documentAnalysis.getMimeType(stream);
             if (!mimeType.equals(documentObject.getMimeType())) {
                 logger.warn("Overriding mime-type for documentObject [" +
                         documentObject + "]. Original was [" +
@@ -864,7 +869,9 @@ public class DocumentObjectService
                         mimeType + "].");
             }
             documentObject.setMimeType(mimeType);
-
+            // Parse document for word tokens
+            documentObject.setDocumentTokens(
+                    documentAnalysis.getDocumentTokensAsClob(stream));
             // TODO find way to detect PRONOM code for a uploaded file.
             Format format = documentObject.getFormat();
             if (null == format) {
@@ -889,7 +896,7 @@ public class DocumentObjectService
 		extractOCRTextFromDocument(documentObject);
 	    }
             documentObjectRepository.save(documentObject);
-        } catch (IOException e) {
+        } catch (IOException | TikaException | SQLException e) {
             String msg = "When associating an uploaded file with " +
                     documentObject + " the following Exception occurred " +
                     e;
