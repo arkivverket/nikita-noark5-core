@@ -32,6 +32,7 @@ public class ODataConstants {
     public static final String DOLLAR_TOP = "$top";
     public static final String DOLLAR_FILTER = "$filter";
     public static final String DOLLAR_COUNT = "$count";
+    public static final String DOLLAR_SEARCH = "$search";
     public static final String NEXT = "next";
     public static final String PREVIOUS = "previous";
 }

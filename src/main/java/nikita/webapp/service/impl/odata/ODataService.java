@@ -1,9 +1,12 @@
 package nikita.webapp.service.impl.odata;
 
 import nikita.common.model.nikita.NikitaPage;
+import nikita.common.model.noark5.v5.DocumentObject;
+import nikita.common.model.noark5.v5.hateoas.DocumentObjectHateoas;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
+import nikita.webapp.hateoas.DocumentObjectHateoasHandler;
 import nikita.webapp.hateoas.HateoasHandler;
 import nikita.webapp.odata.NikitaODataToHQL;
 import nikita.webapp.odata.ODataToHQL;
@@ -23,6 +26,8 @@ import org.hibernate.ScrollableResults;
 import org.hibernate.Session;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.query.Query;
+import org.hibernate.search.engine.search.query.SearchResult;
+import org.hibernate.search.mapper.orm.Search;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,7 +40,9 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.rowset.serial.SerialClob;
 import javax.validation.constraints.NotNull;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 
@@ -96,6 +103,44 @@ public class ODataService
         return processODataQueryGet("");
     }
 
+    /**
+     * Note: This method has an obvious flaw:
+     * .search(DocumentObject.class)
+     * Currently we only allow $search to work on document contents
+     * (documentTokens). This is because hibernate is generating indexes per
+     * object type (Fonds.class, DocumentObject.class). When we make
+     * hibernate work with a single index, we can search across all values.
+     * The point of the code at the moment is just to get fulltext working.
+     */
+    @Override
+    public HateoasNoarkObject processODataSearchQuery(
+            String search, int fetchCount, int from) {
+        try {
+            SerialClob clobQuery = new SerialClob(search.toCharArray());
+            SearchResult<DocumentObject> results = Search.session(entityManager)
+                    .search(DocumentObject.class)
+                    .where(f -> f.match()
+                            .fields("documentTokens")
+                            .matching(clobQuery))
+                    .fetch(fetchCount);
+            long totalRows = results.total().hitCount();
+            List<INoarkEntity> resultsDocObject = List.copyOf(results.hits());
+            NikitaPage page = new NikitaPage(resultsDocObject, totalRows,
+                    fetchCount, from);
+            DocumentObjectHateoasHandler handler = new DocumentObjectHateoasHandler();
+            DocumentObjectHateoas documentObjectHateoas =
+                    new DocumentObjectHateoas(page);
+            handler.setPublicAddress(address.getAddress());
+            handler.setContextPath(address.getContextPath());
+            handler.addLinks(documentObjectHateoas, new Authorisation());
+            setOutgoingRequestHeaderList();
+            return documentObjectHateoas;
+        } catch (SQLException e) {
+            logger.error(e.toString());
+        }
+        return null;
+    }
+
     @Override
     public HateoasNoarkObject processODataQueryGet(String odataAppend) {
         try {
@@ -145,7 +190,8 @@ public class ODataService
                 noarkObject = hateoasObject.using()
                         .getDeclaredConstructor(NikitaPage.class)
                         .newInstance(page);
-            } else {
+            } // TODO : Is it safe to remove this else ??
+            else {
                 noarkObject = hateoasObject.using()
                         .getDeclaredConstructor(List.class)
                         .newInstance(entityList);

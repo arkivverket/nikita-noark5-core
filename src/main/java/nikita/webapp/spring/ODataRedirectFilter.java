@@ -72,7 +72,8 @@ public class ODataRedirectFilter
                 map.containsKey(DOLLAR_TOP) ||
                 map.containsKey(DOLLAR_SKIP) ||
                 map.containsKey(DOLLAR_ORDER_BY) ||
-                map.containsKey(DOLLAR_COUNT))) {
+                map.containsKey(DOLLAR_COUNT) ||
+                map.containsKey(DOLLAR_SEARCH))) {
             String urlVal = sanitiseUrlForOData(urlString);
             RequestDispatcher requestDispatcher = request.
                     getRequestDispatcher(urlVal);

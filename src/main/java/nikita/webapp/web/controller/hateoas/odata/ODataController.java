@@ -77,9 +77,25 @@ public class ODataController {
                   @RequestParam(value = DOLLAR_SKIP, required = false)
                           String skip,
                   @RequestParam(value = DOLLAR_ORDER_BY, required = false)
-                          String orderBy) {
-        return ResponseEntity.status(OK)
-                .body(oDataService.processODataQueryGet());
+                          String orderBy,
+                  @RequestParam(value = DOLLAR_SEARCH, required = false)
+                          String search) {
+        if (search != null && !search.isBlank()) {
+            int fetchCount = 0;
+            if (top != null && !top.isBlank()) {
+                fetchCount = Integer.getInteger(top);
+            }
+            int from = 0;
+            if (skip != null && !skip.isBlank()) {
+                from = Integer.getInteger(skip);
+            }
+            return ResponseEntity.status(OK)
+                    .body(oDataService.processODataSearchQuery(
+                            search, fetchCount, from));
+        } else {
+            return ResponseEntity.status(OK)
+                    .body(oDataService.processODataQueryGet());
+        }
     }
 
     /**
