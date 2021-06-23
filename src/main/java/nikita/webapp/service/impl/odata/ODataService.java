@@ -122,7 +122,7 @@ public class ODataService
                     .where(f -> f.match()
                             .fields("documentTokens")
                             .matching(clobQuery))
-                    .fetch(fetchCount);
+                    .fetch(from, fetchCount);
             long totalRows = results.total().hitCount();
             List<INoarkEntity> resultsDocObject = List.copyOf(results.hits());
             NikitaPage page = new NikitaPage(resultsDocObject, totalRows,
