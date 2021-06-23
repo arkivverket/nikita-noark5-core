@@ -420,6 +420,10 @@ public class DocumentObjectService
             OffsetDateTime now = OffsetDateTime.now();
             Path textFile = extractTextFromImage
                     (originalDocumentObject, textDocumentObject);
+            DocumentAnalysis documentAnalysis = new DocumentAnalysis();
+            textDocumentObject.setDocumentTokens(
+                    documentAnalysis.getDocumentTokensAsClob(
+                            TikaInputStream.get(textFile)));
             // Parent document description
             DocumentDescription documentDescription =
                     originalDocumentObject.getReferenceDocumentDescription();
@@ -471,8 +475,8 @@ public class DocumentObjectService
                         "persisting this documentDescription to the database.");
             }
             return null;
-
-        } catch (InterruptedException | IOException e) {
+        } catch (InterruptedException | IOException | TikaException
+                | SQLException e) {
             logger.error("Problem when trying to convert to text format"
                     + e);
         }
