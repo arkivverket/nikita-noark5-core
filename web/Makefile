@@ -2,9 +2,8 @@ project ?=nikita5/web
 port ?=3000
 instance_name=nikita_web
 
-setup: favicon.ico
+setup:
 	npm install
-	npm install nodemon
 
 setup-debian:
 	apt-get install -y libjs-angularjs node-express node-body-parser wget
