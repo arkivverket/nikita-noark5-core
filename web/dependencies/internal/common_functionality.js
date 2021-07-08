@@ -157,13 +157,16 @@ let app = angular.module('nikita', ['ngFileUpload', 'angular.img'])
                         'Authorization': token
                     }
                 });
-
                 let fondsStructure = await this.getFondsStructureRoot(token);
-                let seriesList = await this.getObject(
-                    fondsStructure._links[REL_SERIES].href, token);
-                return await seriesList;
+                response = await fetch(fondsStructure._links[REL_SERIES].href, {
+                    headers: {
+                        'Authorization': token
+                    }
+                });
+                return await response.json();
             };
-            /**
+
+        /**
              * Using the baseUrl (manually set in config.js), get the root of arkivstruktur.
              * First you use the url corresponding to the root of the application, then
              */
