@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html ng-app="nikita">
+<head>
+    <meta charset="UTF-8">
+    <title>nikita-noark5</title>
+    <script src="dependencies/internal/config.js"></script>
+    <script src="dependencies/vendor/META-INF/resources/webjars/jquery/3.3.1-1/jquery.min.js"></script>
+    <script src="dependencies/vendor/META-INF/resources/webjars/angularjs/1.7.0/angular.min.js"></script>
+    <script src="dependencies/vendor/META-INF/resources/webjars/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="dependencies/vendor/META-INF/resources/webjars/popper.js/1.14.1/umd/popper.js"></script>
+
+    <link href="dependencies/vendor/META-INF/resources/webjars/bootstrap/4.1.1/css/bootstrap.min.css"
+          rel="stylesheet" type="text/css">
+
+    <link
+            href="dependencies/vendor/META-INF/resources/webjars/font-awesome/5.0.9/web-fonts-with-css/css/fontawesome-all.css"
+            rel="stylesheet" type="text/css">
+
+    <script src="dependencies/internal/common_functionality.js"></script>
+    <script src="dependencies/internal/login.js"></script>
+
+    <!-- Manually setting the size of the modal for creating a new user -->
+    <style media="screen" type="text/css">
+        .col-padding-right {
+            padding-right: 15px;
+        }
+    </style>
+</head>
+
+<body ng-controller="LoginController">
+
+<nav class="navbar  navbar-expand-sm bg-light nav-upper">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">nikita-noark5-core@oslomet</a>
+        </div>
+    </div>
+</nav>
+
+<nav class="navbar  navbar-expand-sm bg-light nav-lower">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link py-1" href="#" ng-click="showLoginCard()">P
+                    <C3>
+                        <A5>logging
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link py-1" href="#" ng-click="showAboutCard()">Om</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link py-1" href="#" ng-click="showSourceCodeCard()">Kildekode</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="container container-fluid">
+    <div>
+        <div class="col-lg-3"></div>
+        <div class="card col-lg-6" ng-show="showLogin">
+            <div class="card-body">
+                <h4 class="card-title">nikita-noark5-core</h4>
+                <p class="card-text">
+                    Du m
+                    <C3>
+                        <A5> ha et konto for
+                            <C3>
+                                <A5> logge p
+                                    <C3>
+                                        <A5>. Du kan registrere deg for
+                                            <C3>
+                                                <A5> f
+                                                    <C3>
+                                                        <A5> en konto eller logge p
+                                                            <C3>
+                                                                <A5> med
+                                                                    gjest@example.com:password.
+                                                                    Merk! Data som blir opprettet under gjest kontoen
+                                                                    slettes regelmessig.
+                </p>
+                <a class="card-link" href="login.html">Logg p
+                    <C3>
+                        <A5> eller opprett konto
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3"></div>
+    </div>
+    <div>
+        <div class="col-lg-3"></div>
+        <div class="card col-lg-6" ng-show="showAbout">
+            <div class="card-body">
+                <h4 class="card-title">nikita-noark5-core</h4>
+                <p class="card-text">
+                    Dette er et undervisningsverkt
+                    <C3>
+                        <B8>y brukt p
+                            <C3>
+                                <A5> arkivstudiet ved OsloMet-ABI for
+                                    <C3>
+                                        <A5> utforske tematikken rundt
+                                            digital arkivdanning og bevaring. nikita er et fri programvare prosjekt.
+                                            Ansvarlig ved OsloMet er Thomas
+                                            S
+                                            <C3>
+                                                <B8>dring
+                </p>
+                <a class="card-link" href="https://www.oslomet.no/om/ansatt/tsodring/">Kontakt</a>
+            </div>
+        </div>
+        <div class="col-lg-3"></div>
+    </div>
+    <div>
+        <div class="col-lg-3"></div>
+        <div class="card col-lg-6" ng-show="showSourceCode">
+            <div class="card-body">
+                <h4 class="card-title">nikita-noark5-core</h4>
+                <p class="card-text">
+                    nikita-noark5-core er utviklet som fri programvare. Mer informasjon om prosjektet finner du p
+                    <C3>
+                        <A5>
+                            gitlab siden v
+                            <C3>
+                                <A5>r.
+                </p>
+                <a class="card-link" href="https://gitlab.com/OsloMet-ABI/nikita-noark5-core">Se kildekoden</a>
+            </div>
+        </div>
+        <div class="col-lg-3"></div>
+    </div>
+</div>
+</body>
+</html>
