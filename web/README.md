@@ -1,8 +1,9 @@
 ## Nikita web
 
-A angular application for interacting with [nikita-noark5-core][n].
+An Angular application for interacting with [nikita-noark5-core][n].
 
-You can start the application by running
+After running "mvn package" in the parent folder and "make setup" in the web
+folder,  you can start the application by running:
 
     make run
     # Should be running at http://localhost:3000/
