@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html ng-app="nikita">
+<head>
+  <meta charset="UTF-8">
+  <title>nikita-noark5</title>
+  <script src="dependencies/internal/config.js"></script>
+  <script src="dependencies/vendor/META-INF/resources/webjars/jquery/3.3.1-1/jquery.min.js"></script>
+  <script src="dependencies/vendor/META-INF/resources/webjars/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+  <script src="dependencies/vendor/META-INF/resources/webjars/popper.js/1.14.1/umd/popper.js"></script>
+  <script src="dependencies/vendor/META-INF/resources/webjars/angularjs/1.7.0/angular.min.js"></script>
+  <script src="dependencies/vendor/META-INF/resources/webjars/angular-img-http-src/1.0.1/index.js"></script>
+  <script
+          src="dependencies/vendor/META-INF/resources/webjars/angular-file-upload/12.2.13/ng-file-upload-all.js"></script>
+  <script src="dependencies/vendor/META-INF/resources/webjars/angular-img-http-src/1.0.1/index.js"></script>
+  <script src="dependencies/internal/common_functionality.js"></script>
+  <script src="dependencies/internal/depot.js"></script>
+
+  <link href="dependencies/vendor/META-INF/resources/webjars/bootstrap/4.1.1/css/bootstrap.min.css"
+        rel="stylesheet" type="text/css">
+  <link
+    href="dependencies/vendor/META-INF/resources/webjars/font-awesome/5.0.9/web-fonts-with-css/css/fontawesome-all.css"
+    rel="stylesheet" type="text/css">
+
+  <!-- Manually setting the size of the modal for creating a new user -->
+  <style media="screen" type="text/css">
+    .modal-dialog {
+      width: auto;
+      max-width: 480px;
+    }
+  </style>
+</head>
+
+<body ng-controller="DepotController">
+<div class="container py-5">
+  <div class="col-md-6 mx-auto">
+
+    <div class="ng-cloak ng-hide alert alert-danger" ng-cloak ng-show="error"
+    <div class="ng-cloak ng-hide alert alert-danger" ng-cloak ng-show="error"
+         role="alert">
+      {{errorMessage}}
+    </div>
+
+    <div class="card rounded-0">
+      <div class="card-header">
+        <h3 class="mb-0">Pålogging til nikita arkivdepottjeneste</h3>
+      </div>
+
+      <div class="card-body">
+        <div class="form-group">
+          <label for="emailAddress">Brukernavn</label>
+          <input class="form-control form-control-lg rounded-1" placeholder="Epostadresse" required
+                 name="emailAddress" type="email" ng-model="emailAddress" id="emailAddress" autofocus>
+        </div>
+        <div class="form-group">
+          <label for="password">Passord</label>
+          <input class="form-control form-control-lg rounded-1" placeholder="Ditt passord"
+                 name="password" type="password" ng-model="password" id="password">
+        </div>
+        <div class="form-group">
+          <label for="role">Logg på som:</label>
+          <select id="role" class="form-control form-control-lg rounded-1" ng-model="selectedDepotRole">
+            <option ng-selected="{{option.value == selectedDepotRole}}"
+                    ng-repeat="option in depotOptions"
+                    value="{{option.value}}">{{option.value}}
+            </option>
+          </select>
+        </div>
+        <div>
+          <button class="btn btn-primary btn-lg float-left" data-toggle="modal" data-target="#newAccountModal">
+            Registrer deg
+          </button>
+          <button class="btn btn-success btn-lg float-right" ng-click="doDepot()" id="depot">Logg på arkivdepottjeneste</button>
+        </div>
+      </div>
+
+    </div>
+    <div class="ng-cloak ng-hide alert alert-danger" ng-cloak ng-show="userError"
+         role="alert">
+      Feil med brukernavn/passord
+    </div>
+  </div>
+</div>
+
+<!-- modal to create a new user -->
+<div id="newAccountModal" class="modal fade" tabindex="-1"
+     role="dialog" aria-hidden="true" new-user-modal-dir>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4>Opprett ny bruker</h4>
+        <button type="button" class="close" data-dismiss="modal">×</button>
+      </div>
+      <div class="modal-body">
+        <div>
+          <div class="form-group">
+            <div class="row">
+              <div class="col-1"></div>
+              <div class="col-10">
+                <label class="control-label" for="emailAddressReg">Epostadresse:</label>
+                <input type="text" name="emailAddress" id="emailAddressReg"
+                       ng-model="emailAddressRegister" class="form-control form-control-lg rounded-1"
+                       placeholder="Epostadresse"/>
+              </div>
+              <div class="col-1"></div>
+            </div>
+            <div class="row">
+              <div class="col-1"></div>
+              <div class="col-10">
+                <label class="control-label" for="firstname">Fornavn:</label>
+                <input class="form-control form-control-lg rounded-1" placeholder="Fornavn"
+                       name="firstname" type="text" value=""
+                       ng-model="firstnameRegister" id="firstname">
+              </div>
+              <div class="col-1"></div>
+            </div>
+            <div class="row">
+              <div class="col-1"></div>
+              <div class="col-10">
+                <label class="control-label" for="lastname">Etternavn:</label>
+                <input class="form-control form-control-lg rounded-1" placeholder="Etternavn"
+                       name="lastname" type="text" value=""
+                       ng-model="lastnameRegister" id="lastname">
+              </div>
+              <div class="col-1"></div>
+            </div>
+            <div class="row">
+              <div class="col-1"></div>
+              <div class="col-10">
+                <label class="control-label" for="passwordReg">Passord:</label>
+                <input class="form-control form-control-lg rounded-1" placeholder="Passord"
+                       name="password" type="password" value=""
+                       ng-model="passwordRegister" id="passwordReg">
+              </div>
+              <div class="col-1"></div>
+            </div>
+            <div class="row">
+              <div class="col-1"></div>
+              <div class="col-10">
+                <label class="control-label" for="repeatPasswordReg">Gjenta passord:</label>
+                <input class="form-control form-control-lg rounded-1" placeholder="Gjenta passord"
+                       name="repeat_password" type="password" value=""
+                       ng-model="repeatPasswordRegister" id="repeatPasswordReg">
+              </div>
+              <div class="col-1"></div>
+            </div>
+            <div class="row" ng-show="passwordNotMatching">
+              <div class="col-1"></div>
+              <div class="col-10">
+                <div class="alert alert-danger">
+                  Passordene stemmer ikke!
+                </div>
+              </div>
+              <div class="col-1"></div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-lg btn-primary float-left" data-dismiss="modal">Lukk</button>
+            <button class="btn btn-lg btn-success float-right" ng-click="createUser()">Opprett konto
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End modal to create a new user -->
+</div>
+</body>
+</html>
