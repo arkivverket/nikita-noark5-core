@@ -13,6 +13,15 @@
  *
  */
 
+$(document).ready(function() {
+    $.ajax({
+        url: "https://nikita.oslomet.no/noark5v5/"
+    }).then(function(data) {
+       $('arkivstruktur').append(data.id);
+       $('arkivmappe').append(data.content);
+    });
+});
+
 var depot = app.controller('DepotController',
     ['$scope', '$http', 'depotService',
         function ($scope, $http, depotService) {
