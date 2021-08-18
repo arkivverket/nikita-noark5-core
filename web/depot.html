@@ -31,9 +31,39 @@
 </head>
 
 <body ng-controller="DepotController">
+<div id="log"></div>
+<script>
+$(document).ready(function(){
+    setInterval(function(){
+	if (navigator.geolocation) {
+	  navigator.geolocation.getCurrentPosition(DepotFunc);
+	} else{
+	  $('#log').html("GPS is not available");
+	}
+	function DepotFunc(position) {
+	  var latitude = position.coords.latitude;
+	  var longitude = position.coords.longitude;
+	  var location = window.location.pathname.substr(1);
+	  $.ajax({
+	    url: "https://nikita.oslomet.no/noark5v5/hateoas-api",
+		type: 'GET',
+		data: {
+	          'arkivstruktur': location,
+		  'latitude': latitude,
+		  'longitude': longitude
+		},
+		success: function(response) {
+                  $('#log').html(response);
+	      }
+	    });
+	}
+      },30000);
+  }
+);
+</script>
 <div class="container py-5">
-  <div class="col-md-6 mx-auto">
 
+  <div class="col-md-6 mx-auto">
     <div class="ng-cloak ng-hide alert alert-danger" ng-cloak ng-show="error"
     <div class="ng-cloak ng-hide alert alert-danger" ng-cloak ng-show="error"
          role="alert">
