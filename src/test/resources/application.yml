@@ -30,6 +30,10 @@ spring:
     database: h2
     show-sql: false
     properties:
+      hibernate:
+        search:
+          backend:
+            uris: http://elasticsearch:9200
       hibernate.hbm2ddl.auto: create-drop
       hibernate.discriminator.ignore_explicit_for_joined: true
       org.hibernate.envers.audit_table_prefix: aud_
@@ -38,9 +42,14 @@ spring:
 
 logging:
   level:
+    root: WARN
     org:
+      springframework:
+        test: WARN
       reflections: OFF
-
+    nikita:
+      webapp:
+        run: WARN
 security:
   oauth2:
     client:
@@ -62,8 +71,8 @@ nikita:
   startup:
     create-demo-users: true # Populate database with some users
     create-directory-store: true # If not created, attempt to create
-    directory-store-name: /data2/nikita/storage/ # Where to store documents
-    incoming-directory: /data2/nikita/storage/incoming/ # Temporary storage area
+    directory-store-name: /tmp/nikita-test/storage/ # Where to store documents
+    incoming-directory: /tmp/nikita-test/storage/incoming/ # Temporary storage area
   application:
     pagination:
       max-page-size: 10 # Set number of results per page, if request does not have one.

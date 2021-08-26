@@ -18,7 +18,7 @@ atexit() {
 trap atexit EXIT
 
 basedir=$(pwd)
-mvn spring-boot:run > nikita-run.log 2>&1 &
+mvn spring-boot:run -Dspring-boot.run.profiles=ci > nikita-run.log 2>&1 &
 serverpid=$!
 
 echo "Waiting for nikita to start"
