@@ -1,7 +1,7 @@
 package nikita.webapp.service.impl.secondary;
 
 import nikita.common.model.noark5.v5.DocumentDescription;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.hateoas.secondary.AuthorHateoas;
 import nikita.common.model.noark5.v5.secondary.Author;
 import nikita.common.repository.n5v5.secondary.IAuthorRepository;
@@ -56,7 +56,7 @@ public class AuthorService
     @Transactional
     public AuthorHateoas associateAuthorWithRecord(
             @NotNull final Author author,
-            @NotNull final Record record) {
+            @NotNull final RecordEntity record) {
         author.setReferenceRecord(record);
         return packAsHateoas(authorRepository.save(author));
     }

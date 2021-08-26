@@ -3,7 +3,7 @@ package nikita.webapp.service.interfaces.secondary;
 import nikita.common.model.nikita.PatchObjects;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.File;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.hateoas.secondary.PartHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.PartPersonHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.PartUnitHateoas;
@@ -26,7 +26,7 @@ public interface IPartService {
 
     PartUnitHateoas createNewPartUnit(
             @NotNull final PartUnit partUnit,
-            @NotNull final Record record);
+            @NotNull final RecordEntity record);
 
     PartHateoas handleUpdate(
             @NotNull final UUID systemId,
@@ -34,7 +34,7 @@ public interface IPartService {
 
     PartPersonHateoas createNewPartPerson(
             @NotNull final PartPerson partPerson,
-            @NotNull final Record record);
+            @NotNull final RecordEntity record);
 
     PartUnitHateoas createNewPartUnit(
             @NotNull final PartUnit partUnit,

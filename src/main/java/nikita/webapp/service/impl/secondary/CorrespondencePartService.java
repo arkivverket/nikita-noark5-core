@@ -2,7 +2,7 @@ package nikita.webapp.service.impl.secondary;
 
 import nikita.common.model.nikita.PatchObjects;
 import nikita.common.model.noark5.bsm.BSMBase;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.casehandling.secondary.*;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartInternalHateoas;
@@ -72,7 +72,7 @@ public class CorrespondencePartService
     public CorrespondencePartPersonHateoas
     createNewCorrespondencePartPerson(
             @NotNull final CorrespondencePartPerson correspondencePart,
-            @NotNull final Record record) {
+            @NotNull final RecordEntity record) {
 
         validateCorrespondencePartType(correspondencePart);
         ContactInformation contactInformation
@@ -110,7 +110,7 @@ public class CorrespondencePartService
     @Transactional
     public CorrespondencePartUnitHateoas createNewCorrespondencePartUnit(
             @NotNull final CorrespondencePartUnit correspondencePart,
-            @NotNull final Record record) {
+            @NotNull final RecordEntity record) {
         validateCorrespondencePartType(correspondencePart);
         // Set NikitaEntity values for ContactInformation, PostalAddress,
         // BusinessAddress
@@ -135,7 +135,7 @@ public class CorrespondencePartService
     public CorrespondencePartInternalHateoas
     createNewCorrespondencePartInternal(
             @NotNull final CorrespondencePartInternal correspondencePart,
-            @NotNull final Record record) {
+            @NotNull final RecordEntity record) {
         validateCorrespondencePartType(correspondencePart);
         record.addCorrespondencePart(correspondencePart);
         return packAsCorrespondencePartInternalHateoas(
@@ -336,7 +336,7 @@ public class CorrespondencePartService
     public void deleteCorrespondencePartUnit(@NotNull final UUID systemId) {
         CorrespondencePartUnit correspondencePartUnit = (CorrespondencePartUnit)
                 getCorrespondencePartOrThrow(systemId);
-        Record record = correspondencePartUnit.getReferenceRecord();
+        RecordEntity record = correspondencePartUnit.getReferenceRecord();
         record.removeCorrespondencePart(correspondencePartUnit);
         for (BSMBase bsmBase : correspondencePartUnit.getReferenceBSMBase()) {
             bsmBase.setReferenceCorrespondencePart(null);
@@ -357,7 +357,7 @@ public class CorrespondencePartService
     public void deleteCorrespondencePartPerson(@NotNull final UUID systemId) {
         CorrespondencePartPerson correspondencePartPerson = (CorrespondencePartPerson)
                 getCorrespondencePartOrThrow(systemId);
-        Record record = correspondencePartPerson.getReferenceRecord();
+        RecordEntity record = correspondencePartPerson.getReferenceRecord();
         record.removeCorrespondencePart(correspondencePartPerson);
         for (BSMBase bsmBase : correspondencePartPerson.getReferenceBSMBase()) {
             bsmBase.setReferenceCorrespondencePart(null);

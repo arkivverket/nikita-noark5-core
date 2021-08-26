@@ -2,7 +2,7 @@ package nikita.webapp.service.interfaces.secondary;
 
 import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.File;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.hateoas.secondary.CrossReferenceHateoas;
 import nikita.common.model.noark5.v5.secondary.CrossReference;
 
@@ -17,7 +17,7 @@ public interface ICrossReferenceService {
 
     CrossReferenceHateoas createCrossReferenceAssociatedWithRecord(
             @NotNull final CrossReference crossReference,
-            @NotNull final Record record);
+            @NotNull final RecordEntity record);
 
     CrossReferenceHateoas createCrossReferenceAssociatedWithClass(
             @NotNull final CrossReference crossReference,

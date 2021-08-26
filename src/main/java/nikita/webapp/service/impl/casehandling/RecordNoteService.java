@@ -1,7 +1,7 @@
 package nikita.webapp.service.impl.casehandling;
 
 import nikita.common.model.nikita.PatchMerge;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.casehandling.RecordNote;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RecordNoteExpansionHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RecordNoteHateoas;
@@ -73,7 +73,7 @@ public class RecordNoteService
     @Override
     @Transactional
     public RecordNoteHateoas expandRecordToRecordNote(
-            @NotNull final Record record,
+            @NotNull final RecordEntity record,
             @NotNull final PatchMerge patchMerge) {
         RecordNote recordNote = new RecordNote(record);
         record.setRecordId(recordNote.getRecordId());

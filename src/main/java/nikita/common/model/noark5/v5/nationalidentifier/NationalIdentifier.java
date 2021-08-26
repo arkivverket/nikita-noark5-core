@@ -1,7 +1,7 @@
 package nikita.common.model.noark5.v5.nationalidentifier;
 
 import nikita.common.model.noark5.v5.File;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.NationalIdentifierHateoas;
 import nikita.webapp.hateoas.nationalidentifier.NationalIdentifierHateoasHandler;
@@ -34,7 +34,7 @@ public class NationalIdentifier
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = NATIONAL_IDENTIFIER_RECORD_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
-    private Record referenceRecord;
+    private RecordEntity referenceRecord;
 
     public File getReferenceFile() {
         return referenceFile;
@@ -44,11 +44,11 @@ public class NationalIdentifier
         this.referenceFile = referenceFile;
     }
 
-    public Record getReferenceRecord() {
+    public RecordEntity getReferenceRecord() {
         return referenceRecord;
     }
 
-    public void setReferenceRecord(Record referenceRecord) {
+    public void setReferenceRecord(RecordEntity referenceRecord) {
         this.referenceRecord = referenceRecord;
     }
 }

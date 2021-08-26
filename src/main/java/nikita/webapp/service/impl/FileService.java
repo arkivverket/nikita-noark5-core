@@ -5,7 +5,7 @@ import nikita.common.model.nikita.PatchMerge;
 import nikita.common.model.nikita.PatchObjects;
 import nikita.common.model.noark5.bsm.BSMBase;
 import nikita.common.model.noark5.v5.File;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
 import nikita.common.model.noark5.v5.hateoas.FileHateoas;
 import nikita.common.model.noark5.v5.hateoas.RecordHateoas;
@@ -155,7 +155,7 @@ public class FileService
     @Override
     @Transactional
     public RecordHateoas createRecordAssociatedWithFile(
-            UUID systemId, Record record) {
+            UUID systemId, RecordEntity record) {
         record.setReferenceFile(getFileOrThrow(systemId));
         return recordService.save(record);
     }

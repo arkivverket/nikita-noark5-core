@@ -82,7 +82,7 @@ public class Disposal
 
     // Links to Record
     @OneToMany(mappedBy = "referenceDisposal")
-    private List<Record> referenceRecord = new ArrayList<>();
+    private List<RecordEntity> referenceRecord = new ArrayList<>();
 
     // Links to DocumentDescription
     @OneToMany(mappedBy = "referenceDisposal")
@@ -185,21 +185,21 @@ public class Disposal
         file.setReferenceDisposal(null);
     }
 
-    public List<Record> getReferenceRecord() {
+    public List<RecordEntity> getReferenceRecord() {
         return referenceRecord;
     }
 
-    public void setReferenceRecord(List<Record> referenceRecord) {
+    public void setReferenceRecord(List<RecordEntity> referenceRecord) {
         this.referenceRecord = referenceRecord;
     }
 
 
-    public void addRecord(Record record) {
+    public void addRecord(RecordEntity record) {
         this.referenceRecord.add(record);
         record.setReferenceDisposal(this);
     }
 
-    public void removeRecord(Record record) {
+    public void removeRecord(RecordEntity record) {
         this.referenceRecord.remove(record);
         record.setReferenceDisposal(null);
     }

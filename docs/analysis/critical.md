@@ -250,8 +250,8 @@ statements. Consider using a Set instead. For more info about this event, check 
 2021-03-14 18:24:43.012 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
 BidirectionalSynchronizationEvent - The [referenceRecord] bidirectional association in
 the [nikita.common.model.noark5.v5.secondary.PartUnit] entity requires both ends to be synchronized. Only
-the [addRecord(nikita.common.model.noark5.v5.Record record)] could be found. Consider adding
-the [removeRecord(nikita.common.model.noark5.v5.Record record)]  synchronization method as well. For more info about
+the [addRecord(nikita.common.model.noark5.v5.RecordEntity record)] could be found. Consider adding
+the [removeRecord(nikita.common.model.noark5.v5.RecordEntity record)]  synchronization method as well. For more info about
 this event, check out this User Guide link
 - https://vladmihalcea.com/hypersistence-optimizer/docs/user-guide/#BidirectionalSynchronizationEvent
 2021-03-14 18:24:43.016 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
@@ -347,8 +347,8 @@ statements. Consider using a Set instead. For more info about this event, check 
 2021-03-14 18:24:43.054 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
 BidirectionalSynchronizationEvent - The [referenceRecord] bidirectional association in
 the [nikita.common.model.noark5.v5.DocumentDescription] entity requires both ends to be synchronized. Only
-the [addRecord(nikita.common.model.noark5.v5.Record record)] could be found. Consider adding
-the [removeRecord(nikita.common.model.noark5.v5.Record record)]  synchronization method as well. For more info about
+the [addRecord(nikita.common.model.noark5.v5.RecordEntity record)] could be found. Consider adding
+the [removeRecord(nikita.common.model.noark5.v5.RecordEntity record)]  synchronization method as well. For more info about
 this event, check out this User Guide link
 - https://vladmihalcea.com/hypersistence-optimizer/docs/user-guide/#BidirectionalSynchronizationEvent
 2021-03-14 18:24:43.055 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
@@ -494,8 +494,8 @@ synchronization methods. For more info about this event, check out this User Gui
 2021-03-14 18:24:43.268 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
 BidirectionalSynchronizationEvent - The [referenceRecord] bidirectional association in
 the [nikita.common.model.noark5.v5.secondary.Classified] entity requires both ends to be synchronized. Consider adding
-the [addRecord(nikita.common.model.noark5.v5.Record record)]
-and [removeRecord(nikita.common.model.noark5.v5.Record record)] synchronization methods. For more info about this event,
+the [addRecord(nikita.common.model.noark5.v5.RecordEntity record)]
+and [removeRecord(nikita.common.model.noark5.v5.RecordEntity record)] synchronization methods. For more info about this event,
 check out this User Guide link
 - https://vladmihalcea.com/hypersistence-optimizer/docs/user-guide/#BidirectionalSynchronizationEvent
 2021-03-14 18:24:43.269 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
@@ -593,8 +593,8 @@ SQL statements. Consider using a Set instead. For more info about this event, ch
 2021-03-14 18:24:43.340 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
 BidirectionalSynchronizationEvent - The [referenceRecord] bidirectional association in
 the [nikita.common.model.noark5.v5.casehandling.CaseFile] entity requires both ends to be synchronized. Consider adding
-the [addRecord(nikita.common.model.noark5.v5.Record record)]
-and [removeRecord(nikita.common.model.noark5.v5.Record record)] synchronization methods. For more info about this event,
+the [addRecord(nikita.common.model.noark5.v5.RecordEntity record)]
+and [removeRecord(nikita.common.model.noark5.v5.RecordEntity record)] synchronization methods. For more info about this event,
 check out this User Guide link
 - https://vladmihalcea.com/hypersistence-optimizer/docs/user-guide/#BidirectionalSynchronizationEvent
 2021-03-14 18:24:43.341 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
@@ -624,44 +624,44 @@ InheritanceType.TABLE_PER_CLASS strategy which renders very inefficient SQL stat
 check out this User Guide link
 - https://vladmihalcea.com/hypersistence-optimizer/docs/user-guide/#TablePerClassInheritanceEvent
 2021-03-14 18:24:43.369 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
-TablePerClassInheritanceEvent - The [nikita.common.model.noark5.v5.Record] entity uses the
+TablePerClassInheritanceEvent - The [nikita.common.model.noark5.v5.RecordEntity] entity uses the
 InheritanceType.TABLE_PER_CLASS strategy which renders very inefficient SQL statements. For more info about this event,
 check out this User Guide link
 - https://vladmihalcea.com/hypersistence-optimizer/docs/user-guide/#TablePerClassInheritanceEvent
 2021-03-14 18:24:43.378 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
 BidirectionalSynchronizationEvent - The [referenceChangeLog] bidirectional association in
-the [nikita.common.model.noark5.v5.Record] entity requires both ends to be synchronized. Only
+the [nikita.common.model.noark5.v5.RecordEntity] entity requires both ends to be synchronized. Only
 the [addChangeLog(nikita.common.model.noark5.v5.ChangeLog changeLog)] could be found. Consider adding
 the [removeChangeLog(nikita.common.model.noark5.v5.ChangeLog changeLog)]  synchronization method as well. For more info
 about this event, check out this User Guide link
 - https://vladmihalcea.com/hypersistence-optimizer/docs/user-guide/#BidirectionalSynchronizationEvent
 2021-03-14 18:24:43.392 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
 BidirectionalSynchronizationEvent - The [referenceAuthor] bidirectional association in
-the [nikita.common.model.noark5.v5.Record] entity requires both ends to be synchronized. Only
+the [nikita.common.model.noark5.v5.RecordEntity] entity requires both ends to be synchronized. Only
 the [addAuthor(nikita.common.model.noark5.v5.secondary.Author author)] could be found. Consider adding
 the [removeAuthor(nikita.common.model.noark5.v5.secondary.Author author)]  synchronization method as well. For more info
 about this event, check out this User Guide link
 - https://vladmihalcea.com/hypersistence-optimizer/docs/user-guide/#BidirectionalSynchronizationEvent
 2021-03-14 18:24:43.394 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
 BidirectionalSynchronizationEvent - The [referenceBSMBase] bidirectional association in
-the [nikita.common.model.noark5.v5.Record] entity requires both ends to be synchronized. Only
+the [nikita.common.model.noark5.v5.RecordEntity] entity requires both ends to be synchronized. Only
 the [addBSMBase(nikita.common.model.noark5.bsm.BSMBase bSMBase)] could be found. Consider adding
 the [removeBSMBase(nikita.common.model.noark5.bsm.BSMBase bSMBase)]  synchronization method as well. For more info about
 this event, check out this User Guide link
 - https://vladmihalcea.com/hypersistence-optimizer/docs/user-guide/#BidirectionalSynchronizationEvent
 2021-03-14 18:24:43.396 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
-EagerFetchingEvent - The [referenceClassified] attribute in the [nikita.common.model.noark5.v5.Record] entity uses eager
+EagerFetchingEvent - The [referenceClassified] attribute in the [nikita.common.model.noark5.v5.RecordEntity] entity uses eager
 fetching. Consider using a lazy fetching which, not only that is more efficient, but it is way more flexible when it
 comes to fetching data. For more info about this event, check out this User Guide link
 - https://vladmihalcea.com/hypersistence-optimizer/docs/user-guide/#EagerFetchingEvent
 2021-03-14 18:24:43.397 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
-ManyToManyListEvent - The [referenceComment] many-to-many association in the [nikita.common.model.noark5.v5.Record]
+ManyToManyListEvent - The [referenceComment] many-to-many association in the [nikita.common.model.noark5.v5.RecordEntity]
 entity is using a List, so it does not render very efficient SQL statements. Consider using a Set instead. For more info
 about this event, check out this User Guide link
 - https://vladmihalcea.com/hypersistence-optimizer/docs/user-guide/#ManyToManyListEvent
 2021-03-14 18:24:43.398 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
 BidirectionalSynchronizationEvent - The [referenceCorrespondencePart] bidirectional association in
-the [nikita.common.model.noark5.v5.Record] entity requires both ends to be synchronized. Only
+the [nikita.common.model.noark5.v5.RecordEntity] entity requires both ends to be synchronized. Only
 the [addCorrespondencePart(nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePart correspondencePart)]
 could be found. Consider adding
 the [removeCorrespondencePart(nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePart correspondencePart)]
@@ -669,47 +669,47 @@ synchronization method as well. For more info about this event, check out this U
 - https://vladmihalcea.com/hypersistence-optimizer/docs/user-guide/#BidirectionalSynchronizationEvent
 2021-03-14 18:24:43.400 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
 BidirectionalSynchronizationEvent - The [referenceCrossReference] bidirectional association in
-the [nikita.common.model.noark5.v5.Record] entity requires both ends to be synchronized. Only
+the [nikita.common.model.noark5.v5.RecordEntity] entity requires both ends to be synchronized. Only
 the [addCrossReference(nikita.common.model.noark5.v5.secondary.CrossReference crossReference)] could be found. Consider
 adding the [removeCrossReference(nikita.common.model.noark5.v5.secondary.CrossReference crossReference)]
 synchronization method as well. For more info about this event, check out this User Guide link
 - https://vladmihalcea.com/hypersistence-optimizer/docs/user-guide/#BidirectionalSynchronizationEvent
 2021-03-14 18:24:43.401 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
-EagerFetchingEvent - The [referenceDisposal] attribute in the [nikita.common.model.noark5.v5.Record] entity uses eager
+EagerFetchingEvent - The [referenceDisposal] attribute in the [nikita.common.model.noark5.v5.RecordEntity] entity uses eager
 fetching. Consider using a lazy fetching which, not only that is more efficient, but it is way more flexible when it
 comes to fetching data. For more info about this event, check out this User Guide link
 - https://vladmihalcea.com/hypersistence-optimizer/docs/user-guide/#EagerFetchingEvent
 2021-03-14 18:24:43.403 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
 ManyToManyListEvent - The [referenceDocumentDescription] many-to-many association in
-the [nikita.common.model.noark5.v5.Record] entity is using a List, so it does not render very efficient SQL statements.
+the [nikita.common.model.noark5.v5.RecordEntity] entity is using a List, so it does not render very efficient SQL statements.
 Consider using a Set instead. For more info about this event, check out this User Guide link
 - https://vladmihalcea.com/hypersistence-optimizer/docs/user-guide/#ManyToManyListEvent
 2021-03-14 18:24:43.405 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
-ManyToManyListEvent - The [referenceKeyword] many-to-many association in the [nikita.common.model.noark5.v5.Record]
+ManyToManyListEvent - The [referenceKeyword] many-to-many association in the [nikita.common.model.noark5.v5.RecordEntity]
 entity is using a List, so it does not render very efficient SQL statements. Consider using a Set instead. For more info
 about this event, check out this User Guide link
 - https://vladmihalcea.com/hypersistence-optimizer/docs/user-guide/#ManyToManyListEvent
 2021-03-14 18:24:43.406 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
 BidirectionalSynchronizationEvent - The [referenceNationalIdentifier] bidirectional association in
-the [nikita.common.model.noark5.v5.Record] entity requires both ends to be synchronized. Only
+the [nikita.common.model.noark5.v5.RecordEntity] entity requires both ends to be synchronized. Only
 the [addNationalIdentifier(nikita.common.model.noark5.v5.nationalidentifier.NationalIdentifier nationalIdentifier)]
 could be found. Consider adding
 the [removeNationalIdentifier(nikita.common.model.noark5.v5.nationalidentifier.NationalIdentifier nationalIdentifier)]
 synchronization method as well. For more info about this event, check out this User Guide link
 - https://vladmihalcea.com/hypersistence-optimizer/docs/user-guide/#BidirectionalSynchronizationEvent
 2021-03-14 18:24:43.407 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
-ManyToManyListEvent - The [referencePart] many-to-many association in the [nikita.common.model.noark5.v5.Record] entity
+ManyToManyListEvent - The [referencePart] many-to-many association in the [nikita.common.model.noark5.v5.RecordEntity] entity
 is using a List, so it does not render very efficient SQL statements. Consider using a Set instead. For more info about
 this event, check out this User Guide link
 - https://vladmihalcea.com/hypersistence-optimizer/docs/user-guide/#ManyToManyListEvent
 2021-03-14 18:24:43.408 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
-EagerFetchingEvent - The [referenceScreening] attribute in the [nikita.common.model.noark5.v5.Record] entity uses eager
+EagerFetchingEvent - The [referenceScreening] attribute in the [nikita.common.model.noark5.v5.RecordEntity] entity uses eager
 fetching. Consider using a lazy fetching which, not only that is more efficient, but it is way more flexible when it
 comes to fetching data. For more info about this event, check out this User Guide link
 - https://vladmihalcea.com/hypersistence-optimizer/docs/user-guide/#EagerFetchingEvent
 2021-03-14 18:24:43.411 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
 ManyToManyListEvent - The [referenceStorageLocation] many-to-many association in
-the [nikita.common.model.noark5.v5.Record] entity is using a List, so it does not render very efficient SQL statements.
+the [nikita.common.model.noark5.v5.RecordEntity] entity is using a List, so it does not render very efficient SQL statements.
 Consider using a Set instead. For more info about this event, check out this User Guide link
 - https://vladmihalcea.com/hypersistence-optimizer/docs/user-guide/#ManyToManyListEvent
 2021-03-14 18:24:43.414 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
@@ -766,8 +766,8 @@ statements. Consider using a Set instead. For more info about this event, check 
 2021-03-14 18:24:43.463 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
 BidirectionalSynchronizationEvent - The [referenceRecord] bidirectional association in
 the [nikita.common.model.noark5.v5.secondary.Keyword] entity requires both ends to be synchronized. Consider adding
-the [addRecord(nikita.common.model.noark5.v5.Record record)]
-and [removeRecord(nikita.common.model.noark5.v5.Record record)] synchronization methods. For more info about this event,
+the [addRecord(nikita.common.model.noark5.v5.RecordEntity record)]
+and [removeRecord(nikita.common.model.noark5.v5.RecordEntity record)] synchronization methods. For more info about this event,
 check out this User Guide link
 - https://vladmihalcea.com/hypersistence-optimizer/docs/user-guide/#BidirectionalSynchronizationEvent
 2021-03-14 18:24:43.507 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
@@ -834,8 +834,8 @@ this User Guide link - https://vladmihalcea.com/hypersistence-optimizer/docs/use
 2021-03-14 18:24:43.563 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
 BidirectionalSynchronizationEvent - The [referenceRecord] bidirectional association in
 the [nikita.common.model.noark5.v5.Series] entity requires both ends to be synchronized. Only
-the [addRecord(nikita.common.model.noark5.v5.Record record)] could be found. Consider adding
-the [removeRecord(nikita.common.model.noark5.v5.Record record)]  synchronization method as well. For more info about
+the [addRecord(nikita.common.model.noark5.v5.RecordEntity record)] could be found. Consider adding
+the [removeRecord(nikita.common.model.noark5.v5.RecordEntity record)]  synchronization method as well. For more info about
 this event, check out this User Guide link
 - https://vladmihalcea.com/hypersistence-optimizer/docs/user-guide/#BidirectionalSynchronizationEvent
 2021-03-14 18:24:43.564 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
@@ -1063,8 +1063,8 @@ synchronization methods. For more info about this event, check out this User Gui
 2021-03-14 18:24:43.860 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
 BidirectionalSynchronizationEvent - The [referenceRecord] bidirectional association in
 the [nikita.common.model.noark5.v5.secondary.Disposal] entity requires both ends to be synchronized. Consider adding
-the [addRecord(nikita.common.model.noark5.v5.Record record)]
-and [removeRecord(nikita.common.model.noark5.v5.Record record)] synchronization methods. For more info about this event,
+the [addRecord(nikita.common.model.noark5.v5.RecordEntity record)]
+and [removeRecord(nikita.common.model.noark5.v5.RecordEntity record)] synchronization methods. For more info about this event,
 check out this User Guide link
 - https://vladmihalcea.com/hypersistence-optimizer/docs/user-guide/#BidirectionalSynchronizationEvent
 2021-03-14 18:24:43.861 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
@@ -1406,8 +1406,8 @@ statements. Consider using a Set instead. For more info about this event, check 
 2021-03-14 18:24:44.207 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
 BidirectionalSynchronizationEvent - The [referenceRecord] bidirectional association in
 the [nikita.common.model.noark5.v5.meeting.MeetingFile] entity requires both ends to be synchronized. Consider adding
-the [addRecord(nikita.common.model.noark5.v5.Record record)]
-and [removeRecord(nikita.common.model.noark5.v5.Record record)] synchronization methods. For more info about this event,
+the [addRecord(nikita.common.model.noark5.v5.RecordEntity record)]
+and [removeRecord(nikita.common.model.noark5.v5.RecordEntity record)] synchronization methods. For more info about this event,
 check out this User Guide link
 - https://vladmihalcea.com/hypersistence-optimizer/docs/user-guide/#BidirectionalSynchronizationEvent
 2021-03-14 18:24:44.209 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
@@ -1602,8 +1602,8 @@ this event, check out this User Guide link
 2021-03-14 18:24:44.328 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
 BidirectionalSynchronizationEvent - The [referenceRecord] bidirectional association in
 the [nikita.common.model.noark5.v5.File] entity requires both ends to be synchronized. Consider adding
-the [addRecord(nikita.common.model.noark5.v5.Record record)]
-and [removeRecord(nikita.common.model.noark5.v5.Record record)] synchronization methods. For more info about this event,
+the [addRecord(nikita.common.model.noark5.v5.RecordEntity record)]
+and [removeRecord(nikita.common.model.noark5.v5.RecordEntity record)] synchronization methods. For more info about this event,
 check out this User Guide link
 - https://vladmihalcea.com/hypersistence-optimizer/docs/user-guide/#BidirectionalSynchronizationEvent
 2021-03-14 18:24:44.329 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
@@ -1742,8 +1742,8 @@ statements. Consider using a Set instead. For more info about this event, check 
 2021-03-14 18:24:44.547 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
 BidirectionalSynchronizationEvent - The [referenceRecord] bidirectional association in
 the [nikita.common.model.noark5.v5.secondary.Part] entity requires both ends to be synchronized. Only
-the [addRecord(nikita.common.model.noark5.v5.Record record)] could be found. Consider adding
-the [removeRecord(nikita.common.model.noark5.v5.Record record)]  synchronization method as well. For more info about
+the [addRecord(nikita.common.model.noark5.v5.RecordEntity record)] could be found. Consider adding
+the [removeRecord(nikita.common.model.noark5.v5.RecordEntity record)]  synchronization method as well. For more info about
 this event, check out this User Guide link
 - https://vladmihalcea.com/hypersistence-optimizer/docs/user-guide/#BidirectionalSynchronizationEvent
 2021-03-14 18:24:44.555 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
@@ -1834,8 +1834,8 @@ about this event, check out this User Guide link
 2021-03-14 18:24:44.615 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
 BidirectionalSynchronizationEvent - The [referenceRecord] bidirectional association in
 the [nikita.common.model.noark5.v5.Class] entity requires both ends to be synchronized. Consider adding
-the [addRecord(nikita.common.model.noark5.v5.Record record)]
-and [removeRecord(nikita.common.model.noark5.v5.Record record)] synchronization methods. For more info about this event,
+the [addRecord(nikita.common.model.noark5.v5.RecordEntity record)]
+and [removeRecord(nikita.common.model.noark5.v5.RecordEntity record)] synchronization methods. For more info about this event,
 check out this User Guide link
 - https://vladmihalcea.com/hypersistence-optimizer/docs/user-guide/#BidirectionalSynchronizationEvent
 2021-03-14 18:24:44.617 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
@@ -1889,8 +1889,8 @@ SQL statements. Consider using a Set instead. For more info about this event, ch
 2021-03-14 18:24:44.642 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
 BidirectionalSynchronizationEvent - The [referenceRecord] bidirectional association in
 the [nikita.common.model.noark5.v5.secondary.PartPerson] entity requires both ends to be synchronized. Only
-the [addRecord(nikita.common.model.noark5.v5.Record record)] could be found. Consider adding
-the [removeRecord(nikita.common.model.noark5.v5.Record record)]  synchronization method as well. For more info about
+the [addRecord(nikita.common.model.noark5.v5.RecordEntity record)] could be found. Consider adding
+the [removeRecord(nikita.common.model.noark5.v5.RecordEntity record)]  synchronization method as well. For more info about
 this event, check out this User Guide link
 - https://vladmihalcea.com/hypersistence-optimizer/docs/user-guide/#BidirectionalSynchronizationEvent
 2021-03-14 18:24:44.646 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
@@ -2022,8 +2022,8 @@ statements. Consider using a Set instead. For more info about this event, check 
 2021-03-14 18:24:44.733 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
 BidirectionalSynchronizationEvent - The [referenceRecord] bidirectional association in
 the [nikita.common.model.noark5.v5.secondary.Screening] entity requires both ends to be synchronized. Consider adding
-the [addRecord(nikita.common.model.noark5.v5.Record record)]
-and [removeRecord(nikita.common.model.noark5.v5.Record record)] synchronization methods. For more info about this event,
+the [addRecord(nikita.common.model.noark5.v5.RecordEntity record)]
+and [removeRecord(nikita.common.model.noark5.v5.RecordEntity record)] synchronization methods. For more info about this event,
 check out this User Guide link
 - https://vladmihalcea.com/hypersistence-optimizer/docs/user-guide/#BidirectionalSynchronizationEvent
 2021-03-14 18:24:44.734 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
@@ -2222,8 +2222,8 @@ efficient SQL statements. Consider using a Set instead. For more info about this
 2021-03-14 18:24:45.037 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -
 BidirectionalSynchronizationEvent - The [referenceRecord] bidirectional association in
 the [nikita.common.model.noark5.v5.secondary.StorageLocation] entity requires both ends to be synchronized. Consider
-adding the [addRecord(nikita.common.model.noark5.v5.Record record)]
-and [removeRecord(nikita.common.model.noark5.v5.Record record)] synchronization methods. For more info about this event,
+adding the [addRecord(nikita.common.model.noark5.v5.RecordEntity record)]
+and [removeRecord(nikita.common.model.noark5.v5.RecordEntity record)] synchronization methods. For more info about this event,
 check out this User Guide link
 - https://vladmihalcea.com/hypersistence-optimizer/docs/user-guide/#BidirectionalSynchronizationEvent
 2021-03-14 18:24:45.038 ERROR 28858 --- [           main] Hypersistence Optimizer                  : CRITICAL -

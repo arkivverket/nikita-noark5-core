@@ -1,7 +1,7 @@
 package nikita.webapp.service.interfaces;
 
 import nikita.common.model.noark5.v5.File;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
 import nikita.common.model.noark5.v5.nationalidentifier.*;
 
@@ -12,7 +12,7 @@ public interface INationalIdentifierService {
 
     BuildingHateoas createNewBuilding(
             @NotNull final Building building,
-            @NotNull final Record record);
+            @NotNull final RecordEntity record);
 
     BuildingHateoas createNewBuilding(
             @NotNull final Building building,
@@ -20,7 +20,7 @@ public interface INationalIdentifierService {
 
     CadastralUnitHateoas createNewCadastralUnit(
             @NotNull final CadastralUnit unit,
-            @NotNull final Record record);
+            @NotNull final RecordEntity record);
 
     CadastralUnitHateoas createNewCadastralUnit(
             @NotNull final CadastralUnit unit,
@@ -28,7 +28,7 @@ public interface INationalIdentifierService {
 
     DNumberHateoas createNewDNumber(
             @NotNull final DNumber dNumber,
-            @NotNull final Record record);
+            @NotNull final RecordEntity record);
 
     DNumberHateoas createNewDNumber(
             @NotNull final DNumber dNumber,
@@ -36,7 +36,7 @@ public interface INationalIdentifierService {
 
     PlanHateoas createNewPlan(
             @NotNull final Plan plan,
-            @NotNull final Record record);
+            @NotNull final RecordEntity record);
 
     PlanHateoas createNewPlan(
             @NotNull final Plan plan,
@@ -44,7 +44,7 @@ public interface INationalIdentifierService {
 
     PositionHateoas createNewPosition(
             @NotNull final Position position,
-            @NotNull final Record record);
+            @NotNull final RecordEntity record);
 
     PositionHateoas createNewPosition(
             @NotNull final Position position,
@@ -52,7 +52,7 @@ public interface INationalIdentifierService {
 
     SocialSecurityNumberHateoas createNewSocialSecurityNumber(
             @NotNull final SocialSecurityNumber socialSecurityNumber,
-            @NotNull final Record record);
+            @NotNull final RecordEntity record);
 
     SocialSecurityNumberHateoas createNewSocialSecurityNumber(
             @NotNull final SocialSecurityNumber socialSecurityNumber,
@@ -60,7 +60,7 @@ public interface INationalIdentifierService {
 
     UnitHateoas createNewUnit(
             @NotNull final Unit unit,
-            @NotNull final Record record);
+            @NotNull final RecordEntity record);
 
     UnitHateoas createNewUnit(
             @NotNull final Unit unit,

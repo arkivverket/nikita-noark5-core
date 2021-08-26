@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.File;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.hateoas.secondary.CommentHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.ICommentEntity;
@@ -50,7 +50,7 @@ public class Comment
     /**
      * M310 - merknadstekst (xs:string)
      */
-    @Column(name = COMMENT_TEXT_ENG)
+    @Column(name = COMMENT_TEXT_ENG, length = 8192)
     @JsonProperty(COMMENT_TEXT)
     @Audited
     @FullTextField
@@ -97,7 +97,7 @@ public class Comment
 
     // Links to Record
     @ManyToMany(mappedBy = REFERENCE_COMMENT)
-    private final Set<Record> referenceRecord = new HashSet<>();
+    private final Set<RecordEntity> referenceRecord = new HashSet<>();
 
     // Link to DocumentDescription
     @ManyToMany(mappedBy = REFERENCE_COMMENT)
@@ -167,15 +167,15 @@ public class Comment
         file.getReferenceComment().remove(this);
     }
 
-    public Set<Record> getReferenceRecord() {
+    public Set<RecordEntity> getReferenceRecord() {
         return referenceRecord;
     }
 
-    public void addRecord(Record record) {
+    public void addRecord(RecordEntity record) {
         this.referenceRecord.add(record);
     }
 
-    public void removeRecord(Record record) {
+    public void removeRecord(RecordEntity record) {
         this.referenceRecord.remove(record);
         record.getReferenceComment().remove(this);
     }

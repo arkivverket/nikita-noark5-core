@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import nikita.common.model.noark5.v5.ClassificationSystem;
 import nikita.common.model.noark5.v5.File;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.hateoas.*;
@@ -255,7 +255,7 @@ public class SeriesHateoasController
             @Parameter(name = "Record",
                     description = "Incoming record object",
                     required = true)
-            @RequestBody Record record) throws NikitaException {
+            @RequestBody RecordEntity record) throws NikitaException {
         return errorResponse(NOT_IMPLEMENTED, API_MESSAGE_NOT_IMPLEMENTED);
     }
 

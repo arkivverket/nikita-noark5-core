@@ -1,7 +1,7 @@
 package nikita.webapp.service.interfaces;
 
 import nikita.common.model.nikita.PatchMerge;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryExpansionHateoas;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
@@ -21,7 +21,7 @@ public interface IRegistryEntryService {
     RegistryEntryHateoas save(@NotNull final RegistryEntry registryEntry);
 
     RegistryEntryHateoas expandRecordToRegistryEntry(
-            @NotNull final Record record,
+            @NotNull final RecordEntity record,
             @NotNull final PatchMerge patchMerge);
 
     PrecedenceHateoas createPrecedenceAssociatedWithRecord(

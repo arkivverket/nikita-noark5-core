@@ -2,7 +2,7 @@ package nikita.webapp.service.impl.secondary;
 
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.File;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.hateoas.secondary.CommentHateoas;
 import nikita.common.model.noark5.v5.metadata.CommentType;
 import nikita.common.model.noark5.v5.secondary.Comment;
@@ -69,7 +69,7 @@ public class CommentService
     @Override
     @Transactional
     public CommentHateoas createNewComment(@NotNull final Comment comment,
-                                           @NotNull final Record record) {
+                                           @NotNull final RecordEntity record) {
         checkCommentType(comment);
         if (null == comment.getCommentDate())
             comment.setCommentDate(OffsetDateTime.now());
@@ -134,7 +134,7 @@ public class CommentService
                 comment.getReferenceDocumentDescription()) {
             comment.removeDocumentDescription(documentDescription);
         }
-        for (Record record : comment.getReferenceRecord()) {
+        for (RecordEntity record : comment.getReferenceRecord()) {
             comment.removeRecord(record);
         }
         for (File file : comment.getReferenceFile()) {

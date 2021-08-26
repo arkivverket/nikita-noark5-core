@@ -1,7 +1,6 @@
 package nikita.common.model.noark5.v5.meeting;
 
-import nikita.common.config.N5ResourceMappings;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
@@ -17,7 +16,7 @@ import static nikita.common.config.N5ResourceMappings.MEETING_RECORD;
 @Table(name = TABLE_MEETING_RECORD)
 @Inheritance(strategy = JOINED)
 public class MeetingRecord
-        extends Record {
+        extends RecordEntity {
 
     /**
      * M085 - moeteregistreringstype (xs:string)

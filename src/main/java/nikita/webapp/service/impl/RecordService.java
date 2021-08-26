@@ -5,7 +5,7 @@ import nikita.common.model.nikita.PatchMerge;
 import nikita.common.model.nikita.PatchObjects;
 import nikita.common.model.noark5.bsm.BSMBase;
 import nikita.common.model.noark5.v5.DocumentDescription;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartInternal;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartUnit;
@@ -116,7 +116,7 @@ public class RecordService
 
     @Override
     @Transactional
-    public RecordHateoas save(@NotNull final Record record) {
+    public RecordHateoas save(@NotNull final RecordEntity record) {
         validateDocumentMedium(metadataService, record);
         validateScreening(metadataService, record);
         bsmService.validateBSMList(record.getReferenceBSMBase());
@@ -144,7 +144,7 @@ public class RecordService
     public DocumentDescriptionHateoas
     createDocumentDescriptionAssociatedWithRecord(
             UUID systemId, DocumentDescription documentDescription) {
-        Record record = getRecordOrThrow(systemId);
+        RecordEntity record = getRecordOrThrow(systemId);
         validateDocumentMedium(metadataService, documentDescription);
         validateScreening(metadataService, documentDescription);
         // Adding 1 as documentNumber starts at 1, not 0
@@ -327,7 +327,7 @@ public class RecordService
     public ScreeningMetadataHateoas createScreeningMetadataAssociatedWithRecord(
             @NotNull final UUID systemId,
             @NotNull final Metadata screeningMetadata) {
-        Record record = getRecordOrThrow(systemId);
+        RecordEntity record = getRecordOrThrow(systemId);
         if (null == record.getReferenceScreening()) {
             throw new NoarkEntityNotFoundException(INFO_CANNOT_FIND_OBJECT +
                     " Screening, associated with Record with systemId " +
@@ -342,7 +342,7 @@ public class RecordService
     public StorageLocationHateoas createStorageLocationAssociatedWithRecord(
             @NotNull final UUID systemId,
             @NotNull final StorageLocation storageLocation) {
-        Record record = getRecordOrThrow(systemId);
+        RecordEntity record = getRecordOrThrow(systemId);
         return storageLocationService
                 .createStorageLocationAssociatedWithRecord(
                         storageLocation, record);
@@ -561,9 +561,9 @@ public class RecordService
     @Transactional
     public RecordHateoas handleUpdate(@NotNull final UUID systemId,
                                       @NotNull final Long version,
-                                      @NotNull final Record incomingRecord) {
+                                      @NotNull final RecordEntity incomingRecord) {
         bsmService.validateBSMList(incomingRecord.getReferenceBSMBase());
-        Record existingRecord = getRecordOrThrow(systemId);
+        RecordEntity existingRecord = getRecordOrThrow(systemId);
         // Here copy all the values you are allowed to copy ....
         updateTitleAndDescription(incomingRecord, existingRecord);
         if (null != incomingRecord.getDocumentMedium()) {
@@ -581,7 +581,7 @@ public class RecordService
     public RecordHateoas handleUpdate(
             @NotNull final UUID systemId,
             @NotNull final PatchObjects patchObjects) {
-        return packAsHateoas((Record) handlePatch(systemId, patchObjects));
+        return packAsHateoas((RecordEntity) handlePatch(systemId, patchObjects));
     }
 
     /**
@@ -605,7 +605,7 @@ public class RecordService
     @Transactional
     public Object associateBSM(@NotNull final UUID systemId,
                                @NotNull final List<BSMBase> bsm) {
-        Record record = getRecordOrThrow(systemId);
+        RecordEntity record = getRecordOrThrow(systemId);
         record.addReferenceBSMBase(bsm);
         return record;
     }
@@ -615,7 +615,7 @@ public class RecordService
     @Override
     @Transactional
     public void deleteRecord(@NotNull final UUID systemId) {
-        Record record = getRecordOrThrow(systemId);
+        RecordEntity record = getRecordOrThrow(systemId);
         recordRepository.delete(record);
         applicationEventPublisher.publishEvent(
                 new AfterNoarkEntityDeletedEvent(this, record));
@@ -645,7 +645,7 @@ public class RecordService
      */
     @Override
     public RecordHateoas generateDefaultRecord(@NotNull final UUID systemId) {
-        Record defaultRecord = new Record();
+        RecordEntity defaultRecord = new RecordEntity();
         defaultRecord.setTitle(TEST_TITLE);
         defaultRecord.setVersion(-1L, true);
         return packAsHateoas(defaultRecord);
@@ -830,7 +830,7 @@ public class RecordService
     }
     // All HELPER operations
 
-    public RecordHateoas packAsHateoas(@NotNull final Record record) {
+    public RecordHateoas packAsHateoas(@NotNull final RecordEntity record) {
         RecordHateoas recordHateoas = new RecordHateoas(record);
         applyLinksAndHeader(recordHateoas, recordHateoasHandler);
         return recordHateoas;
@@ -845,8 +845,8 @@ public class RecordService
      * @param systemId the systemId of the record you want to retrieve
      * @return the record
      */
-    protected Record getRecordOrThrow(@NotNull final UUID systemId) {
-        Record record =
+    protected RecordEntity getRecordOrThrow(@NotNull final UUID systemId) {
+        RecordEntity record =
                 recordRepository.findBySystemId(systemId);
         if (record == null) {
             String info = INFO_CANNOT_FIND_OBJECT +

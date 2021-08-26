@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import nikita.common.model.nikita.PatchMerge;
 import nikita.common.model.nikita.PatchObjects;
 import nikita.common.model.noark5.v5.DocumentDescription;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartInternal;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
@@ -2338,7 +2338,7 @@ public class RecordHateoasController
             @Parameter(name = "Record",
                     description = "Incoming record object",
                     required = true)
-            @RequestBody Record record) throws NikitaException {
+            @RequestBody RecordEntity record) throws NikitaException {
         validateForUpdate(record);
         return ResponseEntity.status(OK)
                 .body(recordService.handleUpdate(

@@ -46,7 +46,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @HateoasPacker(using = RecordHateoasHandler.class)
 @HateoasObject(using = RecordHateoas.class)
 @Indexed
-public class Record
+public class RecordEntity
         extends SystemIdEntity
         implements IRecordEntity, IPart, ICorrespondencePart {
 
@@ -545,7 +545,7 @@ public class Record
         if (other.getClass() != getClass()) {
             return false;
         }
-        Record rhs = (Record) other;
+        RecordEntity rhs = (RecordEntity) other;
         return new EqualsBuilder()
                 .appendSuper(super.equals(other))
                 .append(archivedBy, rhs.archivedBy)

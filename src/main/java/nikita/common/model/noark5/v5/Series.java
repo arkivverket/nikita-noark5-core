@@ -157,7 +157,7 @@ public class Series
     // Links to Records
     @OneToMany(mappedBy = "referenceSeries")
     @JsonIgnore
-    private List<Record> referenceRecord = new ArrayList<>();
+    private List<RecordEntity> referenceRecord = new ArrayList<>();
 
     // Links to Classified
     @ManyToOne(fetch = LAZY, cascade = PERSIST)
@@ -343,20 +343,20 @@ public class Series
         file.setReferenceSeries(null);
     }
 
-    public List<Record> getReferenceRecord() {
+    public List<RecordEntity> getReferenceRecord() {
         return referenceRecord;
     }
 
-    public void setReferenceRecord(List<Record> referenceRecord) {
+    public void setReferenceRecord(List<RecordEntity> referenceRecord) {
         this.referenceRecord = referenceRecord;
     }
 
-    public void addRecord(Record record) {
+    public void addRecord(RecordEntity record) {
         this.referenceRecord.add(record);
         record.setReferenceSeries(this);
     }
 
-    public void removeRecord(Record record) {
+    public void removeRecord(RecordEntity record) {
         this.referenceRecord.remove(record);
         record.setReferenceSeries(null);
     }

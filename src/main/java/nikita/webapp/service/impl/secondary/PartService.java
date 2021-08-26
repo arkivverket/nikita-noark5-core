@@ -4,7 +4,7 @@ import nikita.common.model.nikita.PatchObjects;
 import nikita.common.model.noark5.bsm.BSMBase;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.File;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.casehandling.secondary.*;
 import nikita.common.model.noark5.v5.hateoas.secondary.PartHateoas;
 import nikita.common.model.noark5.v5.hateoas.secondary.PartPersonHateoas;
@@ -73,7 +73,7 @@ public class PartService
     @Override
     @Transactional
     public PartPersonHateoas createNewPartPerson(
-            @NotNull final PartPerson part, @NotNull final Record record) {
+            @NotNull final PartPerson part, @NotNull final RecordEntity record) {
         validatePartRole(part);
         createPerson(part);
         record.addPart(part);
@@ -93,7 +93,7 @@ public class PartService
     @Override
     @Transactional
     public PartUnitHateoas createNewPartUnit(
-            @NotNull final PartUnit part, @NotNull final Record record) {
+            @NotNull final PartUnit part, @NotNull final RecordEntity record) {
         validatePartRole(part);
         createUnit(part);
         record.addPart(part);
@@ -264,7 +264,7 @@ public class PartService
     @Transactional
     public void deletePartPerson(@NotNull final UUID systemId) {
         PartPerson partPerson = (PartPerson) getPartOrThrow(systemId);
-        for (Record record : partPerson.getReferenceRecord()) {
+        for (RecordEntity record : partPerson.getReferenceRecord()) {
             record.removePart(partPerson);
         }
         for (File file : partPerson.getReferenceFile()) {
@@ -281,7 +281,7 @@ public class PartService
     @Transactional
     public void deletePartUnit(@NotNull final UUID systemId) {
         PartUnit partUnit = (PartUnit) getPartOrThrow(systemId);
-        for (Record record : partUnit.getReferenceRecord()) {
+        for (RecordEntity record : partUnit.getReferenceRecord()) {
             record.removePart(partUnit);
         }
         for (File file : partUnit.getReferenceFile()) {

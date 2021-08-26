@@ -101,7 +101,7 @@ is mapped to a 8-byte numeric column. If the entity is rarely changed, consider 
 type (e.g., smallint). For more info about this event, check out this User Guide link
 - https://vladmihalcea.com/hypersistence-optimizer/docs/user-guide/#LongVersionColumnSizeEvent
 2021-03-14 18:24:43.376 INFO 28858 --- [           main] Hypersistence Optimizer                  : MINOR -
-LongVersionColumnSizeEvent - The [version] attribute in the [nikita.common.model.noark5.v5.Record] entity is mapped to a
+LongVersionColumnSizeEvent - The [version] attribute in the [nikita.common.model.noark5.v5.RecordEntity] entity is mapped to a
 8-byte numeric column. If the entity is rarely changed, consider using a more compact integer column type (e.g.,
 smallint). For more info about this event, check out this User Guide link
 - https://vladmihalcea.com/hypersistence-optimizer/docs/user-guide/#LongVersionColumnSizeEvent
@@ -11316,7 +11316,7 @@ this mode when starting a transaction, and re-enable it prior to releasing the J
 more info about this event, check out this User Guide link
 - https://vladmihalcea.com/hypersistence-optimizer/docs/user-guide/#AutoCommittingConnectionEvent
 2021-03-14 18:33:02.140 INFO 28858 --- [nio-8092-exec-4] Hypersistence Optimizer                  : MINOR -
-EntityAlreadyManagedEvent - The [nikita.common.model.noark5.v5.Record] entity with the identifier value
+EntityAlreadyManagedEvent - The [nikita.common.model.noark5.v5.RecordEntity] entity with the identifier value
 of [7f000101-7831-13e9-8178-31cc0aad001e] is already managed by the Hibernate Session, so you don't need to call [merge]
 for it. For more info about this event, check out this User Guide link
 - https://vladmihalcea.com/hypersistence-optimizer/docs/user-guide/#EntityAlreadyManagedEvent
@@ -12381,7 +12381,7 @@ this mode when starting a transaction, and re-enable it prior to releasing the J
 more info about this event, check out this User Guide link
 - https://vladmihalcea.com/hypersistence-optimizer/docs/user-guide/#AutoCommittingConnectionEvent
 2021-03-14 18:33:05.763 INFO 28858 --- [nio-8092-exec-2] Hypersistence Optimizer                  : MINOR -
-EntityAlreadyManagedEvent - The [nikita.common.model.noark5.v5.Record] entity with the identifier value
+EntityAlreadyManagedEvent - The [nikita.common.model.noark5.v5.RecordEntity] entity with the identifier value
 of [7f000101-7831-13e9-8178-31cc53480067] is already managed by the Hibernate Session, so you don't need to call [merge]
 for it. For more info about this event, check out this User Guide link
 - https://vladmihalcea.com/hypersistence-optimizer/docs/user-guide/#EntityAlreadyManagedEvent

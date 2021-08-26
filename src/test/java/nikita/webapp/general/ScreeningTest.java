@@ -1398,7 +1398,7 @@ public class ScreeningTest {
         // Note: We are not using the result of the GET ny-registrering, but want the
         // test to check tht it works
 
-        Record record = new Record();
+        RecordEntity record = new RecordEntity();
         record.setTitle("Title of record");
 
         // Create Metadata objects

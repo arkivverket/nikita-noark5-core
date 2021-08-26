@@ -1,7 +1,7 @@
 package nikita.webapp.service.impl;
 
 import nikita.common.model.noark5.v5.File;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.hateoas.nationalidentifier.*;
 import nikita.common.model.noark5.v5.metadata.CoordinateSystem;
 import nikita.common.model.noark5.v5.nationalidentifier.*;
@@ -71,7 +71,7 @@ public class NationalIdentifierService
     @Override
     @Transactional
     public BuildingHateoas createNewBuilding(
-            @NotNull final Building building, @NotNull final Record record) {
+            @NotNull final Building building, @NotNull final RecordEntity record) {
         record.addNationalIdentifier(building);
         building.setReferenceRecord(record);
         return packAsHateoas(nationalIdentifierRepository.save(building));
@@ -90,7 +90,7 @@ public class NationalIdentifierService
     @Transactional
     public CadastralUnitHateoas createNewCadastralUnit
             (@NotNull final CadastralUnit cadastralUnit,
-             @NotNull final Record record) {
+             @NotNull final RecordEntity record) {
         record.addNationalIdentifier(cadastralUnit);
         cadastralUnit.setReferenceRecord(record);
         return packAsHateoas(nationalIdentifierRepository.save(cadastralUnit));
@@ -109,7 +109,7 @@ public class NationalIdentifierService
     @Override
     @Transactional
     public DNumberHateoas createNewDNumber(
-            @NotNull final DNumber dNumber, @NotNull final Record record) {
+            @NotNull final DNumber dNumber, @NotNull final RecordEntity record) {
         record.addNationalIdentifier(dNumber);
         dNumber.setReferenceRecord(record);
         return packAsHateoas(nationalIdentifierRepository.save(dNumber));
@@ -127,7 +127,7 @@ public class NationalIdentifierService
     @Override
     @Transactional
     public PlanHateoas createNewPlan(
-            @NotNull final Plan plan, @NotNull final Record record) {
+            @NotNull final Plan plan, @NotNull final RecordEntity record) {
         record.addNationalIdentifier(plan);
         plan.setReferenceRecord(record);
         return packAsHateoas(nationalIdentifierRepository.save(plan));
@@ -145,7 +145,7 @@ public class NationalIdentifierService
     @Override
     @Transactional
     public PositionHateoas createNewPosition(
-            @NotNull Position position, @NotNull Record record) {
+            @NotNull Position position, @NotNull RecordEntity record) {
         record.addNationalIdentifier(position);
         return packAsHateoas(nationalIdentifierRepository.save(position));
     }
@@ -162,7 +162,7 @@ public class NationalIdentifierService
     @Transactional
     public SocialSecurityNumberHateoas createNewSocialSecurityNumber(
             @NotNull final SocialSecurityNumber socialSecurityNumber,
-            @NotNull final Record record) {
+            @NotNull final RecordEntity record) {
         record.addNationalIdentifier(socialSecurityNumber);
         socialSecurityNumber.setReferenceRecord(record);
         return packAsHateoas(
@@ -183,7 +183,7 @@ public class NationalIdentifierService
     @Override
     @Transactional
     public UnitHateoas createNewUnit(
-            @NotNull final Unit unit, @NotNull final Record record) {
+            @NotNull final Unit unit, @NotNull final RecordEntity record) {
         record.addNationalIdentifier(unit);
         return packAsHateoas(nationalIdentifierRepository.save(unit));
     }

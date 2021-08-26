@@ -2,7 +2,7 @@ package nikita.webapp.service.impl.secondary;
 
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.Fonds;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.hateoas.secondary.StorageLocationHateoas;
 import nikita.common.model.noark5.v5.secondary.StorageLocation;
@@ -77,7 +77,7 @@ public class StorageLocationService
     @Override
     @Transactional
     public StorageLocationHateoas createStorageLocationAssociatedWithRecord
-            (StorageLocation storageLocation, Record record) {
+            (StorageLocation storageLocation, RecordEntity record) {
         storageLocation.addReferenceRecord(record);
         return packAsHateoas(storageLocationRepository.save(storageLocation));
     }
@@ -129,7 +129,7 @@ public class StorageLocationService
             file.removeReferenceStorageLocation(storageLocation);
         }
         // Remove any associations between a Record and the given StorageLocation
-        for (Record record : storageLocation.getReferenceRecord()) {
+        for (RecordEntity record : storageLocation.getReferenceRecord()) {
             record.removeReferenceStorageLocation(storageLocation);
         }
         storageLocationRepository.delete(storageLocation);

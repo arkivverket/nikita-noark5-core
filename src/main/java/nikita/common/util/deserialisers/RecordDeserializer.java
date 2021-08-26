@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import nikita.common.model.noark5.bsm.BSM;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.util.exceptions.NikitaMalformedInputDataException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,7 @@ import static nikita.common.util.CommonUtils.Hateoas.Deserialize.*;
  * Deserialise an incoming Record JSON object.
  */
 public class RecordDeserializer
-        extends JsonDeserializer<Record> {
+        extends JsonDeserializer<RecordEntity> {
 
     private static final Logger logger =
             LoggerFactory.getLogger(RecordDeserializer.class);
@@ -31,10 +31,10 @@ public class RecordDeserializer
     private static final ObjectMapper mapper = new ObjectMapper();
 
     @Override
-    public Record deserialize(JsonParser jsonParser, DeserializationContext dc)
+    public RecordEntity deserialize(JsonParser jsonParser, DeserializationContext dc)
             throws IOException {
         StringBuilder errors = new StringBuilder();
-        Record record = new Record();
+        RecordEntity record = new RecordEntity();
 
         ObjectNode objectNode = mapper.readTree(jsonParser);
 

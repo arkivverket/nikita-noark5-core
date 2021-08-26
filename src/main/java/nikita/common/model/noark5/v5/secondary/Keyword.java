@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.File;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.hateoas.secondary.KeywordHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.IKeywordEntity;
@@ -55,7 +55,7 @@ public class Keyword
     private final Set<File> referenceFile = new HashSet<>();
     // Links to Record
     @ManyToMany(mappedBy = REFERENCE_KEYWORD)
-    private final Set<Record> referenceRecord = new HashSet<>();
+    private final Set<RecordEntity> referenceRecord = new HashSet<>();
 
     public String getKeyword() {
         return keyword;
@@ -110,18 +110,18 @@ public class Keyword
     }
 
     @Override
-    public Set<Record> getReferenceRecord() {
+    public Set<RecordEntity> getReferenceRecord() {
         return referenceRecord;
     }
 
     @Override
-    public void addReferenceRecord(Record record) {
+    public void addReferenceRecord(RecordEntity record) {
         referenceRecord.add(record);
         record.getReferenceKeyword().add(this);
     }
 
     @Override
-    public void removeReferenceRecord(Record record) {
+    public void removeReferenceRecord(RecordEntity record) {
         referenceRecord.remove(record);
         record.getReferenceKeyword().remove(this);
     }

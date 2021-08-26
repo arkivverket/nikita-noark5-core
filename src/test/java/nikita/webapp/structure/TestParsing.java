@@ -682,7 +682,7 @@ public class TestParsing {
         JsonParser jsonParser =
                 objectMapper.getFactory().createParser(json);
         RecordDeserializer recordDeserializer = new RecordDeserializer();
-        Record record =
+        RecordEntity record =
                 recordDeserializer.deserialize(jsonParser,
                         null /* DeserializationContext */);
         assert (null != record);

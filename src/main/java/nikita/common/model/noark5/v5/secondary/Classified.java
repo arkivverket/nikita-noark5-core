@@ -102,7 +102,7 @@ public class Classified
 
     // Links to Record
     @OneToMany(mappedBy = "referenceClassified")
-    private List<Record> referenceRecord = new ArrayList<>();
+    private List<RecordEntity> referenceRecord = new ArrayList<>();
 
     // Links to DocumentDescription
     @OneToMany(mappedBy = "referenceClassified")
@@ -224,20 +224,20 @@ public class Classified
         klass.setReferenceClassified(null);
     }
 
-    public List<Record> getReferenceRecord() {
+    public List<RecordEntity> getReferenceRecord() {
         return referenceRecord;
     }
 
-    public void setReferenceRecord(List<Record> referenceRecord) {
+    public void setReferenceRecord(List<RecordEntity> referenceRecord) {
         this.referenceRecord = referenceRecord;
     }
 
-    public void addRecord(Record klass) {
+    public void addRecord(RecordEntity klass) {
         referenceRecord.add(klass);
         klass.setReferenceClassified(this);
     }
 
-    public void removeRecord(Record klass) {
+    public void removeRecord(RecordEntity klass) {
         referenceRecord.remove(klass);
         klass.setReferenceClassified(null);
     }
