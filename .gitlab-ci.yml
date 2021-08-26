@@ -4,6 +4,9 @@ services:
   - name: "docker.elastic.co/elasticsearch/elasticsearch:7.10.0"
     alias: "elasticsearch"
     command: [ "bin/elasticsearch", "-Expack.security.enabled=false", "-Ediscovery.type=single-node" ]
+cache:
+  paths:
+    - .m2/repository
 variables:
   # This will supress any download for dependencies and plugins or upload messages which would clutter the console log.
   # `showDateTime` will show the passed time in milliseconds. You need to specify `--batch-mode` to make this work.
