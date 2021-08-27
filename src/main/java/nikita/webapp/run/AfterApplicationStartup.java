@@ -26,8 +26,6 @@ import java.util.TreeSet;
 
 import static nikita.common.config.Constants.SLASH;
 import static nikita.common.config.FileConstants.*;
-import static nikita.common.config.ServerConstants.DOCUMENT_STORE_LOCATION;
-import static nikita.common.config.ServerConstants.INCOMING_DOCUMENT_STORE_LOCATION;
 import static nikita.common.util.CommonUtils.FileUtils.addProductionToArchiveVersion;
 import static nikita.common.util.CommonUtils.FileUtils.setDefaultMimeTypesAsConvertible;
 import static nikita.common.util.CommonUtils.WebUtils.addRequestToMethodMap;
@@ -59,11 +57,10 @@ public class AfterApplicationStartup {
     private final Boolean createDirectoryStore = false;
 
     @Value("${nikita.startup.directory-store-name}")
-    private final String directoryStoreName = DOCUMENT_STORE_LOCATION;
+    private String directoryStoreName;
 
     @Value("${nikita.startup.incoming-directory}")
-    private final String incomingDirectoryName =
-            INCOMING_DOCUMENT_STORE_LOCATION;
+    private String incomingDirectoryName;
 
     public AfterApplicationStartup(@Qualifier("requestMappingHandlerMapping")
                                            RequestMappingHandlerMapping handlerMapping,

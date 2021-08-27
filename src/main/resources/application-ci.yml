@@ -1,0 +1,13 @@
+# ===================================================================
+# Spring Boot configuration for the "ci" profile.
+# Supplements the JPA configuration by modifying the elasticsearch
+# host URI for execution in the CI environment.
+# ===================================================================
+
+spring:
+  jpa:
+    properties:
+      hibernate:
+        search:
+          backend:
+            uris: http://elasticsearch:9200

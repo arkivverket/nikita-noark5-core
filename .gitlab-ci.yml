@@ -1,6 +1,14 @@
 image: docker:latest
 services:
   - docker:dind
+  - name: "docker.elastic.co/elasticsearch/elasticsearch:7.10.0"
+    alias: "elasticsearch"
+    command: [ "bin/elasticsearch", "-Expack.security.enabled=false", "-Ediscovery.type=single-node" ]
+variables:
+  # This will supress any download for dependencies and plugins or upload messages which would clutter the console log.
+  # `showDateTime` will show the passed time in milliseconds. You need to specify `--batch-mode` to make this work.
+  MAVEN_OPTS: "-Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true"
+  ELASTICSEARCH_URL: "http://elasticsearch:9200"
 stages:
   - build
   - test
@@ -53,9 +61,11 @@ maven-build:
     - apt install -y tesseract-ocr-nor
   image: maven:3.6.1-jdk-11
   stage: build
+  before_script:
+    - curl "http://elasticsearch:9200/_cat/health?v"
   script:
     - mvn package -B
-    - mvn test -DrunAllTests=runAllTests
+    - mvn test
   artifacts:
     paths:
       - target/*.jar

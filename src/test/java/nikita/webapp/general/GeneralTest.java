@@ -388,8 +388,9 @@ public class GeneralTest {
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint())));
 
-            System.out.println(response.getContentAsString());
-            uuid = JsonPath.read(response.getContentAsString(),
+            String responseContent = response.getContentAsString();
+            System.out.println("Response: " + responseContent);
+            uuid = JsonPath.read(responseContent,
                     "$.results[0]." + SYSTEM_ID);
 
             url = "/noark5v5/api/arkivstruktur/dokumentobjekt/" +
