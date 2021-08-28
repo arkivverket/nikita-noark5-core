@@ -32,12 +32,12 @@ public class HibernateEntityReflections {
         // Record rather than CaseFile and RegistryEntry
         if (toClassName.equalsIgnoreCase("CaseFile") &&
                 fromClassName.equalsIgnoreCase("RegistryEntry")) {
-            fromClassName = "Record";
+            fromClassName = "RecordEntity";
             toClassName = "File";
         }
         if (toClassName.equalsIgnoreCase("CaseFile") &&
                 fromClassName.equalsIgnoreCase("RecordNote")) {
-            fromClassName = "Record";
+            fromClassName = "RecordEntity";
             toClassName = "File";
         }
 
