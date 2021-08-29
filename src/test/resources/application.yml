@@ -33,7 +33,7 @@ spring:
       hibernate:
         search:
           backend:
-            uris: http://elasticsearch:9200
+            uris: http://localhost:9200
       hibernate.hbm2ddl.auto: create-drop
       hibernate.discriminator.ignore_explicit_for_joined: true
       org.hibernate.envers.audit_table_prefix: aud_

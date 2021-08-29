@@ -3,11 +3,7 @@ package nikita.common.model.noark5.v5.secondary;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import nikita.common.model.noark5.v5.Class;
-import nikita.common.model.noark5.v5.DocumentDescription;
-import nikita.common.model.noark5.v5.File;
-import nikita.common.model.noark5.v5.RecordEntity;
-import nikita.common.model.noark5.v5.Series;
-import nikita.common.model.noark5.v5.SystemIdEntity;
+import nikita.common.model.noark5.v5.*;
 import nikita.common.model.noark5.v5.interfaces.entities.IScreeningEntity;
 import nikita.common.model.noark5.v5.metadata.AccessRestriction;
 import nikita.common.model.noark5.v5.metadata.ScreeningDocument;
@@ -31,22 +27,7 @@ import java.util.Set;
 
 import static javax.persistence.CascadeType.PERSIST;
 import static nikita.common.config.Constants.TABLE_SCREENING;
-import static nikita.common.config.N5ResourceMappings.ACCESS_RESTRICTION_CODE;
-import static nikita.common.config.N5ResourceMappings.ACCESS_RESTRICTION_CODE_ENG;
-import static nikita.common.config.N5ResourceMappings.ACCESS_RESTRICTION_CODE_NAME;
-import static nikita.common.config.N5ResourceMappings.ACCESS_RESTRICTION_CODE_NAME_ENG;
-import static nikita.common.config.N5ResourceMappings.REFERENCE_SCREENING;
-import static nikita.common.config.N5ResourceMappings.SCREENING;
-import static nikita.common.config.N5ResourceMappings.SCREENING_AUTHORITY;
-import static nikita.common.config.N5ResourceMappings.SCREENING_AUTHORITY_ENG;
-import static nikita.common.config.N5ResourceMappings.SCREENING_DOCUMENT_CODE;
-import static nikita.common.config.N5ResourceMappings.SCREENING_DOCUMENT_CODE_ENG;
-import static nikita.common.config.N5ResourceMappings.SCREENING_DOCUMENT_CODE_NAME;
-import static nikita.common.config.N5ResourceMappings.SCREENING_DOCUMENT_CODE_NAME_ENG;
-import static nikita.common.config.N5ResourceMappings.SCREENING_DURATION;
-import static nikita.common.config.N5ResourceMappings.SCREENING_DURATION_ENG;
-import static nikita.common.config.N5ResourceMappings.SCREENING_EXPIRES_DATE;
-import static nikita.common.config.N5ResourceMappings.SCREENING_EXPIRES_DATE_ENG;
+import static nikita.common.config.N5ResourceMappings.*;
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 
 @Entity
@@ -139,7 +120,7 @@ public class Screening
 
     // Links to Record
     @OneToMany(mappedBy = REFERENCE_SCREENING)
-    private List<RecordEntity> referenceRecord = new ArrayList<>();
+    private List<RecordEntity> referenceRecordEntity = new ArrayList<>();
 
     // Links to DocumentDescription
     @OneToMany(mappedBy = REFERENCE_SCREENING)
@@ -268,21 +249,21 @@ public class Screening
         file.setReferenceScreening(null);
     }
 
-    public List<RecordEntity> getReferenceRecord() {
-        return referenceRecord;
+    public List<RecordEntity> getReferenceRecordEntity() {
+        return referenceRecordEntity;
     }
 
-    public void setReferenceRecord(List<RecordEntity> referenceRecord) {
-        this.referenceRecord = referenceRecord;
+    public void setReferenceRecord(List<RecordEntity> referenceRecordEntity) {
+        this.referenceRecordEntity = referenceRecordEntity;
     }
 
-    public void addRecord(RecordEntity record) {
-        this.referenceRecord.add(record);
+    public void addRecordEntity(RecordEntity record) {
+        this.referenceRecordEntity.add(record);
         record.setReferenceScreening(this);
     }
 
-    public void removeRecord(RecordEntity record) {
-        this.referenceRecord.remove(record);
+    public void removeRecordEntity(RecordEntity record) {
+        this.referenceRecordEntity.remove(record);
         record.setReferenceScreening(null);
     }
 

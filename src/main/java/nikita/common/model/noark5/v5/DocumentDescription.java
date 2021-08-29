@@ -191,7 +191,7 @@ public class DocumentDescription
 
     // Links to Records
     @ManyToMany(mappedBy = "referenceDocumentDescription")
-    private final Set<RecordEntity> referenceRecord = new HashSet<>();
+    private final Set<RecordEntity> referenceRecordEntity = new HashSet<>();
 
     // Links to DocumentObjects
     @OneToMany(mappedBy = "referenceDocumentDescription")
@@ -389,17 +389,17 @@ public class DocumentDescription
         this.externalReference = externalReference;
     }
 
-    public Set<RecordEntity> getReferenceRecord() {
-        return referenceRecord;
+    public Set<RecordEntity> getReferenceRecordEntity() {
+        return referenceRecordEntity;
     }
 
-    public void addRecord(RecordEntity record) {
-        this.referenceRecord.add(record);
+    public void addRecordEntity(RecordEntity record) {
+        this.referenceRecordEntity.add(record);
         record.addDocumentDescription(this);
     }
 
-    public void removeRecord(RecordEntity record) {
-        this.referenceRecord.remove(record);
+    public void removeRecordEntity(RecordEntity record) {
+        this.referenceRecordEntity.remove(record);
         record.addDocumentDescription(this);
     }
 

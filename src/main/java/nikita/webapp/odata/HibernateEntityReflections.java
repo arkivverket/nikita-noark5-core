@@ -79,7 +79,7 @@ public class HibernateEntityReflections {
                                         variableName.substring(1), null);
                             }
                         } catch (NoSuchMethodException e) {
-                            String error = klass.getName() + "has no foreign" +
+                            String error = klass.getName() + " has no foreign" +
                                     " key for " + toClassName;
                             logger.error(error);
                             throw new InternalServerErrorException(error);

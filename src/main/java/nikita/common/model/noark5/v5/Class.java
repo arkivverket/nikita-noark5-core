@@ -76,7 +76,7 @@ public class Class
 
     // Links to Records
     @OneToMany(mappedBy = "referenceClass")
-    private List<RecordEntity> referenceRecord = new ArrayList<>();
+    private List<RecordEntity> referenceRecordEntity = new ArrayList<>();
 
     // Links to Classified
     @ManyToOne(fetch = LAZY, cascade = ALL)
@@ -198,22 +198,22 @@ public class Class
     }
 
     @Override
-    public List<RecordEntity> getReferenceRecord() {
-        return referenceRecord;
+    public List<RecordEntity> getReferenceRecordEntity() {
+        return referenceRecordEntity;
     }
 
     @Override
-    public void setReferenceRecord(List<RecordEntity> referenceRecord) {
-        this.referenceRecord = referenceRecord;
+    public void setReferenceRecord(List<RecordEntity> referenceRecordEntity) {
+        this.referenceRecordEntity = referenceRecordEntity;
     }
 
-    public void addRecord(RecordEntity record) {
-        this.referenceRecord.add(record);
+    public void addRecordEntity(RecordEntity record) {
+        this.referenceRecordEntity.add(record);
         record.setReferenceClass(this);
     }
 
-    public void removeRecord(RecordEntity record) {
-        this.referenceRecord.remove(record);
+    public void removeRecordEntity(RecordEntity record) {
+        this.referenceRecordEntity.remove(record);
         record.setReferenceClass(null);
     }
 

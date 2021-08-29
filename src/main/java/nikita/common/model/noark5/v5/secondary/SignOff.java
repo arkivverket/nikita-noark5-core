@@ -234,13 +234,13 @@ public class SignOff
     }
 
     @Override
-    public void addRecord(RegistryEntry registryEntry) {
+    public void addRecordEntity(RegistryEntry registryEntry) {
         this.referenceRegistryEntry.add(registryEntry);
         registryEntry.getReferenceSignOff().add(this);
     }
 
     @Override
-    public void removeRecord(RegistryEntry registryEntry) {
+    public void removeRecordEntity(RegistryEntry registryEntry) {
         this.referenceRegistryEntry.remove(registryEntry);
         registryEntry.getReferenceSignOff().remove(this);
     }

@@ -34,7 +34,7 @@ public class Author
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = FOREIGN_KEY_RECORD_PK)
-    private RecordEntity referenceRecord;
+    private RecordEntity referenceRecordEntity;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = FOREIGN_KEY_DOCUMENT_DESCRIPTION_PK)
@@ -72,12 +72,12 @@ public class Author
         this.author = author;
     }
 
-    public RecordEntity getReferenceRecord() {
-        return referenceRecord;
+    public RecordEntity getReferenceRecordEntity() {
+        return referenceRecordEntity;
     }
 
-    public void setReferenceRecord(RecordEntity referenceRecord) {
-        this.referenceRecord = referenceRecord;
+    public void setReferenceRecord(RecordEntity referenceRecordEntity) {
+        this.referenceRecordEntity = referenceRecordEntity;
         isForRecord = true;
     }
 

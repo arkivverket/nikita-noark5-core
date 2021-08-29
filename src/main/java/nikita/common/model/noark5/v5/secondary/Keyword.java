@@ -55,7 +55,7 @@ public class Keyword
     private final Set<File> referenceFile = new HashSet<>();
     // Links to Record
     @ManyToMany(mappedBy = REFERENCE_KEYWORD)
-    private final Set<RecordEntity> referenceRecord = new HashSet<>();
+    private final Set<RecordEntity> referenceRecordEntity = new HashSet<>();
 
     public String getKeyword() {
         return keyword;
@@ -110,19 +110,19 @@ public class Keyword
     }
 
     @Override
-    public Set<RecordEntity> getReferenceRecord() {
-        return referenceRecord;
+    public Set<RecordEntity> getReferenceRecordEntity() {
+        return referenceRecordEntity;
     }
 
     @Override
     public void addReferenceRecord(RecordEntity record) {
-        referenceRecord.add(record);
+        referenceRecordEntity.add(record);
         record.getReferenceKeyword().add(this);
     }
 
     @Override
     public void removeReferenceRecord(RecordEntity record) {
-        referenceRecord.remove(record);
+        referenceRecordEntity.remove(record);
         record.getReferenceKeyword().remove(this);
     }
 

@@ -13,7 +13,7 @@ public interface IDocumentDescriptionRepository extends
 
     DocumentDescription findBySystemId(UUID systemId);
 
-    Long countByReferenceRecord(RecordEntity record);
+    Long countByReferenceRecordEntity(RecordEntity record);
 
     long deleteByOwnedBy(String user);
 }

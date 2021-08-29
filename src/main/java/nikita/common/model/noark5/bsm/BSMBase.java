@@ -95,7 +95,7 @@ public class BSMBase
     @JoinColumn(name = BSM_RECORD_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     @JsonIgnore
-    private RecordEntity referenceRecord;
+    private RecordEntity referenceRecordEntity;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = BSM_PART_ID,
@@ -275,12 +275,12 @@ public class BSMBase
         this.referenceFile = referenceFile;
     }
 
-    public RecordEntity getReferenceRecord() {
-        return referenceRecord;
+    public RecordEntity getReferenceRecordEntity() {
+        return referenceRecordEntity;
     }
 
-    public void setReferenceRecord(RecordEntity referenceRecord) {
-        this.referenceRecord = referenceRecord;
+    public void setReferenceRecord(RecordEntity referenceRecordEntity) {
+        this.referenceRecordEntity = referenceRecordEntity;
     }
 
     public Part getReferencePart() {

@@ -72,7 +72,7 @@ public class Part
 
     // Links to Record
     @ManyToMany(mappedBy = "referencePart")
-    private Set<RecordEntity> referenceRecord = new HashSet<>();
+    private Set<RecordEntity> referenceRecordEntity = new HashSet<>();
 
     // Links to DocumentDescriptions
     @ManyToMany(mappedBy = "referencePart")
@@ -122,18 +122,18 @@ public class Part
     }
 
     @Override
-    public Set<RecordEntity> getReferenceRecord() {
-        return referenceRecord;
+    public Set<RecordEntity> getReferenceRecordEntity() {
+        return referenceRecordEntity;
     }
 
     @Override
-    public void addRecord(RecordEntity record) {
-        this.referenceRecord.add(record);
+    public void addRecordEntity(RecordEntity record) {
+        this.referenceRecordEntity.add(record);
         record.getReferencePart().add(this);
     }
 
-    public void removeRecord(RecordEntity record) {
-        referenceRecord.remove(record);
+    public void removeRecordEntity(RecordEntity record) {
+        referenceRecordEntity.remove(record);
         record.getReferencePart().remove(this);
     }
 

@@ -12,7 +12,7 @@ import nikita.webapp.hateoas.interfaces.IHateoasHandler;
 public interface ICorrespondencePartHateoasHandler
         extends IHateoasHandler {
 
-    void addRecord(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
+    void addRecordEntity(INoarkEntity entity, IHateoasNoarkObject hateoasNoarkObject);
 
     void addCorrespondencePartType(INoarkEntity entity,
                                    IHateoasNoarkObject hateoasNoarkObject);

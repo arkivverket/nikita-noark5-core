@@ -73,7 +73,7 @@ public class CommentService
         checkCommentType(comment);
         if (null == comment.getCommentDate())
             comment.setCommentDate(OffsetDateTime.now());
-        comment.addRecord(record);
+        comment.addRecordEntity(record);
         return packAsHateoas(commentRepository.save(comment));
     }
 
@@ -134,8 +134,8 @@ public class CommentService
                 comment.getReferenceDocumentDescription()) {
             comment.removeDocumentDescription(documentDescription);
         }
-        for (RecordEntity record : comment.getReferenceRecord()) {
-            comment.removeRecord(record);
+        for (RecordEntity record : comment.getReferenceRecordEntity()) {
+            comment.removeRecordEntity(record);
         }
         for (File file : comment.getReferenceFile()) {
             comment.removeFile(file);

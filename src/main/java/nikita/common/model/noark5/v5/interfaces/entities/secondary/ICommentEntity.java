@@ -32,9 +32,9 @@ public interface ICommentEntity
 
     void addFile(File referenceFile);
 
-    Set<RecordEntity> getReferenceRecord();
+    Set<RecordEntity> getReferenceRecordEntity();
 
-    void addRecord(RecordEntity referenceRecord);
+    void addRecordEntity(RecordEntity referenceRecordEntity);
 
     Set<DocumentDescription> getReferenceDocumentDescription();
 

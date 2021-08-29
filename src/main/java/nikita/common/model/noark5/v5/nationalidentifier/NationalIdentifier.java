@@ -34,7 +34,7 @@ public class NationalIdentifier
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = NATIONAL_IDENTIFIER_RECORD_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
-    private RecordEntity referenceRecord;
+    private RecordEntity referenceRecordEntity;
 
     public File getReferenceFile() {
         return referenceFile;
@@ -44,11 +44,11 @@ public class NationalIdentifier
         this.referenceFile = referenceFile;
     }
 
-    public RecordEntity getReferenceRecord() {
-        return referenceRecord;
+    public RecordEntity getReferenceRecordEntity() {
+        return referenceRecordEntity;
     }
 
-    public void setReferenceRecord(RecordEntity referenceRecord) {
-        this.referenceRecord = referenceRecord;
+    public void setReferenceRecord(RecordEntity referenceRecordEntity) {
+        this.referenceRecordEntity = referenceRecordEntity;
     }
 }

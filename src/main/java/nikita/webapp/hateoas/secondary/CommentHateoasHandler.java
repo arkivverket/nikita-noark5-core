@@ -41,7 +41,7 @@ public class CommentHateoasHandler
                                IHateoasNoarkObject hateoasNoarkObject) {
         Comment comment = (Comment) entity;
         addDocumentDescription(comment, hateoasNoarkObject);
-        addRecord(comment, hateoasNoarkObject);
+        addRecordEntity(comment, hateoasNoarkObject);
         addFile(comment, hateoasNoarkObject);
         addCommentType(comment, hateoasNoarkObject);
     }
@@ -71,8 +71,8 @@ public class CommentHateoasHandler
     // This is an OData query that should give a list of Record objects that
     // have an association to this comment
     // noark5v5/arkivstruktur/registrering?$filter=contains(merknad/system_id, 'SYSTEMID')
-    public void addRecord(ICommentEntity comment,
-                          IHateoasNoarkObject hateoasNoarkObject) {
+    public void addRecordEntity(ICommentEntity comment,
+                                IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(comment,
                 new Link(getOutgoingAddress() + HREF_BASE_FILE +
                         "?" + urlEncode(DOLLAR_FILTER) + "=" +

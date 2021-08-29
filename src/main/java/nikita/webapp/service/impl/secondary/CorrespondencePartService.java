@@ -336,7 +336,7 @@ public class CorrespondencePartService
     public void deleteCorrespondencePartUnit(@NotNull final UUID systemId) {
         CorrespondencePartUnit correspondencePartUnit = (CorrespondencePartUnit)
                 getCorrespondencePartOrThrow(systemId);
-        RecordEntity record = correspondencePartUnit.getReferenceRecord();
+        RecordEntity record = correspondencePartUnit.getReferenceRecordEntity();
         record.removeCorrespondencePart(correspondencePartUnit);
         for (BSMBase bsmBase : correspondencePartUnit.getReferenceBSMBase()) {
             bsmBase.setReferenceCorrespondencePart(null);
@@ -357,7 +357,7 @@ public class CorrespondencePartService
     public void deleteCorrespondencePartPerson(@NotNull final UUID systemId) {
         CorrespondencePartPerson correspondencePartPerson = (CorrespondencePartPerson)
                 getCorrespondencePartOrThrow(systemId);
-        RecordEntity record = correspondencePartPerson.getReferenceRecord();
+        RecordEntity record = correspondencePartPerson.getReferenceRecordEntity();
         record.removeCorrespondencePart(correspondencePartPerson);
         for (BSMBase bsmBase : correspondencePartPerson.getReferenceBSMBase()) {
             bsmBase.setReferenceCorrespondencePart(null);
