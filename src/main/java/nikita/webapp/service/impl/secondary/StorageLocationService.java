@@ -129,7 +129,7 @@ public class StorageLocationService
             file.removeReferenceStorageLocation(storageLocation);
         }
         // Remove any associations between a Record and the given StorageLocation
-        for (RecordEntity record : storageLocation.getReferenceRecord()) {
+        for (RecordEntity record : storageLocation.getReferenceRecordEntity()) {
             record.removeReferenceStorageLocation(storageLocation);
         }
         storageLocationRepository.delete(storageLocation);
@@ -145,7 +145,7 @@ public class StorageLocationService
         if (storageLocation.getReferenceFile().size() > 0) {
             return false;
         }
-        if (storageLocation.getReferenceRecord().size() > 0) {
+        if (storageLocation.getReferenceRecordEntity().size() > 0) {
             return false;
         }
         storageLocationRepository.delete(storageLocation);

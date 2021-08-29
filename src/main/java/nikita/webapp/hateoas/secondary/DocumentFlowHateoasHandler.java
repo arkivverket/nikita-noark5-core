@@ -35,7 +35,7 @@ public class DocumentFlowHateoasHandler
     public void addEntityLinks(ISystemId entity,
                                IHateoasNoarkObject hateoasNoarkObject) {
         DocumentFlow documentFlow = (DocumentFlow) entity;
-        addRecordNote(documentFlow, hateoasNoarkObject);
+        addRecordEntityNote(documentFlow, hateoasNoarkObject);
         addRegistryEntry(documentFlow, hateoasNoarkObject);
         addFlowStatus(documentFlow, hateoasNoarkObject);
     }
@@ -48,13 +48,13 @@ public class DocumentFlowHateoasHandler
     }
 
     @Override
-    public void addRecordNote(IDocumentFlowEntity documentFlow,
-                              IHateoasNoarkObject hateoasNoarkObject) {
-        if (null != documentFlow.getReferenceRecordNote()) {
+    public void addRecordEntityNote(IDocumentFlowEntity documentFlow,
+                                    IHateoasNoarkObject hateoasNoarkObject) {
+        if (null != documentFlow.getReferenceRecordEntityNote()) {
             hateoasNoarkObject.addLink(documentFlow,
-                new Link(getOutgoingAddress() + HREF_BASE_RECORD_NOTE + SLASH +
-                        documentFlow.getReferenceRecordNote().getSystemIdAsString(),
-                        REL_CASE_HANDLING_RECORD_NOTE));
+                    new Link(getOutgoingAddress() + HREF_BASE_RECORD_NOTE + SLASH +
+                            documentFlow.getReferenceRecordEntityNote().getSystemIdAsString(),
+                            REL_CASE_HANDLING_RECORD_NOTE));
         }
     }
 

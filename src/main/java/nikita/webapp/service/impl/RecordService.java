@@ -150,7 +150,7 @@ public class RecordService
         // Adding 1 as documentNumber starts at 1, not 0
         long documentNumber =
                 documentDescriptionRepository.
-                        countByReferenceRecord(record) + 1;
+                        countByReferenceRecordEntity(record) + 1;
         documentDescription.setDocumentNumber((int) documentNumber);
         record.addDocumentDescription(documentDescription);
         documentDescription.setDocumentNumber((int) documentNumber);

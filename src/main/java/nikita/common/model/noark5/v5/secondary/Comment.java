@@ -97,7 +97,7 @@ public class Comment
 
     // Links to Record
     @ManyToMany(mappedBy = REFERENCE_COMMENT)
-    private final Set<RecordEntity> referenceRecord = new HashSet<>();
+    private final Set<RecordEntity> referenceRecordEntity = new HashSet<>();
 
     // Link to DocumentDescription
     @ManyToMany(mappedBy = REFERENCE_COMMENT)
@@ -167,16 +167,16 @@ public class Comment
         file.getReferenceComment().remove(this);
     }
 
-    public Set<RecordEntity> getReferenceRecord() {
-        return referenceRecord;
+    public Set<RecordEntity> getReferenceRecordEntity() {
+        return referenceRecordEntity;
     }
 
-    public void addRecord(RecordEntity record) {
-        this.referenceRecord.add(record);
+    public void addRecordEntity(RecordEntity record) {
+        this.referenceRecordEntity.add(record);
     }
 
-    public void removeRecord(RecordEntity record) {
-        this.referenceRecord.remove(record);
+    public void removeRecordEntity(RecordEntity record) {
+        this.referenceRecordEntity.remove(record);
         record.getReferenceComment().remove(this);
     }
 

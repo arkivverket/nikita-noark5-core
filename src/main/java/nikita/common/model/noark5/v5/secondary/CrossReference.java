@@ -103,7 +103,7 @@ public class CrossReference
     @ManyToOne(fetch = LAZY, cascade = ALL)
     @JoinColumn(name = CROSS_REFERENCE_RECORD_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
-    private RecordEntity referenceRecord;
+    private RecordEntity referenceRecordEntity;
 
     public UUID getFromSystemId() {
         return fromSystemId;
@@ -153,12 +153,12 @@ public class CrossReference
         this.referenceFile = referenceFile;
     }
 
-    public RecordEntity getReferenceRecord() {
-        return referenceRecord;
+    public RecordEntity getReferenceRecordEntity() {
+        return referenceRecordEntity;
     }
 
-    public void setReferenceRecord(RecordEntity referenceRecord) {
-        this.referenceRecord = referenceRecord;
+    public void setReferenceRecord(RecordEntity referenceRecordEntity) {
+        this.referenceRecordEntity = referenceRecordEntity;
     }
 
     @Override

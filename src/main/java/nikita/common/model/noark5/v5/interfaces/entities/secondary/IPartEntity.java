@@ -20,9 +20,9 @@ public interface IPartEntity
 
     void removeDocumentDescription(DocumentDescription documentDescription);
 
-    Set<RecordEntity> getReferenceRecord();
+    Set<RecordEntity> getReferenceRecordEntity();
 
-    void addRecord(RecordEntity record);
+    void addRecordEntity(RecordEntity record);
 
-    void removeRecord(RecordEntity record);
+    void removeRecordEntity(RecordEntity record);
 }

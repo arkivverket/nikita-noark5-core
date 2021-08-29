@@ -27,7 +27,7 @@ public class DocumentDescriptionHateoasHandler
                                IHateoasNoarkObject hateoasNoarkObject) {
 
         // links for primary entities
-        addRecord(entity, hateoasNoarkObject);
+        addRecordEntity(entity, hateoasNoarkObject);
         addDocumentObject(entity, hateoasNoarkObject);
         addNewDocumentObject(entity, hateoasNoarkObject);
         // links for secondary entities M:1
@@ -85,8 +85,8 @@ public class DocumentDescriptionHateoasHandler
      * @param hateoasNoarkObject hateoasDocumentObject
      */
     @Override
-    public void addRecord(ISystemId entity,
-                          IHateoasNoarkObject hateoasNoarkObject) {
+    public void addRecordEntity(ISystemId entity,
+                                IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_DOCUMENT_DESCRIPTION + SLASH + entity.getSystemIdAsString() + SLASH +
                 RECORD, REL_FONDS_STRUCTURE_RECORD, false));

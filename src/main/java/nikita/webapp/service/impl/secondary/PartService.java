@@ -264,7 +264,7 @@ public class PartService
     @Transactional
     public void deletePartPerson(@NotNull final UUID systemId) {
         PartPerson partPerson = (PartPerson) getPartOrThrow(systemId);
-        for (RecordEntity record : partPerson.getReferenceRecord()) {
+        for (RecordEntity record : partPerson.getReferenceRecordEntity()) {
             record.removePart(partPerson);
         }
         for (File file : partPerson.getReferenceFile()) {
@@ -281,7 +281,7 @@ public class PartService
     @Transactional
     public void deletePartUnit(@NotNull final UUID systemId) {
         PartUnit partUnit = (PartUnit) getPartOrThrow(systemId);
-        for (RecordEntity record : partUnit.getReferenceRecord()) {
+        for (RecordEntity record : partUnit.getReferenceRecordEntity()) {
             record.removePart(partUnit);
         }
         for (File file : partUnit.getReferenceFile()) {

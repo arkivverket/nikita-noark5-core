@@ -7,8 +7,8 @@ import nikita.webapp.hateoas.interfaces.IHateoasHandler;
 public interface IDocumentFlowHateoasHandler
         extends IHateoasHandler {
 
-    void addRecordNote(IDocumentFlowEntity entity,
-                       IHateoasNoarkObject hateoasNoarkObject);
+    void addRecordEntityNote(IDocumentFlowEntity entity,
+                             IHateoasNoarkObject hateoasNoarkObject);
 
     void addRegistryEntry(IDocumentFlowEntity entity,
                           IHateoasNoarkObject hateoasNoarkObject);

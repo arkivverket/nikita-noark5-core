@@ -38,7 +38,7 @@ public class FileHateoasHandler
         addEndFile(entity, hateoasNoarkObject);
         addSeries(entity, hateoasNoarkObject);
         addSubFile(entity, hateoasNoarkObject);
-        addRecord(entity, hateoasNoarkObject);
+        addRecordEntity(entity, hateoasNoarkObject);
         addNewRecord(entity, hateoasNoarkObject);
         addComment(entity, hateoasNoarkObject);
         addNewComment(entity, hateoasNoarkObject);
@@ -156,7 +156,7 @@ public class FileHateoasHandler
     }
 
     @Override
-    public void addRecord(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
+    public void addRecordEntity(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_FILE + SLASH + entity.getSystemId() + SLASH + RECORD + SLASH,
                 REL_FONDS_STRUCTURE_RECORD, false));

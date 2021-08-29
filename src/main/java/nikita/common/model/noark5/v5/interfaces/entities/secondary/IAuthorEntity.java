@@ -11,9 +11,9 @@ public interface IAuthorEntity
 
     void setAuthor(String author);
 
-    RecordEntity getReferenceRecord();
+    RecordEntity getReferenceRecordEntity();
 
-    void setReferenceRecord(RecordEntity referenceRecord);
+    void setReferenceRecord(RecordEntity referenceRecordEntity);
 
     DocumentDescription getReferenceDocumentDescription();
 

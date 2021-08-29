@@ -11,8 +11,8 @@ import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 public interface IDocumentDescriptionHateoasHandler
         extends IHateoasHandler {
 
-    void addRecord(ISystemId entity,
-                   IHateoasNoarkObject hateoasNoarkObject);
+    void addRecordEntity(ISystemId entity,
+                         IHateoasNoarkObject hateoasNoarkObject);
 
     void addDocumentObject(ISystemId entity,
                            IHateoasNoarkObject hateoasNoarkObject);

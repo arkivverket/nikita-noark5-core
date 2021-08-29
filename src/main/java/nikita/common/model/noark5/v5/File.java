@@ -117,7 +117,7 @@ public class File
 
     // Links to Records
     @OneToMany(mappedBy = "referenceFile")
-    private final List<RecordEntity> referenceRecord = new ArrayList<>();
+    private final List<RecordEntity> referenceRecordEntity = new ArrayList<>();
 
     // Links to Comments
     @ManyToMany(cascade = {PERSIST, MERGE})
@@ -317,17 +317,17 @@ public class File
         this.referenceClass = referenceClass;
     }
 
-    public List<RecordEntity> getReferenceRecord() {
-        return referenceRecord;
+    public List<RecordEntity> getReferenceRecordEntity() {
+        return referenceRecordEntity;
     }
 
-    public void addRecord(RecordEntity record) {
-        referenceRecord.add(record);
+    public void addRecordEntity(RecordEntity record) {
+        referenceRecordEntity.add(record);
         record.setReferenceFile(this);
     }
 
-    public void removeRecord(RecordEntity record) {
-        referenceRecord.remove(record);
+    public void removeRecordEntity(RecordEntity record) {
+        referenceRecordEntity.remove(record);
         record.setReferenceFile(null);
     }
 

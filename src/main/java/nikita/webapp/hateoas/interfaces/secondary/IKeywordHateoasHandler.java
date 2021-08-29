@@ -7,8 +7,8 @@ import nikita.webapp.hateoas.interfaces.IHateoasHandler;
 public interface IKeywordHateoasHandler
         extends IHateoasHandler {
 
-    void addRecord(IKeywordEntity entity,
-                   IHateoasNoarkObject hateoasNoarkObject);
+    void addRecordEntity(IKeywordEntity entity,
+                         IHateoasNoarkObject hateoasNoarkObject);
 
     void addFile(IKeywordEntity entity,
                  IHateoasNoarkObject hateoasNoarkObject);

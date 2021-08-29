@@ -877,8 +877,8 @@ public class TestOData {
                 " AS documentobject_1" +
                 " JOIN documentobject_1.referenceDocumentDescription" +
                 " AS documentdescription_1" +
-                " JOIN documentdescription_1.referenceRecord AS record_1" +
-                " JOIN record_1.referenceFile AS file_1" +
+                " JOIN documentdescription_1.referenceRecordEntity AS recordentity_1" +
+                " JOIN recordentity_1.referenceFile AS file_1" +
                 " JOIN file_1.referenceSeries AS series_1" +
                 " JOIN series_1.referenceFonds AS fonds_1" +
                 " WHERE month(fonds_1.createdDate) > :parameter_0";
@@ -1323,11 +1323,11 @@ public class TestOData {
      * SELECT file_1 FROM File AS file_1
      * JOIN
      * file_1.referenceClass AS class_1
-     * JOIN file_1.referenceRecord AS record_1
+     * JOIN file_1.referenceRecordEntity AS recordentity_1
      * WHERE
      * class_1.classId = :parameter_0 and
      * file_1.title like :parameter_0 and
-     * record_1.title != :parameter_1
+     * recordentity_1.title != :parameter_1
      * Additionally.
      * The parameter_0 parameter value should be:
      * 12/2
@@ -1345,10 +1345,10 @@ public class TestOData {
         QueryObject queryObject = oDataService.convertODataToHQL(joinQuery, "");
         String hqlJoin = "SELECT file_1 FROM File AS file_1 " +
                 "JOIN file_1.referenceClass AS class_1 " +
-                "JOIN file_1.referenceRecord AS record_1 WHERE " +
+                "JOIN file_1.referenceRecordEntity AS recordentity_1 WHERE " +
                 "class_1.classId = :parameter_0 and " +
                 "file_1.title like :parameter_1 and " +
-                "record_1.title != :parameter_2";
+                "recordentity_1.title != :parameter_2";
         Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 "12/2");
         Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_1"),
@@ -1371,11 +1371,11 @@ public class TestOData {
      * SELECT file_1 FROM File AS file_1
      * JOIN
      * file_1.referenceClass AS class_1
-     * JOIN file_1.referenceRecord AS record_1
+     * JOIN file_1.referenceRecordEntity AS recordentity_1
      * WHERE
      * class_1.classId = :parameter_0 and
      * file_1.title like :parameter_0 and
-     * record_1.title != :parameter_1
+     * recordentity_1.title != :parameter_1
      * Additionally.
      * The parameter_0 parameter value should be:
      * 12/2
@@ -1393,10 +1393,10 @@ public class TestOData {
         QueryObject queryObject = oDataService.convertODataToHQL(odata, "");
         String hql = "SELECT file_1 FROM File AS file_1 " +
                 "JOIN file_1.referenceClass AS class_1 " +
-                "JOIN file_1.referenceRecord AS record_1 WHERE " +
+                "JOIN file_1.referenceRecordEntity AS recordentity_1 WHERE " +
                 "(class_1.classId = :parameter_0 and " +
                 "file_1.title like :parameter_1) or (" +
-                "record_1.title != :parameter_2)";
+                "recordentity_1.title != :parameter_2)";
         Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_0"),
                 "12/2");
         Assertions.assertEquals(queryObject.getQuery().getParameterValue("parameter_1"),
@@ -2491,10 +2491,10 @@ public class TestOData {
     public void testManualQuery() {
         // select concat(c.firstname, c.lastname) as fullname from Contact c
         String hqlTestJoin = "FROM File as file_1 JOIN " +
-                "file_1.referenceClass AS class_1 JOIN file_1.referenceRecord" +
-                " AS record_1 WHERE class_1.classId = '12/2' and " +
+                "file_1.referenceClass AS class_1 JOIN file_1.referenceRecordEntity" +
+                " AS recordentity_1 WHERE class_1.classId = '12/2' and " +
                 "file_1.title like :parameter_0 and " +
-                "record_1.title = 'Brev fra dept.' ";
+                "recordentity_1.title = 'Brev fra dept.' ";
 
         Session session = emf.unwrap(Session.class);
         session.createQuery(hqlTestJoin);

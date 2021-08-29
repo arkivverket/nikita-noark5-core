@@ -109,7 +109,7 @@ public class KeywordService
             klass.removeKeyword(keyword);
         }
         // Remove any associations between a Record and the given Keyword
-        for (RecordEntity record : keyword.getReferenceRecord()) {
+        for (RecordEntity record : keyword.getReferenceRecordEntity()) {
             record.removeKeyword(keyword);
         }
         // Remove any associations between a File and the given Keyword
@@ -126,7 +126,7 @@ public class KeywordService
         if (keyword.getReferenceFile().size() > 0) {
             return false;
         }
-        if (keyword.getReferenceRecord().size() > 0) {
+        if (keyword.getReferenceRecordEntity().size() > 0) {
             return false;
         }
         keywordRepository.delete(keyword);

@@ -673,7 +673,7 @@ public class RegistryEntryService
         }
 
         if (null != referenceCorrespondencePart) {
-            if (!referenceCorrespondencePart.getReferenceRecord()
+            if (!referenceCorrespondencePart.getReferenceRecordEntity()
                     .equals(referenceRegistryEntry)) {
                 String info = INFO_CANNOT_FIND_OBJECT +
                         " CorrespondencePart " + partID +

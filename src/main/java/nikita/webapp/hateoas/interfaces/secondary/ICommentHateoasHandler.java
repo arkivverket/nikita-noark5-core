@@ -13,8 +13,8 @@ public interface ICommentHateoasHandler
     void addFile(ICommentEntity comment,
                  IHateoasNoarkObject hateoasNoarkObject);
 
-    void addRecord(ICommentEntity comment,
-                   IHateoasNoarkObject hateoasNoarkObject);
+    void addRecordEntity(ICommentEntity comment,
+                         IHateoasNoarkObject hateoasNoarkObject);
 
     void addDocumentDescription(ICommentEntity comment,
                                 IHateoasNoarkObject hateoasNoarkObject);

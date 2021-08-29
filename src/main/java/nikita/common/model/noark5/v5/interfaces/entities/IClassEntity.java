@@ -36,7 +36,7 @@ public interface IClassEntity
 
     void setReferenceFile(List<File> referenceFile);
 
-    List<RecordEntity> getReferenceRecord();
+    List<RecordEntity> getReferenceRecordEntity();
 
-    void setReferenceRecord(List<RecordEntity> referenceRecord);
+    void setReferenceRecord(List<RecordEntity> referenceRecordEntity);
 }

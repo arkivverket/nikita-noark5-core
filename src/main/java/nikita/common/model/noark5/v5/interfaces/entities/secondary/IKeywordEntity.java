@@ -14,11 +14,11 @@ public interface IKeywordEntity
 
     void setKeyword(String keyword);
 
-    Set<RecordEntity> getReferenceRecord();
+    Set<RecordEntity> getReferenceRecordEntity();
 
-    void addReferenceRecord(RecordEntity referenceRecord);
+    void addReferenceRecord(RecordEntity referenceRecordEntity);
 
-    void removeReferenceRecord(RecordEntity referenceRecord);
+    void removeReferenceRecord(RecordEntity referenceRecordEntity);
 
     Set<File> getReferenceFile();
 

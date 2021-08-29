@@ -146,8 +146,8 @@ public class CrossReferenceService
             crossReference.getReferenceFile()
                     .removeCrossReference(crossReference);
         }
-        if (null != crossReference.getReferenceRecord()) {
-            crossReference.getReferenceRecord()
+        if (null != crossReference.getReferenceRecordEntity()) {
+            crossReference.getReferenceRecordEntity()
                     .removeCrossReference(crossReference);
         }
         crossReferenceRepository.delete(crossReference);

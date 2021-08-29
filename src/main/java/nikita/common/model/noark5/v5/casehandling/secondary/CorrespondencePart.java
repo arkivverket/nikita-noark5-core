@@ -53,7 +53,7 @@ public class CorrespondencePart
     // Link to Record
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = FOREIGN_KEY_RECORD_PK)
-    private RecordEntity referenceRecord;
+    private RecordEntity referenceRecordEntity;
 
     // Links to businessSpecificMetadata (virksomhetsspesifikkeMetadata)
     @OneToMany(mappedBy = REFERENCE_CORRESPONDENCE_PART,
@@ -105,12 +105,12 @@ public class CorrespondencePart
         bsmBase.setReferenceCorrespondencePart(null);
     }
 
-    public RecordEntity getReferenceRecord() {
-        return referenceRecord;
+    public RecordEntity getReferenceRecordEntity() {
+        return referenceRecordEntity;
     }
 
-    public void setReferenceRecord(RecordEntity referenceRecord) {
-        this.referenceRecord = referenceRecord;
+    public void setReferenceRecord(RecordEntity referenceRecordEntity) {
+        this.referenceRecordEntity = referenceRecordEntity;
     }
 
     @Override

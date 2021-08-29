@@ -7,8 +7,8 @@ import nikita.webapp.hateoas.interfaces.IHateoasHandler;
 public interface ICrossReferenceHateoasHandler
         extends IHateoasHandler {
 
-    void addRecord(ISystemId entity,
-                   IHateoasNoarkObject hateoasNoarkObject);
+    void addRecordEntity(ISystemId entity,
+                         IHateoasNoarkObject hateoasNoarkObject);
 
     void addFile(ISystemId entity,
                  IHateoasNoarkObject hateoasNoarkObject);
