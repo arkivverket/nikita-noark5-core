@@ -689,12 +689,17 @@ public class DocumentObjectService
                     outputStream), incoming, documentObject);
             checksumSetIfOK(digestInputStream, incoming, documentObject);
 
-        } catch (NoSuchAlgorithmException | IOException e) {
+        } catch (NoSuchAlgorithmException e) {
             String msg = "Internal error, could not load checksum algorithm " +
                     "[" + documentObject.getChecksumAlgorithm() + "] when " +
                     "attempting to store a file associated with " +
                     documentObject;
-            logger.warn(msg);
+            logger.warn(msg, e);
+            throw new StorageException(msg);
+        } catch (IOException e) {
+            String msg = "Internal error when attempting to store a file associated with " +
+                documentObject;
+            logger.warn(msg, e);
             throw new StorageException(msg);
         }
     }
