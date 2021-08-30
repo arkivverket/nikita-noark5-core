@@ -1,7 +1,7 @@
 package nikita.common.model.noark5.v5.interfaces.entities.secondary;
 
 import nikita.common.model.noark5.v5.DocumentDescription;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 
 public interface IAuthorEntity
@@ -11,9 +11,9 @@ public interface IAuthorEntity
 
     void setAuthor(String author);
 
-    Record getReferenceRecord();
+    RecordEntity getReferenceRecordEntity();
 
-    void setReferenceRecord(Record referenceRecord);
+    void setReferenceRecord(RecordEntity referenceRecordEntity);
 
     DocumentDescription getReferenceDocumentDescription();
 

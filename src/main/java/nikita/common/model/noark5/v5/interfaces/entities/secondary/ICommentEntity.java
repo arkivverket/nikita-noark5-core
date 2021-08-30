@@ -2,7 +2,7 @@ package nikita.common.model.noark5.v5.interfaces.entities.secondary;
 
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.File;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.common.model.noark5.v5.metadata.CommentType;
 
@@ -32,9 +32,9 @@ public interface ICommentEntity
 
     void addFile(File referenceFile);
 
-    Set<Record> getReferenceRecord();
+    Set<RecordEntity> getReferenceRecordEntity();
 
-    void addRecord(Record referenceRecord);
+    void addRecordEntity(RecordEntity referenceRecordEntity);
 
     Set<DocumentDescription> getReferenceDocumentDescription();
 

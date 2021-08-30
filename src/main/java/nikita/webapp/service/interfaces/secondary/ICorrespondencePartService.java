@@ -1,7 +1,7 @@
 package nikita.webapp.service.interfaces.secondary;
 
 import nikita.common.model.nikita.PatchObjects;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePart;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartInternal;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
@@ -30,15 +30,15 @@ public interface ICorrespondencePartService {
 
     CorrespondencePartUnitHateoas createNewCorrespondencePartUnit(
             @NotNull final CorrespondencePartUnit correspondencePartUnit,
-            @NotNull final Record record);
+            @NotNull final RecordEntity record);
 
     CorrespondencePartInternalHateoas createNewCorrespondencePartInternal(
             @NotNull final CorrespondencePartInternal correspondencePartUnit,
-            @NotNull final Record record);
+            @NotNull final RecordEntity record);
 
     CorrespondencePartPersonHateoas createNewCorrespondencePartPerson(
             @NotNull final CorrespondencePartPerson correspondencePartPerson,
-            @NotNull final Record record);
+            @NotNull final RecordEntity record);
 
     CorrespondencePart findBySystemId(@NotNull final UUID systemId);
 

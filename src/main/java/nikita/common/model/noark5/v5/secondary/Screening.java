@@ -120,7 +120,7 @@ public class Screening
 
     // Links to Record
     @OneToMany(mappedBy = REFERENCE_SCREENING)
-    private List<Record> referenceRecord = new ArrayList<>();
+    private List<RecordEntity> referenceRecordEntity = new ArrayList<>();
 
     // Links to DocumentDescription
     @OneToMany(mappedBy = REFERENCE_SCREENING)
@@ -249,21 +249,21 @@ public class Screening
         file.setReferenceScreening(null);
     }
 
-    public List<Record> getReferenceRecord() {
-        return referenceRecord;
+    public List<RecordEntity> getReferenceRecordEntity() {
+        return referenceRecordEntity;
     }
 
-    public void setReferenceRecord(List<Record> referenceRecord) {
-        this.referenceRecord = referenceRecord;
+    public void setReferenceRecord(List<RecordEntity> referenceRecordEntity) {
+        this.referenceRecordEntity = referenceRecordEntity;
     }
 
-    public void addRecord(Record record) {
-        this.referenceRecord.add(record);
+    public void addRecordEntity(RecordEntity record) {
+        this.referenceRecordEntity.add(record);
         record.setReferenceScreening(this);
     }
 
-    public void removeRecord(Record record) {
-        this.referenceRecord.remove(record);
+    public void removeRecordEntity(RecordEntity record) {
+        this.referenceRecordEntity.remove(record);
         record.setReferenceScreening(null);
     }
 

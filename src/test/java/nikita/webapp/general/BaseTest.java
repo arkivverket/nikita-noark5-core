@@ -37,7 +37,6 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 @SpringBootTest(classes = N5CoreApp.class,
         webEnvironment = RANDOM_PORT)
 @ContextConfiguration(classes = {TestSecurityConfiguration.class})
-@ActiveProfiles("test")
 @AutoConfigureRestDocs(outputDir = "target/snippets")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Transactional

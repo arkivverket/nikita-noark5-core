@@ -1,6 +1,6 @@
 package nikita.webapp.hateoas;
 
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
@@ -99,7 +99,7 @@ public class RecordHateoasHandler
 
     @Override
     public void addKeyword(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
-        if (((Record) entity).getReferenceKeyword().size() > 0) {
+        if (((RecordEntity) entity).getReferenceKeyword().size() > 0) {
             hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                     HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() +
                     SLASH + KEYWORD + SLASH, REL_FONDS_STRUCTURE_KEYWORD, true));
@@ -115,7 +115,7 @@ public class RecordHateoasHandler
 
     @Override
     public void addStorageLocation(ISystemId entity, IHateoasNoarkObject hateoasNoarkObject) {
-        if (((Record) entity).getReferenceStorageLocation().size() > 0) {
+        if (((RecordEntity) entity).getReferenceStorageLocation().size() > 0) {
             hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                     HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() +
                     SLASH + STORAGE_LOCATION + SLASH,
@@ -159,7 +159,7 @@ public class RecordHateoasHandler
     @Override
     public void addReferenceSeries(ISystemId entity,
                                    IHateoasNoarkObject hateoasNoarkObject) {
-        Record record = getRecord(entity);
+        RecordEntity record = getRecord(entity);
         if (record.getReferenceSeries() != null) {
             hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                     HREF_BASE_SERIES + SLASH + record.getReferenceSeries().getSystemIdAsString(),
@@ -180,7 +180,7 @@ public class RecordHateoasHandler
     @Override
     public void addReferenceFile(ISystemId entity,
                                  IHateoasNoarkObject hateoasNoarkObject) {
-        Record record = getRecord(entity);
+        RecordEntity record = getRecord(entity);
         if (record.getReferenceFile() != null) {
             hateoasNoarkObject.addLink(entity,
                     new Link(getOutgoingAddress() + HREF_BASE_FILE + SLASH +
@@ -202,7 +202,7 @@ public class RecordHateoasHandler
     @Override
     public void addReferenceClass(ISystemId entity,
                                   IHateoasNoarkObject hateoasNoarkObject) {
-        Record record = getRecord(entity);
+        RecordEntity record = getRecord(entity);
         if (record.getReferenceClass() != null) {
             hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                     HREF_BASE_CLASS + SLASH + record.getReferenceClass().getSystemIdAsString(),
@@ -303,7 +303,7 @@ public class RecordHateoasHandler
     @Override
     public void addAuthor(ISystemId entity,
                           IHateoasNoarkObject hateoasNoarkObject) {
-        if (((Record) entity).getReferenceAuthor().size() > 0) {
+        if (((RecordEntity) entity).getReferenceAuthor().size() > 0) {
             hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                     HREF_BASE_RECORD + SLASH + entity.getSystemIdAsString() +
                     SLASH + AUTHOR + SLASH, REL_FONDS_STRUCTURE_AUTHOR, true));
@@ -428,7 +428,7 @@ public class RecordHateoasHandler
     @Override
     public void addScreeningMetadataLocal(ISystemId entity,
                                           IHateoasNoarkObject hateoasNoarkObject) {
-        if (null != ((Record) entity).getReferenceScreening()) {
+        if (null != ((RecordEntity) entity).getReferenceScreening()) {
             hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                     HREF_BASE_FONDS_STRUCTURE + SLASH + RECORD + SLASH +
                     entity.getSystemId() + SLASH + SCREENING_METADATA,
@@ -439,7 +439,7 @@ public class RecordHateoasHandler
     @Override
     public void addNewScreeningMetadataLocal(ISystemId entity,
                                              IHateoasNoarkObject hateoasNoarkObject) {
-        if (null != ((Record) entity).getReferenceScreening()) {
+        if (null != ((RecordEntity) entity).getReferenceScreening()) {
             hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                     HREF_BASE_FONDS_STRUCTURE + SLASH + RECORD + SLASH +
                     entity.getSystemId() + SLASH + NEW_SCREENING_METADATA,
@@ -453,7 +453,7 @@ public class RecordHateoasHandler
      * @param entity the Record
      * @return a Record object
      */
-    private Record getRecord(@NotNull ISystemId entity) {
-        return (Record) entity;
+    private RecordEntity getRecord(@NotNull ISystemId entity) {
+        return (RecordEntity) entity;
     }
 }

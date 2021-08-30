@@ -1,7 +1,7 @@
 package nikita.common.util.serializers.noark5v5.hateoas;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.casehandling.RecordNote;
 import nikita.common.model.noark5.v5.casehandling.RegistryEntry;
 import nikita.common.model.noark5.v5.hateoas.HateoasNoarkObject;
@@ -24,7 +24,7 @@ public class RecordHateoasSerializer
                                      HateoasNoarkObject recordHateoas,
                                      JsonGenerator jgen) throws IOException {
 
-        Record record = (Record) noarkSystemIdEntity;
+        RecordEntity record = (RecordEntity) noarkSystemIdEntity;
 
         jgen.writeStartObject();
         printRecordEntity(jgen, record);

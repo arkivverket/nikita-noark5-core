@@ -5,7 +5,7 @@ import nikita.common.model.noark5.bsm.BSMBase;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.File;
 import nikita.common.model.noark5.v5.NoarkGeneralEntity;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.hateoas.secondary.PartHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.IPartEntity;
 import nikita.common.model.noark5.v5.metadata.PartRole;
@@ -72,7 +72,7 @@ public class Part
 
     // Links to Record
     @ManyToMany(mappedBy = "referencePart")
-    private Set<Record> referenceRecord = new HashSet<>();
+    private Set<RecordEntity> referenceRecordEntity = new HashSet<>();
 
     // Links to DocumentDescriptions
     @ManyToMany(mappedBy = "referencePart")
@@ -122,18 +122,18 @@ public class Part
     }
 
     @Override
-    public Set<Record> getReferenceRecord() {
-        return referenceRecord;
+    public Set<RecordEntity> getReferenceRecordEntity() {
+        return referenceRecordEntity;
     }
 
     @Override
-    public void addRecord(Record record) {
-        this.referenceRecord.add(record);
+    public void addRecordEntity(RecordEntity record) {
+        this.referenceRecordEntity.add(record);
         record.getReferencePart().add(this);
     }
 
-    public void removeRecord(Record record) {
-        referenceRecord.remove(record);
+    public void removeRecordEntity(RecordEntity record) {
+        referenceRecordEntity.remove(record);
         record.getReferencePart().remove(this);
     }
 

@@ -36,7 +36,7 @@ public class CaseFileHateoasHandler
         addNewRegistryEntry(entity, hateoasNoarkObject);
         addRegistryEntry(entity, hateoasNoarkObject);
         addNewRecordNote(entity, hateoasNoarkObject);
-        addRecordNote(entity, hateoasNoarkObject);
+        addRecordEntityNote(entity, hateoasNoarkObject);
         //addSecondaryClassification(entity, hateoasNoarkObject);
         addNewSubCaseFile(entity, hateoasNoarkObject);
         addMetadataCaseStatus(entity, hateoasNoarkObject);
@@ -117,8 +117,8 @@ public class CaseFileHateoasHandler
      * @param hateoasNoarkObject hateoasCaseFile
      */
     @Override
-    public void addRecordNote(ISystemId entity,
-                              IHateoasNoarkObject hateoasNoarkObject) {
+    public void addRecordEntityNote(ISystemId entity,
+                                    IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
                 HREF_BASE_CASE_FILE + SLASH + entity.getSystemId() + SLASH + RECORD_NOTE,
                 REL_CASE_HANDLING_RECORD_NOTE));

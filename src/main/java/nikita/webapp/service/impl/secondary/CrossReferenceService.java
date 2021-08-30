@@ -2,7 +2,7 @@ package nikita.webapp.service.impl.secondary;
 
 import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.File;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.hateoas.secondary.CrossReferenceHateoas;
 import nikita.common.model.noark5.v5.interfaces.ICrossReference;
@@ -82,7 +82,7 @@ public class CrossReferenceService
     @Transactional
     public CrossReferenceHateoas createCrossReferenceAssociatedWithRecord(
             @NotNull final CrossReference crossReference,
-            @NotNull final Record record) {
+            @NotNull final RecordEntity record) {
         return createCrossReference(record, crossReference, RECORD, RECORD_ENG);
     }
 
@@ -146,8 +146,8 @@ public class CrossReferenceService
             crossReference.getReferenceFile()
                     .removeCrossReference(crossReference);
         }
-        if (null != crossReference.getReferenceRecord()) {
-            crossReference.getReferenceRecord()
+        if (null != crossReference.getReferenceRecordEntity()) {
+            crossReference.getReferenceRecordEntity()
                     .removeCrossReference(crossReference);
         }
         crossReferenceRepository.delete(crossReference);

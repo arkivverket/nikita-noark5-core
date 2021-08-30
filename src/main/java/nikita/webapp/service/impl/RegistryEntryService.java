@@ -2,7 +2,7 @@ package nikita.webapp.service.impl;
 
 import nikita.common.model.nikita.PatchMerge;
 import nikita.common.model.noark5.v5.File;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.admin.User;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
@@ -115,7 +115,7 @@ public class RegistryEntryService
     @Override
     @Transactional
     public RegistryEntryHateoas expandRecordToRegistryEntry(
-            @NotNull final Record record,
+            @NotNull final RecordEntity record,
             @NotNull final PatchMerge patchMerge) {
         RegistryEntry registryEntry = new RegistryEntry(record);
         RegistryEntryStatus registryEntryStatus =
@@ -673,7 +673,7 @@ public class RegistryEntryService
         }
 
         if (null != referenceCorrespondencePart) {
-            if (!referenceCorrespondencePart.getReferenceRecord()
+            if (!referenceCorrespondencePart.getReferenceRecordEntity()
                     .equals(referenceRegistryEntry)) {
                 String info = INFO_CANNOT_FIND_OBJECT +
                         " CorrespondencePart " + partID +

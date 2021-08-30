@@ -39,7 +39,7 @@ public class KeywordHateoasHandler
     public void addEntityLinks(ISystemId entity,
                                IHateoasNoarkObject hateoasNoarkObject) {
         addClass((IKeywordEntity) entity, hateoasNoarkObject);
-        addRecord((IKeywordEntity) entity, hateoasNoarkObject);
+        addRecordEntity((IKeywordEntity) entity, hateoasNoarkObject);
         addFile((IKeywordEntity) entity, hateoasNoarkObject);
     }
 
@@ -54,9 +54,9 @@ public class KeywordHateoasHandler
      * @param hateoasNoarkObject hateoasDocumentObject
      */
     @Override
-    public void addRecord(IKeywordEntity keyword,
-                          IHateoasNoarkObject hateoasNoarkObject) {
-        if (keyword.getReferenceRecord().size() > 0) {
+    public void addRecordEntity(IKeywordEntity keyword,
+                                IHateoasNoarkObject hateoasNoarkObject) {
+        if (keyword.getReferenceRecordEntity().size() > 0) {
             hateoasNoarkObject.addLink(keyword,
                     new Link(getOutgoingAddress() +
                             HREF_BASE_RECORD + "?" + urlEncode(DOLLAR_FILTER) +

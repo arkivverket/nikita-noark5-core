@@ -2,7 +2,7 @@ package nikita.common.model.noark5.v5.casehandling.secondary;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.bsm.BSMBase;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.hateoas.casehandling.CorrespondencePartHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.ICorrespondencePartEntity;
@@ -53,7 +53,7 @@ public class CorrespondencePart
     // Link to Record
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = FOREIGN_KEY_RECORD_PK)
-    private Record referenceRecord;
+    private RecordEntity referenceRecordEntity;
 
     // Links to businessSpecificMetadata (virksomhetsspesifikkeMetadata)
     @OneToMany(mappedBy = REFERENCE_CORRESPONDENCE_PART,
@@ -105,12 +105,12 @@ public class CorrespondencePart
         bsmBase.setReferenceCorrespondencePart(null);
     }
 
-    public Record getReferenceRecord() {
-        return referenceRecord;
+    public RecordEntity getReferenceRecordEntity() {
+        return referenceRecordEntity;
     }
 
-    public void setReferenceRecord(Record referenceRecord) {
-        this.referenceRecord = referenceRecord;
+    public void setReferenceRecord(RecordEntity referenceRecordEntity) {
+        this.referenceRecordEntity = referenceRecordEntity;
     }
 
     @Override

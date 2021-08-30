@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.File;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.admin.AdministrativeUnit;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePart;
@@ -95,7 +95,7 @@ public class BSMBase
     @JoinColumn(name = BSM_RECORD_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
     @JsonIgnore
-    private Record referenceRecord;
+    private RecordEntity referenceRecordEntity;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = BSM_PART_ID,
@@ -275,12 +275,12 @@ public class BSMBase
         this.referenceFile = referenceFile;
     }
 
-    public Record getReferenceRecord() {
-        return referenceRecord;
+    public RecordEntity getReferenceRecordEntity() {
+        return referenceRecordEntity;
     }
 
-    public void setReferenceRecord(Record referenceRecord) {
-        this.referenceRecord = referenceRecord;
+    public void setReferenceRecord(RecordEntity referenceRecordEntity) {
+        this.referenceRecordEntity = referenceRecordEntity;
     }
 
     public Part getReferencePart() {

@@ -8,7 +8,7 @@ import nikita.common.model.noark5.bsm.BSM;
 import nikita.common.model.noark5.bsm.BSMBase;
 import nikita.common.model.noark5.v5.DocumentDescription;
 import nikita.common.model.noark5.v5.File;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
 import nikita.common.model.noark5.v5.metadata.AssociatedWithRecordAs;
 import nikita.common.model.noark5.v5.metadata.DocumentStatus;
@@ -85,7 +85,7 @@ import static utils.TestConstants.*;
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @SpringBootTest(classes = {SpringSecurityWebAuxTestConfig.class},
         webEnvironment = RANDOM_PORT)
-@ActiveProfiles("test")
+
 @Transactional
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class BSMTest {
@@ -473,7 +473,7 @@ public class BSMTest {
 
     @WithMockCustomUser
     public void addBSMWithNewRecord() throws Exception {
-        Record record = new Record();
+        RecordEntity record = new RecordEntity();
         record.addReferenceBSMBase(bsmObjects);
         record.setTitle("Title of record");
         String url = "/noark5v5/api/arkivstruktur/mappe" +

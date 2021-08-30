@@ -2,7 +2,7 @@ package nikita.common.model.noark5.v5.casehandling;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RecordNoteHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.IRecordNoteEntity;
 import nikita.common.model.noark5.v5.secondary.DocumentFlow;
@@ -36,7 +36,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @HateoasObject(using = RecordNoteHateoas.class)
 @Indexed
 public class RecordNote
-        extends Record
+        extends RecordEntity
         implements IRecordNoteEntity {
 
     /**
@@ -123,7 +123,7 @@ public class RecordNote
     public RecordNote() {
     }
 
-    public RecordNote(Record record) {
+    public RecordNote(RecordEntity record) {
         super();
         setVersion(record.getVersion(), true);
         this.setRecordId(record.getRecordId());

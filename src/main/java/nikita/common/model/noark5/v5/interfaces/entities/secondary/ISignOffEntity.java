@@ -56,7 +56,7 @@ public interface ISignOffEntity
 
     void setReferenceRegistryEntry(Set<RegistryEntry> referenceRegistryEntry);
 
-    void addRecord(RegistryEntry record);
+    void addRecordEntity(RegistryEntry record);
 
-    void removeRecord(RegistryEntry record);
+    void removeRecordEntity(RegistryEntry record);
 }

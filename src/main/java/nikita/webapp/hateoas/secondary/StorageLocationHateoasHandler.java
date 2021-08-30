@@ -42,7 +42,7 @@ public class StorageLocationHateoasHandler
         addFonds(entity, hateoasNoarkObject);
         addSeries(entity, hateoasNoarkObject);
         addFile(entity, hateoasNoarkObject);
-        addRecord(entity, hateoasNoarkObject);
+        addRecordEntity(entity, hateoasNoarkObject);
     }
 
     /**
@@ -125,9 +125,9 @@ public class StorageLocationHateoasHandler
      * @param hateoasNoarkObject hateoasDocumentObject
      */
     @Override
-    public void addRecord(ISystemId storageLocation,
-                          IHateoasNoarkObject hateoasNoarkObject) {
-        if (((StorageLocation) storageLocation).getReferenceRecord().size() > 0) {
+    public void addRecordEntity(ISystemId storageLocation,
+                                IHateoasNoarkObject hateoasNoarkObject) {
+        if (((StorageLocation) storageLocation).getReferenceRecordEntity().size() > 0) {
             hateoasNoarkObject.addLink(storageLocation,
                     new Link(getOutgoingAddress() +
                             "?" + urlEncode(DOLLAR_FILTER) +

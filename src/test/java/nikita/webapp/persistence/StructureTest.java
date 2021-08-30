@@ -55,7 +55,7 @@ import static utils.TestConstants.*;
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @SpringBootTest(classes = N5CoreApp.class,
         webEnvironment = RANDOM_PORT)
-@ActiveProfiles("test")
+
 @AutoConfigureRestDocs(outputDir = "target/snippets")
 @Transactional
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)

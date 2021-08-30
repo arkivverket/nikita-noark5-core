@@ -852,7 +852,7 @@ public final class N5ResourceMappings {
     public static final String AUTHOR_ENG_OBJECT = "Author";
     public static final String BUILDING_CHANGE_NUMBER_ENG_OBJECT = "continuousNumberingOfBuildingChange";
     public static final String BUILDING_NUMBER_ENG_OBJECT = "buildingNumber";
-    public static final String RECORD_ENG_OBJECT = "Record";
+    public static final String RECORD_ENG_OBJECT = "RecordEntity";
     public static final String RECORD_ID_ENG_OBJECT = "recordId";
     public static final String BUSINESS_ADDRESS_ENG_OBJECT = "forretningsadresse";
     public static final String CASE_DATE_ENG_OBJECT = "caseDate";

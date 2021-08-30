@@ -54,7 +54,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = N5CoreApp.class,
         webEnvironment = RANDOM_PORT)
 @ContextConfiguration(classes = {TestSecurityConfiguration.class})
-@ActiveProfiles("test")
 @AutoConfigureRestDocs(outputDir = "target/snippets")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Transactional
@@ -1398,7 +1397,7 @@ public class ScreeningTest {
         // Note: We are not using the result of the GET ny-registrering, but want the
         // test to check tht it works
 
-        Record record = new Record();
+        RecordEntity record = new RecordEntity();
         record.setTitle("Title of record");
 
         // Create Metadata objects

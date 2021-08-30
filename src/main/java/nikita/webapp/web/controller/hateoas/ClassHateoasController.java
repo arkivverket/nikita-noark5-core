@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.File;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
 import nikita.common.model.noark5.v5.hateoas.ClassificationSystemHateoas;
@@ -358,7 +358,7 @@ public class ClassHateoasController
             @PathVariable UUID systemID,
             @Parameter(name = "record", description = "Incoming record object",
                     required = true)
-            @RequestBody Record record)
+            @RequestBody RecordEntity record)
             throws NikitaException {
         return ResponseEntity.status(CREATED)
                 .body(classService

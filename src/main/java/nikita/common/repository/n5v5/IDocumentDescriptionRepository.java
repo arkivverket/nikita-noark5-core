@@ -1,7 +1,7 @@
 package nikita.common.repository.n5v5;
 
 import nikita.common.model.noark5.v5.DocumentDescription;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ public interface IDocumentDescriptionRepository extends
 
     DocumentDescription findBySystemId(UUID systemId);
 
-    Long countByReferenceRecord(Record record);
+    Long countByReferenceRecordEntity(RecordEntity record);
 
     long deleteByOwnedBy(String user);
 }

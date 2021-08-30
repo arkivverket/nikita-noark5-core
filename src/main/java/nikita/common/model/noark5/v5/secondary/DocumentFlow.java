@@ -261,7 +261,7 @@ public class DocumentFlow
     }
 
     @Override
-    public RecordNote getReferenceRecordNote() {
+    public RecordNote getReferenceRecordEntityNote() {
         return referenceRecordNote;
     }
 

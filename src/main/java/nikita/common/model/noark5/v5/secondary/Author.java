@@ -2,7 +2,7 @@ package nikita.common.model.noark5.v5.secondary;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.DocumentDescription;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.hateoas.secondary.AuthorHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.secondary.IAuthorEntity;
@@ -34,7 +34,7 @@ public class Author
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = FOREIGN_KEY_RECORD_PK)
-    private Record referenceRecord;
+    private RecordEntity referenceRecordEntity;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = FOREIGN_KEY_DOCUMENT_DESCRIPTION_PK)
@@ -72,12 +72,12 @@ public class Author
         this.author = author;
     }
 
-    public Record getReferenceRecord() {
-        return referenceRecord;
+    public RecordEntity getReferenceRecordEntity() {
+        return referenceRecordEntity;
     }
 
-    public void setReferenceRecord(Record referenceRecord) {
-        this.referenceRecord = referenceRecord;
+    public void setReferenceRecord(RecordEntity referenceRecordEntity) {
+        this.referenceRecordEntity = referenceRecordEntity;
         isForRecord = true;
     }
 

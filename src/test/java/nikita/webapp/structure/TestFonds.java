@@ -36,7 +36,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = N5CoreApp.class,
         webEnvironment = RANDOM_PORT)
 @ContextConfiguration(classes = {TestSecurityConfiguration.class})
-@ActiveProfiles("test")
 public class TestFonds {
 
     private MockMvc mockMvc;

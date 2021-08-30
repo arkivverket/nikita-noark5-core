@@ -52,7 +52,7 @@ public class StorageLocation
     // Links to Record
     @ManyToMany(mappedBy = REFERENCE_STORAGE_LOCATION)
     @JsonIgnore
-    private final Set<Record> referenceRecord = new HashSet<>();
+    private final Set<RecordEntity> referenceRecordEntity = new HashSet<>();
     /**
      * M301 - oppbevaringssted (xs:string)
      */
@@ -112,17 +112,17 @@ public class StorageLocation
         file.getReferenceStorageLocation().remove(this);
     }
 
-    public Set<Record> getReferenceRecord() {
-        return referenceRecord;
+    public Set<RecordEntity> getReferenceRecordEntity() {
+        return referenceRecordEntity;
     }
 
-    public void addReferenceRecord(Record record) {
-        this.referenceRecord.add(record);
+    public void addReferenceRecord(RecordEntity record) {
+        this.referenceRecordEntity.add(record);
         record.getReferenceStorageLocation().add(this);
     }
 
-    public void removeReferenceRecord(Record record) {
-        this.referenceRecord.remove(record);
+    public void removeReferenceRecord(RecordEntity record) {
+        this.referenceRecordEntity.remove(record);
         record.getReferenceStorageLocation().remove(this);
     }
 

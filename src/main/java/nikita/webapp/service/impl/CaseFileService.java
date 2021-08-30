@@ -209,7 +209,7 @@ public class CaseFileService
             @NotNull final RegistryEntry registryEntry) {
         CaseFile caseFile = getCaseFileOrThrow(systemId);
         registryEntry.setReferenceFile(caseFile);
-        caseFile.getReferenceRecord().add(registryEntry);
+        caseFile.getReferenceRecordEntity().add(registryEntry);
         return registryEntryService.save(registryEntry);
     }
 
@@ -253,7 +253,7 @@ public class CaseFileService
             @NotNull final RecordNote recordNote) {
         CaseFile caseFile = getCaseFileOrThrow(systemId);
         recordNote.setReferenceFile(caseFile);
-        caseFile.getReferenceRecord().add(recordNote);
+        caseFile.getReferenceRecordEntity().add(recordNote);
         return recordNoteService.save(recordNote);
     }
 

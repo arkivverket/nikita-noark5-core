@@ -8,7 +8,7 @@ import nikita.common.model.nikita.PatchMerge;
 import nikita.common.model.nikita.PatchObjects;
 import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.File;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.Series;
 import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
 import nikita.common.model.noark5.v5.hateoas.FileHateoas;
@@ -98,7 +98,7 @@ public class FileHateoasController
             @Parameter(name = "Record",
                     description = "Incoming record",
                     required = true)
-            @RequestBody Record record) throws NikitaException {
+            @RequestBody RecordEntity record) throws NikitaException {
         return ResponseEntity.status(CREATED)
                 .body(fileService
                         .createRecordAssociatedWithFile(systemID, record));
@@ -563,7 +563,7 @@ public class FileHateoasController
                 .body(fileService.generateDefaultFile(systemID));
     }
 
-    // Create a suggested PartUnit (like a template) object 
+    // Create a suggested PartUnit (like a template) object
     // with default values (nothing persisted)
     // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-partenhet
     @Operation(summary = "Suggests the contents of a new Part object",
@@ -596,7 +596,7 @@ public class FileHateoasController
                         generateDefaultPartUnit(systemID));
     }
 
-    // Create a suggested PartPerson (like a template) object 
+    // Create a suggested PartPerson (like a template) object
     // with default values (nothing persisted)
     // GET [contextPath][api]/arkivstruktur/mappe/{systemId}/ny-partenhet
     @Operation(summary = "Suggests the contents of a new Part object",

@@ -3,7 +3,7 @@ package nikita.common.model.noark5.v5.interfaces.entities;
 import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.ClassificationSystem;
 import nikita.common.model.noark5.v5.File;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.interfaces.*;
 import nikita.common.model.noark5.v5.secondary.Keyword;
 
@@ -36,7 +36,7 @@ public interface IClassEntity
 
     void setReferenceFile(List<File> referenceFile);
 
-    List<Record> getReferenceRecord();
+    List<RecordEntity> getReferenceRecordEntity();
 
-    void setReferenceRecord(List<Record> referenceRecord);
+    void setReferenceRecord(List<RecordEntity> referenceRecordEntity);
 }

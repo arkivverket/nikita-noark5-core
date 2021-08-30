@@ -3,7 +3,7 @@ package nikita.webapp.service.interfaces;
 import nikita.common.model.nikita.PatchMerge;
 import nikita.common.model.nikita.PatchObjects;
 import nikita.common.model.noark5.v5.DocumentDescription;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartInternal;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartPerson;
 import nikita.common.model.noark5.v5.casehandling.secondary.CorrespondencePartUnit;
@@ -21,7 +21,7 @@ import java.util.UUID;
 public interface IRecordService {
 
     // -- All CREATE operations
-    RecordHateoas save(@NotNull final Record record);
+    RecordHateoas save(@NotNull final RecordEntity record);
 
     DocumentDescriptionHateoas createDocumentDescriptionAssociatedWithRecord(
             @NotNull final UUID systemId,
@@ -149,7 +149,7 @@ public interface IRecordService {
     // -- All UPDATE operations
     RecordHateoas handleUpdate(@NotNull final UUID systemId,
                                @NotNull final Long version,
-                               @NotNull final Record record);
+                               @NotNull final RecordEntity record);
 
     // -- All DELETE operations
     void deleteRecord(@NotNull final UUID systemId);

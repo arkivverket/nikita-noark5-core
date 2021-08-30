@@ -3,7 +3,7 @@ package nikita.common.model.noark5.v5.casehandling;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.config.Constants;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.hateoas.casehandling.RegistryEntryHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.IRegistryEntryEntity;
 import nikita.common.model.noark5.v5.metadata.RegistryEntryStatus;
@@ -47,7 +47,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @HateoasObject(using = RegistryEntryHateoas.class)
 @Indexed
 public class RegistryEntry
-        extends Record
+        extends RecordEntity
         implements IRegistryEntryEntity {
 
     // Links to DocumentFlow
@@ -233,7 +233,7 @@ public class RegistryEntry
         super();
     }
 
-    public RegistryEntry(Record record) {
+    public RegistryEntry(RecordEntity record) {
         super();
         setVersion(record.getVersion(), true);
         this.setRecordId(record.getRecordId());

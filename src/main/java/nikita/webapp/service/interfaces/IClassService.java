@@ -2,7 +2,7 @@ package nikita.webapp.service.interfaces;
 
 import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.File;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.casehandling.CaseFile;
 import nikita.common.model.noark5.v5.hateoas.ClassHateoas;
 import nikita.common.model.noark5.v5.hateoas.ClassificationSystemHateoas;
@@ -39,7 +39,7 @@ public interface IClassService {
             @NotNull final Metadata screeningMetadata);
 
     RecordHateoas createRecordAssociatedWithClass(
-            @NotNull final UUID systemId, @NotNull final Record record);
+            @NotNull final UUID systemId, @NotNull final RecordEntity record);
 
     CrossReferenceHateoas createCrossReferenceAssociatedWithClass(
             @NotNull final UUID systemId,

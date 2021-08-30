@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import nikita.common.model.noark5.v5.Class;
 import nikita.common.model.noark5.v5.File;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.SystemIdEntity;
 import nikita.common.model.noark5.v5.hateoas.secondary.CrossReferenceHateoas;
 import nikita.common.model.noark5.v5.interfaces.entities.ICrossReferenceEntity;
@@ -103,7 +103,7 @@ public class CrossReference
     @ManyToOne(fetch = LAZY, cascade = ALL)
     @JoinColumn(name = CROSS_REFERENCE_RECORD_ID,
             referencedColumnName = PRIMARY_KEY_SYSTEM_ID)
-    private Record referenceRecord;
+    private RecordEntity referenceRecordEntity;
 
     public UUID getFromSystemId() {
         return fromSystemId;
@@ -153,12 +153,12 @@ public class CrossReference
         this.referenceFile = referenceFile;
     }
 
-    public Record getReferenceRecord() {
-        return referenceRecord;
+    public RecordEntity getReferenceRecordEntity() {
+        return referenceRecordEntity;
     }
 
-    public void setReferenceRecord(Record referenceRecord) {
-        this.referenceRecord = referenceRecord;
+    public void setReferenceRecord(RecordEntity referenceRecordEntity) {
+        this.referenceRecordEntity = referenceRecordEntity;
     }
 
     @Override

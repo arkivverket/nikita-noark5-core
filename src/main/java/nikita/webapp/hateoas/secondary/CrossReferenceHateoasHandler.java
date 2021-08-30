@@ -36,7 +36,7 @@ public class CrossReferenceHateoasHandler
     @Override
     public void addEntityLinks(ISystemId entity,
                                IHateoasNoarkObject hateoasNoarkObject) {
-        addRecord(entity, hateoasNoarkObject);
+        addRecordEntity(entity, hateoasNoarkObject);
         addFile(entity, hateoasNoarkObject);
         addClass(entity, hateoasNoarkObject);
     }
@@ -50,14 +50,14 @@ public class CrossReferenceHateoasHandler
      * @param hateoasNoarkObject hateoasDocumentObject
      */
     @Override
-    public void addRecord(ISystemId crossReference,
-                          IHateoasNoarkObject hateoasNoarkObject) {
-        if (null != ((CrossReference) crossReference).getReferenceRecord()) {
+    public void addRecordEntity(ISystemId crossReference,
+                                IHateoasNoarkObject hateoasNoarkObject) {
+        if (null != ((CrossReference) crossReference).getReferenceRecordEntity()) {
             hateoasNoarkObject.addLink(crossReference,
                     new Link(getOutgoingAddress() +
                             HREF_BASE_RECORD + "/" +
                             ((CrossReference) crossReference)
-                                    .getReferenceRecord().getSystemId(),
+                                    .getReferenceRecordEntity().getSystemId(),
                             REL_FONDS_STRUCTURE_RECORD));
         }
     }

@@ -1,7 +1,7 @@
 package nikita.common.model.noark5.v5.interfaces.entities.secondary;
 
 import nikita.common.model.noark5.v5.DocumentDescription;
-import nikita.common.model.noark5.v5.Record;
+import nikita.common.model.noark5.v5.RecordEntity;
 import nikita.common.model.noark5.v5.interfaces.IBSM;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
 import nikita.common.model.noark5.v5.metadata.PartRole;
@@ -20,9 +20,9 @@ public interface IPartEntity
 
     void removeDocumentDescription(DocumentDescription documentDescription);
 
-    Set<Record> getReferenceRecord();
+    Set<RecordEntity> getReferenceRecordEntity();
 
-    void addRecord(Record record);
+    void addRecordEntity(RecordEntity record);
 
-    void removeRecord(Record record);
+    void removeRecordEntity(RecordEntity record);
 }

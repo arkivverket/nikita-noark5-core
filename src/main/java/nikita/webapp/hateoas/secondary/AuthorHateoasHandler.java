@@ -44,7 +44,7 @@ public class AuthorHateoasHandler
             addDocumentDescription(author, hateoasNoarkObject);
         }
         if (author.getForRecord()) {
-            addRecord(author, hateoasNoarkObject);
+            addRecordEntity(author, hateoasNoarkObject);
         }
     }
 
@@ -59,11 +59,11 @@ public class AuthorHateoasHandler
      * @param hateoasNoarkObject hateoasDocumentObject
      */
     @Override
-    public void addRecord(IAuthorEntity author,
-                          IHateoasNoarkObject hateoasNoarkObject) {
+    public void addRecordEntity(IAuthorEntity author,
+                                IHateoasNoarkObject hateoasNoarkObject) {
         hateoasNoarkObject.addLink(author,
                 new Link(getOutgoingAddress() + HREF_BASE_RECORD + SLASH +
-                        author.getReferenceRecord().getSystemId(),
+                        author.getReferenceRecordEntity().getSystemId(),
                         REL_FONDS_STRUCTURE_RECORD));
     }
 

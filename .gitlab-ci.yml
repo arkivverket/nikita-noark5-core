@@ -28,6 +28,7 @@ noark5tester-runtest:
     - apt install -y git maven curl python3 unoconv python3-tz
     - apt install -y tesseract-ocr-nor
     - git clone https://github.com/petterreinholdtsen/noark5-tester
+    - curl "http://elasticsearch:9200/_cat/health?v"
   script:
     - scripts/run-runtest
   artifacts:
@@ -46,6 +47,7 @@ noark5tester-inoutin:
     - apt install -y tesseract-ocr-nor
     - apt install -y libxml2-utils
     - git clone https://github.com/petterreinholdtsen/noark5-tester
+    - curl "http://elasticsearch:9200/_cat/health?v"
   script:
     - scripts/run-inoutin-test
   artifacts:
@@ -61,8 +63,6 @@ maven-build:
     - apt install -y tesseract-ocr-nor
   image: maven:3.6.1-jdk-11
   stage: build
-  before_script:
-    - curl "http://elasticsearch:9200/_cat/health?v"
   script:
     - mvn package -B
     - mvn test

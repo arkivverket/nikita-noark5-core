@@ -46,7 +46,7 @@ import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME
 @HateoasPacker(using = RecordHateoasHandler.class)
 @HateoasObject(using = RecordHateoas.class)
 @Indexed
-public class Record
+public class RecordEntity
         extends SystemIdEntity
         implements IRecordEntity, IPart, ICorrespondencePart {
 
@@ -117,7 +117,7 @@ public class Record
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private final Set<Part> referencePart = new HashSet<>();
     // Links to CorrespondencePart
-    @OneToMany(mappedBy = "referenceRecord",
+    @OneToMany(mappedBy = "referenceRecordEntity",
             cascade = ALL, orphanRemoval = true)
     private final List<CorrespondencePart>
             referenceCorrespondencePart = new ArrayList<>();
@@ -146,7 +146,7 @@ public class Record
                     referencedColumnName = PRIMARY_KEY_SYSTEM_ID))
     private final Set<Keyword> referenceKeyword = new HashSet<>();
     // Links to Authors
-    @OneToMany(mappedBy = "referenceRecord",
+    @OneToMany(mappedBy = "referenceRecordEntity",
             cascade = ALL, orphanRemoval = true)
     private final List<Author> referenceAuthor = new ArrayList<>();
 
@@ -184,11 +184,11 @@ public class Record
     private final Set<DocumentDescription> referenceDocumentDescription =
             new HashSet<>();
     // Links to CrossReference
-    @OneToMany(mappedBy = "referenceRecord")
+    @OneToMany(mappedBy = "referenceRecordEntity")
     private final List<CrossReference> referenceCrossReference =
             new ArrayList<>();
     // Links to businessSpecificMetadata (virksomhetsspesifikkeMetadata)
-    @OneToMany(mappedBy = "referenceRecord", cascade = {PERSIST, MERGE, REMOVE})
+    @OneToMany(mappedBy = "referenceRecordEntity", cascade = {PERSIST, MERGE, REMOVE})
     private final List<BSMBase> referenceBSMBase = new ArrayList<>();
     /**
      * M??? - dokumentmedium code (xs:string)
@@ -216,7 +216,7 @@ public class Record
     private Screening referenceScreening;
 
     // Links to NationalIdentifiers
-    @OneToMany(mappedBy = "referenceRecord")
+    @OneToMany(mappedBy = "referenceRecordEntity")
     private List<NationalIdentifier> referenceNationalIdentifier =
             new ArrayList<>();
     /**
@@ -331,7 +331,7 @@ public class Record
     public void addDocumentDescription(
             DocumentDescription referenceDocumentDescription) {
         this.referenceDocumentDescription.add(referenceDocumentDescription);
-        referenceDocumentDescription.getReferenceRecord().add(this);
+        referenceDocumentDescription.getReferenceRecordEntity().add(this);
     }
 
     @Override
@@ -372,13 +372,13 @@ public class Record
     @Override
     public void addReferenceStorageLocation(StorageLocation storageLocation) {
         this.referenceStorageLocation.add(storageLocation);
-        storageLocation.getReferenceRecord().add(this);
+        storageLocation.getReferenceRecordEntity().add(this);
     }
 
     @Override
     public void removeReferenceStorageLocation(StorageLocation storageLocation) {
         this.referenceStorageLocation.remove(storageLocation);
-        storageLocation.getReferenceRecord().remove(this);
+        storageLocation.getReferenceRecordEntity().remove(this);
     }
 
     @Override
@@ -389,13 +389,13 @@ public class Record
     @Override
     public void addKeyword(Keyword keyword) {
         this.referenceKeyword.add(keyword);
-        keyword.getReferenceRecord().add(this);
+        keyword.getReferenceRecordEntity().add(this);
     }
 
     @Override
     public void removeKeyword(Keyword keyword) {
         this.referenceKeyword.remove(keyword);
-        keyword.getReferenceRecord().remove(this);
+        keyword.getReferenceRecordEntity().remove(this);
     }
 
     @Override
@@ -423,7 +423,7 @@ public class Record
     @Override
     public void addComment(Comment comment) {
         referenceComment.add(comment);
-        comment.getReferenceRecord().add(this);
+        comment.getReferenceRecordEntity().add(this);
     }
 
     @Override
@@ -451,13 +451,13 @@ public class Record
     @Override
     public void addPart(Part part) {
         referencePart.add(part);
-        part.getReferenceRecord().add(this);
+        part.getReferenceRecordEntity().add(this);
     }
 
     @Override
     public void removePart(Part part) {
         this.referencePart.remove(part);
-        part.getReferenceRecord().remove(this);
+        part.getReferenceRecordEntity().remove(this);
     }
 
     @Override
@@ -545,7 +545,7 @@ public class Record
         if (other.getClass() != getClass()) {
             return false;
         }
-        Record rhs = (Record) other;
+        RecordEntity rhs = (RecordEntity) other;
         return new EqualsBuilder()
                 .appendSuper(super.equals(other))
                 .append(archivedBy, rhs.archivedBy)

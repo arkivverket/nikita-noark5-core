@@ -5,7 +5,6 @@ import nikita.common.model.noark5.v5.hateoas.IHateoasNoarkObject;
 import nikita.common.model.noark5.v5.hateoas.Link;
 import nikita.common.model.noark5.v5.interfaces.entities.INoarkEntity;
 import nikita.common.model.noark5.v5.interfaces.entities.ISystemId;
-import nikita.webapp.hateoas.HateoasHandler;
 import nikita.webapp.hateoas.SystemIdHateoasHandler;
 import nikita.webapp.hateoas.interfaces.secondary.ICorrespondencePartHateoasHandler;
 import org.springframework.stereotype.Component;
@@ -27,7 +26,7 @@ public class CorrespondencePartHateoasHandler
     @Override
     public void addEntityLinks(ISystemId entity,
                                IHateoasNoarkObject hateoasNoarkObject) {
-        addRecord(entity, hateoasNoarkObject);
+        addRecordEntity(entity, hateoasNoarkObject);
         addCorrespondencePartType(entity, hateoasNoarkObject);
     }
 
@@ -38,11 +37,11 @@ public class CorrespondencePartHateoasHandler
     }
 
     @Override
-    public void addRecord(INoarkEntity entity,
-                          IHateoasNoarkObject hateoasNoarkObject) {
+    public void addRecordEntity(INoarkEntity entity,
+                                IHateoasNoarkObject hateoasNoarkObject) {
         CorrespondencePart correspondencePart = (CorrespondencePart) entity;
         hateoasNoarkObject.addLink(entity, new Link(getOutgoingAddress() +
-                HREF_BASE_RECORD + SLASH + correspondencePart.getReferenceRecord().getSystemId(),
+                HREF_BASE_RECORD + SLASH + correspondencePart.getReferenceRecordEntity().getSystemId(),
                 REL_FONDS_STRUCTURE_RECORD));
     }
 

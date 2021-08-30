@@ -15,6 +15,6 @@ public interface IStorageLocationHateoasHandler
     void addFile(ISystemId entity,
                  IHateoasNoarkObject hateoasNoarkObject);
 
-    void addRecord(ISystemId entity,
-                   IHateoasNoarkObject hateoasNoarkObject);
+    void addRecordEntity(ISystemId entity,
+                         IHateoasNoarkObject hateoasNoarkObject);
 }
