@@ -54,7 +54,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = N5CoreApp.class,
         webEnvironment = RANDOM_PORT)
 @ContextConfiguration(classes = {TestSecurityConfiguration.class})
-@ActiveProfiles("test")
 @AutoConfigureRestDocs(outputDir = "target/snippets")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Transactional

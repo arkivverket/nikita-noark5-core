@@ -85,7 +85,7 @@ import static utils.TestConstants.*;
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @SpringBootTest(classes = {SpringSecurityWebAuxTestConfig.class},
         webEnvironment = RANDOM_PORT)
-@ActiveProfiles("test")
+
 @Transactional
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class BSMTest {
