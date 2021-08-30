@@ -65,7 +65,7 @@ maven-build:
     - curl "http://elasticsearch:9200/_cat/health?v"
   script:
     - mvn package -B
-    - mvn test
+    - mvn test -DargLine="-Dspring.profiles.active=ci"
   artifacts:
     paths:
       - target/*.jar
