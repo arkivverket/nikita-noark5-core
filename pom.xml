@@ -63,7 +63,7 @@
         <elasticsearch.version>7.10.0</elasticsearch.version>
         <!-- JS / GUI -->
         <jquery.version>3.3.1-1</jquery.version>
-        <angularjs.version>1.7.0</angularjs.version>
+        <angularjs.version>1.8.2</angularjs.version>
         <font-awesome.version>5.0.9</font-awesome.version>
         <bootstrap.version>4.1.1</bootstrap.version>
         <angular-file-upload.version>12.2.13</angular-file-upload.version>
