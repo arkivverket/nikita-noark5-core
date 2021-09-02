@@ -39,6 +39,11 @@ spring:
       hibernate:
         connection:
           provider_disables_autocommit: true
+        search:
+          backend:
+            uris: ${ELASTIC_URI:http://localhost:9200}
+            username: ${ELASTIC_USER}
+            password: ${ELASTIC_PASS}
       hbm2ddl:
         auto: create-drop
         hbm2ddl.import_files_sql_extractor: org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor
@@ -71,8 +76,9 @@ nikita:
   startup:
     create-demo-users: true # Populate database with some users
     create-directory-store: true # If not created, attempt to create
-    directory-store-name: /data2/nikita/storage/ # Where to store documents
-    incoming-directory: /data2/nikita/storage/incoming/ # Temporary storage area
+    base-directory: ${NIKITA_BASE_DIR:/data2}
+    directory-store-name: ${nikita.startup.base-directory}/nikita/storage/ # Where to store documents
+    incoming-directory: ${nikita.startup.base-directory}/nikita/storage/incoming/ # Temporary storage area
   application:
     pagination:
       max-page-size: 10 # Set number of results per page, if request does not have one.
