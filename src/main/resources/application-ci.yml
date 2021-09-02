@@ -10,4 +10,4 @@ spring:
       hibernate:
         search:
           backend:
-            uris: http://elasticsearch:9200
+            uris: ${ELASTIC_URI:http://elasticsearch:9200}

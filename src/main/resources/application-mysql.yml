@@ -14,27 +14,15 @@
 #
 # Or whatever variation you use to create a user
 # ===================================================================
-# Leaving logging here so you can quickly turn it on when required
-#logging:
-#  level:
-#    org:
-#      springframework:
-#        web: DEBUG
-#      hibernate:
-#        SQL: DEBUG
-server:
-  servlet:
-    context-path: /noark5v5
-  port: 8092
 
 spring:
   application:
     name: OsloMet Noark 5 Core (using MySQL)
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/nikita_noark5_prod?serverTimezone=Europe/Oslo
-    username: USERNAME-HERE
-    password: PASSWORD-HERE
+    url: ${DB_URI:jdbc:mysql://localhost:3306/nikita_noark5_prod?serverTimezone=Europe/Oslo}
+    username: ${DB_USER:INSERT-USERNAME-HERE}
+    password: ${DB_PASS:INSERT-PASSWORD-HERE}
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     database: mysql
@@ -43,51 +31,3 @@ spring:
       hibernate.hbm2ddl.auto: create
       discriminator.ignore_explicit_for_joined: true
       org.hibernate.envers.audit_table_prefix: aud_
-
-# Used to avoid filling the log file up with INFO messages
-# about time used when performing reflection for OData queries
-logging:
-  level:
-    org:
-      reflections: OFF
-
-security:
-  oauth2:
-    client:
-      client-id: nikita-client
-      client-secret: $2a$10$52VgSTgNvk4ROc8YNYdTUesHhQTm2r5oeH1aiCtIgu3rfPQZQzswa
-      token-expiry: 28800 # seconds
-
-info:
-  app.name: OsloMet Noark 5 Core
-  build.version: ${project.version}
-
-nikita:
-  system:
-    vendor:
-      name: OsloMet
-      version: 0.4
-    protocol:
-      version: Noark 5.5.0
-    build: 2019-08-07+0200
-  startup:
-    create-demo-users: true # Populate database with some users
-    create-directory-store: true # If not created, attempt to create
-    directory-store-name: /data2/nikita/storage/ # Where to store documents
-    incoming-directory: /data2/nikita/storage/incoming/ # Temporary storage area
-  application:
-    pagination:
-      max-page-size: 10 # Set number of results per page, if request does not have one.
-      absolute-max-page-size: 1000 # Set maximum number of results per page. To prevent resource starvation.
-      checksum-algorithm: SHA-256
-  server:
-    hateoas:
-      publicAddress: http://localhost:8092
-    details:
-      conformity-levels:
-        official: arkivstruktur, casehandling, metadata
-        non-official: gui, import-api
-  # Only used if eventhandling profile is enabled
-  simplechain:
-    # Address to post a block to the chain.
-    address: http://localhost:9792:/simplechain/block
