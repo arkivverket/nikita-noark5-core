@@ -148,7 +148,7 @@ public class FondsService
         Fonds fonds = getFondsOrThrow(systemId);
         seriesService.updateSeriesReferences(series);
         seriesService.checkSeriesStatusUponCreation(series);
-        //checkFondsNotClosed(fonds);
+        checkFondsNotClosed(fonds);
         checkFondsDoesNotContainSubFonds(fonds);
         series.setReferenceFonds(fonds);
         return seriesService.save(series);
@@ -175,7 +175,7 @@ public class FondsService
             @NotNull final UUID systemId,
             @NotNull final FondsCreator fondsCreator) {
         Fonds fonds = getFondsOrThrow(systemId);
-        //checkFondsNotClosed(fonds);
+        checkFondsNotClosed(fonds);
         fonds.addFondsCreator(fondsCreator);
         return fondsCreatorService.createNewFondsCreator(fondsCreator);
     }
