@@ -40,10 +40,10 @@ public class AuthorHateoasHandler
     public void addEntityLinks(ISystemId entity,
                                IHateoasNoarkObject hateoasNoarkObject) {
         Author author = (Author) entity;
-        if (author.getForDocumentDescription()) {
+        if (Boolean.TRUE.equals(author.getForDocumentDescription())) {
             addDocumentDescription(author, hateoasNoarkObject);
         }
-        if (author.getForRecord()) {
+        if (Boolean.TRUE.equals(author.getForRecord())) {
             addRecordEntity(author, hateoasNoarkObject);
         }
     }

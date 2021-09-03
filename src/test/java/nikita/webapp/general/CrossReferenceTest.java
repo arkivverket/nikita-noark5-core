@@ -41,8 +41,7 @@ import static utils.CrossReferenceValidator.*;
  * - Check that it is not possible to create duplicate cross references
  */
 
-public class CrossReferenceTest
-        extends BaseTest {
+class CrossReferenceTest extends BaseTest {
 
     /**
      * Check that it is possible to add a Cross-reference from one class to
@@ -57,8 +56,7 @@ public class CrossReferenceTest
     @Test
     @Sql({"/db-tests/basic_structure.sql", "/db-tests/cross_reference.sql"})
     @WithMockCustomUser
-    public void addCrossReferenceFromClassToClassUpdateToClass()
-            throws Exception {
+    void addCrossReferenceFromClassToClassUpdateToClass() throws Exception {
         UUID fromUUID = fromString("06ae4940-3d86-4a69-a59f-f1a27b26f2a8");
         UUID toUUID = fromString("bd303a71-48e9-4c5d-9ee8-7df7d514d4e1");
         UUID toUpdatedUUID = fromString("d6b0d4ba-3b2d-4896-84fa-5d9ba1756cf4");
@@ -142,8 +140,7 @@ public class CrossReferenceTest
     @Test
     @Sql({"/db-tests/basic_structure.sql", "/db-tests/cross_reference.sql"})
     @WithMockCustomUser
-    public void addCrossReferenceFromFileToFileUpdateToFile()
-            throws Exception {
+    void addCrossReferenceFromFileToFileUpdateToFile() throws Exception {
         UUID fromUUID = fromString("7e857df9-d453-48bf-ac4c-19beebf81091");
         UUID toUUID = fromString("b7da0a57-2983-4389-a65e-d87343da78eb");
         UUID toUpdatedUUID = fromString("01d0ef0b-b043-457e-8a8b-4ac2128a6637");
@@ -231,8 +228,7 @@ public class CrossReferenceTest
     @Test
     @Sql({"/db-tests/basic_structure.sql", "/db-tests/cross_reference.sql"})
     @WithMockCustomUser
-    public void addCrossReferenceFromRecordToRecordUpdateToRecord()
-            throws Exception {
+    void addCrossReferenceFromRecordToRecordUpdateToRecord() throws Exception {
         UUID fromUUID = fromString("ba848de1-e1d7-42fe-9ea1-77127db206fd");
         UUID toUUID = fromString("92e53dff-bd83-4a39-8485-9e34942a1583");
         UUID toUpdatedUUID = fromString("bde603e8-ed29-43a3-8b38-52b796ca0b73");
@@ -312,8 +308,7 @@ public class CrossReferenceTest
     @Test
     @Sql({"/db-tests/basic_structure.sql", "/db-tests/cross_reference.sql"})
     @WithMockCustomUser
-    public void addCrossReferenceFromRecordToFileUpdateToRecord()
-            throws Exception {
+    void addCrossReferenceFromRecordToFileUpdateToRecord() throws Exception {
         // This is a Record
         UUID fromUUID = fromString("ba848de1-e1d7-42fe-9ea1-77127db206fd");
         // This is a File
@@ -395,8 +390,7 @@ public class CrossReferenceTest
     @Test
     @Sql({"/db-tests/basic_structure.sql", "/db-tests/cross_reference.sql"})
     @WithMockCustomUser
-    public void addCrossReferenceFromFileToRecordUpdateToFile()
-            throws Exception {
+    void addCrossReferenceFromFileToRecordUpdateToFile()  throws Exception {
         // This is a File
         UUID fromUUID = fromString("7e857df9-d453-48bf-ac4c-19beebf81091");
         // This is a Record
@@ -479,7 +473,7 @@ public class CrossReferenceTest
     @Test
     @Sql({"/db-tests/basic_structure.sql", "/db-tests/cross_reference.sql"})
     @WithMockCustomUser
-    public void addCrossReferenceFromRecordThenDeleteRecord()
+    void addCrossReferenceFromRecordThenDeleteRecord()
             throws Exception {
         UUID fromUUID = fromString("ba848de1-e1d7-42fe-9ea1-77127db206fd");
         UUID toUUID = fromString("92e53dff-bd83-4a39-8485-9e34942a1583");
@@ -518,7 +512,7 @@ public class CrossReferenceTest
     @Test
     @Sql({"/db-tests/basic_structure.sql", "/db-tests/cross_reference.sql"})
     @WithMockCustomUser
-    public void addCrossReferenceFromClassThenDeleteClass()
+    void addCrossReferenceFromClassThenDeleteClass()
             throws Exception {
         UUID fromUUID = fromString("06ae4940-3d86-4a69-a59f-f1a27b26f2a8");
         UUID toUUID = fromString("bd303a71-48e9-4c5d-9ee8-7df7d514d4e1");
@@ -557,8 +551,7 @@ public class CrossReferenceTest
     @Test
     @Sql({"/db-tests/basic_structure.sql", "/db-tests/cross_reference.sql"})
     @WithMockCustomUser
-    public void addCrossReferenceFromFileThenDeleteFile()
-            throws Exception {
+    void addCrossReferenceFromFileThenDeleteFile() throws Exception {
         UUID fromUUID = fromString("7e857df9-d453-48bf-ac4c-19beebf81091");
         UUID toUUID = fromString("b7da0a57-2983-4389-a65e-d87343da78eb");
 
@@ -595,8 +588,7 @@ public class CrossReferenceTest
     @Test
     @Sql({"/db-tests/basic_structure.sql", "/db-tests/cross_reference.sql"})
     @WithMockCustomUser
-    public void addCrossReferenceFromClassToClassWithBadPayload()
-            throws Exception {
+    void addCrossReferenceFromClassToClassWithBadPayload() throws Exception {
         UUID fromUUID = fromString("06ae4940-3d86-4a69-a59f-f1a27b26f2a8");
         UUID toUUID = fromString("bd303a71-48e9-4c5d-9ee8-7df7d514d4e1");
         UUID badUUID = fromString("605fe898-5acd-47ed-9504-4341ba7d1cec");
@@ -624,7 +616,7 @@ public class CrossReferenceTest
     @Test
     @Sql({"/db-tests/basic_structure.sql", "/db-tests/cross_reference.sql"})
     @WithMockCustomUser
-    public void addCrossReferenceFromFileToFileWithBadPayload()
+    void addCrossReferenceFromFileToFileWithBadPayload()
             throws Exception {
         UUID fromUUID = fromString("b7da0a57-2983-4389-a65e-d87343da78eb");
         UUID toUUID = fromString("01d0ef0b-b043-457e-8a8b-4ac2128a6637");
@@ -652,7 +644,7 @@ public class CrossReferenceTest
     @Test
     @Sql({"/db-tests/basic_structure.sql", "/db-tests/cross_reference.sql"})
     @WithMockCustomUser
-    public void addCrossReferenceFromRecordToRecordWithBadPayload()
+    void addCrossReferenceFromRecordToRecordWithBadPayload()
             throws Exception {
         UUID fromUUID = fromString("ba848de1-e1d7-42fe-9ea1-77127db206fd");
         UUID toUUID = fromString("92e53dff-bd83-4a39-8485-9e34942a1583");
@@ -682,7 +674,7 @@ public class CrossReferenceTest
     @Test
     @Sql({"/db-tests/basic_structure.sql", "/db-tests/cross_reference.sql"})
     @WithMockCustomUser
-    public void addCrossReferenceFromClassToDocumentDescription()
+    void addCrossReferenceFromClassToDocumentDescription()
             throws Exception {
         UUID fromUUID = fromString("bd303a71-48e9-4c5d-9ee8-7df7d514d4e1");
         UUID toUUID = fromString("dc600862-3298-4ec0-8541-3e51fb900054");
@@ -710,7 +702,7 @@ public class CrossReferenceTest
     @Test
     @Sql({"/db-tests/basic_structure.sql", "/db-tests/cross_reference.sql"})
     @WithMockCustomUser
-    public void addCrossReferenceFromFileToSeries()
+    void addCrossReferenceFromFileToSeries()
             throws Exception {
         UUID fromUUID = fromString("b7da0a57-2983-4389-a65e-d87343da78eb");
         UUID toUUID = fromString("f32c1fa0-8e42-4236-8f40-e006940ea70b");
@@ -738,7 +730,7 @@ public class CrossReferenceTest
     @Test
     @Sql({"/db-tests/basic_structure.sql", "/db-tests/cross_reference.sql"})
     @WithMockCustomUser
-    public void addCrossReferenceFromRecordToFonds()
+    void addCrossReferenceFromRecordToFonds()
             throws Exception {
         UUID fromUUID = fromString("ba848de1-e1d7-42fe-9ea1-77127db206fd");
         UUID toUUID = fromString("3318a63f-11a7-4ec9-8bf1-4144b7f281cf");
@@ -767,7 +759,7 @@ public class CrossReferenceTest
     @Test
     @Sql({"/db-tests/basic_structure.sql", "/db-tests/cross_reference.sql"})
     @WithMockCustomUser
-    public void addCrossReferenceFromFondsToRecord()
+    void addCrossReferenceFromFondsToRecord()
             throws Exception {
         UUID fromUUID = fromString("3318a63f-11a7-4ec9-8bf1-4144b7f281cf");
         UUID toUUID = fromString("ba848de1-e1d7-42fe-9ea1-77127db206fd");
@@ -796,7 +788,7 @@ public class CrossReferenceTest
     @Test
     @Sql({"/db-tests/basic_structure.sql", "/db-tests/cross_reference.sql"})
     @WithMockCustomUser
-    public void addCrossReferenceFromDocumentDescriptionToRecordClass()
+    void addCrossReferenceFromDocumentDescriptionToRecordClass()
             throws Exception {
         UUID fromUUID = fromString("dc600862-3298-4ec0-8541-3e51fb900054");
         UUID toUUID = fromString("bd303a71-48e9-4c5d-9ee8-7df7d514d4e1");
@@ -825,7 +817,7 @@ public class CrossReferenceTest
     @Test
     @Sql({"/db-tests/basic_structure.sql", "/db-tests/cross_reference.sql"})
     @WithMockCustomUser
-    public void addCrossReferenceFromSeriesToFile()
+    void addCrossReferenceFromSeriesToFile()
             throws Exception {
         UUID fromUUID = fromString("f32c1fa0-8e42-4236-8f40-e006940ea70b");
         UUID toUUID = fromString("b7da0a57-2983-4389-a65e-d87343da78eb");

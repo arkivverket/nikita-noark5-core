@@ -93,11 +93,11 @@ public class AfterApplicationStartup {
 
         metadataInsert.populateMetadataEntities();
 
-        if (createDirectoryStore) {
+        if (Boolean.TRUE.equals(createDirectoryStore)) {
             createDirectoryStoreIfNotExists();
         }
 
-        if (createUsers) {
+        if (Boolean.TRUE.equals(createUsers)) {
             userStartupImport.addAuthorities();
             userStartupImport.addAdminUnit();
             userStartupImport.addUserAdmin();

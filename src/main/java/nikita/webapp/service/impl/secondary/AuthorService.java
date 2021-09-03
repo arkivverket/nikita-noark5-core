@@ -56,8 +56,8 @@ public class AuthorService
     @Transactional
     public AuthorHateoas associateAuthorWithRecord(
             @NotNull final Author author,
-            @NotNull final RecordEntity record) {
-        author.setReferenceRecord(record);
+            @NotNull final RecordEntity recordEntity) {
+        author.setReferenceRecord(recordEntity);
         return packAsHateoas(authorRepository.save(author));
     }
 

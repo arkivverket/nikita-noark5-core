@@ -20,6 +20,7 @@ public class AfterNoarkEntityEvent
         this.entity = entity;
     }
 
+    @Override
     public String toString() {
         return entity.toString();
     }

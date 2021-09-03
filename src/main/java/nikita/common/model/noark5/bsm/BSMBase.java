@@ -137,7 +137,7 @@ public class BSMBase
                    Boolean isDate) {
         this.valueName = valueName;
         this.offsetdatetimeValue = offsetdatetimeValue;
-        if (isDate) {
+        if (Boolean.TRUE.equals(isDate)) {
             this.dataType = TYPE_DATE;
         } else {
             this.dataType = TYPE_DATE_TIME;
@@ -233,7 +233,7 @@ public class BSMBase
     public void setDateTimeValue(OffsetDateTime offsetdatetimeValue,
                                  Boolean isDate) {
         this.offsetdatetimeValue = offsetdatetimeValue;
-        if (isDate) {
+        if (Boolean.TRUE.equals(isDate)) {
             this.dataType = TYPE_DATE;
         } else {
             this.dataType = TYPE_DATE_TIME;
@@ -315,6 +315,7 @@ public class BSMBase
         this.referenceAdministrativeUnit = referenceAdministrativeUnit;
     }
 
+    @Override
     public String getBaseRel() {
         return REL_FONDS_STRUCTURE_BSM;
     }

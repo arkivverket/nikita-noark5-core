@@ -29,7 +29,7 @@ public class APIDetailsSerializer extends StdSerializer<APIDetails> {
         for (APIDetail apiDetail : apiDetails.getApiDetails()) {
             jgen.writeObjectFieldStart(apiDetail.getRel());
             jgen.writeStringField(HREF, apiDetail.getHref());
-            if (apiDetail.getTemplated()) {
+            if (Boolean.TRUE.equals(apiDetail.getTemplated())) {
                 jgen.writeBooleanField("templated",
                         apiDetail.getTemplated());
             }

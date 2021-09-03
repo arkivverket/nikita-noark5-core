@@ -207,14 +207,14 @@ public class Class
         this.referenceRecordEntity = referenceRecordEntity;
     }
 
-    public void addRecordEntity(RecordEntity record) {
-        this.referenceRecordEntity.add(record);
-        record.setReferenceClass(this);
+    public void addRecordEntity(RecordEntity recordEntity) {
+        this.referenceRecordEntity.add(recordEntity);
+        recordEntity.setReferenceClass(this);
     }
 
-    public void removeRecordEntity(RecordEntity record) {
-        this.referenceRecordEntity.remove(record);
-        record.setReferenceClass(null);
+    public void removeRecordEntity(RecordEntity recorecordEntityd) {
+        this.referenceRecordEntity.remove(recorecordEntityd);
+        recorecordEntityd.setReferenceClass(null);
     }
 
     @Override

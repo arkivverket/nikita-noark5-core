@@ -95,7 +95,7 @@ public class AdministrativeUnitService
         List<AdministrativeUnit> administrativeUnitList =
                 administrativeUnitRepository.findByAdministrativeUnitName(
                         administrativeUnit.getAdministrativeUnitName());
-        if (administrativeUnitList.size() == 0) {
+        if (administrativeUnitList.isEmpty()) {
             createSequenceNumberGenerator(administrativeUnit);
             administrativeUnitRepository.save(administrativeUnit);
         }
