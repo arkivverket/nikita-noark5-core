@@ -21,12 +21,32 @@ If you haven't cloned the project then:
     git clone https://gitlab.com/OsloMet-ABI/nikita-noark5-core.git
 
 If you already have the code consider synchronizing your local copy:
-    
+
     git fetch --all
     git checkout origin/master
 
 Remember to also read [Test data](Testa-data.md) to understand how you can
 populate the core with data.
+
+
+## Database and Elasticsearch Configuration
+
+The default profile creates an in-memory database using H2 and connects to an Elasticsearch
+instance running on localhost:9200 without any username or password. MySQL or Postgres can be
+used instead of H2 by activating the corresponding Spring profile ("mysql" or "postgres").
+
+The following environment variables can be set to further configure the data connections:
+
+| Variable Name      | Comment           | Default  |
+| ------------- |:-------------:| -----:|
+| NIKITA_BASE_DIR | The root directory used for storage of document files in Nikita. | `/data2` |
+| DB_URI | The JDBC string for connecting to the DB when using the mysql / postgres profiles. | Mysql: `jdbc:mysql://localhost:3306/nikita_noark5_prod?serverTimezone=Europe/Oslo` Postgres: `jdbc:postgresql://localhost:5432/nikita` |
+| DB_USER | The DB user. | `INSERT-USERNAME-HERE` (or blank when using H2). |
+| DB_PASS | The password for DB_USER. | `INSERT-PASSWORD-HERE` (or blank when using H2). |
+| ELASTIC_URI | URI to the Elastic host | `http://localhost:8200`. |
+| ELASTIC_USER | The elastic user. | No default (i.e. no auth required). |
+| ELASTIC_PASS | The elastic user password. | No default. |
+
 
 ## Makefile
 
@@ -34,7 +54,7 @@ This option is a wrapper around the maven command.
 
 To compile the core and start it automatically, from the top level directory:
 
-    make     
+    make
 
 ## Maven
 
@@ -44,6 +64,10 @@ jar files will be downloaded.
 
     mvn clean validate install
     mvn spring-boot:run
+    # Or, using an alternative ELASIC_URI:
+    # mvn spring-boot:run -Dspring-boot.run.jvmArguments="-DELASTIC_URI=http://elasticsearch:9200"
+    # Or, using an alternative Spring profile and a custom DB username and password:
+    # mvn spring-boot:run -Dspring-boot.run.profiles=mysql -Dspring-boot.run.jvmArguments="-DDB_USER=mydbuser -DDB_PASS=mypass"
 
 The debian operating system provides some packages that can install some of these packages for you. If you have your
 maven repository you can set it accordingly in pom.xml.
@@ -57,7 +81,7 @@ The program should output something like the following if everything is successf
  	Local: 			http://localhost:8092
  	External: 		http://127.0.1.1:8092
  	contextPath: 	http://127.0.1.1:8092/noark5v5
- 	Application is running with following profile(s): [] 
+ 	Application is running with following profile(s): []
 
 ## Docker
 
