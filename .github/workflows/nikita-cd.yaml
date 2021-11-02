@@ -1,0 +1,85 @@
+---
+name: Nikita CD
+
+on:
+  pull_request:
+    branches:
+      - master
+    types: [closed]
+    paths:
+      - '**'
+      - '.github/workflows/nikita-cd.yaml'
+
+env:
+  ACR: ${{ format('arkivverket.azurecr.io/da-nikita') }}
+  IMAGE: ${{ github.event.repository.name }}
+  TAG: ${{ github.event.pull_request.head.sha }}
+  TARGET_ENV: dev
+
+jobs:
+  pre_job:
+    runs-on: ubuntu-latest
+    outputs:
+      branch: ${{ steps.extract_branch.outputs.branch }}
+    steps:
+      - name: Extract branch name
+        id: extract_branch
+        shell: bash
+        run: echo "##[set-output name=branch;]$(BRANCH=${GITHUB_HEAD_REF#refs/heads/}; echo ${BRANCH//\//-})"
+
+  publish:
+    if: github.event.pull_request.merged == true
+    needs: pre_job
+    runs-on: ubuntu-latest
+    env:
+      BRANCH_TAG: ${{ format('{0}-{1}', needs.pre_job.outputs.branch, github.event.pull_request.head.sha) }}
+    steps:
+      - name: Login to GitHub Package Registry
+        uses: docker/login-action@v1.10.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Pull from GHCR
+        run: docker pull ${{ format('ghcr.io/{0}:{1}', github.repository, env.BRANCH_TAG) }}
+      - name: Tag to ACR
+        run: docker tag ${{ format('ghcr.io/{0}:{1}', github.repository, env.BRANCH_TAG) }} ${ACR}/${IMAGE}:${TAG}
+      - name: Login to ACR
+        uses: Azure/docker-login@v1
+        with:
+          username: ${{ secrets.ARKIVVERKET_AZURE_REGISTRY_USERNAME }}
+          password: ${{ secrets.ARKIVVERKET_AZURE_REGISTRY_PASSWORD }}
+          login-server: https://arkivverket.azurecr.io
+      - name: Publish to ACR
+        run: docker push ${ACR}/${IMAGE}:${TAG}
+
+  update-deployment-version:
+    needs:
+      - publish
+    runs-on: ubuntu-latest
+    env:
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+      PR_URL: ${{ github.event.pull_request.html_url }}
+      REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v2.3.4
+        with:
+          repository: ${{ github.repository_owner }}/da-noark5-visning-poc-k8s-config
+          token: ${{ secrets.GITOPS_PAT }}
+      - uses: imranismail/setup-kustomize@v1.6.0
+        with:
+          kustomize-version: "4.1.3"
+      - run: kustomize edit set image nikitaImage=${ACR}/${IMAGE}:${TAG}
+        working-directory: overlays/${{ env.TARGET_ENV }}
+      - run: |
+          git config --local user.email "${{ secrets.GITOPS_EMAIL }}"
+          git config --local user.name "${{ secrets.GITOPS_USER }}"
+          git add .
+          cat > /tmp/commit-message <<- EOM
+          Set ${IMAGE} image tag to ${TAG} in ${TARGET_ENV}
+
+          Repository: ${REPO}
+          Pull Request: [#${PR_NUMBER}](${PR_URL})
+          EOM
+          git commit -F /tmp/commit-message
+          git push
