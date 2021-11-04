@@ -24,6 +24,7 @@ import nikita.webapp.service.interfaces.odata.IODataService;
 import nikita.webapp.service.interfaces.secondary.IStorageLocationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,6 +54,9 @@ public class FondsService
     private final IFondsCreatorService fondsCreatorService;
     private final IFondsHateoasHandler fondsHateoasHandler;
     private final IStorageLocationService storageLocationService;
+
+    @Value("${nikita.import.allowed:false}")
+    private boolean isImportAllowed;
 
     public FondsService(EntityManager entityManager,
                         ApplicationEventPublisher applicationEventPublisher,
@@ -439,7 +443,8 @@ public class FondsService
      * @param fonds The fonds object
      */
     private void checkFondsNotClosed(@NotNull Fonds fonds) {
-        if (null != fonds.getFondsStatus() &&
+        if (!isImportAllowed &&
+            null != fonds.getFondsStatus() &&
                 FONDS_STATUS_CLOSED_CODE.equals(
                         fonds.getFondsStatus().getCode())) {
             String info = INFO_CANNOT_ASSOCIATE_WITH_CLOSED_OBJECT +

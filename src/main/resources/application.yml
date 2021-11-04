@@ -73,6 +73,8 @@ nikita:
     protocol:
       version: Noark 5.5.0
     build: 2019-08-07+0200
+  import:
+    allowed: false
   startup:
     create-demo-users: true # Populate database with some users
     create-directory-store: true # If not created, attempt to create
