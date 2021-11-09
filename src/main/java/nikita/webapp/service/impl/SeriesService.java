@@ -31,6 +31,7 @@ import nikita.webapp.service.interfaces.secondary.IScreeningMetadataService;
 import nikita.webapp.service.interfaces.secondary.IStorageLocationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,6 +63,9 @@ public class SeriesService
     private final IScreeningMetadataService screeningMetadataService;
     private final IStorageLocationService storageLocationService;
     private final IScreeningMetadataHateoasHandler screeningMetadataHateoasHandler;
+
+    @Value("${nikita.import.allowed:false}")
+    private boolean isImportAllowed;
 
     public SeriesService(
             EntityManager entityManager,
@@ -390,7 +394,8 @@ public class SeriesService
      * @param series The series object to check if it open
      */
     private void checkOpenOrThrow(@NotNull Series series) {
-        if (null != series.getSeriesStatus() &&
+        if (!isImportAllowed &&
+            null != series.getSeriesStatus() &&
                 SERIES_STATUS_CLOSED_CODE.equals(series.getSeriesStatus().getCode())) {
             String info = INFO_CANNOT_ASSOCIATE_WITH_CLOSED_OBJECT +
                     ". Series with systemId " + series.getSystemIdAsString() +
