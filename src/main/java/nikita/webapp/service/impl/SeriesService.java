@@ -100,7 +100,7 @@ public class SeriesService
             @NotNull final UUID systemId,
             @NotNull final CaseFile caseFile) {
         Series series = getSeriesOrThrow(systemId);
-        //checkOpenOrThrow(series);
+        checkOpenOrThrow(series);
         caseFile.setReferenceSeries(series);
         return caseFileService.save(caseFile);
     }
@@ -110,7 +110,7 @@ public class SeriesService
     public StorageLocationHateoas createStorageLocationAssociatedWithSeries(
             UUID systemId, StorageLocation storageLocation) {
         Series series = getSeriesOrThrow(systemId);
-        //checkOpenOrThrow(series);
+        checkOpenOrThrow(series);
         return storageLocationService
                 .createStorageLocationAssociatedWithSeries(
                         storageLocation, series);
@@ -122,7 +122,7 @@ public class SeriesService
             @NotNull final UUID systemId,
             @NotNull final File file) {
         Series series = getSeriesOrThrow(systemId);
-        //checkOpenOrThrow(series);
+        checkOpenOrThrow(series);
         file.setReferenceSeries(series);
         return fileService.createFile(file);
     }
